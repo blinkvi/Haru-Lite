@@ -2,7 +2,6 @@ package cc.unknown.socket;
 
 import cc.unknown.socket.api.HookRetriever;
 import cc.unknown.socket.impl.IRCSocket;
-import cc.unknown.util.Accessor;
 import cc.unknown.util.client.netty.NetworkUtil;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -12,7 +11,7 @@ import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
-public class WebSocketCore extends ListenerAdapter implements HookRetriever, Accessor {
+public class WebSocketCore extends ListenerAdapter implements HookRetriever {
 	private static TextChannel cosmeticChannelText;
 	private static TextChannel ircChannelText;
 	private static String botID;

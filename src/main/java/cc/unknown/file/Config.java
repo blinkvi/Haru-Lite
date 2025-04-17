@@ -67,8 +67,8 @@ public class Config extends Directory {
                             } else if (value instanceof ColorValue) {
                                 JsonObject colorValues = theValue.getAsJsonObject();
                                 ((ColorValue) value).set(ColorUtil.applyOpacity(
-                                        new Color(colorValues.get("RGB").getAsInt()),
-                                        colorValues.get("Alpha").getAsFloat()));
+                                        new Color(colorValues.get("rgb").getAsInt()),
+                                        colorValues.get("alpha").getAsFloat()));
                             }
                         }
                     }
@@ -85,6 +85,12 @@ public class Config extends Directory {
                     for (BoolValue bool : window.getSettingBools()) {
                         if (settingsObject.has(bool.getName())) {
                             bool.set(settingsObject.get(bool.getName()).getAsBoolean());
+                        }
+                    }
+                    // Slider
+                    for (SliderValue slider : window.getSettingSlider()) {
+                        if (settingsObject.has(slider.getName())) {
+                            slider.setValue(settingsObject.get(slider.getName()).getAsNumber().floatValue());                            
                         }
                     }
                 }
@@ -131,6 +137,9 @@ public class Config extends Directory {
             if (window.getCategory() == Category.SETTINGS) {
                 for (BoolValue bool : window.getSettingBools()) {
                     settingsObject.addProperty(bool.getName(), bool.get());
+                }
+                for (SliderValue slider : window.getSettingSlider()) {                    
+                    settingsObject.addProperty(slider.getName(), ((SliderValue) slider).get());
                 }
             }
         }

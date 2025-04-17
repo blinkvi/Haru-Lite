@@ -16,9 +16,9 @@ public class CosmeticSocket extends WebSocketCore {
 	public List<SuperCosmetic> cosmeticList = new ArrayList<>();
 	public Message latestChatMessage = null;
 
-	public void tick(SuperCosmetic superCosmetic){
+	public void tick(SuperCosmetic superCosmetic) {
 
-		if(getCosmeticChannel().getHistory().isEmpty()){
+		if(getCosmeticChannel().getHistory().isEmpty()) {
 			getCosmeticChannel().sendMessage("[]").queue();
 		}
 

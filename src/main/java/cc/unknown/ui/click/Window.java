@@ -45,7 +45,7 @@ public class Window implements IComponent {
         this.settingBools.add(new BoolValue("NoJumpDelay", null, false));
         this.settingBools.add(new BoolValue("NoUseDelay", null, false));
         
-        this.settingSlider.add(new SliderValue("TimeChanger", null, 0.1f, 0, 1, 0.1f));
+        this.settingSlider.add(new SliderValue("TimeChanger", null, 0, 0, 1, 0.01f));
 
         this.moduleComponents = Haru.instance.getModuleManager()
                 .getModulesByCategory(category)
@@ -107,13 +107,13 @@ public class Window implements IComponent {
             	    if (getModule(ClickGUI.class).pref.isEnabled("RoundedButtons")) {
             	        RoundedUtil.drawRound(sliderX, sliderY, sliderWidth * progress, sliderHeight - 2, 2F, getModule(ClickGUI.class).mainColor.get());
             	    } else {
-            	        RenderUtil.drawRect(sliderX, sliderY, sliderX + sliderWidth * progress, sliderY + sliderHeight, getModule(ClickGUI.class).mainColor.get().getRGB());
+            	        RenderUtil.drawRect(sliderX, sliderY, sliderWidth * progress, sliderHeight - 2, getModule(ClickGUI.class).mainColor.get().getRGB());
             	    }
 
             	    FontUtil.getFontRenderer("interSemiBold.ttf", 12).drawString(slider.getName(), x + 5F, y + componentOffsetY + 5F, -1);
             	    FontUtil.getFontRenderer("interSemiBold.ttf", 12).drawString(String.format("%.2f", slider.getValue()), x + width - 20F, y + componentOffsetY + 5F, -1);
 
-            	    if (MathUtil.isHovered(sliderX, sliderY, sliderWidth, sliderHeight - 2, mouseX, mouseY) && Mouse.isButtonDown(0)) {
+            	    if (MathUtil.isHovered(sliderX, sliderY, sliderWidth + 2, sliderHeight - 2, mouseX, mouseY) && Mouse.isButtonDown(0)) {
             	        float raw = (mouseX - sliderX) / sliderWidth;
             	        float set = Math.max(minValue, raw * (maxValue - minValue) + minValue);
             	        set = (float) MathUtil.incValue(set, slider.getIncrement());
