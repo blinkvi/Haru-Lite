@@ -7,5 +7,7 @@ Sakura_Client
 run/
 .//build
 build/libs
-libs/fastutil-core-8.5.15.jar
-libs/fastutil-8.5.11.jar
+*.iml
+*.ipr
+*.iws
+.idea
