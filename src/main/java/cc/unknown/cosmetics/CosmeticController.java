@@ -11,8 +11,6 @@ import cc.unknown.cosmetics.impl.hat.DougDimmadome;
 import cc.unknown.cosmetics.impl.hat.Tophat;
 import cc.unknown.cosmetics.impl.hat.WitchHat;
 import cc.unknown.cosmetics.impl.pet.DogPet;
-import cc.unknown.cosmetics.impl.pet.WhiterPet;
-import cc.unknown.cosmetics.impl.wings.CrystalWings;
 import cc.unknown.cosmetics.impl.wings.GalaxyWings;
 import cc.unknown.file.cosmetics.SuperCosmetic;
 import cc.unknown.module.impl.visual.Cosmetics;
@@ -30,8 +28,8 @@ public class CosmeticController {
     private static boolean shouldRenderCosmetic(AbstractClientPlayer player, CosmeticType type) {
         for(SuperCosmetic cosme : CosmeticSocket.cosmeticList){
             if(player.getName().equalsIgnoreCase(cosme.getName())){
-                System.out.println(cosme.toString());
-                System.out.println(type.getName());
+               // System.out.println(cosme.toString());
+               // System.out.println(type.getName());
             }
         }
 
@@ -68,7 +66,6 @@ public class CosmeticController {
     public static void addModels(RenderPlayer renderPlayer) {
     	renderPlayer.addLayer(new DougDimmadome(renderPlayer));
         renderPlayer.addLayer(new Tophat(renderPlayer));
-        renderPlayer.addLayer(new WhiterPet(renderPlayer));
         renderPlayer.addLayer(new DogPet(renderPlayer));
         renderPlayer.addLayer(new Bandana(renderPlayer));
         renderPlayer.addLayer(new GalaxyWings(renderPlayer));
@@ -77,7 +74,6 @@ public class CosmeticController {
         renderPlayer.addLayer(new BlazeAura(renderPlayer));
         renderPlayer.addLayer(new CreeperAura(renderPlayer));
         renderPlayer.addLayer(new EnchantingAura(renderPlayer));
-        renderPlayer.addLayer(new CrystalWings(renderPlayer));
         renderPlayer.addLayer(new Cape(renderPlayer));
     }
 }

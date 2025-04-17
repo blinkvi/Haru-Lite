@@ -27,13 +27,12 @@ public class AutoClicker extends Module {
     private final SliderValue min = new SliderValue("MinCPS", this, 10, 1, 25);
     private final SliderValue max = new SliderValue("MaxCPS", this, 14, 1, 25);
     private final SliderValue amount = new SliderValue("Amount", this, 0.2f, 0, 1, 0.1f, () -> !this.randomization.is("Normal"));
-    private final SliderValue boost = new SliderValue("Boost", this, 10, 0, 300, () -> this.conditionals.isEnabled("CPSBoost") && this.randomization.is("Normal"));
+    private final SliderValue boost = new SliderValue("Boost", this, 5, 1, 99, () -> this.conditionals.isEnabled("CPSBoost") && this.randomization.is("Normal"));
     
     private final ModeValue randomization = new ModeValue("Randomization", this, "Normal", "Normal", "Extra", "Extra+");
     
     public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
             new BoolValue("CPSBoost", false),
-            new BoolValue("OnlyClick", true),
             new BoolValue("Inventory", false)));
 
     private final StopWatch stopWatch = new StopWatch();

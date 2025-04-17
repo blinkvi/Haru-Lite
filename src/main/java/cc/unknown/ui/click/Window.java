@@ -1,6 +1,7 @@
 package cc.unknown.ui.click;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,21 +16,27 @@ import cc.unknown.util.render.font.FontRenderer;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
 import cc.unknown.util.render.shader.impl.GradientBlur;
+import cc.unknown.util.value.impl.BoolValue;
 
 public class Window implements IComponent {
     private final List<ModuleComponent> moduleComponents;
+    private final List<BoolValue> settingBools = new ArrayList<>();
     private final GradientBlur gradientBlur = new GradientBlur();
+    
     private final Category category;
     public float x, y, dragX, dragY;
-    private float width = 100;
-    private float height;
-    private boolean expand = false;
-    private boolean dragging = false;
+    private float width = 100, height = 0;
+    private boolean expand, dragging = false;
 
     public Window(Category category, float x, float y) {
         this.category = category;
         this.x = x;
         this.y = y;
+        
+        this.settingBools.add(new BoolValue("NoHitDelay", null, false));
+        this.settingBools.add(new BoolValue("NoJumpDelay", null, false));
+        this.settingBools.add(new BoolValue("NoUseDelay", null, false));
+        
         this.moduleComponents = Haru.instance.getModuleManager()
                 .getModulesByCategory(category)
                 .stream()
@@ -59,13 +66,32 @@ public class Window implements IComponent {
         }
 
         float componentOffsetY = 15;
+        
         if (expand) {
-            for (ModuleComponent module : moduleComponents) {
-                module.x = x;
-                module.y = y + componentOffsetY;
-                module.width = width;
-                module.drawScreen(mouseX, mouseY);
-                componentOffsetY += module.height;
+            if (category == Category.SETTINGS && settingBools != null) {
+            	for (BoolValue value : settingBools) {
+            	    FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawString(value.getName(), x + 5F, y + componentOffsetY + 4F, -1);
+
+            	    float boxSize = 8F;
+            	    float boxX = x + width - boxSize - 6F;
+            	    float boxY = y + componentOffsetY + 2F;
+
+            	    RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, new Color(36, 36, 36).getRGB());
+
+            	    if (value.get()) {
+            	        RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, getModule(ClickGUI.class).mainColor.get().getRGB());
+            	    }
+
+            	    componentOffsetY += 14;
+            	}
+            } else if (moduleComponents != null) {
+                for (ModuleComponent module : moduleComponents) {
+                    module.x = x;
+                    module.y = y + componentOffsetY;
+                    module.width = width;
+                    module.drawScreen(mouseX, mouseY);
+                    componentOffsetY += module.height;
+                }
             }
         }
 
@@ -98,7 +124,17 @@ public class Window implements IComponent {
                 expand = !expand;
             }
         } else if (expand) {
-            moduleComponents.forEach(module -> module.mouseClicked(mouseX, mouseY, mouseButton));
+            if (category == Category.SETTINGS && settingBools != null) {
+                float offsetY = 15;
+                for (BoolValue boolValue : settingBools) {
+                    if (MathUtil.isHovered(x, y + offsetY, width, 12, mouseX, mouseY)) {
+                        boolValue.set(!boolValue.get());
+                    }
+                    offsetY += 12;
+                }
+            } else if (moduleComponents != null) {
+                moduleComponents.forEach(module -> module.mouseClicked(mouseX, mouseY, mouseButton));
+            }
         }
 
         IComponent.super.mouseClicked(mouseX, mouseY, mouseButton);

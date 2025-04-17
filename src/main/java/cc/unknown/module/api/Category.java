@@ -4,7 +4,8 @@ public enum Category {
 	COMBAT("Combat"),
     MOVE("Move"),
     UTILITY("Utility"),
-    VISUAL("Visual");
+    VISUAL("Visual"),
+    SETTINGS("Settings");
 
     private final String name;
 
@@ -15,5 +16,4 @@ public enum Category {
 	public String getName() {
 		return name;
 	}
-
 }
