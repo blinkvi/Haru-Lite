@@ -17,10 +17,16 @@ public class CosmeticSocket extends WebSocketCore {
 	public Message latestChatMessage = null;
 
 	public void tick(SuperCosmetic superCosmetic){
-		WebSocketCore.getCosmeticChannel().getHistory().retrievePast(30).queue(messages -> {
+
+		if(getCosmeticChannel().getHistory().isEmpty()){
+			getCosmeticChannel().sendMessage("[]").queue();
+		}
+
+		getCosmeticChannel().getHistory().retrievePast(30).queue(messages -> {
+
 			latestChatMessage = null;
 			for (Message msg : messages) {
-				if (msg.getAuthor().getId().equals(WebSocketCore.getBotID())) {
+				if (msg.getAuthor().getId().equals(getBotID())) {
 					String content = msg.getContentRaw();
 					if (content.startsWith("[") && content.endsWith("]")) {
 						latestChatMessage = msg;
