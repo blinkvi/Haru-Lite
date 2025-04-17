@@ -1,0 +1,18 @@
+name: "Contact"
+description: "Need to contact us? Join our Discord server."
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Contact  
+        For any inquiries, questions, or collaborations, please join our Discord server:  
+        [Discord Invite](https://discord.gg/MuF4YRQFht)
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: "Acknowledgment"
+      description: "Before proceeding, please confirm:"
+      options:
+        - label: "I understand that support is provided through Discord."
+          required: true

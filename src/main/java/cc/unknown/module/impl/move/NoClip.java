@@ -1,0 +1,98 @@
+package cc.unknown.module.impl.move;
+
+import cc.unknown.event.player.BlockAABBEvent;
+import cc.unknown.event.player.PrePositionEvent;
+import cc.unknown.event.player.PushOutOfBlockEvent;
+import cc.unknown.event.render.Render2DEvent;
+import cc.unknown.handlers.SpoofHandler;
+import cc.unknown.module.Module;
+import cc.unknown.module.api.Category;
+import cc.unknown.module.api.ModuleInfo;
+import cc.unknown.module.impl.visual.Interface;
+import cc.unknown.util.player.BlockUtil;
+import cc.unknown.util.player.InventoryUtil;
+import cc.unknown.util.render.font.FontUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+@ModuleInfo(name = "NoClip", description = "", category = Category.MOVE)
+public class NoClip extends Module {
+
+	private int lastSlot;
+	
+	@Override
+	public void onEnable() {
+		lastSlot = -1;
+	}
+
+	@Override
+	public void onDisable() {
+		mc.thePlayer.noClip = false;
+		mc.thePlayer.inventory.currentItem = lastSlot;
+		SpoofHandler.stopSpoofing();
+	}
+	
+	@SubscribeEvent
+	public void onBlockAABB(BlockAABBEvent event) {
+		if (!BlockUtil.insideBlock()) return;
+
+		Block block = event.getBlock();
+		BlockPos pos = event.getBlockPos();
+		double x = pos.getX(), y = pos.getY(), z = pos.getZ();
+
+		boolean isSneaking = mc.gameSettings.keyBindSneak.isKeyDown();
+		boolean isAirBlock = block instanceof BlockAir;
+
+		event.setBoundingBox(null);
+
+		if (!isSneaking) {
+			AxisAlignedBB expandedBox = AxisAlignedBB.fromBounds(-15, -1, -15, 15, 1, 15);
+
+			if (y < mc.thePlayer.posY) {
+				event.setBoundingBox(expandedBox.offset(x, y, z));
+			}
+
+			if (!isAirBlock) {
+				event.setBoundingBox(expandedBox.offset(x, y, z));
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPushOutOfBlock(PushOutOfBlockEvent event) {
+		event.setCanceled(true);
+	}
+
+    @SubscribeEvent
+    public void onPreAttack(PrePositionEvent event) {
+		if (lastSlot == -1) {
+			lastSlot = mc.thePlayer.inventory.currentItem;
+		}
+
+		mc.thePlayer.noClip = true;
+		
+		final int slot = InventoryUtil.findBlock();
+
+		if (slot == -1 || BlockUtil.insideBlock()) {
+			return;
+		}
+
+		mc.thePlayer.inventory.currentItem = slot;
+		SpoofHandler.startSpoofing(lastSlot);
+		
+		if (mc.thePlayer.rotationPitch >= 45 && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && mc.thePlayer.posY == mc.objectMouseOver.getBlockPos().up().getY()) {
+			mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, InventoryUtil.getItemStack(), mc.objectMouseOver.getBlockPos(), mc.objectMouseOver.sideHit, mc.objectMouseOver.hitVec);
+
+			mc.thePlayer.swingItem();
+		}
+	}
+
+	@SubscribeEvent
+	public void onRender2D(Render2DEvent event) {
+		FontUtil.getFontRenderer("comfortaa.ttf", 17).drawCenteredString("presiona shift", event.getScaledWidth() / 2F, event.getScaledHeight() - 90, getModule(Interface.class).color());
+	}
+}

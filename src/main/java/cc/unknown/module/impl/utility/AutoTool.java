@@ -1,0 +1,82 @@
+package cc.unknown.module.impl.utility;
+
+import java.util.Arrays;
+
+import cc.unknown.event.PreTickEvent;
+import cc.unknown.event.player.AttackEvent;
+import cc.unknown.handlers.SpoofHandler;
+import cc.unknown.module.Module;
+import cc.unknown.module.api.Category;
+import cc.unknown.module.api.ModuleInfo;
+import cc.unknown.util.client.system.StopWatch;
+import cc.unknown.util.player.InventoryUtil;
+import cc.unknown.util.value.impl.BoolValue;
+import cc.unknown.util.value.impl.MultiBoolValue;
+import cc.unknown.util.value.impl.SliderValue;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+@ModuleInfo(name = "AutoTool", description = "Automatically selects the best tool or weapon from the player's inventory breaking blocks or attacking.", category = Category.UTILITY)
+public class AutoTool extends Module {
+
+    private final SliderValue delay = new SliderValue("Ticks", this, 0, 0, 10, 1);
+    
+    public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
+            new BoolValue("SpoofSlot", true),
+            new BoolValue("SwitchBack", true),
+            new BoolValue("AutoSword", true),
+            new BoolValue("RequireSneak", false)
+    ));
+
+    private int oldSlot;
+    public boolean wasDigging;
+    private final StopWatch delayTimer = new StopWatch();
+
+    @Override
+    public void onDisable() {
+        if (wasDigging) {
+            mc.thePlayer.inventory.currentItem = oldSlot;
+            wasDigging = false;
+        }
+        SpoofHandler.stopSpoofing();
+    }
+
+	@SubscribeEvent
+	public void onAttack(AttackEvent event) {
+        if (conditionals.isEnabled("AutoSword")) {
+            if (!mc.thePlayer.isEating()) {
+                InventoryUtil.bestSword(event.getTarget());
+            }
+        }
+    }
+
+	@SubscribeEvent
+	public void onPreTick(PreTickEvent event) {
+		if (!isInGame()) return;
+        if (!delayTimer.finished((long) (delay.getValue() * 50))) return;
+        
+        if (mc.gameSettings.keyBindAttack.isKeyDown() && mc.objectMouseOver != null && 
+            mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && 
+            InventoryUtil.findTool(mc.objectMouseOver.getBlockPos()) != -1) {
+            
+            if (conditionals.isEnabled("RequireSneak") && !mc.gameSettings.keyBindSneak.isKeyDown()) return;
+            
+            if (!wasDigging) {
+                oldSlot = mc.thePlayer.inventory.currentItem;
+                if (conditionals.isEnabled("SpoofSlot")) {
+                    SpoofHandler.startSpoofing(oldSlot);
+                }
+            }
+            
+            mc.thePlayer.inventory.currentItem = InventoryUtil.findTool(mc.objectMouseOver.getBlockPos());
+            wasDigging = true;
+            delayTimer.reset();
+        } else if (wasDigging && (conditionals.isEnabled("SpoofSlot") || conditionals.isEnabled("SwitchBack"))) {
+            mc.thePlayer.inventory.currentItem = oldSlot;
+            SpoofHandler.stopSpoofing();
+            wasDigging = false;
+        } else {
+            oldSlot = mc.thePlayer.inventory.currentItem;
+        }
+    }
+}
