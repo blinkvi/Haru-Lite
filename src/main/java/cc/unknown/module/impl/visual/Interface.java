@@ -73,7 +73,6 @@ public class Interface extends Module {
     public int scoreBoardHeight = 0;
     private final Pattern LINK_PATTERN = Pattern.compile("(http(s)?://.)?(www\\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\\.[A-z]{2,6}\\b([-a-zA-Z0-9@:%_+.~#?&//=]*)");
 
-    
 	public int getRainbow(int counter) {
 		return Color.HSBtoRGB(getRainbowHSB(counter)[0], getRainbowHSB(counter)[1], getRainbowHSB(counter)[2]);
 	}

@@ -15,16 +15,13 @@ import net.minecraft.client.gui.GuiSelectWorld;
 public class DiscordHandler implements Accessor {
 	public boolean running = true;
 	private long timeElapsed = 0;
-	private volatile static String discordUser = "";
 	private final String joinSecret = UUID.randomUUID().toString();
 	private final String spectateSecret = UUID.randomUUID().toString();
 
 	public void start() {
 		this.timeElapsed = System.currentTimeMillis();
 
-		DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler(user -> {
-			discordUser = user.username;
-		}).build();
+		DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().build();
 
 		DiscordRPC.discordInitialize("1305938480802828350", handlers, true);
 
@@ -36,7 +33,7 @@ public class DiscordHandler implements Accessor {
 						if (mc.isSingleplayer()) {
 							updateStatus("", "Practicing godlike movement... totally not cheating.");
 						} else if (ServerUtil.isConnectedToKnownServer(mc.getCurrentServerData().serverIP)) {
-							updateStatus("User: " + getDiscordUser(),
+							updateStatus("User: " + getUser(),
 									"Cheating on... I mean, playing on " + ServerUtil.serverName);
 						} else if (mc.currentScreen instanceof GuiDownloadTerrain) {
 							updateStatus("Loading world...", "Hope you didn't just crash.");
@@ -78,7 +75,7 @@ public class DiscordHandler implements Accessor {
 		DiscordRPC.discordUpdatePresence(rpc.build());
 	}
 
-	public static String getDiscordUser() {
+	public static String getUser() {
 		return mc.getSession().getUsername();
 	}
 }

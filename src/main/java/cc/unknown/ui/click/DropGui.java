@@ -129,6 +129,7 @@ public class DropGui extends GuiScreen {
     
     @Override
     public void onGuiClosed() {
+    	Haru.instance.getCfgManager().saveFiles();
         super.onGuiClosed();
     }
 

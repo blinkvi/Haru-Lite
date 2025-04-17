@@ -1,19 +1,13 @@
 package cc.unknown.event.render;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
+@AllArgsConstructor
+@Getter
+@Setter
 public class RenderTextEvent extends Event {
 	private String string;
-
-	public RenderTextEvent(String string) {
-		this.string = string;
-	}
-
-	public String getString() {
-		return string;
-	}
-
-	public void setString(String string) {
-		this.string = string;
-	}
 }

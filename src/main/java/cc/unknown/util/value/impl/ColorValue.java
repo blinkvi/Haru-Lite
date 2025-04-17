@@ -6,13 +6,16 @@ import java.util.function.Supplier;
 import cc.unknown.module.Module;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.util.value.Value;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class ColorValue extends Value {
     private float hue = 0;
     private float saturation = 1;
     private float brightness = 1;
     private float alpha = 1;
-    private boolean rainbow = false;
 
     public ColorValue(String name, Module module, Color color, Supplier<Boolean> visible) {
         super(name, module, visible);
@@ -35,44 +38,4 @@ public class ColorValue extends Value {
         brightness = hsb[2];
         alpha = color.getAlpha() / 255.0f;
     }
-
-	public float getHue() {
-		return hue;
-	}
-
-	public void setHue(float hue) {
-		this.hue = hue;
-	}
-
-	public float getSaturation() {
-		return saturation;
-	}
-
-	public void setSaturation(float saturation) {
-		this.saturation = saturation;
-	}
-
-	public float getBrightness() {
-		return brightness;
-	}
-
-	public void setBrightness(float brightness) {
-		this.brightness = brightness;
-	}
-
-	public float getAlpha() {
-		return alpha;
-	}
-
-	public void setAlpha(float alpha) {
-		this.alpha = alpha;
-	}
-
-	public boolean isRainbow() {
-		return rainbow;
-	}
-
-	public void setRainbow(boolean rainbow) {
-		this.rainbow = rainbow;
-	}
 }

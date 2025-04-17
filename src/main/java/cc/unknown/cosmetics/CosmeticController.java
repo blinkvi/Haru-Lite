@@ -1,16 +1,11 @@
 package cc.unknown.cosmetics;
 
-import cc.unknown.cosmetics.impl.accessories.Bandana;
-import cc.unknown.cosmetics.impl.aura.BlazeAura;
-import cc.unknown.cosmetics.impl.aura.CreeperAura;
-import cc.unknown.cosmetics.impl.aura.EnchantingAura;
-import cc.unknown.cosmetics.impl.aura.OrbitAura;
-import cc.unknown.cosmetics.impl.cape.Cape;
-import cc.unknown.cosmetics.impl.hat.DougDimmadome;
-import cc.unknown.cosmetics.impl.hat.Tophat;
-import cc.unknown.cosmetics.impl.hat.WitchHat;
-import cc.unknown.cosmetics.impl.pet.DogPet;
-import cc.unknown.cosmetics.impl.wings.GalaxyWings;
+import cc.unknown.cosmetics.impl.accessories.*;
+import cc.unknown.cosmetics.impl.aura.*;
+import cc.unknown.cosmetics.impl.cape.*;
+import cc.unknown.cosmetics.impl.hat.*;
+import cc.unknown.cosmetics.impl.pet.*;
+import cc.unknown.cosmetics.impl.wings.*;
 import cc.unknown.file.cosmetics.SuperCosmetic;
 import cc.unknown.socket.impl.CosmeticSocket;
 import cc.unknown.util.render.enums.CosmeticType;
@@ -22,8 +17,8 @@ public class CosmeticController {
     private static boolean shouldRenderCosmetic(AbstractClientPlayer player, CosmeticType type) {
         for(SuperCosmetic cosme : CosmeticSocket.cosmeticList){
             if(player.getName().equalsIgnoreCase(cosme.getName())){
-               // System.out.println(cosme.toString());
-               // System.out.println(type.getName());
+              // System.out.println(cosme.toString());
+               //System.out.println(type.getName());
             }
         }
 

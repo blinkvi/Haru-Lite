@@ -15,16 +15,22 @@ import cc.unknown.util.Accessor;
 import cc.unknown.util.structure.list.SList;
 import cc.unknown.util.value.Value;
 import cc.unknown.util.value.impl.SliderValue;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraftforge.common.MinecraftForge;
 
+@Getter
+@Setter
 public abstract class Module implements Accessor {
 
+	private final SList<Value> values = new SList<>();
+	
     private final ModuleInfo moduleInfo;
     private final String name;
     private final String description;
     private final Category category;
     private int keyBind;
-    private final SList<Value> values = new SList<>();
+    
     private boolean hidden;
     private boolean state;
     private boolean expanded;
@@ -126,58 +132,6 @@ public abstract class Module implements Accessor {
                 .findFirst()
                 .orElse(null);
     }
-
-	public int getKeyBind() {
-		return keyBind;
-	}
-
-	public void setKeyBind(int keyBind) {
-		this.keyBind = keyBind;
-	}
-
-	public boolean isHidden() {
-		return hidden;
-	}
-
-	public void setHidden(boolean hidden) {
-		this.hidden = hidden;
-	}
-
-	public boolean isState() {
-		return state;
-	}
-
-	public void setState(boolean state) {
-		this.state = state;
-	}
-
-	public boolean isExpanded() {
-		return expanded;
-	}
-
-	public void setExpanded(boolean expanded) {
-		this.expanded = expanded;
-	}
-
-	public ModuleInfo getModuleInfo() {
-		return moduleInfo;
-	}
-
-	public String getName() {
-		return name;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-
-	public Category getCategory() {
-		return category;
-	}
-
-	public SList<Value> getValues() {
-		return values;
-	}
 
     public boolean shouldDisplay(ArrayListDraggable arrayListDraggable) {
         if (this instanceof ClickGUI) {

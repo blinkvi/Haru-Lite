@@ -5,7 +5,8 @@ public enum Category {
     MOVE("Move"),
     UTILITY("Utility"),
     VISUAL("Visual"),
-    SETTINGS("Settings");
+    SETTINGS("Settings"),
+    SCRIPTS("Scripts");
 
     private final String name;
 

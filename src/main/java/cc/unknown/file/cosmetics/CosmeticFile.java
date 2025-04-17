@@ -38,7 +38,7 @@ public class CosmeticFile extends Directory {
         if (cosmetics == null) return null;
 
         SuperCosmetic cosmetic = new SuperCosmetic(
-            DiscordHandler.getDiscordUser(),
+            DiscordHandler.getUser(),
             cosmetics.haloType.getMode(),
             cosmetics.hatType.getMode(),
             cosmetics.petType.getMode(),

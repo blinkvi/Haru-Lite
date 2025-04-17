@@ -25,7 +25,6 @@ import cc.unknown.event.PostTickEvent;
 import cc.unknown.event.PreTickEvent;
 import cc.unknown.event.player.AttackEvent;
 import cc.unknown.mixin.impl.IMinecraft;
-import cc.unknown.module.impl.utility.NoHitDelay;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -123,13 +122,6 @@ public abstract class MixinMinecraft implements IMinecraft {
 	@Inject(method = "runGameLoop", at = @At(value = "INVOKE", target = "Lnet/minecraft/profiler/Profiler;startSection(Ljava/lang/String;)V", ordinal = 1))
 	private void loopEvent(CallbackInfo ci) {
 		MinecraftForge.EVENT_BUS.post(new GameEvent());
-	}
-
-	@Inject(method = "clickMouse", at = @At("HEAD"))
-	public void fixHitDelay(CallbackInfo ci) {
-		if (Haru.instance.getModuleManager().getModule(NoHitDelay.class).isEnabled()) {
-			leftClickCounter = 0;
-		}
 	}
 
 	@Redirect(method = "runTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/EffectRenderer;updateEffects()V"))

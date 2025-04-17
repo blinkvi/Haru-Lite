@@ -6,6 +6,7 @@ public enum CosmeticType {
     WHITER("Whiter"),
     DOG("Dog"),
     BANDANA("Bandana"),
+    HALO("Halo"),
     GALAXY("Galaxy"),
     CRYSTAL("Crystal"),
     WITCH("Witch"),

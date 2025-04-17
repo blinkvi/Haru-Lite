@@ -8,10 +8,10 @@ import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.socket.impl.CosmeticSocket;
+import cc.unknown.util.render.HaloRenderer;
 import cc.unknown.util.render.enums.AccesoriesType;
 import cc.unknown.util.render.enums.AuraType;
 import cc.unknown.util.render.enums.CapeType;
-import cc.unknown.util.render.enums.HaloType;
 import cc.unknown.util.render.enums.HatType;
 import cc.unknown.util.render.enums.PetType;
 import cc.unknown.util.render.enums.WingsType;
@@ -23,8 +23,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Cosmetics extends Module {
 	boolean changed;
 
+	public final ModeValue haloType = new ModeValue("Halo", this, "Aris", "Aris", "Shiroko", "Reisa", "Natsu", "Hoshino", "None");
 	public final ModeValue capeType = new ModeValue("Cape", this, CapeType.NONE, CapeType.values());
-	public final ModeValue haloType = new ModeValue("Halo", this, HaloType.NONE, HaloType.values());
 	public final ModeValue hatType = new ModeValue("Hat", this, HatType.NONE, HatType.values());
 	public final ModeValue petType = new ModeValue("Pet", this, PetType.NONE, PetType.values());
 	public final ModeValue auraType = new ModeValue("Aura", this, AuraType.ORBIT, AuraType.values());
@@ -42,7 +42,7 @@ public class Cosmetics extends Module {
 	@SubscribeEvent
 	public void onRender3D(RenderWorldLastEvent event) {
 		if (mc.gameSettings.thirdPersonView == 0) return;
-		haloType.getMode(HaloType.class).render(event);
+		HaloRenderer.drawHalo(haloType.getMode());
 	}
 
 	@SubscribeEvent
@@ -50,7 +50,7 @@ public class Cosmetics extends Module {
 		if (!isInGame()) return;
 		if (!(mc.thePlayer.ticksExisted % 400 == 0)) return;
 		
-	    String username = DiscordHandler.getDiscordUser();
+	    String username = DiscordHandler.getUser();
 	    boolean capeChanged = !capeType.is(prevCapeMode);
 	    boolean haloChanged = !haloType.is(prevHaloMode);
 	    boolean hatChanged = !hatType.is(prevHatMode);
@@ -76,9 +76,5 @@ public class Cosmetics extends Module {
 	    prevAuraMode = auraType.getMode();
 	    prevWingsMode = wingsType.getMode();
 	    prevAccesoriesMode = accesoriesType.getMode();
-	}
-
-	public boolean isChanged() {
-		return changed;
 	}
 }

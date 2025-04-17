@@ -40,8 +40,6 @@ public final class ModuleManager extends SList<Module> {
         		Velocity.class,
         		
         		// utility
-        		NoHitDelay.class,
-        		NoUseDelay.class,
         		AutoTool.class,
         		NoItemRelease.class,
         		Blink.class,
@@ -56,7 +54,6 @@ public final class ModuleManager extends SList<Module> {
                 ClickGUI.class,
                 Interface.class,
                 ESP.class,
-                Ambience.class,
                 FullBright.class,
                 AntiDebuff.class,
                 BedPlates.class,
@@ -71,12 +68,9 @@ public final class ModuleManager extends SList<Module> {
                 BridgeAssist.class,
                 NoClip.class,
                 Clutch.class,
-                //KeepSprint.class,
         		NoSlow.class,
-        		NoJumpDelay.class,
         		Sprint.class
         );
-
     }
 
     @SafeVarargs
@@ -97,15 +91,12 @@ public final class ModuleManager extends SList<Module> {
     }
 
     @SuppressWarnings("unchecked")
-    public <Quisoji extends Module> Quisoji getModule(Class<Quisoji> moduleClass) {
-        return (Quisoji) registry.get(moduleClass);
+    public <T extends Module> T getModule(Class<T> moduleClass) {
+        return (T) registry.get(moduleClass);
     }
 
     public Module getModule(String name) {
-        return this.stream()
-                .filter(m -> m.getName().equalsIgnoreCase(name))
-                .findFirst()
-                .orElse(null);
+        return this.stream().filter(m -> m.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
     public SList<Module> getModules() {

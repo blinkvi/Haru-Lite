@@ -1,23 +1,23 @@
 package cc.unknown.command;
 
-import static cc.unknown.util.render.client.ColorUtil.*;
+import static cc.unknown.util.render.client.ColorUtil.gold;
+import static cc.unknown.util.render.client.ColorUtil.green;
+import static cc.unknown.util.render.client.ColorUtil.pink;
+import static cc.unknown.util.render.client.ColorUtil.red;
+import static cc.unknown.util.render.client.ColorUtil.reset;
 
 import cc.unknown.util.Accessor;
 import cc.unknown.util.render.client.ChatUtil;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
+@Getter
 public abstract class Command implements Accessor {
 
     protected final String prefix;
 
-    public Command(String prefix) {
-        this.prefix = prefix;
-    }
-
     public abstract void execute(String[] args);
-
-    public String getPrefix() {
-        return prefix;
-    }
 
     public void error(String message) {
         ChatUtil.display(String.format("%s[%s*%s] %s", pink, red, pink, reset + message));

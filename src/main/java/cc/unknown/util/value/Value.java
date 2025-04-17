@@ -3,7 +3,11 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import cc.unknown.module.Module;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public abstract class Value {
     private final String name;
     public Supplier<Boolean> visible;
@@ -17,16 +21,4 @@ public abstract class Value {
     public Boolean canDisplay() {
         return this.visible.get();
     }
-
-	public Supplier<Boolean> getVisible() {
-		return visible;
-	}
-
-	public void setVisible(Supplier<Boolean> visible) {
-		this.visible = visible;
-	}
-
-	public String getName() {
-		return name;
-	}
 }

@@ -4,5 +4,4 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 @Cancelable
-public class PushOutOfBlockEvent extends Event {
-}
+public class PushOutOfBlockEvent extends Event { }

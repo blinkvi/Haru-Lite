@@ -4,10 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import cc.unknown.socket.security.AESUtil;
 
-public interface HookRetriever {
-	// h o s t
-	String socket = "";
-	
+public interface HookRetriever {	
 	// i r c
 	String ircChannel = AESUtil.decrypt("7bVBDDRXww475JPvFb4Die8hsjZd82bNLqSAtDA3shI=") /*"1356750457720143946"*/;
 	String endpoint = AESUtil.decrypt("FiKn32mYiOlZesWGjcNf6ot9CoqjfomfVWvS5XGhZeNYklv6OyAu1ApgFV6wpteEPBwbKzRqeRqzQeSfmMUdgV1uj7H4oXl50KK4VSdrJ0yzJkWUO9zTiA2xmKwqg2cGb+454vSBymiZNoc5pmT/IXczwwAKTVZRXDzGG6VQtFA=") /*"https://discord.com/api/webhooks/1361004883997626549/hFUVazfOpo8UWGGjMvBVRGoj1c-rBg91-ok0bIxs1ScBV_pXvItRy_NpLbsTnbBDXLxk"*/;
@@ -19,6 +16,4 @@ public interface HookRetriever {
     
 	// S e c r e t    K e y
 	String secretKey = "5QHSwNhiWc750w41L6h1uWXRB39P67";
-	String secretKey2 = "";
-
 }

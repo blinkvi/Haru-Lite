@@ -3,19 +3,19 @@ package cc.unknown.util.alt;
 import com.google.gson.JsonObject;
 
 import cc.unknown.mixin.impl.IMinecraft;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Session;
 
+@AllArgsConstructor
+@Getter
+@Setter
 public class Account {
     private String name;
     private String uuid;
     private String accessToken;
-
-    public Account(String name, String uuid, String accessToken) {
-        this.name = name;
-        this.uuid = uuid;
-        this.accessToken = accessToken;
-    }
 
     public boolean login() {
         ((IMinecraft) Minecraft.getMinecraft()).setSession(new Session(name, uuid, accessToken, "mojang"));
@@ -45,28 +45,4 @@ public class Account {
             accessToken = object.get("accessToken").getAsString();
         }
     }
-
-	public String getName() {
-		return name;
-	}
-
-	public String getUuid() {
-		return uuid;
-	}
-
-	public String getAccessToken() {
-		return accessToken;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
 }

@@ -70,7 +70,9 @@ dependencies {
         exclude module: 'slf4j-api'
     }
 
-	implementation files('nigger/jda.jar')
+    implementation fileTree(dir: 'nigger', include: ['*.jar'])
+    compileOnly 'org.projectlombok:lombok:1.18.38'
+    annotationProcessor 'org.projectlombok:lombok:1.18.38'
     annotationProcessor 'org.spongepowered:mixin:0.7.11-SNAPSHOT'
     implementation configurations.embed
 }
