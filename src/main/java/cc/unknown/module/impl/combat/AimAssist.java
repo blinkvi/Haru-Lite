@@ -36,7 +36,7 @@ public class AimAssist extends Module {
 	private SliderValue verticalSpeed = new SliderValue("VerticalSpeed", this, 10, 1, 15, vertical::get);
 	private SliderValue verticalCompl = new SliderValue("VerticalMult", this, 5, 1, 10, vertical::get);
 	
-	private final SliderValue angle = new SliderValue("Angle", this, 180, 1, 180, 1);
+	private final SliderValue angle = new SliderValue("Angle", this, 180, 0, 180, 1);
 	private final SliderValue distance = new SliderValue("Distance", this, 4f, 1f, 8f, 0.1f);
 
 	private final ModeValue speedMode = new ModeValue("Speed", this, "Random", "Random", "Secure", "Gaussian");
@@ -58,10 +58,9 @@ public class AimAssist extends Module {
 	@SubscribeEvent
 	public void onAttack(AttackEvent event) {        
 		if (event.getTarget() instanceof EntityPlayer) {
-            EntityPlayer newTarget = (EntityPlayer) event.getTarget();
-			if (!isValidTarget(newTarget, (int) angle.getValue())) return;
+            EntityPlayer newTarget = (EntityPlayer) event.getTarget();            
 			if (conditionals.isEnabled("LockTarget")) {
-	            if (!lockedTargets.contains(newTarget)) lockedTargets.add(newTarget);
+	            lockedTargets.add(newTarget);
 	            if (target == null) {
 	                target = newTarget;
 	            }

@@ -74,7 +74,7 @@ public class AutoClicker extends Module {
     };
 
     @SubscribeEvent
-    public void onPreAttack(PrePositionEvent event) {
+    public void onPrePosition(PrePositionEvent event) {
         if (conditionals.isEnabled("Inventory") && mc.currentScreen instanceof GuiContainer) {
         	InventoryUtil.guiClicker(mc.currentScreen, 0, getClickDelay());
         }

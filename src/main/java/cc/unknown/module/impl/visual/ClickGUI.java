@@ -32,7 +32,7 @@ public final class ClickGUI extends Module {
 			new BoolValue("ToolTips", false)));
 	
 	
-	public final SliderValue alpha = new SliderValue("AlphaBackground", this, 150, 0, 255, 1);
+	public final SliderValue alpha = new SliderValue("AlphaBackground", this, 150, 20, 255, 1);
 	
     public final ColorValue outlineColor = new ColorValue("OutlineColor", this, new Color(128, 128, 255));
     public final ColorValue mainColor = new ColorValue("MainColor", this, new Color(164, 53, 144));

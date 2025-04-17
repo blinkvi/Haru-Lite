@@ -44,7 +44,7 @@ public class Clutch extends Module {
 	}
 
 	@SubscribeEvent
-	public void onPreAttack(PrePositionEvent event) {
+	public void onPrePosition(PrePositionEvent event) {
 		if (lastSlot == -1) {
 			lastSlot = mc.thePlayer.inventory.currentItem;
 		}

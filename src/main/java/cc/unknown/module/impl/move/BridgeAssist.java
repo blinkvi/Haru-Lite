@@ -6,7 +6,6 @@ import org.lwjgl.input.Keyboard;
 
 import cc.unknown.event.player.MoveInputEvent;
 import cc.unknown.event.player.PrePositionEvent;
-import cc.unknown.mixin.impl.IEntityPlayer;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -56,7 +55,7 @@ public class BridgeAssist extends Module {
     @SubscribeEvent
     public void onMoveInput(MoveInputEvent event) {
     	if (isShifting && shouldBridge) {
-    		((IEntityPlayer) mc.thePlayer).getHideSneakHeight().reset();
+    		//((IEntityPlayer) mc.thePlayer).getHideSneakHeight().reset();
     		event.setSneak(true);
     	}
     	
