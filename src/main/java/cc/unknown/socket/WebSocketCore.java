@@ -1,7 +1,6 @@
 package cc.unknown.socket;
 
 import cc.unknown.socket.api.HookRetriever;
-import cc.unknown.socket.impl.CosmeticSocket;
 import cc.unknown.socket.impl.IRCSocket;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.netty.NetworkUtil;

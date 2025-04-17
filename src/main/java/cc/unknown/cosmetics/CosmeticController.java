@@ -1,6 +1,5 @@
 package cc.unknown.cosmetics;
 
-import cc.unknown.Haru;
 import cc.unknown.cosmetics.impl.accessories.Bandana;
 import cc.unknown.cosmetics.impl.aura.BlazeAura;
 import cc.unknown.cosmetics.impl.aura.CreeperAura;
@@ -13,17 +12,12 @@ import cc.unknown.cosmetics.impl.hat.WitchHat;
 import cc.unknown.cosmetics.impl.pet.DogPet;
 import cc.unknown.cosmetics.impl.wings.GalaxyWings;
 import cc.unknown.file.cosmetics.SuperCosmetic;
-import cc.unknown.module.impl.visual.Cosmetics;
 import cc.unknown.socket.impl.CosmeticSocket;
 import cc.unknown.util.render.enums.CosmeticType;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 
 public class CosmeticController {
-
-    private static Cosmetics getCosmetics() {
-        return Haru.instance.getModuleManager().getModule(Cosmetics.class);
-    }
 
     private static boolean shouldRenderCosmetic(AbstractClientPlayer player, CosmeticType type) {
         for(SuperCosmetic cosme : CosmeticSocket.cosmeticList){

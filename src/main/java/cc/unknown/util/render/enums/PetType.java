@@ -2,7 +2,6 @@ package cc.unknown.util.render.enums;
 
 public enum PetType {
     DOG("Dog", "dog.png"),
-    WHITER("Wither", ""),
     NONE("None", "");
 
     private final String name;

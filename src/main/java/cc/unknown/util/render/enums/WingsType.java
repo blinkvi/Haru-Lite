@@ -1,7 +1,6 @@
 package cc.unknown.util.render.enums;
 
 public enum WingsType {
-	CRYSTAL("Crystal", "crystal.png"),
 	GALAXY("Galaxy", "galaxy.png"),
 	NONE("None", "");
 	

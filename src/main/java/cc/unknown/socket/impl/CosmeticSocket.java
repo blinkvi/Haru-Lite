@@ -9,12 +9,10 @@ import com.google.gson.Gson;
 import cc.unknown.file.cosmetics.SuperCosmetic;
 import cc.unknown.socket.WebSocketCore;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class CosmeticSocket extends WebSocketCore {
 	public static List<SuperCosmetic> cosmeticList = new ArrayList<>();
 	public static Message latestChatMessage = null;
-
 
 	public static void tick(SuperCosmetic superCosmetic){
 		WebSocketCore.getCosmeticChannel().getHistory().retrievePast(30).queue(messages -> {
