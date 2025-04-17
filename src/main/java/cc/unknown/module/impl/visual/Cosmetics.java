@@ -65,10 +65,9 @@ public class Cosmetics extends Module {
 
 	    if (changed) {
 	        Haru.instance.getCosmeticManager().saveFiles();
-			CosmeticSocket.cosmeticList.add(currentCosmetic);
 	    }
 
-		CosmeticSocket.tick();
+		CosmeticSocket.tick(currentCosmetic);
 
 	    prevCapeMode = capeType.getMode();
 	    prevHaloMode = haloType.getMode();

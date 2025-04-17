@@ -1,6 +1,7 @@
 package cc.unknown.socket.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -14,13 +15,8 @@ public class CosmeticSocket extends WebSocketCore {
 	public static List<SuperCosmetic> cosmeticList = new ArrayList<>();
 	public static Message latestChatMessage = null;
 
-	public static void cosmeticListener(MessageReceivedEvent event) {
-	    if (!event.getChannel().getId().equals(cosmeticChannel)) {
-	        return;
-	    }
-	}
 
-	public static void tick(){
+	public static void tick(SuperCosmetic superCosmetic){
 		WebSocketCore.getCosmeticChannel().getHistory().retrievePast(30).queue(messages -> {
 			latestChatMessage = null;
 			for (Message msg : messages) {
@@ -35,13 +31,15 @@ public class CosmeticSocket extends WebSocketCore {
 
 					//chatgpt
 					SuperCosmetic[] cosmetics = gson.fromJson(content, SuperCosmetic[].class);
-					for (SuperCosmetic sc : cosmetics) {
-						cosmeticList.add(sc);
-						cosmeticList.removeIf(exist -> exist.getName().equalsIgnoreCase(sc.getName()));
-					}
+
+					cosmeticList.clear();
+					Collections.addAll(cosmeticList, cosmetics);
 
 				}
 			}
+
+			cosmeticList.removeIf(existing -> existing.getName().equalsIgnoreCase(superCosmetic.getName()));
+			cosmeticList.add(superCosmetic);
 
 			Gson gson = new Gson();
 			String json = gson.toJson(cosmeticList);

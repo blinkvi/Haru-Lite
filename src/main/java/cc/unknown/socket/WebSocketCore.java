@@ -41,7 +41,6 @@ public class WebSocketCore extends ListenerAdapter implements HookRetriever, Acc
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 	    IRCSocket.ircHandler(event);
-	    CosmeticSocket.cosmeticListener(event);
 	}
 
 	public static TextChannel getCosmeticChannel() {
