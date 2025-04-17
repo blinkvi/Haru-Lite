@@ -53,4 +53,18 @@ public class SuperCosmetic {
     public String getCape() {
         return cape;
     }
+
+    @Override
+    public String toString() {
+        return "SuperCosmetic{" +
+                "name='" + name + '\'' +
+                ", halo='" + halo + '\'' +
+                ", hat='" + hat + '\'' +
+                ", pet='" + pet + '\'' +
+                ", aura='" + aura + '\'' +
+                ", wings='" + wings + '\'' +
+                ", accesories='" + accesories + '\'' +
+                ", cape='" + cape + '\'' +
+                '}';
+    }
 }

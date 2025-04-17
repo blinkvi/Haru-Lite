@@ -28,6 +28,13 @@ public class CosmeticController {
     }
 
     private static boolean shouldRenderCosmetic(AbstractClientPlayer player, CosmeticType type) {
+        for(SuperCosmetic cosme : CosmeticSocket.cosmeticList){
+            if(player.getName().equalsIgnoreCase(cosme.getName())){
+                System.out.println(cosme.toString());
+                System.out.println(type.getName());
+            }
+        }
+
         return CosmeticSocket.cosmeticList.stream()
                 .filter(cosmetic -> player.getName().equalsIgnoreCase(cosmetic.getName()))
                 .anyMatch(cosmetic -> {
