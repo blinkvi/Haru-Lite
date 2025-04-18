@@ -13,10 +13,12 @@ import cc.unknown.util.Accessor;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.enums.StickersType;
 import cc.unknown.util.structure.list.SList;
+import lombok.Getter;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
 
+@Getter
 public class DropGui extends GuiScreen {
     private final SList<Window> windows = new SList<>();
     private int guiYMoveLeft = 0;
@@ -24,6 +26,7 @@ public class DropGui extends GuiScreen {
     public float startX, startY;
     public float x, y;
     public float buttonWidth, spacingY;
+    private Window win;
 
     public DropGui() {
     	ScaledResolution sr = new ScaledResolution(Accessor.mc);
@@ -132,8 +135,4 @@ public class DropGui extends GuiScreen {
     	Haru.instance.getCfgManager().saveFiles();
         super.onGuiClosed();
     }
-
-	public SList<Window> getWindows() {
-		return windows;
-	}
 }

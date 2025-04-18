@@ -1,11 +1,13 @@
 package cc.unknown.ui.click;
 
 import java.awt.Color;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import cc.unknown.Haru;
+import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.impl.visual.ClickGUI;
 import cc.unknown.ui.click.complement.IComponent;
@@ -146,5 +148,13 @@ public class Window implements IComponent {
     public void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
+    }
+    
+    public void rebuildModuleCache() {
+    	moduleComponents.clear();
+        @SuppressWarnings("unchecked")
+		java.util.List<Module> sortedModules = (List<Module>) Haru.instance.getModuleManager().getModules();
+        sortedModules.sort((o1, o2) -> Collator.getInstance().compare(o1.getName(), o2.getName()));
+        sortedModules.forEach(module -> moduleComponents.add(new ModuleComponent(module)));
     }
 }

@@ -36,14 +36,13 @@ import cc.unknown.managers.CosmeticManager;
 import cc.unknown.managers.DragManager;
 import cc.unknown.managers.ModuleManager;
 import cc.unknown.managers.PositionManager;
-import cc.unknown.managers.RotationManager;
-import cc.unknown.module.Module;
 import cc.unknown.socket.WebSocketCore;
 import cc.unknown.ui.click.DropGui;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.system.CustomLogger;
 import cc.unknown.util.client.system.SystemUtil;
 import cc.unknown.util.render.font.FontUtil;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -51,6 +50,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 @Mod(modid = "betterclouds", name = "better clouds", version = "Lite")
+@Getter
 public class Haru {
     public static Haru instance = new Haru();
 
@@ -63,10 +63,8 @@ public class Haru {
     private ConfigManager cfgManager;
     private PositionManager positionManager;
     private DragManager dragManager;
-    private RotationManager rotationManager;
     
     private DropGui dropGui;
-    private Module module;
     private WebSocketCore webSocket;
     
     private final CustomLogger logger = new CustomLogger();
@@ -80,6 +78,7 @@ public class Haru {
     public static final File CFG_DIR = new File(MAIN_DIR, "configs");
     public static final File DRAG_DIR = new File(MAIN_DIR, "draggable");
     public static final File CS_DIR = new File(MAIN_DIR, "cosmetics");
+    public static final File SCRIPT_DIR = new File(MAIN_DIR, "scripts");
     
     private final Minecraft mc = Minecraft.getMinecraft();
 
@@ -150,7 +149,6 @@ public class Haru {
         moduleManager = new ModuleManager();
         cmdManager = new CommandManager();
         cfgManager = new ConfigManager();
-        rotationManager = new RotationManager();
         positionManager = new PositionManager();
         dragManager = new DragManager();
         cosmeticManager = new CosmeticManager();
@@ -196,20 +194,10 @@ public class Haru {
             Files.createDirectories(CFG_DIR.toPath());
             Files.createDirectories(DRAG_DIR.toPath());
             Files.createDirectories(CS_DIR.toPath());
+            Files.createDirectories(SCRIPT_DIR.toPath());
             logger.info("Dirs created successfully.");
         } catch (IOException e) {
             System.err.println("Error al crear directorios: " + e.getMessage());
         }
     }
-
-    public WebSocketCore getWebSocket() { return webSocket; }
-	public ModuleManager getModuleManager() { return moduleManager; }
-	public CosmeticManager getCosmeticManager() { return cosmeticManager; }
-	public RotationManager getRotationManager() { return rotationManager; }
-    public CommandManager getCmdManager() { return cmdManager; }
-    public ConfigManager getCfgManager() { return cfgManager; }
-    public CustomLogger getLogger() { return logger; }
-    public Gson getGSON() { return GSON; }
-    public DragManager getDragManager() { return dragManager; }
-    public DropGui getDropGui() { return dropGui; }
 }

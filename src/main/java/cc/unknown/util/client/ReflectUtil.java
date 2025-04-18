@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import cc.unknown.util.Accessor;
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
@@ -17,112 +18,120 @@ import net.minecraft.util.Timer;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+@UtilityClass
 public class ReflectUtil implements Accessor {
 	
-	public static void setBlockHitDelay(int val) {
+	public void setBlockHitDelay(int val) {
 		ObfuscationReflectionHelper.setPrivateValue(PlayerControllerMP.class, mc.playerController, val, "blockHitDelay", "field_78781_i");
 	}
 
-	public static void setRightClickDelayTimer(int val) {
+	public void setRightClickDelayTimer(int val) {
 		ObfuscationReflectionHelper.setPrivateValue(Minecraft.class, mc, val, "rightClickTimer", "field_71467_ac");
 	}
 	
-	public static void setLeftClickCounter(int val) {
+	public void setLeftClickCounter(int val) {
 		ObfuscationReflectionHelper.setPrivateValue(Minecraft.class, mc, val, "leftClickCounter", "field_71429_W");
 	}
 
-	public static void setJumpTicks(int val) {
+	public void setJumpTicks(int val) {
 		ObfuscationReflectionHelper.setPrivateValue(EntityLivingBase.class, mc.thePlayer, val, "jumpTicks", "field_70773_bE");
 	}
 
-	public static void setCurBlockDamage(float val) {
+	public void setCurBlockDamage(float val) {
         ObfuscationReflectionHelper.setPrivateValue(PlayerControllerMP.class, mc.playerController, val, "curBlockDamageMP", "field_78770_f");
 	}
+	
+	public boolean isInWeb() {
+		return ObfuscationReflectionHelper.getPrivateValue(Entity.class, mc.thePlayer, "isInWeb", "field_70134_J");
+	}
 
-	public static double getRenderPosX() {
+	public void setInWeb(boolean bool) {
+		ObfuscationReflectionHelper.setPrivateValue(Entity.class, mc.thePlayer, bool, "isInWeb", "field_70134_J");
+	}
+
+	public double getRenderPosX() {
 		return ObfuscationReflectionHelper.getPrivateValue(RenderManager.class, mc.getRenderManager(), "renderPosX", "field_78725_b");
 	}
 	
-	public static double getRenderPosY() {
+	public double getRenderPosY() {
 		return ObfuscationReflectionHelper.getPrivateValue(RenderManager.class, mc.getRenderManager(), "renderPosY", "field_78726_c");
 	}
 
-	public static double getRenderPosZ() {
+	public double getRenderPosZ() {
     	return ObfuscationReflectionHelper.getPrivateValue(RenderManager.class, mc.getRenderManager(), "renderPosZ", "field_78723_d");
 	}
 	
-	public static int getBlockHitDelay() {
+	public int getBlockHitDelay() {
     	return ObfuscationReflectionHelper.getPrivateValue(PlayerControllerMP.class, mc.playerController, "blockHitDelay", "field_78781_i");
 	}
 	
-    public static float getCurBlockDamage() {
+    public float getCurBlockDamage() {
     	return ObfuscationReflectionHelper.getPrivateValue(PlayerControllerMP.class, mc.playerController, "curBlockDamageMP", "field_78770_f");
     }
 	
-    public static Timer getTimer() {
+    public Timer getTimer() {
     	return ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, mc, "timer", "field_71428_T");
     }
     
-    public static float getLastReportedYaw() {
+    public float getLastReportedYaw() {
     	return ObfuscationReflectionHelper.getPrivateValue(EntityPlayerSP.class, mc.thePlayer, "lastReportedYaw", "field_175164_bL");
     }
     
-    public static float getLastReportedPitch() {
+    public float getLastReportedPitch() {
     	return ObfuscationReflectionHelper.getPrivateValue(EntityPlayerSP.class, mc.thePlayer, "lastReportedPitch", "field_175165_bM");
     }
     
-    public static int getMotionX() {
+    public int getMotionX() {
         return ObfuscationReflectionHelper.getPrivateValue(S12PacketEntityVelocity.class, new S12PacketEntityVelocity(), "motionX", "field_149415_b");
     }
     
-    public static int getMotionY() {
+    public int getMotionY() {
     	return ObfuscationReflectionHelper.getPrivateValue(S12PacketEntityVelocity.class, new S12PacketEntityVelocity(), "motionY", "field_149416_c");
     }
     
-    public static int getMotionZ() {
+    public int getMotionZ() {
     	return ObfuscationReflectionHelper.getPrivateValue(S12PacketEntityVelocity.class, new S12PacketEntityVelocity(), "motionZ", "field_149414_d");
     }
     
-    public static void setMotionX(int val) {
+    public void setMotionX(int val) {
         ObfuscationReflectionHelper.setPrivateValue(S12PacketEntityVelocity.class, new S12PacketEntityVelocity(), val, "motionX", "field_149415_b");
     }
     
-    public static void setMotionY(int val) {
+    public void setMotionY(int val) {
     	ObfuscationReflectionHelper.setPrivateValue(S12PacketEntityVelocity.class, new S12PacketEntityVelocity(), val, "motionY", "field_149416_c");
     }
     
-    public static void setMotionZ(int val) {
+    public void setMotionZ(int val) {
     	ObfuscationReflectionHelper.setPrivateValue(S12PacketEntityVelocity.class, new S12PacketEntityVelocity(), val, "motionZ", "field_149414_d");
     }
     
-    public static void setServerSprintState(boolean bool) {
+    public void setServerSprintState(boolean bool) {
     	ObfuscationReflectionHelper.setPrivateValue(EntityPlayerSP.class, mc.thePlayer, bool, "serverSprintState", "field_175171_bO");
     }
     
-    public static boolean isServerSprintState() {
+    public boolean isServerSprintState() {
     	return ObfuscationReflectionHelper.getPrivateValue(EntityPlayerSP.class, mc.thePlayer, "serverSprintState", "field_175171_bO");
     }
     
-    public static void setYawC03(float flot) {
+    public void setYawC03(float flot) {
     	ObfuscationReflectionHelper.setPrivateValue(C03PacketPlayer.class, new C03PacketPlayer(), flot, "yaw", "field_149476_e");
     }
     
-    public static void setPitchC03(float flot) {
+    public void setPitchC03(float flot) {
     	ObfuscationReflectionHelper.setPrivateValue(C03PacketPlayer.class, new C03PacketPlayer(), flot, "pitch", "field_149473_f");
     }
     
-    public static void setRotatingC03(boolean bool) {
+    public void setRotatingC03(boolean bool) {
     	ObfuscationReflectionHelper.setPrivateValue(C03PacketPlayer.class, new C03PacketPlayer(), bool, "rotating", "field_149481_i");
     }
     
-    // block = 1
-    // unblock = 0
-    
-    public static void setItemInUse(int block) {
+    public void setItemInUse(int block) {
+        // block = 1
+        // unblock = 0
     	ObfuscationReflectionHelper.setPrivateValue(EntityPlayerSP.class, mc.thePlayer, block, "itemInUseCount", "field_71072_f");
     }
     
-    public static Vec3 getVectorForRotation(float pitch, float yaw) {
+    public Vec3 getVectorForRotation(float pitch, float yaw) {
         try {
             Method method;
             try {
@@ -140,7 +149,7 @@ public class ReflectUtil implements Accessor {
         }
     }
     
-    public static void rightClickMouse() {
+    public void rightClickMouse() {
     	try {
     		Method method;
     		try {
@@ -156,7 +165,23 @@ public class ReflectUtil implements Accessor {
     	}
     }
     
-    public static boolean isShaders() {
+    public void clickMouse() {
+    	try {
+    		Method method;
+    		try {
+    			method = Minecraft.class.getDeclaredMethod("func_147116_af");
+    		} catch (NoSuchMethodException e) {
+    			method = Minecraft.class.getDeclaredMethod("clickMouse");
+    		}
+    		
+    		method.setAccessible(true);
+    		method.invoke(mc);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    public boolean isShaders() {
         try {
             Class<?> configClass = Class.forName("Config");
             return (boolean) configClass.getMethod("isShaders").invoke(null);
@@ -166,7 +191,7 @@ public class ReflectUtil implements Accessor {
         return false;
     }
 
-    public static void setGameSetting(Minecraft mc, String fieldName, boolean value) {
+    public void setGameSetting(Minecraft mc, String fieldName, boolean value) {
         try {
             try {
                 ObfuscationReflectionHelper.setPrivateValue(GameSettings.class, mc.gameSettings, value, fieldName);

@@ -47,7 +47,7 @@ public class Cosmetics extends Module {
 	@SubscribeEvent
 	public void onPreTick(PreTickEvent event) {
 		if (!isInGame()) return;
-		if (!(mc.thePlayer.ticksExisted % 400 == 0)) return;
+		if (!(mc.thePlayer.ticksExisted % 20 == 0)) return;
 		
 	    String username = DiscordHandler.getUser();
 	    boolean capeChanged = !capeType.is(prevCapeMode);

@@ -6,7 +6,6 @@ import java.util.List;
 
 import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.handlers.SpoofHandler;
-import cc.unknown.managers.RotationManager;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -15,6 +14,7 @@ import cc.unknown.util.player.BlockUtil;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.player.move.MoveUtil;
+import cc.unknown.util.player.move.RotationUtil;
 import cc.unknown.util.value.impl.SliderValue;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -134,7 +134,7 @@ public class Clutch extends Module {
 	        mc.thePlayer.posY = futurePosY;
 	        mc.thePlayer.posZ = futurePosZ;
 
-	        RotationManager.setPlayerRotation(BlockUtil.getFaceRotation(placeFace, block));
+	        RotationUtil.setPlayerRotation(BlockUtil.getFaceRotation(placeFace, block));
 
 	        PlayerUtil.rightClick(true);
 

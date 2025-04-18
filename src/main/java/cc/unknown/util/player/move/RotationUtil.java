@@ -1,4 +1,4 @@
-package cc.unknown.managers;
+package cc.unknown.util.player.move;
 
 import static java.lang.Math.hypot;
 
@@ -18,7 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
-public class RotationManager implements Accessor {
+public class RotationUtil implements Accessor {
 	public static float getAngleDifference(float a, float b) {
 		return MathHelper.wrapAngleTo180_float(a - b);
 	}

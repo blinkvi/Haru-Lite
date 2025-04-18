@@ -1,8 +1,8 @@
 package cc.unknown.util.player;
 import java.util.Map;
 
-import cc.unknown.managers.RotationManager;
 import cc.unknown.util.Accessor;
+import cc.unknown.util.player.move.RotationUtil;
 import cc.unknown.util.structure.vectors.Vector2f;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
@@ -91,7 +91,7 @@ public class BlockUtil implements Accessor {
     }
 
     public static Vector2f getCenterRotation(BlockPos blockPos) {
-        return RotationManager.getRotations(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
+        return RotationUtil.getRotations(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
     }
     
     public static EnumFacing getHorizontalFacingEnum(BlockPos blockPos) {
@@ -126,7 +126,7 @@ public class BlockUtil implements Accessor {
         Vec3 blockFaceVec = new Vec3(faceVec.getX() * 0.5, faceVec.getY() * 0.5, faceVec.getZ() * 0.5);
         blockFaceVec = blockFaceVec.add(toVec3(blockPos));
         blockFaceVec = blockFaceVec.addVector(0.5, 0.5, 0.5);
-        return RotationManager.getRotations(blockFaceVec);
+        return RotationUtil.getRotations(blockFaceVec);
     }
     
 	public static Vec3 toVec3(BlockPos blockPos) {

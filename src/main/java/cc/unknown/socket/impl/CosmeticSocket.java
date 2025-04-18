@@ -2,7 +2,7 @@ package cc.unknown.socket.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -22,35 +22,42 @@ public class CosmeticSocket extends WebSocketCore {
 	private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeStructuredAdapter()).create();
 
 	public void tick(SuperCosmetic superCosmetic) {
-		getCosmeticChannel().getHistory().retrievePast(30).queue(messages -> {
-			latestChatMessage = null;
+	    getCosmeticChannel().getHistory().retrievePast(30).queue(messages -> {
+	        latestChatMessage = null;
 
-			for (Message msg : messages) {
-				if (msg.getAuthor().getId().equals(getBotID())) {
-					String content = msg.getContentRaw();
+	        for (Message msg : messages) {
+	            if (msg.getAuthor().getId().equals(getBotID())) {
+	                String content = msg.getContentRaw();
 
-					if (content.startsWith("[") && content.endsWith("]")) {
-						latestChatMessage = msg;
+	                if (content.startsWith("[") && content.endsWith("]")) {
+	                    latestChatMessage = msg;
 
-						SuperCosmetic[] cosmetics = gson.fromJson(content, SuperCosmetic[].class);
+	                    SuperCosmetic[] cosmetics = gson.fromJson(content, SuperCosmetic[].class);
+	                    cosmeticList.clear();
+	                    cosmeticList.addAll(Arrays.asList(cosmetics));
+	                    break;
+	                }
+	            }
+	        }
 
-						cosmeticList.clear();
-						Collections.addAll(cosmeticList, cosmetics);
-						break;
-					}
-				}
-			}
+	        cosmeticList.removeIf(cosmetic ->
+	            !cosmetic.getName().equalsIgnoreCase(superCosmetic.getName()) &&
+	            cosmetic.getLastUpdated().isBefore(LocalDateTime.now().minusHours(4))
+	        );
 
-			cosmeticList.removeIf(existing -> existing.getName().equalsIgnoreCase(superCosmetic.getName()));
-			cosmeticList.add(superCosmetic);
+	        cosmeticList.removeIf(cosmetic ->
+	            cosmetic.getName().equalsIgnoreCase(superCosmetic.getName())
+	        );
 
-			String json = gson.toJson(cosmeticList);
+	        cosmeticList.add(superCosmetic);
 
-			if (latestChatMessage != null) {
-				latestChatMessage.editMessage(json).queue();
-			} else {
-				getCosmeticChannel().sendMessage(json).queue();
-			}
-		});
+	        String json = gson.toJson(cosmeticList);
+
+	        if (latestChatMessage != null) {
+	            latestChatMessage.editMessage(json).queue();
+	        } else {
+	            getCosmeticChannel().sendMessage(json).queue();
+	        }
+	    });
 	}
 }
