@@ -15,7 +15,7 @@ Follow these steps to set up the project:
 
       **For IntelliJ:**  
    ```sh
-   gradlew --debug setupDevWorkspace idea genIntellijRuns build
+   gradlew -Dorg.gradle.jvmargs=-Xmx2096m setupDecompWorkspace && gradlew eclipse
    ```
 
       **For Eclipse:**  
