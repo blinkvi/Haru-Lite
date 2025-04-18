@@ -17,13 +17,14 @@ import cc.unknown.util.Accessor;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.render.client.ColorUtil;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 
 public class HaloRenderer implements Accessor {
 	
-	public static void drawHalo(String mode) {
-		float height = mc.thePlayer.height + 0.25f;
-		float yaw = mc.thePlayer.rotationYaw;
+	public static void drawHalo(String mode, EntityPlayer player) {
+		float height = player.height + 0.25f;
+		float yaw = player.rotationYaw;
 		float partialTicks = ReflectUtil.getTimer().renderPartialTicks;
         float extraHeight = 0.035f;
         float extensionLength = 0.18f;
@@ -32,7 +33,7 @@ public class HaloRenderer implements Accessor {
 		switch (mode) {
 		case "Aris":
 		    GL11.glPushMatrix();
-		    glTranslated(partialTicks, height);
+		    glTranslated(partialTicks, height, player);
 		    setupOpenGL();
 		    GL11.glRotatef(-yaw, 0F, 1F, 0F);
 		    GL11.glRotatef(90, 1F, 0F, 0F);
@@ -44,7 +45,7 @@ public class HaloRenderer implements Accessor {
 			break;
 		case "Shiroko":
 	        GL11.glPushMatrix();
-	        glTranslated(partialTicks, height);
+	        glTranslated(partialTicks, height, player);
 	        setupOpenGL();
 
 	        ColorUtil.color(new Color(MathHelper.clamp_int(2000 * 1800, 0, 255), MathHelper.clamp_int(230 + 2000 * 200, 0, 255), 250, 220));
@@ -62,7 +63,7 @@ public class HaloRenderer implements Accessor {
 			break;
 		case "Reisa":
 	        GL11.glPushMatrix();
-	        glTranslated(partialTicks, height);
+	        glTranslated(partialTicks, height, player);
 	        setupOpenGL();
 
 	        GL11.glRotatef(-yaw, 0F, 1F, 0F);
@@ -82,7 +83,7 @@ public class HaloRenderer implements Accessor {
 			break;
 		case "Natsu":
 	        GL11.glPushMatrix();
-	        glTranslated(partialTicks, height);
+	        glTranslated(partialTicks, height, player);
 	        setupOpenGL();
 
 	        GL11.glRotatef(-yaw, 0F, 1F, 0F);
@@ -98,7 +99,7 @@ public class HaloRenderer implements Accessor {
 			break;
 		case "Hoshino":
 	        GL11.glPushMatrix();
-	        glTranslated(partialTicks, height);
+	        glTranslated(partialTicks, height, player);
 	        setupOpenGL();
 	        GL11.glRotatef(-yaw, 0F, 1F, 0F);
 	        GL11.glRotatef(90, 1F, 0F, 0F);
@@ -136,7 +137,7 @@ public class HaloRenderer implements Accessor {
         GlStateManager.enableDepth();
     }
     
-    public static void glTranslated(float partialTicks, float height) {
-        GL11.glTranslated(mc.thePlayer.lastTickPosX + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX) * partialTicks - ReflectUtil.getRenderPosX(), mc.thePlayer.lastTickPosY + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY) * partialTicks - ReflectUtil.getRenderPosY() + height, mc.thePlayer.lastTickPosZ + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ) * partialTicks - ReflectUtil.getRenderPosZ());
+    public static void glTranslated(float partialTicks, float height, EntityPlayer player) {
+        GL11.glTranslated(player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks - ReflectUtil.getRenderPosX(), player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks - ReflectUtil.getRenderPosY() + height, player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks - ReflectUtil.getRenderPosZ());
     }
 }
