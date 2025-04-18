@@ -66,7 +66,7 @@ public class AutoClicker extends Module {
 
 		clickDelay = getClickDelay();
 		
-		if (stopWatch.finished(clickDelay)) {
+		if (stopWatch.hasPassed(clickDelay)) {
 			PlayerUtil.leftClick(true);
 			stopWatch.reset();
 		}

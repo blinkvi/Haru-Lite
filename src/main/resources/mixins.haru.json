@@ -17,8 +17,6 @@
 		"MixinEntityLivingBase",
 		"MixinNetHandlerPlayClient",
 		"MixinRendererLivingEntity",
-		"MixinFMLCommonHandler",
-		"MixinC00Handshake",
 		"MixinWorldRenderer",
 		"MixinGuiChat",
 		"MixinEnumFacing",

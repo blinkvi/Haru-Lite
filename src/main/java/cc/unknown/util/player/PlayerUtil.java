@@ -47,10 +47,36 @@ public class PlayerUtil implements Accessor {
         return mc.theWorld.getBlockState(new BlockPos(mc.thePlayer).add(offsetX, offsetY, offsetZ)).getBlock();
     }
     
-    public static boolean checkEdge(double offset, double checkHeight) {
+    public static boolean checkEdge(double offset) {
     	AxisAlignedBB box = mc.thePlayer.getEntityBoundingBox();
-    	AxisAlignedBB adjustedBox = setMinY(box.offset(0, -0.2, 0).expand(-offset, 0, -offset), checkHeight);
+    	AxisAlignedBB adjustedBox = setMinY(box.offset(0, -0.2, 0).expand(-offset, 0, -offset), 0);
         return mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, adjustedBox).isEmpty();
+    }
+    
+    public static boolean isOnEdgeWithBlockCheck(double negativeOffset, double positiveOffset) {
+        AxisAlignedBB box = mc.thePlayer.getEntityBoundingBox();
+        
+        AxisAlignedBB adjustedBox = box
+            .offset(0, -0.2, 0)
+            .expand(-negativeOffset, 0, -negativeOffset);
+
+        boolean noCollisionBelow = mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, adjustedBox).isEmpty();
+
+        BlockPos blockPos = new BlockPos(mc.thePlayer).add(positiveOffset, 0, positiveOffset);
+        Block blockBelow = mc.theWorld.getBlockState(blockPos).getBlock();
+
+        boolean isAirOrReplaceable = blockBelow.getMaterial().isReplaceable();
+
+        return noCollisionBelow && isAirOrReplaceable;
+    }
+    
+    public static boolean isOnEdgeWithBlockCheck(double offset) {
+        BlockPos blockPos = new BlockPos(mc.thePlayer).add(offset, -1, offset);
+        Block blockBelow = mc.theWorld.getBlockState(blockPos).getBlock();
+
+        boolean isAirOrReplaceable = blockBelow.getMaterial().isReplaceable();
+
+        return isAirOrReplaceable;
     }
     
     public static boolean isOverVoid(double x, double y, double z) {

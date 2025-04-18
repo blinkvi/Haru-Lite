@@ -135,7 +135,7 @@ public class InventoryUtil implements Accessor {
         if (Mouse.isButtonDown(mouseButton) && (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42))) {
             long clickDelay = delay;
 
-            if (inventoryStopWatch.finished(clickDelay)) {
+            if (inventoryStopWatch.hasPassed(clickDelay)) {
                 int x = Mouse.getX() * gui.width / mc.displayWidth;
                 int y = gui.height - Mouse.getY() * gui.height / mc.displayHeight - 1;
 

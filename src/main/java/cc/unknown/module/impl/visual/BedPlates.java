@@ -52,8 +52,8 @@ public class BedPlates extends Module {
     public void onUpdate() {
     	try {
         if (isInGame()) {
-            if (stopWatch.finished()) {
-            	stopWatch.setMillis(1000);
+            if (stopWatch.isFinished()) {
+            	stopWatch.setStartTime(1000);
             	stopWatch.reset();
             }
             int i;

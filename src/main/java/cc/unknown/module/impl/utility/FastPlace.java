@@ -76,7 +76,7 @@ public class FastPlace extends Module {
         if (mc.currentScreen != null || !mc.inGameHasFocus) return;
 		if (BLACKLISTED_ITEMS.contains(InventoryUtil.getItem())) return;
 		
-    	if (!startDelay.finished((int) delay.getValue())) return;
+    	if (!startDelay.hasPassed((int) delay.getValue())) return;
 
         if (conditionals.isEnabled("Inventory") && mc.currentScreen instanceof GuiInventory && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) return;
         if (!conditionals.isEnabled("Projectiles") && InventoryUtil.getProjectiles()) return;
@@ -106,7 +106,7 @@ public class FastPlace extends Module {
 
     private void expert() {
         int randomizedCPS = getRandomizedCPS();
-        if (stopWatch.finished(1000 / randomizedCPS)) {
+        if (stopWatch.hasPassed(1000 / randomizedCPS)) {
             PlayerUtil.rightClick(true);
             stopWatch.reset();
         }
