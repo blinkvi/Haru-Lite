@@ -12,24 +12,6 @@ public class StopWatch {
         reset();
     }
     
-    public StopWatch(int offsetTicks) {
-        reset();
-        startTicks(offsetTicks);
-    }
-    
-    public StopWatch(long offsetMillis) {
-        reset();
-        startMillis(offsetMillis);
-    }
-    
-    public void startMillis(long offsetMillis) {
-        this.startTime = System.currentTimeMillis() - offsetMillis;
-    }
-    
-    public void startTicks(int offsetTicks) {
-        this.startTime = System.currentTimeMillis() - (offsetTicks * 50L);
-    }
-    
     public boolean hasPassed(long delay) {
         return System.currentTimeMillis() - delay >= startTime;
     }

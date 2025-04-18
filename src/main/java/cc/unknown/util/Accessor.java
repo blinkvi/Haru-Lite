@@ -7,7 +7,6 @@ import cc.unknown.managers.ConfigManager;
 import cc.unknown.managers.DragManager;
 import cc.unknown.managers.ModuleManager;
 import cc.unknown.module.Module;
-import cc.unknown.socket.api.HookRetriever;
 import cc.unknown.ui.click.DropGui;
 import cc.unknown.util.client.system.CustomLogger;
 import cc.unknown.util.client.system.StopWatch;
@@ -15,7 +14,7 @@ import cc.unknown.util.render.client.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 
-public interface Accessor extends HookRetriever {
+public interface Accessor {
     static Minecraft mc = Minecraft.getMinecraft();
     
     default Haru getInstance() {
@@ -64,5 +63,9 @@ public interface Accessor extends HookRetriever {
 
     default Gson getGSON() {
         return getInstance().getGSON();
+    }
+    
+    default boolean isHovered(float x, float y, float width, float height, int mouseX, int mouseY) {
+        return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
     }
 }

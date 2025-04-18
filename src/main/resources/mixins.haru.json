@@ -8,6 +8,8 @@
 		"MixinNetworkManager",
 		"MixinS3EPacketTeams",
 		"MixinScoreBoard",
+		"MixinEmbeddedChannel",
+		"MixinNetworkDispatcher",
 		"MixinEntityPlayerSP",
 		"MixinEntityRenderer",
 		"MixinGuiIngame",

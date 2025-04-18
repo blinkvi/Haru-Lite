@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import cc.unknown.event.PreTickEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -21,6 +20,8 @@ import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "MusicPlayer", description = "Time to listen to radio.", category = Category.VISUAL)
 public class MusicPlayer extends Module {
@@ -48,7 +49,8 @@ public class MusicPlayer extends Module {
     }
     
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onPreTick(PreTickEvent event) {
+	public void onPreTick(ClientTickEvent event) {
+    	if (event.phase == Phase.END) return;
         if (started) {
         	if (mode.is("Local")) {
         	    String userHome = System.getProperty("user.home");

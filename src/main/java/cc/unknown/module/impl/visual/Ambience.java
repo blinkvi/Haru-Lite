@@ -1,6 +1,5 @@
 package cc.unknown.module.impl.visual;
 
-import cc.unknown.event.PreTickEvent;
 import cc.unknown.event.player.InboundEvent;
 import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.module.Module;
@@ -11,6 +10,8 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S03PacketTimeUpdate;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @SuppressWarnings("rawtypes")
 @ModuleInfo(name = "Ambience", description = "Change the time.", category = Category.VISUAL)
@@ -24,7 +25,8 @@ public class Ambience extends Module {
 	}
 	
 	@SubscribeEvent
-	public void onRender3D(PreTickEvent event) {
+	public void onPreTick(ClientTickEvent event) {
+    	if (event.phase == Phase.END) return;
 		if (!isInGame()) return;
 		mc.theWorld.setWorldTime((long) (time.getValue() * 22999));
 	}

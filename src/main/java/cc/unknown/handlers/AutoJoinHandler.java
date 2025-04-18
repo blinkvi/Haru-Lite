@@ -2,7 +2,6 @@ package cc.unknown.handlers;
 
 import java.util.List;
 
-import cc.unknown.event.PreTickEvent;
 import cc.unknown.event.player.InboundEvent;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.netty.PacketUtil;
@@ -18,6 +17,8 @@ import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.network.play.server.S2DPacketOpenWindow;
 import net.minecraft.network.play.server.S2EPacketCloseWindow;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class AutoJoinHandler implements Accessor {
 	
@@ -41,7 +42,9 @@ public class AutoJoinHandler implements Accessor {
     }
     
     @SubscribeEvent
-    public void onPreTick(PreTickEvent event) {
+    public void onPreTick(ClientTickEvent event) {
+    	if (event.phase == Phase.END) return;
+    	
         if (isInGame()) {
             if (mc.currentScreen instanceof GuiChat || MoveUtil.isMoving()) {
                 joining = false;

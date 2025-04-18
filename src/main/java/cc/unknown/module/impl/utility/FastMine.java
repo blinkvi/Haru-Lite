@@ -2,7 +2,6 @@ package cc.unknown.module.impl.utility;
 
 import java.util.Arrays;
 
-import cc.unknown.event.PreTickEvent;
 import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
@@ -18,6 +17,8 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "FastMine", description = "Increases the speed at which blocks can be broken.", category = Category.UTILITY)
 public class FastMine extends Module {
@@ -33,7 +34,8 @@ public class FastMine extends Module {
 	));
 
 	@SubscribeEvent
-	public void onPreTick(PreTickEvent event) {
+	public void onPreTick(ClientTickEvent event) {
+    	if (event.phase == Phase.END) return;
 		if (!applyConditions()) return;
 		
 		if (conditionals.isEnabled("Instant")) {

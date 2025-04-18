@@ -35,6 +35,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "BedPlates", description = "Show information about beds.", category = Category.VISUAL)
 public class BedPlates extends Module {
@@ -48,8 +50,9 @@ public class BedPlates extends Module {
     private final SliderValue range = new SliderValue("Range", this, 10, 2, 30);
     private final SliderValue layers = new SliderValue("Layers", this, 3, 1, 10);
     
-    @Override
-    public void onUpdate() {
+	@SubscribeEvent
+	public void onPostTick(ClientTickEvent event) {
+    	if (event.phase == Phase.START) return;
     	try {
         if (isInGame()) {
             if (stopWatch.isFinished()) {

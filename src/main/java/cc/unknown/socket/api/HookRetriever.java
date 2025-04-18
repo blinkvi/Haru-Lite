@@ -8,7 +8,7 @@ public interface HookRetriever {
 	// i r c
 	String ircChannel = AESUtil.decrypt("7bVBDDRXww475JPvFb4Die8hsjZd82bNLqSAtDA3shI=") /*"1356750457720143946"*/;
 	String endpoint = AESUtil.decrypt("FiKn32mYiOlZesWGjcNf6ot9CoqjfomfVWvS5XGhZeNYklv6OyAu1ApgFV6wpteEPBwbKzRqeRqzQeSfmMUdgV1uj7H4oXl50KK4VSdrJ0yzJkWUO9zTiA2xmKwqg2cGb+454vSBymiZNoc5pmT/IXczwwAKTVZRXDzGG6VQtFA=") /*"https://discord.com/api/webhooks/1361004883997626549/hFUVazfOpo8UWGGjMvBVRGoj1c-rBg91-ok0bIxs1ScBV_pXvItRy_NpLbsTnbBDXLxk"*/;
-	String token = AESUtil.decrypt("Beoj8czvsfFuR8S1OXgg3YiOSmUhz3aR4FUM+tfXkQ7nUvBbek60Z+CPRvWxb5e/O5VL/PAuFo2AG3TSqVJXtDpyNvx8xAJLU+ixEWW3UkI=") /*"MTMwNTkzODQ4MDgwMjgyODM1MA.G8aPzS.LAo8IOiqU7s_g1ZMz4P-N2iwrmrxDvgchdy8LM"*/;
+	String token = AESUtil.decrypt("5VNjWHP/5VfYteFV5QYiI0V71qkp94qTR5dw2OQi0EN/Tx2egxKLAX3iuP5G5eio2/qYjXtDl5qfyKl+Q2/DiZw7sGnTPyWa0hl42gu4ZJs=") /*"MTM2Mjg1NjczMzE1MTg1NDg1NA.GVDlHZ.dSnz1c94wEFWak-SEzW0WlgqyMOFeWagkNKNVw"*/;
 	
 	// c o s m e t i c s
 	String cosmeticChannel = AESUtil.decrypt("3VxYKe1G6iZxj1Xm3Q+cEpkC1ROCXXSGixMM7nRsO3Q=") /*"1360731034278428976"*/;

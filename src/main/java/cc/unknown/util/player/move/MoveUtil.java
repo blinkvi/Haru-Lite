@@ -1,8 +1,5 @@
 package cc.unknown.util.player.move;
-
-import cc.unknown.event.player.MoveInputEvent;
 import cc.unknown.util.Accessor;
-import cc.unknown.util.client.MathUtil;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.MathHelper;
 
@@ -55,36 +52,4 @@ public class MoveUtil implements Accessor {
     	KeyBinding.setKeyBindState(mc.gameSettings.keyBindLeft.getKeyCode(), false);
     	KeyBinding.setKeyBindState(mc.gameSettings.keyBindRight.getKeyCode(), false);
     }
-    
-    public static void fixMovement(final MoveInputEvent event, final float yaw) {
-        final float forward = event.getForward();
-        final float strafe = event.getStrafe();
-
-        final double angle = MathHelper.wrapAngleTo180_double(Math.toDegrees(direction(mc.thePlayer.rotationYaw, forward, strafe)));
-
-        if (forward == 0 && strafe == 0) {
-            return;
-        }
-
-        float closestForward = 0, closestStrafe = 0, closestDifference = Float.MAX_VALUE;
-
-        for (float predictedForward = -1F; predictedForward <= 1F; predictedForward += 1F) {
-            for (float predictedStrafe = -1F; predictedStrafe <= 1F; predictedStrafe += 1F) {
-                if (predictedStrafe == 0 && predictedForward == 0) continue;
-
-                final double predictedAngle = MathHelper.wrapAngleTo180_double(Math.toDegrees(direction(yaw, predictedForward, predictedStrafe)));
-                final double difference = MathUtil.wrappedDifference(angle, predictedAngle);
-
-                if (difference < closestDifference) {
-                    closestDifference = (float) difference;
-                    closestForward = predictedForward;
-                    closestStrafe = predictedStrafe;
-                }
-            }
-        }
-
-        event.setForward(closestForward);
-        event.setStrafe(closestStrafe);
-    }
-
 }

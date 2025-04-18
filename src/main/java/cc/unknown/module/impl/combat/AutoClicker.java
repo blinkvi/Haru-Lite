@@ -20,6 +20,8 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "AutoClicker", description = "Automatically clicks for you.", category = Category.COMBAT)
 public class AutoClicker extends Module {
@@ -42,36 +44,36 @@ public class AutoClicker extends Module {
     public void onEnable() {
     	reset();
     }
-    
-	@Override
-	public void onUpdate() {
-		correctValues(min, max);
-	}
-	
-	@Override
-	public void guiUpdate() {
-		correctValues(min, max);
-	}
-    
+
     @Override
     public void onDisable() {
     	reset();
     }
     
-	@SubscribeEvent
-	public void onRender3D(TickEvent.RenderTickEvent event) {
-		if (!isInGame()) return;
-		if (noClick()) return;
-		
-		ReflectUtil.setLeftClickCounter(0);
+    @SubscribeEvent
+    public void onPostTick(ClientTickEvent event) {
+    	if (event.phase == Phase.START) return;
+    	correctValues(min, max);
+    }
+    
+    @SubscribeEvent
+    public void onRender3D(TickEvent.RenderTickEvent event) {
+    	if (!isInGame()) return;
+    	if (mc.objectMouseOver == null || mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK) return;
+    	if (mc.currentScreen != null || !mc.inGameHasFocus) return;
+    	if (!mc.gameSettings.keyBindAttack.isKeyDown()) return;
 
-		clickDelay = getClickDelay();
-		
-		if (stopWatch.hasPassed(clickDelay)) {
-			PlayerUtil.leftClick(true);
-			stopWatch.reset();
-		}
-    };
+    	if (stopWatch == null) return;
+
+    	ReflectUtil.setLeftClickCounter(0);
+
+    	clickDelay = getClickDelay();
+
+    	if (stopWatch.hasPassed(clickDelay)) {
+    		PlayerUtil.leftClick(true);
+    		stopWatch.reset();
+    	}
+    }
 
     @SubscribeEvent
     public void onPrePosition(PrePositionEvent event) {
@@ -80,13 +82,6 @@ public class AutoClicker extends Module {
         }
     }
 
-    private boolean noClick() {
-		if (mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK) return true;
-		if (mc.currentScreen != null || !mc.inGameHasFocus) return true;
-		if (!mc.gameSettings.keyBindAttack.isKeyDown()) return true;
-    	return false;
-    }
-    
     public long getClickDelay() {
         return conditionals.isEnabled("CPSBoost") ? PatternUtil.randomization(randomization.getMode(), (int) MathUtil.randomizeDouble(min.getValue(), max.getValue()) + (int) boost.getValue(), amount.getValue()) : PatternUtil.randomization(randomization.getMode(), (int) MathUtil.randomizeDouble(min.getValue(), max.getValue()), amount.getValue());
     }

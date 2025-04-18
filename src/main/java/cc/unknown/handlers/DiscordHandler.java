@@ -23,7 +23,7 @@ public class DiscordHandler implements Accessor {
 
 		DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().build();
 
-		DiscordRPC.discordInitialize("1305938480802828350", handlers, true);
+		DiscordRPC.discordInitialize("1362856733151854854", handlers, true);
 
 		new Thread("Discord RPC Callback") {
 			@Override
@@ -69,7 +69,7 @@ public class DiscordHandler implements Accessor {
 
 	public void updateStatus(String line1, String line2) {
 		DiscordRichPresence.Builder rpc = new DiscordRichPresence.Builder(line2).setDetails(line1)
-				.setBigImage("sakura", "Haru " + Haru.VERSION).setParty("discord.gg/MuF4YRQFht", 1, 4)
+				.setBigImage("logo", "Haru " + Haru.VERSION).setParty("discord.gg/MuF4YRQFht", 1, 4)
 				.setSecrets(joinSecret, spectateSecret).setStartTimestamps(timeElapsed);
 
 		DiscordRPC.discordUpdatePresence(rpc.build());

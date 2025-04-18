@@ -21,8 +21,6 @@ import com.sun.jna.Platform;
 
 import cc.unknown.Haru;
 import cc.unknown.event.GameEvent;
-import cc.unknown.event.PostTickEvent;
-import cc.unknown.event.PreTickEvent;
 import cc.unknown.event.player.AttackEvent;
 import cc.unknown.mixin.impl.IMinecraft;
 import net.minecraft.block.material.Material;
@@ -97,16 +95,6 @@ public abstract class MixinMinecraft implements IMinecraft {
 	@Override
 	public void setSession(final Session session) {
 		this.session = session;
-	}
-
-	@Inject(method = "runTick", at = @At("HEAD"))
-	private void runPreTick(CallbackInfo ci) {
-		MinecraftForge.EVENT_BUS.post(new PreTickEvent());
-	}
-
-	@Inject(method = "runTick", at = @At("RETURN"))
-	private void runPostTick(CallbackInfo ci) {
-		MinecraftForge.EVENT_BUS.post(new PostTickEvent());
 	}
 
 	@Inject(method = "startGame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;ingameGUI:Lnet/minecraft/client/gui/GuiIngame;", shift = At.Shift.AFTER))

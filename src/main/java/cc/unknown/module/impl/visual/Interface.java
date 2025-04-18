@@ -45,7 +45,7 @@ public class Interface extends Module {
 			new BoolValue("PotionStatus", false), 
 			new BoolValue("Inventory", false)));
 	
-	public final ModeValue stickersType = new ModeValue("Sticker", this, StickersType.UZAKI, StickersType.values());
+	public final ModeValue stickersType = new ModeValue("Sticker", this, () -> elements.isEnabled("Stickers"), StickersType.UZAKI, StickersType.values());
 	public final ModeValue color = new ModeValue("ArraylistColor", this, () -> elements.isEnabled("ArrayList"), "Slinky", "Rainbow", "Fade", "Slinky", "Magic", "Neon", "Astolfo", "Blaze", "Ghoul", "Custom");
 	public final ColorValue mainColor = new ColorValue("MainColor", this, new Color(128, 128, 255), () -> color.is("Custom") || color.is("Fade"));
 	public final ColorValue secondColor = new ColorValue("SecondColor", this, new Color(128, 255, 255), () -> color.is("Fade"));

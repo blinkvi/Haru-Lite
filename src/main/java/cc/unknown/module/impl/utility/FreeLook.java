@@ -2,12 +2,13 @@ package cc.unknown.module.impl.utility;
 
 import org.lwjgl.input.Keyboard;
 
-import cc.unknown.event.PreTickEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.render.client.CameraUtil;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "FreeLook", description = "Allows the player to freely move their camera around the viewpoint.", category = Category.UTILITY, key = Keyboard.KEY_LMENU)
 public class FreeLook extends Module {
@@ -21,8 +22,9 @@ public class FreeLook extends Module {
         mc.gameSettings.thirdPersonView = 0;
     }
 
-    @SubscribeEvent
-    public void onPreTick(PreTickEvent event) {
+	@SubscribeEvent
+	public void onPreTick(ClientTickEvent event) {
+    	if (event.phase == Phase.END) return;
         if (this.getKeyBind() == Keyboard.KEY_NONE || !Keyboard.isKeyDown(this.getKeyBind())) {
             this.setEnabled(false);
             return;

@@ -1,7 +1,6 @@
 package cc.unknown.module.impl.visual;
 
 import cc.unknown.Haru;
-import cc.unknown.event.PreTickEvent;
 import cc.unknown.file.cosmetics.SuperCosmetic;
 import cc.unknown.handlers.DiscordHandler;
 import cc.unknown.module.Module;
@@ -17,6 +16,8 @@ import cc.unknown.util.render.enums.WingsType;
 import cc.unknown.util.value.impl.ModeValue;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "Cosmetics", description = "Cosmetics like lunar.", category = Category.VISUAL)
 public class Cosmetics extends Module {
@@ -47,8 +48,9 @@ public class Cosmetics extends Module {
 	}
 
 	@SubscribeEvent
-	public void onPreTick(PreTickEvent event) {
+	public void onPreTick(ClientTickEvent event) {
 		if (!isInGame()) return;
+		if (event.phase == Phase.END) return;
 		if (!(mc.thePlayer.ticksExisted % 20 == 0)) return;
 		
 	    String username = DiscordHandler.getUser();

@@ -46,8 +46,6 @@ public abstract class Module implements Accessor {
 
     public void onEnable() { }
     public void onDisable() { }
-    public void onUpdate() { }
-    public void guiUpdate() { }
     public boolean isEnabled() { return state; }
     public boolean isDisabled() { return !state; }
     
@@ -83,15 +81,29 @@ public abstract class Module implements Accessor {
             }
         }
     }
-
+    
     private void enable() {
     	MinecraftForge.EVENT_BUS.register(this);
-    	onEnable();
+    	try {
+            onEnable();
+        } catch (Exception e) {
+            handleException(e);
+        }
     }
 
     private void disable() {
         MinecraftForge.EVENT_BUS.unregister(this);
-        onDisable();
+        try {
+            onDisable();
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    private void handleException(Exception e) {
+        if (mc.thePlayer != null) {
+            e.printStackTrace();
+        }
     }
 
     public <M extends Module> M getModule(Class<M> clazz) {

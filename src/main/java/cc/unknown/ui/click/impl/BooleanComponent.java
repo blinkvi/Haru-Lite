@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import cc.unknown.module.impl.visual.ClickGUI;
 import cc.unknown.ui.click.complement.Component;
-import cc.unknown.util.client.MathUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.value.impl.BoolValue;
@@ -38,13 +37,13 @@ public class BooleanComponent extends Component {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MathUtil.isHovered(x, y, width, 9, mouseX, mouseY)) {
+        if (isHovered(x, y, width, 9, mouseX, mouseY)) {
             if (mouseButton == 0) {
                 expanded = !expanded;
             }
         }
 
-        if (MathUtil.isHovered(x, y, width, 9, mouseX, mouseY)) {
+        if (isHovered(x, y, width, 9, mouseX, mouseY)) {
             if (mouseButton == 0) {
                 value.set(!value.get());
             }

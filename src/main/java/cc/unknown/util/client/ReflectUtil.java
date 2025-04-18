@@ -149,8 +149,12 @@ public class ReflectUtil implements Accessor {
     }
 
     @SneakyThrows
-    public void setGameSetting(Minecraft mc, String fieldName, boolean value) {
-        ObfuscationReflectionHelper.setPrivateValue(GameSettings.class, mc.gameSettings, value, fieldName);
+    public static void setGameSetting(Minecraft mc, String fieldName, boolean value) {
+        try {
+            ObfuscationReflectionHelper.setPrivateValue(GameSettings.class, mc.gameSettings, value, fieldName);
+            return;
+        } catch (Exception ignored) {}
+
         Class<?> configClass = Class.forName("Config");
         Field field = configClass.getDeclaredField(fieldName);
         field.setAccessible(true);

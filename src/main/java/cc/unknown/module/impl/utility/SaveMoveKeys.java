@@ -10,6 +10,9 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.value.impl.SliderValue;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "SaveMoveKeys", description = "Automatically retoggles your movekeys after closing the inventory.", category = Category.UTILITY)
 public class SaveMoveKeys extends Module {
@@ -17,8 +20,9 @@ public class SaveMoveKeys extends Module {
 	private final SliderValue delay = new SliderValue("Delay", this, 0, 0, 1000, 10);
 	private boolean lastInGUI = false;
 	
-	@Override
-	public void onUpdate() {
+	@SubscribeEvent
+	public void onPostTick(ClientTickEvent event) {
+    	if (event.phase == Phase.START) return;
         if (mc.currentScreen != null) {
             lastInGUI = true;
         } else {

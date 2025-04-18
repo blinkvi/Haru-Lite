@@ -2,7 +2,6 @@ package cc.unknown.module.impl.utility;
 
 import java.util.Arrays;
 
-import cc.unknown.event.PreTickEvent;
 import cc.unknown.event.player.AttackEvent;
 import cc.unknown.handlers.SpoofHandler;
 import cc.unknown.module.Module;
@@ -15,6 +14,8 @@ import cc.unknown.util.value.impl.MultiBoolValue;
 import cc.unknown.util.value.impl.SliderValue;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "AutoTool", description = "Automatically selects the best tool or weapon from the player's inventory breaking blocks or attacking.", category = Category.UTILITY)
 public class AutoTool extends Module {
@@ -51,7 +52,8 @@ public class AutoTool extends Module {
     }
 
 	@SubscribeEvent
-	public void onPreTick(PreTickEvent event) {
+	public void onPreTick(ClientTickEvent event) {
+    	if (event.phase == Phase.END) return;
 		if (!isInGame()) return;
         if (!delayTimer.hasPassed((long) (delay.getValue() * 50))) return;
         

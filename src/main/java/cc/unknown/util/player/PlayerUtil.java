@@ -160,8 +160,8 @@ public class PlayerUtil implements Accessor {
 		return (float) (Math.atan2(n - mc.thePlayer.posX, n2 - mc.thePlayer.posZ) * 57.295780181884766 * -1.0);
 	}
 	
-	public static double fovFromTarget(Entity entity, float yaw) {
-	    return ((yaw - fovToTarget(entity)) % 360.0 + 540.0) % 360.0 - 180.0;
+	public static double fovFromTarget(Entity entity) {
+	    return ((mc.thePlayer.rotationYaw - fovToTarget(entity)) % 360.0 + 540.0) % 360.0 - 180.0;
 	}
 
 	private static float fovToTarget(Entity entity) {
@@ -170,8 +170,8 @@ public class PlayerUtil implements Accessor {
 		return (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0F;
 	}
 	
-    public static double pitchFromTarget(Entity en, float offset, float pitch) {
-        return (double) (pitch - pitchToEntity(en, offset));
+    public static double pitchFromTarget(Entity en) {
+        return (double) (mc.thePlayer.rotationPitch - pitchToEntity(en, 0));
     }
 
     public static float pitchToEntity(Entity ent, float offset) {

@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import cc.unknown.event.player.PostVelocityEvent;
 import cc.unknown.ui.click.DropGui;
-import cc.unknown.util.Accessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -19,7 +18,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(NetHandlerPlayClient.class)
-public class MixinNetHandlerPlayClient implements Accessor {
+public class MixinNetHandlerPlayClient {
 	@Shadow
 	private Minecraft gameController;
 
@@ -32,8 +31,8 @@ public class MixinNetHandlerPlayClient implements Accessor {
 	
 	@Inject(method = "handleEntityVelocity", at = @At("RETURN"))
 	public void onPostHandleEntityVelocity(S12PacketEntityVelocity packetIn, CallbackInfo ci) {
-	    if (!isInGame()) return;
-
+		if (gameController.thePlayer == null && gameController.theWorld == null) return;
+		
 	    if (packetIn.getEntityID() == this.gameController.thePlayer.getEntityId()) {
 	        MinecraftForge.EVENT_BUS.post(new PostVelocityEvent());
 	    }

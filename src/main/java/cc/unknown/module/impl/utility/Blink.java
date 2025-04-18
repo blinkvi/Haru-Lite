@@ -3,7 +3,6 @@ package cc.unknown.module.impl.utility;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import cc.unknown.event.PostTickEvent;
 import cc.unknown.event.player.InboundEvent;
 import cc.unknown.event.player.OutgoingEvent;
 import cc.unknown.module.Module;
@@ -19,6 +18,8 @@ import net.minecraft.network.play.server.S14PacketEntity;
 import net.minecraft.network.play.server.S18PacketEntityTeleport;
 import net.minecraft.network.play.server.S32PacketConfirmTransaction;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "Blink", description = "Fakes internet lag", category = Category.UTILITY)
 public class Blink extends Module {
@@ -40,7 +41,8 @@ public class Blink extends Module {
 	}
 
 	@SubscribeEvent
-	public void onPostTick(PostTickEvent event) {
+	public void onPreTick(ClientTickEvent event) {
+    	if (event.phase == Phase.END) return;
 		if (mc.thePlayer == null) return;
 		while (!packets.isEmpty()) {
 			Packet<?> packet = packets.get(0);

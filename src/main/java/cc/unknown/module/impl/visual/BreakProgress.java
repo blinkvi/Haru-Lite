@@ -12,6 +12,8 @@ import cc.unknown.util.render.progress.ProgressManager;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "BreakProgress", description = "", category = Category.VISUAL)
 public class BreakProgress extends Module {
@@ -37,8 +39,9 @@ public class BreakProgress extends Module {
 			ProgressManager.remove(progressObj);
 	}
 
-	@Override
-	public void onUpdate() {
+	@SubscribeEvent
+	public void onPostTick(ClientTickEvent event) {
+    	if (event.phase == Phase.START) return;
 		try {
 		if (mc.thePlayer.capabilities.isCreativeMode || !mc.thePlayer.capabilities.allowEdit) {
 			this.resetVariables();

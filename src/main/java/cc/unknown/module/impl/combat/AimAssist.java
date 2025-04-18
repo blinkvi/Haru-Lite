@@ -1,7 +1,7 @@
 package cc.unknown.module.impl.combat;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 import org.lwjgl.input.Mouse;
@@ -25,16 +25,18 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "AimAssist", description = "Assists with aiming at opponents in a legitimate manner.", category = Category.COMBAT)
 public class AimAssist extends Module {
 
-	private final SliderValue horizontalSpeed = new SliderValue("HorizontalSpeed", this, 45, 5, 100);
-	private final SliderValue horizontalCompl = new SliderValue("HorizontalMult", this, 35, 2, 97);
+	private final SliderValue hSpeed = new SliderValue("HorizontalSpeed", this, 3.4f, 0.1f, 10, 0.01f);
+	private final SliderValue hMult  = new SliderValue("HorizontalMult",  this, 3.5f, 0.1f, 10, 0.01f);
 	
 	private BoolValue vertical = new BoolValue("Vertical", this, false);
-	private SliderValue verticalSpeed = new SliderValue("VerticalSpeed", this, 10, 1, 15, vertical::get);
-	private SliderValue verticalCompl = new SliderValue("VerticalMult", this, 5, 1, 10, vertical::get);
+	private SliderValue vSpeed = new SliderValue("VerticalSpeed", this, 2.1f, 0.1f, 10, 0.01f, vertical::get);
+	private SliderValue vMult = new SliderValue("VerticalMult", this, 2.3f, 0.1f, 10, 0.01f, vertical::get);
 	
 	private final SliderValue angle = new SliderValue("Angle", this, 180, 0, 180, 1);
 	private final SliderValue distance = new SliderValue("Distance", this, 4f, 1f, 8f, 0.1f);
@@ -68,8 +70,9 @@ public class AimAssist extends Module {
 		}
 	}
 	
-	@Override
-	public void onUpdate() {
+	@SubscribeEvent
+	public void onPostTick(ClientTickEvent event) {
+    	if (event.phase == Phase.START) return;
 	    if (noAim()) return;
 	    
         if (!conditionals.isEnabled("LockTarget") || target == null || !onTarget()) {
@@ -79,18 +82,19 @@ public class AimAssist extends Module {
 	    if (target == null) {
 	        return;
 	    }
-
-	    float yawSpeed = horizontalSpeed.getValue();
-	    float yawCompl = horizontalCompl.getValue();
-	    float yawOffset = MathUtil.nextSecure(yawSpeed, yawCompl).floatValue() / 180f;
-	    float yawFov = (float) PlayerUtil.fovFromTarget(target, mc.thePlayer.rotationYaw);
-	    float pitchEntity = (float) PlayerUtil.pitchFromTarget(target, 0, mc.thePlayer.rotationPitch);
-	    float yawAdjustment = getSpeedRandomize(speedMode.getMode(), yawFov, yawOffset, yawSpeed, yawCompl);
-
-	    float verticalRandomOffset = MathUtil.nextRandom(verticalCompl.getValue() - 1.47328f, verticalCompl.getValue() + 2.48293f).floatValue() / 100;
-	    float resultVertical = (float) (-(pitchEntity * verticalRandomOffset + pitchEntity / (101.0f - MathUtil.nextRandom(verticalSpeed.getValue() - 4.723847f, verticalSpeed.getValue()).floatValue())));
 	    
-	    if (onTarget(target)) {
+	    float yawOffset = MathUtil.nextRandomFloat(Math.min(hSpeed.getValue(), hMult.getValue()) * 10f, Math.max(hSpeed.getValue(), hMult.getValue()) * 10f) / 180f;
+	    float yawFov = (float) PlayerUtil.fovFromTarget(target);
+	    float yawAdjustment = getSpeedRandomize(speedMode.getMode(), yawFov, yawOffset, hSpeed.getValue(), hMult.getValue());
+
+	    float pitchOffset = MathUtil.nextRandomFloat(Math.min(vSpeed.getValue(), vMult.getValue()) * 10f, Math.max(vSpeed.getValue(), vMult.getValue()) * 10f) / 90f;
+	    
+	    float pitchEntity = (float) PlayerUtil.pitchFromTarget(target);
+	    
+	    float resultVertical = getSpeedRandomize(speedMode.getMode(), pitchEntity, pitchOffset, vSpeed.getValue(), vMult.getValue());
+
+	    
+	    if (onTarget()) {
 	        applyYaw(yawFov, yawAdjustment);
 	        applyPitch(resultVertical);
 	    } else {
@@ -104,26 +108,12 @@ public class AimAssist extends Module {
 		target = null;
 	}
 
-    private EntityPlayer getEnemy() {
-        int fov = (int) angle.getValue();
-        Vec3 playerPos = new Vec3(mc.thePlayer);
-        EntityPlayer bestTarget = null;
-        double bestScore = Double.MAX_VALUE;
-        
-        for (EntityPlayer player : mc.theWorld.playerEntities) {
-            if (lockedTargets.contains(player) && !isValidTarget(player, fov)) continue;
-            if (lockedTargets.contains(player)) continue;
-            if (!isValidTarget(player, fov)) continue;
-            
-            double score = playerPos.distanceTo(player.getPositionVector());
-            if (score < bestScore) {
-                bestTarget = player;
-                bestScore = score;
-            }
-        }
-        
-        return bestTarget;
-    }
+	private EntityPlayer getEnemy() {
+	    int fov = (int) angle.getValue();
+	    Vec3 playerPos = new Vec3(mc.thePlayer);
+
+	    return mc.theWorld.playerEntities.stream().filter(player -> isValidTarget(player, fov)).filter(player -> !lockedTargets.contains(player)).min(Comparator.comparingDouble(player -> playerPos.distanceTo(player.getPositionVector()))).orElse(null);
+	}
 	
 	private boolean isValidTarget(EntityPlayer player, int fov) {
 		if (player == mc.thePlayer || !player.isEntityAlive()) return false;
@@ -156,22 +146,14 @@ public class AimAssist extends Module {
 	}
 	
     private boolean onTarget() {
-        return mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY
-                && mc.objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK
-                && mc.objectMouseOver.entityHit == target;
+        return mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && mc.objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK && mc.objectMouseOver.entityHit == target;
     }
     
-    private boolean onTarget(EntityPlayer target) {
-    	return mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY
-    			&& mc.objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK
-    			&& mc.objectMouseOver.entityHit == target;
+    private void applyYaw(float yawFov, float yawAdjustment) {
+        if (isYawFov(yawFov)) {
+            mc.thePlayer.rotationYaw += yawAdjustment;
+        }
     }
-	
-	private void applyYaw(double yawFov, float yawAdjustment) {
-	    if (isYawFov(yawFov)) {
-	        mc.thePlayer.rotationYaw += yawAdjustment;
-	    }
-	}
 
 	private void applyPitch(float resultVertical) {
 	    if (vertical.get()) {
@@ -183,42 +165,38 @@ public class AimAssist extends Module {
 	    }
 	}
 
+	private float getSpeedRandomize(String mode, float fov, float offset, float speed, float complement) {
+	    float randomComplement = 0, result = 0;
+
+	    switch (mode) {
+	        case "Random":
+	            randomComplement = MathUtil.nextRandomFloat(complement - 1.47328f, complement + 2.48293f);
+	            result = calculateResult(fov, offset, speed, MathUtil.nextRandomFloat(speed - 4.723847f, speed));
+	            break;
+
+	        case "Secure":
+	            randomComplement = MathUtil.nextSecureFloat(complement - 1.47328f, complement + 2.48293f);
+	            result = calculateResult(fov, offset, speed, MathUtil.nextSecureFloat(speed - 4.723847f, speed));
+	            break;
+
+	        case "Gaussian":
+	            randomComplement = (float) ((complement + MathUtil.getRandomGaussian(0.5f)) / 100f);
+	            result = calculateResult(fov, offset, speed, (float) (speed + MathUtil.getRandomGaussian(0.3f)));
+	            break;
+	    }
+
+	    return randomComplement + result;
+	}
+	
 	private float normalizePitch(float pitch) {
 	    return pitch >= 90f ? pitch - 360f : pitch <= -90f ? pitch + 360f : pitch;
 	}
 
-	private float getSpeedRandomize(String mode, double fov, double offset, double speed, double complement) {
-	    double randomComplement;
-	    float result;
-
-	    switch (mode) {
-	        case "Random":
-	            randomComplement = MathUtil.nextRandom(complement - 1.47328, complement + 2.48293).doubleValue() / 100;
-	            result = calculateResult(fov, offset, speed, MathUtil.nextRandom(speed - 4.723847, speed).doubleValue());
-	            break;
-
-	        case "Secure":
-	            randomComplement = MathUtil.getSafeRandom((long) complement - (long)1.47328, (long) (complement + 2.48293)) / 100;
-	            result = calculateResult(fov, offset, speed, MathUtil.getSafeRandom((long) ((long) speed - 4.723847), (long) speed));
-	            break;
-
-	        case "Gaussian":
-	            randomComplement = (complement + new Random().nextGaussian() * 0.5) / 100;
-	            result = calculateResult(fov, offset, speed, speed + new Random().nextGaussian() * 0.3);
-	            break;
-
-	        default:
-	            throw new IllegalArgumentException("Unknown mode: " + mode);
-	    }
-
-	    return (float) (randomComplement + result);
-	}
-
-	private float calculateResult(double fov, double offset, double speed, double randomizedSpeed) {
-	    return (float) (-(fov * offset + fov / (101.0 - randomizedSpeed)));
+	private float calculateResult(float fov, float offset, float speed, float randomizedSpeed) {
+	    return -fov * offset + fov / (100f - randomizedSpeed);
 	}
 	
-	private boolean isYawFov(double fov) {
-		return fov > 1.0D || fov < -1.0D;
+	private boolean isYawFov(float fov) {
+		return fov > 1.0f || fov < -1.0f;
 	}
 }

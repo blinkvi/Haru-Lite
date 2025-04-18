@@ -1,11 +1,12 @@
 package cc.unknown.handlers;
 import org.lwjgl.input.Mouse;
 
-import cc.unknown.event.PreTickEvent;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.structure.list.SList;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class CPSHandler implements Accessor {
 	
@@ -14,6 +15,8 @@ public class CPSHandler implements Accessor {
 
 	@SubscribeEvent
 	public void onClick(MouseEvent event) {
+		if (!isInGame()) return;
+		
 		if(Mouse.getEventButtonState()) {
 			if(event.button == 0) {
 				addLeftClicks();
@@ -26,7 +29,9 @@ public class CPSHandler implements Accessor {
 	}
 	
 	@SubscribeEvent
-	public void onPreTick(PreTickEvent event) {
+	public void onPreTick(ClientTickEvent event) {
+    	if (event.phase == Phase.END) return;
+
 		leftPresses.removeIf(t -> System.currentTimeMillis() - t > 1000);
 		rightPresses.removeIf(t -> System.currentTimeMillis() - t > 1000);
 	}

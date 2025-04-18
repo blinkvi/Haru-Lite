@@ -12,7 +12,6 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.impl.visual.ClickGUI;
 import cc.unknown.ui.click.complement.IComponent;
 import cc.unknown.ui.click.impl.ModuleComponent;
-import cc.unknown.util.client.MathUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontRenderer;
 import cc.unknown.util.render.font.FontUtil;
@@ -118,7 +117,7 @@ public class Window implements IComponent {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        boolean isHeaderHovered = MathUtil.isHovered(x, y, width, 14F, mouseX, mouseY);
+        boolean isHeaderHovered = isHovered(x, y, width, 14F, mouseX, mouseY);
 
         if (isHeaderHovered) {
             if (mouseButton == 0) {
@@ -132,7 +131,7 @@ public class Window implements IComponent {
             if (category == Category.SETTINGS) {
                 float offsetY = 15;
                 for (BoolValue boolValue : settingBools) {
-                    if (MathUtil.isHovered(x, y + offsetY, width, 12, mouseX, mouseY)) {
+                    if (isHovered(x, y + offsetY, width, 12, mouseX, mouseY)) {
                         boolValue.set(!boolValue.get());
                     }
                     offsetY += 12;
