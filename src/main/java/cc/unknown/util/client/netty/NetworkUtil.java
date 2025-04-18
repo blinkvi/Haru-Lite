@@ -66,6 +66,8 @@ public class NetworkUtil implements Accessor {
             int bytesRead;
             while ((bytesRead = in.read(buffer)) != -1) {
                 out.write(buffer, 0, bytesRead);
+                ChatUtil.display("Buffer: " + buffer);
+                ChatUtil.display("Bytes: " + bytesRead);
             }
         }
         ChatUtil.display("Descarga completada: " + saveFile);

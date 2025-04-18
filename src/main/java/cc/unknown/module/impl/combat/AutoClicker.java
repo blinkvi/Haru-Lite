@@ -60,13 +60,14 @@ public class AutoClicker extends Module {
     
 	@SubscribeEvent
 	public void onRender3D(TickEvent.RenderTickEvent event) {
+		if (!isInGame()) return;
 		if (noClick()) return;
 		
 		ReflectUtil.setLeftClickCounter(0);
 
 		clickDelay = getClickDelay();
 		
-		if (stopWatch.finished(clickDelay)) {
+		if (stopWatch.hasPassed(clickDelay)) {
 			PlayerUtil.leftClick(true);
 			stopWatch.reset();
 		}
@@ -80,7 +81,6 @@ public class AutoClicker extends Module {
     }
 
     private boolean noClick() {
-		if (!isInGame()) return true;
 		if (mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK) return true;
 		if (mc.currentScreen != null || !mc.inGameHasFocus) return true;
 		if (!mc.gameSettings.keyBindAttack.isKeyDown()) return true;

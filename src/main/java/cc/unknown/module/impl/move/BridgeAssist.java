@@ -23,13 +23,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "BridgeAssist", description = "Automatically sneaks for you when you are near the edge of a block.", category = Category.MOVE)	
 public class BridgeAssist extends Module {
     
-	private final SliderValue delay = new SliderValue("Ticks", this, 1, 0, 5, 1);
-	private final SliderValue edgeOffset = new SliderValue("EdgeOffset", this, 0.3f, 0f, 0.4f, 0.01f);
+	private final SliderValue delay = new SliderValue("Delay", this, 0, 0, 1, 0.1f);
     private final SliderValue pitch = new SliderValue("Angle", this, 45, 0, 90, 5, () -> this.conditionals.isEnabled("AngleCheck"));
     
 	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
 			new BoolValue("AngleCheck", false),
-			new BoolValue("Legitimize", false),
 			new BoolValue("RequireSneak", false),
 			new BoolValue("BlockSwitching", false),
 			new BoolValue("OnlyBlocks", true),
@@ -37,7 +35,6 @@ public class BridgeAssist extends Module {
 
     private StopWatch stopWatch = new StopWatch();
     private boolean shouldBridge = false, isShifting = false;
-    private boolean checkAir;
     private int slot;
     
     @Override
@@ -47,29 +44,19 @@ public class BridgeAssist extends Module {
 
     @Override
     public void onDisable() {
-    	reset();
-        if (checkAir) reset();
+    	stopWatch.reset();
         if (conditionals.isEnabled("BlockSwitching")) mc.thePlayer.inventory.currentItem = slot;
     }
     
     @SubscribeEvent
     public void onMoveInput(MoveInputEvent event) {
     	if (isShifting && shouldBridge) {
-    		//((IEntityPlayer) mc.thePlayer).getHideSneakHeight().reset();
     		event.setSneak(true);
-    	}
-    	
-    	if (!isShifting && !shouldBridge) {
-    		event.setSneak(false);
     	}
     	
     	if (!isShifting && shouldBridge) {
     		event.setSneak(false);
     	}
-    	
-    	if (!isShifting) {
-    		event.setSneak(false);
-    	}    	
     }
     
     @SubscribeEvent
@@ -77,7 +64,6 @@ public class BridgeAssist extends Module {
     	if (noBridge()) return;
     	 
         boolean shift = delay.getValue() > 0;
-        checkAir = conditionals.isEnabled("Legitimize") && PlayerUtil.checkAir();
         
         if (conditionals.isEnabled("RequireSneak")) {
             if (!Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode())) {
@@ -107,9 +93,9 @@ public class BridgeAssist extends Module {
 		}
         
 		if (mc.thePlayer.onGround) {
-			if (PlayerUtil.checkEdge(edgeOffset.getValue(), 0) || checkAir) {
+			if (PlayerUtil.isOnEdgeWithBlockCheck(Double.MIN_VALUE)) {
 				if (shift) {
-				    stopWatch.setMillis((int) (delay.getValue() * 50));
+				    stopWatch.setStartTime((int) (delay.getValue() * 1000));
 				    stopWatch.reset();
 				}
 
@@ -127,18 +113,18 @@ public class BridgeAssist extends Module {
 				shouldBridge = false;
 			}
 			
-			else if (mc.thePlayer.isSneaking() && (Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()) && conditionals.isEnabled("RequireSneak")) && (!shift || stopWatch.finished())) {
+			else if (mc.thePlayer.isSneaking() && (Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()) && conditionals.isEnabled("RequireSneak")) && (!shift || stopWatch.isFinished())) {
 				isShifting = false;
 				shouldBridge = true;
 			}
 			
-			else if (mc.thePlayer.isSneaking() && !conditionals.isEnabled("RequireSneak") && (!shift || stopWatch.finished())) {
+			else if (mc.thePlayer.isSneaking() && !conditionals.isEnabled("RequireSneak") && (!shift || stopWatch.isFinished())) {
 				isShifting = false;
 				shouldBridge = true;
 			}
 		}
 		
-		else if (shouldBridge && (PlayerUtil.checkEdge(edgeOffset.getValue(), 0) || checkAir)) {
+		else if (shouldBridge && (PlayerUtil.checkEdge(0.30))) {
 			isShifting = true;
 		}
 		
@@ -172,11 +158,6 @@ public class BridgeAssist extends Module {
         if (mc.currentScreen != null || !mc.inGameHasFocus) return true;
         if (getModule(AutoTool.class).isEnabled() && getModule(AutoTool.class).wasDigging) return true;
     	return false;
-    }
-    
-    private void reset() {
-        PlayerUtil.setShift(false);
-        stopWatch.reset();
     }
     
     // pitch 78

@@ -32,6 +32,8 @@ public class Cosmetics extends Module {
 
 	private String prevCapeMode, prevHaloMode, prevHatMode, prevPetMode, prevAuraMode, prevWingsMode,
 			prevAccesoriesMode;
+	
+	// ok the cosmetics are a bit disorganized, this module will go in a menu
 
 	public Cosmetics() {
 		if (!isEnabled())

@@ -1,53 +1,84 @@
 package cc.unknown.util.client.system;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class StopWatch {
-	public long millis;
+    private long startTime;
 
-	public StopWatch() {
-		reset();
-	}
-
-	public boolean finished(long delay) {
-		return System.currentTimeMillis() - delay >= millis;
-	}
-
-	public boolean elapse(double delay, boolean reset) {
-		if ((double) (System.currentTimeMillis() - this.millis) >= delay) {
-			if (reset) {
-				this.reset();
-			}
-
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-    public boolean reached(final long lastTime, final long currentTime) {
-        return Math.max(0L, System.currentTimeMillis() - millis + lastTime) >= currentTime;
+    public StopWatch() {
+        reset();
+    }
+    
+    public StopWatch(int offsetTicks) {
+        reset();
+        startTicks(offsetTicks);
+    }
+    
+    public StopWatch(long offsetMillis) {
+        reset();
+        startMillis(offsetMillis);
+    }
+    
+    public void startMillis(long offsetMillis) {
+        this.startTime = System.currentTimeMillis() - offsetMillis;
+    }
+    
+    public void startTicks(int offsetTicks) {
+        this.startTime = System.currentTimeMillis() - (offsetTicks * 50L);
+    }
+    
+    public boolean hasPassed(long delay) {
+        return System.currentTimeMillis() - delay >= startTime;
     }
 
-	public boolean finished() {
-		return System.currentTimeMillis() >= millis;
-	}
+    public boolean hasElapsed(double delay, boolean reset) {
+        if (System.currentTimeMillis() - this.startTime >= delay) {
+            if (reset) reset();
+            return true;
+        }
+        return false;
+    }
 
-	public boolean reached(float millis) {
-		return getElapsedTime() >= (millis);
-	}
+    public boolean hasElapsedMillis(long millis, boolean reset) {
+        if (hasPassedMillis(millis)) {
+            if (reset) reset();
+            return true;
+        }
+        return false;
+    }
 
-	public void reset() {
-		this.millis = System.currentTimeMillis();
-	}
+    public boolean hasPassedMillis(long millis) {
+        return getElapsedTime() >= millis;
+    }
 
-	public long getElapsedTime() {
-		return System.currentTimeMillis() - this.millis;
-	}
+    public boolean hasElapsedTicks(int ticks, boolean reset) {
+        return hasElapsedMillis(ticks * 50L, reset);
+    }
 
-	public long getMillis() {
-		return millis;
-	}
+    public boolean hasPassedTicks(int ticks) {
+        return getElapsedTime() >= ticks * 50L;
+    }
 
-	public void setMillis(long millis) {
-		this.millis = millis;
-	}
+    public boolean reachedSince(long lastTime, long currentTime) {
+        return Math.max(0L, System.currentTimeMillis() - startTime + lastTime) >= currentTime;
+    }
+
+    public boolean reached(float millis) {
+        return getElapsedTime() >= millis;
+    }
+
+    public boolean isFinished() {
+        return System.currentTimeMillis() >= startTime;
+    }
+
+    public void reset() {
+        this.startTime = System.currentTimeMillis();
+    }
+
+    public long getElapsedTime() {
+        return System.currentTimeMillis() - this.startTime;
+    }
 }

@@ -43,7 +43,7 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements
 			f = 0.2F;
 		}
 
-		if (this.isSneaking() && hideSneakHeight.finished(100)) {
+		if (this.isSneaking() && hideSneakHeight.hasPassed(100)) {
 			f -= 0.08F;
 		}
 

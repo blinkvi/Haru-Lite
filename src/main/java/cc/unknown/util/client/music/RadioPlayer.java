@@ -24,7 +24,7 @@ public class RadioPlayer implements Accessor {
     	MusicPlayer musicPlayer = getModule(MusicPlayer.class);
     	assert musicPlayer != null;
     	
-        if (this.timer.finished(5L)) {
+        if (this.timer.hasPassed(5L)) {
             (this.thread = new Thread(() -> {
                 try {
                     SSLContext sslContext = SSLContext.getInstance("TLS");

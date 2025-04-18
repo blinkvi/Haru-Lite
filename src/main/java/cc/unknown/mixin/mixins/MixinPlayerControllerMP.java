@@ -52,7 +52,7 @@ public class MixinPlayerControllerMP {
         mc.theWorld.sendBlockBreakProgress(mc.thePlayer.getEntityId(), currentBlock, -1);
     }
 
-    @Inject(method = "func_181040_m", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getIsHittingBlock", at = @At("HEAD"), cancellable = true)
     private void cancelHit(CallbackInfoReturnable<Boolean> cir) {
     	cir.setReturnValue(false);
     }

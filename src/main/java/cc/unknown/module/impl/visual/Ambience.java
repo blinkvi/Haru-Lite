@@ -31,7 +31,7 @@ public class Ambience extends Module {
 
 	@SubscribeEvent
 	public void onPreAttack(PrePositionEvent event) {
-		clear();
+	    clear();
 	}
 
 	@SubscribeEvent

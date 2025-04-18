@@ -16,7 +16,7 @@ public class TimedPacket {
     public TimedPacket(final Packet<?> packet, long stopWatchTime) {
         this.packet = packet;
         this.stopWatch = new StopWatch();
-        this.stopWatch.finished(stopWatchTime);
+        this.stopWatch.hasPassed(stopWatchTime);
     }
 
 	public Packet<?> getPacket() {

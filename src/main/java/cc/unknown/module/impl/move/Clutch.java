@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "Clutch", description = "", category = Category.MOVE)
 public class Clutch extends Module {
 
-	private final SliderValue searchDist = new SliderValue("Search Distance", this, 4, 1, 6, 0.5f);
+	private final SliderValue searchDist = new SliderValue("Search Distance", this, 4, 1, 30, 0.5f);
 
 	private int lastSlot;
 	
@@ -65,7 +65,7 @@ public class Clutch extends Module {
 		}
 
 		if (startSearch() && pickBlock()) {
-	        if (stopWatch.finished(1000 / 25) ) {
+	        if (stopWatch.hasPassed(1000 / 25) ) {
 	            PlayerUtil.rightClick(true);
 	            stopWatch.reset();
 	        }
