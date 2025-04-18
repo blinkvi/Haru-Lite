@@ -7,6 +7,7 @@ import cc.unknown.managers.ConfigManager;
 import cc.unknown.managers.DragManager;
 import cc.unknown.managers.ModuleManager;
 import cc.unknown.module.Module;
+import cc.unknown.socket.api.HookRetriever;
 import cc.unknown.ui.click.DropGui;
 import cc.unknown.util.client.system.CustomLogger;
 import cc.unknown.util.client.system.StopWatch;
@@ -14,7 +15,7 @@ import cc.unknown.util.render.client.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 
-public interface Accessor {
+public interface Accessor extends HookRetriever {
     static Minecraft mc = Minecraft.getMinecraft();
     
     default Haru getInstance() {

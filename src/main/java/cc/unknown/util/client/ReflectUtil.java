@@ -127,52 +127,19 @@ public class ReflectUtil implements Accessor {
     }
     
     public void setItemInUse(int block) {
-        // block = 1
-        // unblock = 0
     	ObfuscationReflectionHelper.setPrivateValue(EntityPlayerSP.class, mc.thePlayer, block, "itemInUseCount", "field_71072_f");
     }
     
-    @SneakyThrows
     public Vec3 getVectorForRotation(float pitch, float yaw) {
-        Method method;
-        try {
-            method = Entity.class.getDeclaredMethod("func_174806_f", float.class, float.class);
-        } catch (NoSuchMethodException e) {
-            method = Entity.class.getDeclaredMethod("getVectorForRotation", float.class, float.class);
-        }
-
-        method.setAccessible(true);
-        return (Vec3) method.invoke(mc.thePlayer, pitch, yaw);
+        return (Vec3) getPrivateMethod(Entity.class, mc.thePlayer, float.class, float.class, pitch, yaw, "getVectorForRotation", "func_174806_f");
     }
     
-    public void invokeClickMouse() {
-    	invokeAny(Minecraft.class, mc, "func_147116_af", "clickMouse");
-    }
-    
-    @SneakyThrows
-    public void rightClickMouse() {
-		Method method;
-		try {
-			method = Minecraft.class.getDeclaredMethod("func_147121_ag");
-		} catch (NoSuchMethodException e) {
-			method = Minecraft.class.getDeclaredMethod("rightClickMouse");
-		}
-		
-		method.setAccessible(true);
-		method.invoke(mc);
-    }
-    
-    @SneakyThrows
     public void clickMouse() {
-		Method method;
-		try {
-			method = Minecraft.class.getDeclaredMethod("func_147116_af");
-		} catch (NoSuchMethodException e) {
-			method = Minecraft.class.getDeclaredMethod("clickMouse");
-		}
-		
-		method.setAccessible(true);
-		method.invoke(mc);
+    	getPrivateMethod(Minecraft.class, mc, "func_147116_af", "clickMouse");
+    }
+    
+    public void rightClickMouse() {
+    	getPrivateMethod(Minecraft.class, mc, "func_147121_ag", "rightClickMouse");
     }
     
     @SneakyThrows
@@ -191,15 +158,53 @@ public class ReflectUtil implements Accessor {
     }
     
     @SneakyThrows
-    private <T, E> void invokeAny(Class<? super T> classToAccess, T instance, String... fieldNames) {
-        Method method;
-        try {
-            method = classToAccess.getDeclaredMethod(fieldNames[0]);
-        } catch (NoSuchMethodException e) {
-            method = classToAccess.getDeclaredMethod(fieldNames[1]);
+    private <T> void getPrivateMethod(Class<? super T> classToAccess, T instance, String... methodNames) {
+        Method method = null;
+
+        for (String name : methodNames) {
+            try {
+                method = classToAccess.getDeclaredMethod(name);
+                break;
+            } catch (NoSuchMethodException ignored) {}
         }
 
         method.setAccessible(true);
         method.invoke(instance);
+    }
+    
+    @SneakyThrows
+    public <T> Object getPrivateMethod(Class<? super T> classToAccess, T instance, Object... values) {
+        int stringIndex = -1;
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] instanceof String) {
+                stringIndex = i;
+                break;
+            }
+        }
+
+        int paramCount = stringIndex / 2;
+        Class<?>[] paramTypes = new Class<?>[paramCount];
+        Object[] args = new Object[paramCount];
+        
+        for (int i = 0; i < paramCount; i++) {
+            paramTypes[i] = (Class<?>) values[i];
+            args[i] = values[i + paramCount];
+        }
+
+        String[] methodNames = new String[values.length - stringIndex];
+        for (int i = stringIndex; i < values.length; i++) {
+            methodNames[i - stringIndex] = (String) values[i];
+        }
+
+        Method method = null;
+        for (String name : methodNames) {
+            try {
+                method = classToAccess.getDeclaredMethod(name, paramTypes);
+                break;
+            } catch (NoSuchMethodException ignored) {}
+        }
+
+        method.setAccessible(true);
+        return method.invoke(instance, args);
     }
 }

@@ -1,9 +1,9 @@
 package cc.unknown.socket.util;
 
 import cc.unknown.handlers.DiscordHandler;
-import cc.unknown.socket.api.HookRetriever;
+import cc.unknown.util.Accessor;
 
-public class MessageListener implements HookRetriever {
+public class MessageListener implements Accessor {
 
 	public static void send(String message) {
 		Webhook irc = new Webhook(endpoint);

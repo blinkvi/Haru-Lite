@@ -9,10 +9,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import cc.unknown.socket.api.HookRetriever;
+import cc.unknown.util.Accessor;
 import lombok.SneakyThrows;
 
-public class AESUtil implements HookRetriever {
+public class AESUtil implements Accessor {
 
 	@SneakyThrows
 	public static String encrypt(String data) {
