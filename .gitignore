@@ -3,7 +3,7 @@
 .classpath
 .settings
 bin/
-Sakura_Client
+Haru-Lite_Client
 run/
 .//build
 build/libs
