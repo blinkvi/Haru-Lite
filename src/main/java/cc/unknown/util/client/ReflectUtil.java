@@ -156,22 +156,23 @@ public class ReflectUtil implements Accessor {
         field.setAccessible(true);
         field.setBoolean(null, value);
     }
-    
-    @SneakyThrows
-    private <T> void getPrivateMethod(Class<? super T> classToAccess, T instance, String... methodNames) {
-        Method method = null;
 
-        for (String name : methodNames) {
-            try {
-                method = classToAccess.getDeclaredMethod(name);
-                break;
-            } catch (NoSuchMethodException ignored) {}
-        }
-
-        method.setAccessible(true);
-        method.invoke(instance);
-    }
-    
+    /**
+     * This method is used to invoke a private method on a specified instance.
+     * It searches for a method by its name from a list of possible names and invokes it with parameters.
+     * 
+     * @param <T> The type of the instance that the method is invoked on.
+     * @param classToAccess The class to which the method belongs.
+     * @param instance The instance of the class on which the method will be invoked.
+     * @param values The list of values, where:
+     *               - Any string elements represent method names.
+     *               - Class elements represent the parameter types.
+     *               - Object elements represent the argument values.
+     * 
+     * @throws Exception If the method invocation fails or the method doesn't exist.
+     * 
+     * @author xAmwy
+     */
     @SneakyThrows
     public <T> Object getPrivateMethod(Class<? super T> classToAccess, T instance, Object... values) {
         int stringIndex = -1;
@@ -185,7 +186,7 @@ public class ReflectUtil implements Accessor {
         int paramCount = stringIndex / 2;
         Class<?>[] paramTypes = new Class<?>[paramCount];
         Object[] args = new Object[paramCount];
-        
+
         for (int i = 0; i < paramCount; i++) {
             paramTypes[i] = (Class<?>) values[i];
             args[i] = values[i + paramCount];
