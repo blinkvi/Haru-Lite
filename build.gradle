@@ -32,7 +32,8 @@ minecraft {
     version = "1.8.9-11.15.1.2318-1.8.9"
     runDir = "run"
     mappings = "stable_22"
-    clientJvmArgs += '-Dfml.coreMods.load=cc.unknown.mixin.MixinLoader'
+    makeObfSourceJar = false
+    clientJvmArgs += ["-Dfml.coreMods.load=cc.unknown.mixin.MixinLoader", "-Xmx4096m", "-Xms1024m", "-Ddev-mode"]
 }
 
 mixin {
@@ -70,8 +71,8 @@ dependencies {
         exclude module: 'slf4j-api'
     }
 
-    implementation fileTree(dir: 'nigger', include: ['*.jar'])
-    runtimeOnly fileTree(dir: 'nigger', include: ['*.jar'])
+    embed fileTree(dir: 'nigger', include: ['*.jar'])
+
     compileOnly 'org.projectlombok:lombok:1.18.38'
     annotationProcessor 'org.projectlombok:lombok:1.18.38'
     annotationProcessor 'org.spongepowered:mixin:0.7.11-SNAPSHOT'
@@ -125,8 +126,8 @@ jar {
                 'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
                 'TweakOrder': 0,
                 "FMLCorePlugin": "cc.unknown.mixin.MixinLoader",
-                "ForceLoadAsMod": true,
-                'FMLCorePluginContainsFMLMod': true,
+                'ForceLoadAsMod': 'true',
+                'FMLCorePluginContainsFMLMod': 'true',
                 "ModSide": "CLIENT"
         )
     }
