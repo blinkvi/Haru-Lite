@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import cc.unknown.util.Accessor;
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -131,82 +132,74 @@ public class ReflectUtil implements Accessor {
     	ObfuscationReflectionHelper.setPrivateValue(EntityPlayerSP.class, mc.thePlayer, block, "itemInUseCount", "field_71072_f");
     }
     
+    @SneakyThrows
     public Vec3 getVectorForRotation(float pitch, float yaw) {
+        Method method;
         try {
-            Method method;
-            try {
-                method = Entity.class.getDeclaredMethod("func_174806_f", float.class, float.class);
-            } catch (NoSuchMethodException e) {
-                method = Entity.class.getDeclaredMethod("getVectorForRotation", float.class, float.class);
-            }
-
-            method.setAccessible(true);
-            return (Vec3) method.invoke(mc.thePlayer, pitch, yaw);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            method = Entity.class.getDeclaredMethod("func_174806_f", float.class, float.class);
+        } catch (NoSuchMethodException e) {
+            method = Entity.class.getDeclaredMethod("getVectorForRotation", float.class, float.class);
         }
+
+        method.setAccessible(true);
+        return (Vec3) method.invoke(mc.thePlayer, pitch, yaw);
     }
     
+    public void invokeClickMouse() {
+    	invokeAny(Minecraft.class, mc, "func_147116_af", "clickMouse");
+    }
+    
+    @SneakyThrows
     public void rightClickMouse() {
-    	try {
-    		Method method;
-    		try {
-    			method = Minecraft.class.getDeclaredMethod("func_147121_ag");
-    		} catch (NoSuchMethodException e) {
-    			method = Minecraft.class.getDeclaredMethod("rightClickMouse");
-    		}
-    		
-    		method.setAccessible(true);
-    		method.invoke(mc);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+		Method method;
+		try {
+			method = Minecraft.class.getDeclaredMethod("func_147121_ag");
+		} catch (NoSuchMethodException e) {
+			method = Minecraft.class.getDeclaredMethod("rightClickMouse");
+		}
+		
+		method.setAccessible(true);
+		method.invoke(mc);
     }
     
+    @SneakyThrows
     public void clickMouse() {
-    	try {
-    		Method method;
-    		try {
-    			method = Minecraft.class.getDeclaredMethod("func_147116_af");
-    		} catch (NoSuchMethodException e) {
-    			method = Minecraft.class.getDeclaredMethod("clickMouse");
-    		}
-    		
-    		method.setAccessible(true);
-    		method.invoke(mc);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+		Method method;
+		try {
+			method = Minecraft.class.getDeclaredMethod("func_147116_af");
+		} catch (NoSuchMethodException e) {
+			method = Minecraft.class.getDeclaredMethod("clickMouse");
+		}
+		
+		method.setAccessible(true);
+		method.invoke(mc);
     }
     
+    @SneakyThrows
     public boolean isShaders() {
-        try {
-            Class<?> configClass = Class.forName("Config");
-            return (boolean) configClass.getMethod("isShaders").invoke(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+        Class<?> configClass = Class.forName("Config");
+        return (boolean) configClass.getMethod("isShaders").invoke(null);
     }
 
+    @SneakyThrows
     public void setGameSetting(Minecraft mc, String fieldName, boolean value) {
+        ObfuscationReflectionHelper.setPrivateValue(GameSettings.class, mc.gameSettings, value, fieldName);
+        Class<?> configClass = Class.forName("Config");
+        Field field = configClass.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.setBoolean(null, value);
+    }
+    
+    @SneakyThrows
+    private <T, E> void invokeAny(Class<? super T> classToAccess, T instance, String... fieldNames) {
+        Method method;
         try {
-            try {
-                ObfuscationReflectionHelper.setPrivateValue(GameSettings.class, mc.gameSettings, value, fieldName);
-                return;
-            } catch (Exception ignored) {}
-
-            try {
-                Class<?> configClass = Class.forName("Config");
-                Field field = configClass.getDeclaredField(fieldName);
-                field.setAccessible(true);
-                field.setBoolean(null, value);
-            } catch (Exception ignored) {}
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            method = classToAccess.getDeclaredMethod(fieldNames[0]);
+        } catch (NoSuchMethodException e) {
+            method = classToAccess.getDeclaredMethod(fieldNames[1]);
         }
+
+        method.setAccessible(true);
+        method.invoke(instance);
     }
 }

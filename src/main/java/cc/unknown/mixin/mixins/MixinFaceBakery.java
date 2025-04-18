@@ -21,7 +21,7 @@ public class MixinFaceBakery {
         return EnumFacings.FACINGS;
     }
 
-    @Redirect(method = "func_178408_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/EnumFacing;values()[Lnet/minecraft/util/EnumFacing;"))
+    @Redirect(method = "applyFacing", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/EnumFacing;values()[Lnet/minecraft/util/EnumFacing;"))
     private EnumFacing[] applyFacing$getCachedArray() {
         return EnumFacings.FACINGS;
     }
