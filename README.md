@@ -15,7 +15,7 @@ Follow these steps to set up the project:
 
       **For IntelliJ:**  
    ```sh
-   gradlew -Dorg.gradle.jvmargs=-Xmx2096m setupDecompWorkspace && gradlew eclipse
+   gradlew -Dorg.gradle.jvmargs=-Xmx2096m setupDecompWorkspace && gradlew idea
    ```
 
       **For Eclipse:**  
