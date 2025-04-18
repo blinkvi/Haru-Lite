@@ -1,8 +1,8 @@
 package cc.unknown.cosmetics.impl.cape;
 
 import cc.unknown.cosmetics.CosmeticBase;
-import cc.unknown.module.impl.visual.Cosmetics;
-import cc.unknown.util.render.enums.CapeType;
+import cc.unknown.cosmetics.CosmeticController;
+import cc.unknown.util.render.enums.CosmeticType;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -19,16 +19,81 @@ public class Cape extends CosmeticBase {
     }
 
 	@Override
-	public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		Cosmetics cosmetic = getModule(Cosmetics.class);
-		
-		if (player.hasPlayerInfo() && !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE) && player == mc.thePlayer) {
+	public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {		
+		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.CAPE) && !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE)) {
 	        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 	        
-	        CapeType selectedCape = cosmetic.capeType.getMode(CapeType.class);
+	        String activeCape = isCape(player.getName());
 
-	        if (selectedCape != CapeType.NONE) {
-	            renderPlayer.bindTexture(new ResourceLocation(selectedCape.getPath()));
+	        switch (activeCape) {
+	            case "Canada":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/flag/canada.png"));
+	                break;
+	            case "France":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/flag/france.png"));
+	                break;
+	            case "Germany":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/flag/germany.png"));
+	                break;
+	            case "India":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/flag/india.png"));
+	                break;
+	            case "Indonesia":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/flag/indonesia.png"));
+	                break;
+	            case "Italy":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/flag/italy.png"));
+	                break;
+	            case "Japan":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/flag/japan.png"));
+	                break;
+	            case "Korean":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/flag/korean.png"));
+	                break;
+	            case "UnitedKingdom":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/flag/uk.png"));
+	                break;
+	            case "UnitedStates":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/flag/us.png"));
+	                break;
+	            case "Arcade":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/custom/arcade.png"));
+	                break;
+	            case "Boost":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/custom/boost.png"));
+	                break;
+	            case "Dark":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/custom/dark.png"));
+	                break;
+	            case "Eyes":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/custom/eyes.png"));
+	                break;
+	            case "Flame":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/custom/flame.png"));
+	                break;
+	            case "Kocho":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/custom/kocho.png"));
+	                break;
+	            case "ZeroTwo":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/custom/zero.png"));
+	                break;
+	            case "Minecon2011":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/minecon/2011.png"));
+	                break;
+	            case "Minecon2012":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/minecon/2012.png"));
+	                break;
+	            case "Minecon2013":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/minecon/2013.png"));
+	                break;
+	            case "Minecon2015":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/minecon/2015.png"));
+	                break;
+	            case "Minecon2016":
+	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/minecon/2016.png"));
+	                break;
+	            case "None":
+	            default: break;
 	        }
 
 	        GlStateManager.pushMatrix();

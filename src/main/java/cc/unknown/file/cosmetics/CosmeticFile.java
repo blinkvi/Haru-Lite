@@ -1,17 +1,22 @@
 package cc.unknown.file.cosmetics;
 
 import java.io.File;
+import java.time.LocalDateTime;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import cc.unknown.Haru;
 import cc.unknown.file.Directory;
 import cc.unknown.handlers.DiscordHandler;
 import cc.unknown.module.impl.visual.Cosmetics;
+import cc.unknown.util.client.system.LocalDateTimeStructuredAdapter;
 
 public class CosmeticFile extends Directory {
-    private final Gson gson = new Gson();
+	private final Gson gson = new GsonBuilder()
+	        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeStructuredAdapter())
+	        .create();
 
     public CosmeticFile(String name) {
         super(name, new File(Haru.MAIN_DIR + "/cosmetics", name + ".json"));

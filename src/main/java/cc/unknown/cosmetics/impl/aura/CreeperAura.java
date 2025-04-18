@@ -22,31 +22,33 @@ public class CreeperAura extends CosmeticBase {
 
 	@Override
 	public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.CREEPER) && !player.isInvisible()) {
-			boolean flag = player.isInvisible();
-			GlStateManager.depthMask(!flag);
-			this.playerModel = this.renderPlayer.getMainModel();
-            String imagePath = AuraType.CREEPER.getImagePath();
-            renderPlayer.bindTexture(new ResourceLocation(imagePath));
-			GlStateManager.matrixMode(5890);
-			GlStateManager.loadIdentity();
-			float f = (float) player.ticksExisted + partialTicks;
-			double speed = 0.01;
-			GlStateManager.translate((double) 1 / -100, (double) f * speed, 0.0D);
-			GlStateManager.matrixMode(5888);
-			GlStateManager.enableBlend();
-
-			GlStateManager.disableLighting();
-			GlStateManager.blendFunc(1, 1);
-			this.playerModel.setModelAttributes(this.renderPlayer.getMainModel());
-			this.playerModel.render(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 0.0625F);
-			GlStateManager.matrixMode(5890);
-			GlStateManager.loadIdentity();
-			GlStateManager.matrixMode(5888);
-			GlStateManager.enableLighting();
-			GlStateManager.disableBlend();
-			GlStateManager.depthMask(flag);
-			GlStateManager.disableLighting();
+		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.AURA) && !player.isInvisible()) {
+		    if (isAura(player.getName()).equalsIgnoreCase("Creeper")) {
+				boolean flag = player.isInvisible();
+				GlStateManager.depthMask(!flag);
+				this.playerModel = this.renderPlayer.getMainModel();
+	            String imagePath = AuraType.CREEPER.getImagePath();
+	            renderPlayer.bindTexture(new ResourceLocation(imagePath));
+				GlStateManager.matrixMode(5890);
+				GlStateManager.loadIdentity();
+				float f = (float) player.ticksExisted + partialTicks;
+				double speed = 0.01;
+				GlStateManager.translate((double) 1 / -100, (double) f * speed, 0.0D);
+				GlStateManager.matrixMode(5888);
+				GlStateManager.enableBlend();
+	
+				GlStateManager.disableLighting();
+				GlStateManager.blendFunc(1, 1);
+				this.playerModel.setModelAttributes(this.renderPlayer.getMainModel());
+				this.playerModel.render(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, 0.0625F);
+				GlStateManager.matrixMode(5890);
+				GlStateManager.loadIdentity();
+				GlStateManager.matrixMode(5888);
+				GlStateManager.enableLighting();
+				GlStateManager.disableBlend();
+				GlStateManager.depthMask(flag);
+				GlStateManager.disableLighting();
+		    }
 		}
 	}
 }

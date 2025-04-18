@@ -1,6 +1,7 @@
 package cc.unknown.file.cosmetics;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import lombok.Getter;
 
@@ -28,18 +29,20 @@ public class SuperCosmetic {
 		this.lastUpdated = LocalDateTime.now();
 	}
 
-    @Override
-    public String toString() {
-        return "SuperCosmetic{" +
-                "name='" + name + '\'' +
-                ", halo='" + halo + '\'' +
-                ", hat='" + hat + '\'' +
-                ", pet='" + pet + '\'' +
-                ", aura='" + aura + '\'' +
-                ", wings='" + wings + '\'' +
-                ", accesories='" + accesories + '\'' +
-                ", cape='" + cape + '\'' +
-                ", lastUpdated=" + lastUpdated +
-                '}';
-    }
+	@Override
+	public String toString() {
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+	    return "SuperCosmetic{" +
+	            "name='" + name + '\'' +
+	            ", halo='" + halo + '\'' +
+	            ", hat='" + hat + '\'' +
+	            ", pet='" + pet + '\'' +
+	            ", aura='" + aura + '\'' +
+	            ", wings='" + wings + '\'' +
+	            ", accesories='" + accesories + '\'' +
+	            ", cape='" + cape + '\'' +
+	            ", lastUpdated=" + lastUpdated.format(formatter) +
+	            '}';
+	}
 }

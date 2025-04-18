@@ -23,13 +23,15 @@ public class BlazeAura extends CosmeticBase {
 
 	@Override
 	public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.BLAZE) && !player.isInvisible()) {
-			GlStateManager.pushMatrix();
-            String imagePath = AuraType.BLAZE.getImagePath();
-            playerRenderer.bindTexture(new ResourceLocation(imagePath));
-			blazeModel.setModelAttributes(playerRenderer.getMainModel());
-			blazeModel.render(player, limbSwing, limbSwingAmount, ageInTicks, headPitch, headPitch, scale);
-			GlStateManager.popMatrix();
+		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.AURA) && !player.isInvisible()) {
+		    if (isAura(player.getName()).equalsIgnoreCase("Blaze")) {
+				GlStateManager.pushMatrix();
+	            String imagePath = AuraType.BLAZE.getImagePath();
+	            playerRenderer.bindTexture(new ResourceLocation(imagePath));
+				blazeModel.setModelAttributes(playerRenderer.getMainModel());
+				blazeModel.render(player, limbSwing, limbSwingAmount, ageInTicks, headPitch, headPitch, scale);
+				GlStateManager.popMatrix();
+		    }
 		}
 	}
 

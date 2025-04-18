@@ -1,7 +1,7 @@
 package cc.unknown.cosmetics.impl.aura;
 
+import cc.unknown.cosmetics.CosmeticBase;
 import cc.unknown.cosmetics.CosmeticController;
-import cc.unknown.util.Accessor;
 import cc.unknown.util.render.enums.AuraType;
 import cc.unknown.util.render.enums.CosmeticType;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -9,24 +9,26 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
-public class EnchantingAura implements LayerRenderer<AbstractClientPlayer>, Accessor {
+public class EnchantingAura extends CosmeticBase {
 	private final RenderPlayer renderPlayer;
 	@SuppressWarnings("unused")
 	private final ModelPlayer playerModel;
 
 	public EnchantingAura(RenderPlayer renderPlayer) {
+		super(renderPlayer);
         this.renderPlayer = renderPlayer;
         this.playerModel = new ModelPlayer(0.2F, false);
     }
 
 	@Override
-	public void doRenderLayer(AbstractClientPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		if (CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.ENCHANTING) && entitylivingbaseIn == mc.thePlayer && !entitylivingbaseIn.isInvisible()) {
-			this.createEnchantGlint(entitylivingbaseIn, renderPlayer.getMainModel(), limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+	public void render(AbstractClientPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+		if (CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.AURA) && entitylivingbaseIn == mc.thePlayer && !entitylivingbaseIn.isInvisible()) {
+		    if (isAura(entitylivingbaseIn.getName()).equalsIgnoreCase("Enchanting")) {
+		    	this.createEnchantGlint(entitylivingbaseIn, renderPlayer.getMainModel(), limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+		    }
 		}
 	}
 

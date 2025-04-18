@@ -87,12 +87,6 @@ public class Config extends Directory {
                             bool.set(settingsObject.get(bool.getName()).getAsBoolean());
                         }
                     }
-                    // Slider
-                    for (SliderValue slider : window.getSettingSlider()) {
-                        if (settingsObject.has(slider.getName())) {
-                            slider.setValue(settingsObject.get(slider.getName()).getAsNumber().floatValue());                            
-                        }
-                    }
                 }
             }
         }
@@ -137,9 +131,6 @@ public class Config extends Directory {
             if (window.getCategory() == Category.SETTINGS) {
                 for (BoolValue bool : window.getSettingBools()) {
                     settingsObject.addProperty(bool.getName(), bool.get());
-                }
-                for (SliderValue slider : window.getSettingSlider()) {                    
-                    settingsObject.addProperty(slider.getName(), ((SliderValue) slider).get());
                 }
             }
         }

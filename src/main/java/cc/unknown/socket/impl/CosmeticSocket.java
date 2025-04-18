@@ -1,54 +1,56 @@
 package cc.unknown.socket.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import cc.unknown.file.cosmetics.SuperCosmetic;
 import cc.unknown.socket.WebSocketCore;
+import cc.unknown.util.client.system.LocalDateTimeStructuredAdapter;
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Message;
 
 @UtilityClass
 public class CosmeticSocket extends WebSocketCore {
 	public List<SuperCosmetic> cosmeticList = new ArrayList<>();
-	public Message latestChatMessage = null;
+	public Message latestChatMessage;
+	
+	private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeStructuredAdapter()).create();
 
 	public void tick(SuperCosmetic superCosmetic) {
-
-		if(getCosmeticChannel().getHistory().isEmpty()) {
-			getCosmeticChannel().sendMessage("[]").queue();
-		}
-
 		getCosmeticChannel().getHistory().retrievePast(30).queue(messages -> {
-
 			latestChatMessage = null;
+
 			for (Message msg : messages) {
 				if (msg.getAuthor().getId().equals(getBotID())) {
 					String content = msg.getContentRaw();
+
 					if (content.startsWith("[") && content.endsWith("]")) {
 						latestChatMessage = msg;
+
+						SuperCosmetic[] cosmetics = gson.fromJson(content, SuperCosmetic[].class);
+
+						cosmeticList.clear();
+						Collections.addAll(cosmeticList, cosmetics);
+						break;
 					}
-
-					Gson gson = new Gson();
-
-					SuperCosmetic[] cosmetics = gson.fromJson(content, SuperCosmetic[].class);
-
-					cosmeticList.clear();
-					Collections.addAll(cosmeticList, cosmetics);
-
 				}
 			}
 
 			cosmeticList.removeIf(existing -> existing.getName().equalsIgnoreCase(superCosmetic.getName()));
 			cosmeticList.add(superCosmetic);
 
-			Gson gson = new Gson();
 			String json = gson.toJson(cosmeticList);
 
-			latestChatMessage.editMessage(json).queue();
+			if (latestChatMessage != null) {
+				latestChatMessage.editMessage(json).queue();
+			} else {
+				getCosmeticChannel().sendMessage(json).queue();
+			}
 		});
 	}
 }

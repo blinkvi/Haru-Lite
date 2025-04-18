@@ -25,20 +25,17 @@ public class DogPet extends CosmeticBase {
 
 	@Override
 	public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.DOG) && !player.isInvisible()) {
-			GlStateManager.pushMatrix();
-	
-			GlStateManager.translate(-0.7D, 0.0D, 0.0D);
-			
-            String imagePath = PetType.DOG.getImagePath();
-			playerRenderer.bindTexture(new ResourceLocation(imagePath));
-			
-			if (player.isSneaking()) {
-				GlStateManager.translate(0.0D, 0.045D, 0.0D);
+		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.PET) && !player.isInvisible()) {
+			if (isPet(player.getName()).equalsIgnoreCase("Dog")) {
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(-0.7D, 0.0D, 0.0D);
+	            String imagePath = PetType.DOG.getImagePath();
+				playerRenderer.bindTexture(new ResourceLocation(imagePath));
+				if (player.isSneaking()) GlStateManager.translate(0.0D, 0.045D, 0.0D);
+				this.wolfModel.render((Entity) player, limbSwing, limbSwingAmount, ageInTicks, headPitch, headPitch, scale);
+				GL11.glColor3f(1.0F, 1.0F, 1.0F);
+				GL11.glPopMatrix();
 			}
-			this.wolfModel.render((Entity) player, limbSwing, limbSwingAmount, ageInTicks, headPitch, headPitch, scale);
-			GL11.glColor3f(1.0F, 1.0F, 1.0F);
-			GL11.glPopMatrix();
 		}
 	}
 

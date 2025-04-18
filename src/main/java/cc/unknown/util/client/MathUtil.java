@@ -100,6 +100,13 @@ public class MathUtil implements Accessor {
         return previous + (current - previous) * multiplier;
     }
     
+	public static float yawInterpolate(float yaw1, float yaw2, float percent) {
+		float f = (yaw1 + (yaw2 - yaw1) * percent) % 360.0F;
+		if (f < 0.0F)
+			f += 360.0F;
+		return f;
+	}
+    
     public static float calculateGaussianValue(float x, float sigma) {
         double PI = Math.PI;
         double output = 1.0 / Math.sqrt(2.0 * PI * (sigma * sigma));

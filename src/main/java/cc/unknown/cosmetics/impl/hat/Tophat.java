@@ -26,24 +26,24 @@ public class Tophat extends CosmeticBase {
 
 	@Override
 	public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float headYaw, float headPitch, float scale) {
-		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.TOP) && !player.isInvisible()) {
-			GlStateManager.pushMatrix();
-			
-            String imagePath = HatType.TOPHAT.getImagePath();
-			playerRenderer.bindTexture(new ResourceLocation(imagePath));
-
-			if (player.isSneaking()) {
-				GL11.glTranslated(0D, 0.225D, 0D);
+		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.HAT) && !player.isInvisible()) {
+			if (isHat(player.getName()).equalsIgnoreCase("Top")) {
+				GlStateManager.pushMatrix();
+				
+	            String imagePath = HatType.TOPHAT.getImagePath();
+				playerRenderer.bindTexture(new ResourceLocation(imagePath));
+	
+				if (player.isSneaking()) {
+					GL11.glTranslated(0D, 0.225D, 0D);
+				}
+	
+				float[] color = CosmeticController.getTophatColor(player);
+				GL11.glColor3f(color[0], color[1], color[2]);
+				modelTophat.render(player, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, scale);
+				GL11.glColor3f(1, 1, 1);
+				GlStateManager.popMatrix();
 			}
-
-			float[] color = CosmeticController.getTophatColor(player);
-			GL11.glColor3f(color[0], color[1], color[2]);
-			modelTophat.render(player, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, scale);
-			GL11.glColor3f(1, 1, 1);
-			GlStateManager.popMatrix();
-
 		}
-
 	}
 
 	private class ModelTophat extends CosmeticModelBase {

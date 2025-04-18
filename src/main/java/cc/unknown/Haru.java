@@ -17,8 +17,27 @@ import org.lwjgl.opengl.Display;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import cc.unknown.handlers.*;
-import cc.unknown.managers.*;
+import cc.unknown.handlers.AutoJoinHandler;
+import cc.unknown.handlers.CPSHandler;
+import cc.unknown.handlers.CommandHandler;
+import cc.unknown.handlers.DiscordHandler;
+import cc.unknown.handlers.DragHandler;
+import cc.unknown.handlers.FixHandler;
+import cc.unknown.handlers.GuiMoveHandler;
+import cc.unknown.handlers.IRCHandler;
+import cc.unknown.handlers.KeyHandler;
+import cc.unknown.handlers.SettingsHandler;
+import cc.unknown.handlers.ShaderHandler;
+import cc.unknown.handlers.SpoofHandler;
+import cc.unknown.handlers.TransactionHandler;
+import cc.unknown.managers.CommandManager;
+import cc.unknown.managers.ConfigManager;
+import cc.unknown.managers.CosmeticManager;
+import cc.unknown.managers.DragManager;
+import cc.unknown.managers.ModuleManager;
+import cc.unknown.managers.PositionManager;
+import cc.unknown.managers.RotationManager;
+import cc.unknown.module.Module;
 import cc.unknown.socket.WebSocketCore;
 import cc.unknown.ui.click.DropGui;
 import cc.unknown.util.client.ReflectUtil;
@@ -47,6 +66,7 @@ public class Haru {
     private RotationManager rotationManager;
     
     private DropGui dropGui;
+    private Module module;
     private WebSocketCore webSocket;
     
     private final CustomLogger logger = new CustomLogger();

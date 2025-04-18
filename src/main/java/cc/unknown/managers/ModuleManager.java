@@ -56,6 +56,7 @@ public final class ModuleManager extends SList<Module> {
                 ESP.class,
                 FullBright.class,
                 AntiDebuff.class,
+                Ambience.class,
                 BedPlates.class,
                 Cosmetics.class,
                 BreakProgress.class,

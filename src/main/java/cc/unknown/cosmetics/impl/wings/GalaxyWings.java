@@ -3,6 +3,8 @@ package cc.unknown.cosmetics.impl.wings;
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.cosmetics.CosmeticController;
+import cc.unknown.file.cosmetics.SuperCosmetic;
+import cc.unknown.socket.impl.CosmeticSocket;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.render.enums.CosmeticType;
 import cc.unknown.util.render.enums.WingsType;
@@ -49,44 +51,50 @@ public class GalaxyWings extends ModelBase implements LayerRenderer<AbstractClie
 
 	@Override
 	public void doRenderLayer(AbstractClientPlayer entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scalee) {
-		if (!entitylivingbaseIn.isInvisible() && CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.GALAXY)) {
-			double rotate = interpolate(entitylivingbaseIn.prevRenderYawOffset, entitylivingbaseIn.renderYawOffset, partialTicks);
-			GL11.glPushMatrix();
-			GL11.glScaled(-0.6, -0.6, 0.6);
-			GL11.glTranslated(0.0D, -1.45, 0.1D);
-			GL11.glTranslated(0.0D, 1.3D, 0.2D);
-			if (entitylivingbaseIn.isSneaking()) {
-				GlStateManager.translate(0.0F, -0.142F, -0.0178F);
+		if (!entitylivingbaseIn.isInvisible() && CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.WINGS)) {
+			if (isWings(entitylivingbaseIn.getName()).equalsIgnoreCase("Galaxy")) {
+				double rotate = interpolate(entitylivingbaseIn.prevRenderYawOffset, entitylivingbaseIn.renderYawOffset, partialTicks);
+				GL11.glPushMatrix();
+				GL11.glScaled(-0.6, -0.6, 0.6);
+				GL11.glTranslated(0.0D, -1.45, 0.1D);
+				GL11.glTranslated(0.0D, 1.3D, 0.2D);
+				if (entitylivingbaseIn.isSneaking()) {
+					GlStateManager.translate(0.0F, -0.142F, -0.0178F);
+				}
+				GL11.glRotated(130, 1, 0, 0);
+				GL11.glRotated(180, 0, 1, 0);
+	
+				GL11.glColor3f(1, 1, 1);
+				
+	            String imagePath = WingsType.GALAXY.getImagePath();					
+	            mc.getTextureManager().bindTexture(new ResourceLocation(imagePath));
+				
+				for (int j = 0; j < 2; j++) {
+					GL11.glEnable(2884);
+					float f11 = (float) (System.currentTimeMillis() % 1000L) / 1000.0F * 3.1415927F * 2.0F;
+					this.wing.rotateAngleX = (float) Math.toRadians(-80.0D) - (float) Math.cos(f11) * 0.2F;
+					this.wing.rotateAngleY = (float) Math.toRadians(20.0D) + (float) Math.sin(f11) * 0.4F;
+					this.wing.rotateAngleZ = (float) Math.toRadians(20.0D);
+					this.wingTip.rotateAngleZ = -((float) (Math.sin((f11 + 2.0F)) + 0.5D)) * 0.95F;
+					this.wing.render(0.0615F);
+					GL11.glScalef(-1.0F, 1.0F, 1.0F);
+					if (j == 0)
+						GL11.glCullFace(1028);
+				}
+				GL11.glCullFace(1029);
+				GL11.glDisable(2884);
+				GL11.glColor3f(255.0F, 255.0F, 255.0F);
+				GL11.glPopMatrix();
 			}
-			GL11.glRotated(130, 1, 0, 0);
-			GL11.glRotated(180, 0, 1, 0);
-
-			GL11.glColor3f(1, 1, 1);
-			
-            String imagePath = WingsType.GALAXY.getImagePath();					
-            mc.getTextureManager().bindTexture(new ResourceLocation(imagePath));
-			
-			for (int j = 0; j < 2; j++) {
-				GL11.glEnable(2884);
-				float f11 = (float) (System.currentTimeMillis() % 1000L) / 1000.0F * 3.1415927F * 2.0F;
-				this.wing.rotateAngleX = (float) Math.toRadians(-80.0D) - (float) Math.cos(f11) * 0.2F;
-				this.wing.rotateAngleY = (float) Math.toRadians(20.0D) + (float) Math.sin(f11) * 0.4F;
-				this.wing.rotateAngleZ = (float) Math.toRadians(20.0D);
-				this.wingTip.rotateAngleZ = -((float) (Math.sin((f11 + 2.0F)) + 0.5D)) * 0.95F;
-				this.wing.render(0.0615F);
-				GL11.glScalef(-1.0F, 1.0F, 1.0F);
-				if (j == 0)
-					GL11.glCullFace(1028);
-			}
-			GL11.glCullFace(1029);
-			GL11.glDisable(2884);
-			GL11.glColor3f(255.0F, 255.0F, 255.0F);
-			GL11.glPopMatrix();
 		}
 	}
 
 	@Override
 	public boolean shouldCombineTextures() {
 		return false;
+	}
+	
+	public String isWings(String name) {
+		return CosmeticSocket.cosmeticList.stream().filter(cosmetic -> name.equalsIgnoreCase(cosmetic.getName())).map(SuperCosmetic::getWings).filter(wings -> !wings.equalsIgnoreCase("None")).findFirst().orElse("None");
 	}
 }

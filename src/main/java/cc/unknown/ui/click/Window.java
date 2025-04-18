@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.lwjgl.input.Mouse;
-
 import cc.unknown.Haru;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.impl.visual.ClickGUI;
@@ -19,7 +17,6 @@ import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
 import cc.unknown.util.render.shader.impl.GradientBlur;
 import cc.unknown.util.value.impl.BoolValue;
-import cc.unknown.util.value.impl.SliderValue;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +25,6 @@ import lombok.Setter;
 public class Window implements IComponent {
     private final List<ModuleComponent> moduleComponents;
     private final List<BoolValue> settingBools = new ArrayList<>();
-    private final List<SliderValue> settingSlider = new ArrayList<>();
 	private final GradientBlur gradientBlur = new GradientBlur();
     
     private final Category category;
@@ -45,8 +41,6 @@ public class Window implements IComponent {
         this.settingBools.add(new BoolValue("NoJumpDelay", null, false));
         this.settingBools.add(new BoolValue("NoUseDelay", null, false));
         
-        this.settingSlider.add(new SliderValue("TimeChanger", null, 0, 0, 1, 0.01f));
-
         this.moduleComponents = Haru.instance.getModuleManager()
                 .getModulesByCategory(category)
                 .stream()
@@ -92,35 +86,6 @@ public class Window implements IComponent {
             	        RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, getModule(ClickGUI.class).mainColor.get().getRGB());
             	    }
             	    componentOffsetY += 12;
-            	}
-            	
-            	for (SliderValue slider : settingSlider) {
-            	    float sliderX = x + 5F;
-            	    float sliderY = y + componentOffsetY + 2F;
-            	    float sliderWidth = width - 10F;
-            	    float sliderHeight = 10F;
-
-            	    float minValue = slider.getMin();
-            	    float maxValue = slider.getMax();
-            	    float progress = (slider.get() - minValue) / (maxValue - minValue);
-
-            	    if (getModule(ClickGUI.class).pref.isEnabled("RoundedButtons")) {
-            	        RoundedUtil.drawRound(sliderX, sliderY, sliderWidth * progress, sliderHeight - 2, 2F, getModule(ClickGUI.class).mainColor.get());
-            	    } else {
-            	        RenderUtil.drawRect(sliderX, sliderY, sliderWidth * progress, sliderHeight - 2, getModule(ClickGUI.class).mainColor.get().getRGB());
-            	    }
-
-            	    FontUtil.getFontRenderer("interSemiBold.ttf", 12).drawString(slider.getName(), x + 5F, y + componentOffsetY + 5F, -1);
-            	    FontUtil.getFontRenderer("interSemiBold.ttf", 12).drawString(String.format("%.2f", slider.getValue()), x + width - 20F, y + componentOffsetY + 5F, -1);
-
-            	    if (MathUtil.isHovered(sliderX, sliderY, sliderWidth + 2, sliderHeight - 2, mouseX, mouseY) && Mouse.isButtonDown(0)) {
-            	        float raw = (mouseX - sliderX) / sliderWidth;
-            	        float set = Math.max(minValue, raw * (maxValue - minValue) + minValue);
-            	        set = (float) MathUtil.incValue(set, slider.getIncrement());
-            	        slider.setValue(set);
-            	    }
-
-            	    componentOffsetY += 24;
             	}
             } else if (moduleComponents != null) {
                 for (ModuleComponent module : moduleComponents) {

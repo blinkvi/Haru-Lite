@@ -48,6 +48,8 @@ public abstract class Module implements Accessor {
     public void onDisable() { }
     public void onUpdate() { }
     public void guiUpdate() { }
+    public boolean isEnabled() { return state; }
+    public boolean isDisabled() { return !state; }
     
     @SafeVarargs
     public final boolean isEnabled(Class<? extends Module>... modules) {
@@ -55,14 +57,6 @@ public abstract class Module implements Accessor {
             if (getModule(module).isEnabled()) return true;
         }
         return false;
-    }
-    
-    public boolean isEnabled() {
-        return state;
-    }
-
-    public boolean isDisabled() {
-        return !state;
     }
 
     public <M extends Module> boolean isEnabled(Class<M> module) {
@@ -92,26 +86,12 @@ public abstract class Module implements Accessor {
 
     private void enable() {
     	MinecraftForge.EVENT_BUS.register(this);
-    	try {
-            onEnable();
-        } catch (Exception e) {
-            handleException(e);
-        }
+    	onEnable();
     }
 
     private void disable() {
         MinecraftForge.EVENT_BUS.unregister(this);
-        try {
-            onDisable();
-        } catch (Exception e) {
-            handleException(e);
-        }
-    }
-
-    private void handleException(Exception e) {
-        if (mc.thePlayer != null) {
-            e.printStackTrace();
-        }
+        onDisable();
     }
 
     public <M extends Module> M getModule(Class<M> clazz) {

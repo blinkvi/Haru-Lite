@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "NameTags", description = "Displays customizable nametags above players.", category = Category.VISUAL)
 public final class NameTags extends Module {
 	
-	private final ModeValue mode = new ModeValue("Font", this, "Default", "Smooth", "Normal");
+	private final ModeValue mode = new ModeValue("Font", this, "Default", "Smooth", "Normal", "Default");
 	private final SliderValue distance = new SliderValue("Distance", this, 2.4f, 1, 7, 0.1f);
 	private final SliderValue scale = new SliderValue("Scale", this, 2.4f, 0.1f, 10, 0.1f);
 	private final BoolValue shadow = new BoolValue("Shadow", this, true, () -> mode.is("Default"));
