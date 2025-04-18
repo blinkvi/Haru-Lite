@@ -6,13 +6,11 @@ import cc.unknown.event.GameEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ShaderHandler {
-    public final static CopyOnWriteArrayList<Runnable> tasks = new CopyOnWriteArrayList<>();
+    public static final CopyOnWriteArrayList<Runnable> tasks = new CopyOnWriteArrayList<>();
 
     @SubscribeEvent
     public void onLoop(GameEvent event) {
-        for (Runnable task : tasks) {
-            task.run();
-            tasks.remove(task);
-        }
+        tasks.forEach(Runnable::run);
+        tasks.removeIf(task -> true);
     }
 }

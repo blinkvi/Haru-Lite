@@ -7,14 +7,12 @@ import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.socket.impl.CosmeticSocket;
-import cc.unknown.util.render.HaloRenderer;
 import cc.unknown.util.render.enums.AccesoriesType;
 import cc.unknown.util.render.enums.AuraType;
 import cc.unknown.util.render.enums.HatType;
 import cc.unknown.util.render.enums.PetType;
 import cc.unknown.util.render.enums.WingsType;
 import cc.unknown.util.value.impl.ModeValue;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -42,16 +40,10 @@ public class Cosmetics extends Module {
 	}
 
 	@SubscribeEvent
-	public void onRender3D(RenderWorldLastEvent event) {
-		if (mc.gameSettings.thirdPersonView == 0) return;
-		HaloRenderer.drawHalo(haloType.getMode());
-	}
-
-	@SubscribeEvent
 	public void onPreTick(ClientTickEvent event) {
 		if (!isInGame()) return;
 		if (event.phase == Phase.END) return;
-		if (!(mc.thePlayer.ticksExisted % 20 == 0)) return;
+		if (!(mc.thePlayer.ticksExisted % 200 == 0)) return;
 		
 	    String username = DiscordHandler.getUser();
 	    boolean capeChanged = !capeType.is(prevCapeMode);

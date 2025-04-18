@@ -53,4 +53,8 @@ public abstract class CosmeticBase implements LayerRenderer<AbstractClientPlayer
 	public String isWings(String name) {
 		return CosmeticSocket.cosmeticList.stream().filter(cosmetic -> name.equalsIgnoreCase(cosmetic.getName())).map(SuperCosmetic::getWings).filter(wings -> !wings.equalsIgnoreCase("None")).findFirst().orElse("None");
 	}
+	
+	public String isHalo(String name) {
+		return CosmeticSocket.cosmeticList.stream().filter(cosmetic -> name.equalsIgnoreCase(cosmetic.getName())).map(SuperCosmetic::getHalo).filter(halo -> !halo.equalsIgnoreCase("None")).findFirst().orElse("None");
+	}
 }

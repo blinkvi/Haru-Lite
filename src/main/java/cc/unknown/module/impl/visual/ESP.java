@@ -36,8 +36,9 @@ public class ESP extends Module {
 	@SubscribeEvent
 	public void onRender3D(RenderWorldLastEvent event) {
         for (EntityPlayer player : mc.theWorld.playerEntities) {
-            if (PlayerUtil.unusedNames(player) || mc.gameSettings.thirdPersonView == 0) continue;
-            if (player.deathTime > 0 || (player.isInvisible() && !checkInvis.get())) continue;
+            if (PlayerUtil.unusedNames(player)) continue;
+            if (player.isInvisible() && !checkInvis.get()) continue;
+            if (mc.thePlayer == player) continue;
 
             float partialTicks = event.partialTicks;
             int color = getPlayerColor(player);

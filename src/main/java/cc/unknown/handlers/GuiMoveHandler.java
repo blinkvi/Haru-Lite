@@ -19,13 +19,14 @@ public class GuiMoveHandler implements Accessor {
 	@SubscribeEvent
 	public void onPreTick(ClientTickEvent event) {
 		if (!isInGame()) return;
-		
+
 		if (event.phase == Phase.START && mc.currentScreen instanceof DropGui) {
-			for (KeyBinding bind : moveKeys) {
-				int keyCode = bind.getKeyCode();
-				boolean isPressed = GameSettings.isKeyDown(bind);
-				KeyBinding.setKeyBindState(keyCode, isPressed);
-			}
+			moveKeys.stream()
+				.forEach(bind -> {
+					int keyCode = bind.getKeyCode();
+					boolean isPressed = GameSettings.isKeyDown(bind);
+					KeyBinding.setKeyBindState(keyCode, isPressed);
+				});
 		}
 	}
 }

@@ -42,6 +42,7 @@ public class AutoClicker extends Module {
         
     @Override
     public void onEnable() {
+    	correctValues(min, max);
     	reset();
     }
 

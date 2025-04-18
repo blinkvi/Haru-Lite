@@ -104,7 +104,7 @@ public final class NameTags extends Module {
 
 	    switch (mode.getMode()) {
 	    case "Default":
-	    	mc.fontRendererObj.drawString(fontName, (float) (-mc.fontRendererObj.getStringWidth(name) / 2), 0, -1, shadow.get());
+	    	mc.fontRendererObj.drawString(name, (float) (-mc.fontRendererObj.getStringWidth(name) / 2), 0, -1, shadow.get());
 	    	break;
 	    case "Smooth":
 	    	FontUtil.getFontRenderer(fontName, fontSize).drawSmoothString(name, (float) (-nameWidth / 2), 0, -1);

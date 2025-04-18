@@ -56,9 +56,7 @@ public final class FriendCom extends Command {
 	    }
 
 	    StringBuilder message = new StringBuilder("Friend list:\n");
-	    for (String friend : FriendUtil.getFriends()) {
-	        message.append("- ").append(friend).append("\n");
-	    }
+	    FriendUtil.getFriends().forEach(friend -> message.append("- ").append(friend).append("\n"));
 	    return message.toString();
 	}
 }

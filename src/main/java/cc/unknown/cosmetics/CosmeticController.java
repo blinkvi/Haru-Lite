@@ -6,6 +6,7 @@ import cc.unknown.cosmetics.impl.aura.CreeperAura;
 import cc.unknown.cosmetics.impl.aura.EnchantingAura;
 import cc.unknown.cosmetics.impl.aura.OrbitAura;
 import cc.unknown.cosmetics.impl.cape.Cape;
+import cc.unknown.cosmetics.impl.halo.Halo;
 import cc.unknown.cosmetics.impl.hat.DougDimmadome;
 import cc.unknown.cosmetics.impl.hat.Tophat;
 import cc.unknown.cosmetics.impl.hat.WitchHat;
@@ -56,5 +57,6 @@ public class CosmeticController {
         renderPlayer.addLayer(new CreeperAura(renderPlayer));
         renderPlayer.addLayer(new EnchantingAura(renderPlayer));
         renderPlayer.addLayer(new Cape(renderPlayer));
+        renderPlayer.addLayer(new Halo(renderPlayer));
     }
 }

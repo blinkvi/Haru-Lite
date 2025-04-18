@@ -14,31 +14,29 @@ public class KeyHandler implements Accessor {
 	
 	@SubscribeEvent
 	public void onKeyInput(KeyInputEvent event) {
-	    int key = Keyboard.getEventKey();
+		int key = Keyboard.getEventKey();
 
-	    if (key != Keyboard.CHAR_NONE && Keyboard.getEventKeyState()) {
-	        for (Module module : Haru.instance.getModuleManager().getModules()) {
-	            if (module.getKeyBind() == key) {
-	                if (module instanceof FreeLook) {
-	                    if (!module.isEnabled()) {
-	                        module.toggle();
-	                    }
-	                } else {
-	                    if (!Keyboard.isRepeatEvent()) {
-	                        module.toggle();
-	                    }
-	                }
-	                break;
-	            }
-	        }
-	    } else if (key != Keyboard.CHAR_NONE && !Keyboard.getEventKeyState()) {
-	        for (Module module : Haru.instance.getModuleManager().getModules()) {
-	            if (module instanceof FreeLook && module.getKeyBind() == key && module.isEnabled()) {
-	                module.toggle();
-	                break;
-	            }
-	        }
-	    }
+		if (key != Keyboard.CHAR_NONE && Keyboard.getEventKeyState()) {
+			Haru.instance.getModuleManager().getModules().stream()
+				.filter(module -> module.getKeyBind() == key)
+				.findFirst()
+				.ifPresent(module -> {
+					if (module instanceof FreeLook) {
+						if (!module.isEnabled()) {
+							module.toggle();
+						}
+					} else {
+						if (!Keyboard.isRepeatEvent()) {
+							module.toggle();
+						}
+					}
+				});
+		} else if (key != Keyboard.CHAR_NONE && !Keyboard.getEventKeyState()) {
+			Haru.instance.getModuleManager().getModules().stream()
+				.filter(module -> module instanceof FreeLook && module.getKeyBind() == key && module.isEnabled())
+				.findFirst()
+				.ifPresent(Module::toggle);
+		}
 	}
 	
 	@SubscribeEvent
