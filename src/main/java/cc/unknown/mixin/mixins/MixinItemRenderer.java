@@ -42,31 +42,31 @@ public abstract class MixinItemRenderer {
 	private Minecraft mc;
 
 	@Shadow
-	protected abstract void func_178109_a(AbstractClientPlayer var1);
+	protected abstract void setLightMapFromPlayer(AbstractClientPlayer var1);
 
 	@Shadow
-	protected abstract void func_178105_d(float var1);
+	protected abstract void doItemUsedTransformations(float var1);
 
 	@Shadow
-	protected abstract void func_178098_a(float var1, AbstractClientPlayer var2);
+	protected abstract void doBowTransformations(float var1, AbstractClientPlayer var2);
 
 	@Shadow
-	protected abstract void func_178110_a(EntityPlayerSP var1, float var2);
+	protected abstract void rotateWithPlayerRotations(EntityPlayerSP var1, float var2);
 
 	@Shadow
-	protected abstract void func_178104_a(AbstractClientPlayer var1, float var2);
+	protected abstract void performDrinking(AbstractClientPlayer var1, float var2);
 
 	@Shadow
 	protected abstract void transformFirstPersonItem(float equipProgress, float swingProgress);
 
 	@Shadow
-	protected abstract void func_178095_a(AbstractClientPlayer var1, float var2, float var3);
+	protected abstract void renderPlayerArm(AbstractClientPlayer var1, float var2, float var3);
 
 	@Shadow
 	public abstract void renderItem(EntityLivingBase var1, ItemStack var2, TransformType var3);
 
 	@Shadow
-	protected abstract void func_178101_a(float var1, float var2);
+	protected abstract void rotateArroundXAndY(float var1, float var2);
 
 	@Shadow
 	protected abstract void renderItemMap(AbstractClientPlayer var1, float var2, float var3, float var4);
@@ -84,7 +84,7 @@ public abstract class MixinItemRenderer {
 	}
 
 	@Overwrite
-	private void func_178103_d() {
+	private void doBlockTransformations() {
 		GlStateManager.translate(-0.5F, 0.2F, 0.0F);
 		GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate(-80.0F, 1.0F, 0.0F, 0.0F);
@@ -98,9 +98,9 @@ public abstract class MixinItemRenderer {
 		float f1 = player.getSwingProgress(partialTicks);
 		float f2 = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks;
 		float f3 = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks;
-		func_178101_a(f2, f3);
-		func_178109_a(player);
-		func_178110_a(player, partialTicks);
+		rotateArroundXAndY(f2, f3);
+		setLightMapFromPlayer(player);
+		rotateWithPlayerRotations(player, partialTicks);
 		GlStateManager.enableRescaleNormal();
 		GlStateManager.pushMatrix();
 		
@@ -116,25 +116,25 @@ public abstract class MixinItemRenderer {
 					break;
 				case EAT:
 				case DRINK:
-					func_178104_a(player, partialTicks);
+					performDrinking(player, partialTicks);
 					transformFirstPersonItem(f, f1);
 					break;
 				case BLOCK:
 					transformFirstPersonItem(f, f1);
-					func_178103_d();
+					doBlockTransformations();
 					break;
 				case BOW:
 					transformFirstPersonItem(f, f1);
-					func_178098_a(partialTicks, player);
+					doBowTransformations(partialTicks, player);
 				}
 			} else {
-				func_178105_d(f1);
+				doItemUsedTransformations(f1);
 				transformFirstPersonItem(f, f1);
 			}
 
 			renderItem(player, itemToRender, TransformType.FIRST_PERSON);
 		} else if (!player.isInvisible()) {
-			func_178095_a(player, f, f1);
+			renderPlayerArm(player, f, f1);
 		}
 
 		GlStateManager.popMatrix();
