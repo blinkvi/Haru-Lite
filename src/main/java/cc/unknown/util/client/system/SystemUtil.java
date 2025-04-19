@@ -1,127 +1,111 @@
 package cc.unknown.util.client.system;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
-import com.sun.jna.Platform;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.Sequencer;
 
 import cc.unknown.Haru;
 import cc.unknown.util.Accessor;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-import net.minecraft.client.Minecraft;
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 import net.minecraft.util.ResourceLocation;
 
-public class SystemUtil implements Accessor {
-	private static Player player;
+@UtilityClass
+public class SystemUtil implements Accessor {	
+	private Sequence sequence;
+	private Sequencer sequencer;
 	
-	private static final String EXPECTED_CONTENT = "[Haru] Init Sound | DONT DELETE THIS";
-	
-    public static void playSound() {
-        if (Platform.isWindows()) {
-            ResourceLocation loc = new ResourceLocation("haru/sound/welcome.mp3");
-            InputStream input = null;
-			try {
-				input = Minecraft.getMinecraft().getResourceManager().getResource(loc).getInputStream();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-            BufferedInputStream buffer = new BufferedInputStream(input);
+	@SneakyThrows
+	public void playSound() {
+	    new Thread(() -> {
+	        try {
+	            ResourceLocation resourceLocation = new ResourceLocation("haru/sound/elfen.mid");
 
-            try {
-				player = new Player(buffer);
-			} catch (JavaLayerException e) {
-				e.printStackTrace();
-			}
-            new Thread(() -> {
-                try {
-                    player.play();
-                } catch (JavaLayerException e) {
-                    e.printStackTrace();
-                }
-            }).start();
-        }
-    }
-    
-    public static void stopSound() {
-    	if (Platform.isWindows()) {
-	        if (player != null) {
-	            player.close();
+	            InputStream midiStream = mc.getResourceManager().getResource(resourceLocation).getInputStream();
+
+	            if (midiStream != null) {
+	                sequencer = MidiSystem.getSequencer();
+	                if (sequencer == null) {
+	                    System.out.println("No se encontró un secuenciador MIDI.");
+	                    return;
+	                }
+
+	                sequencer.open();
+
+	                sequence = MidiSystem.getSequence(midiStream);
+	                sequencer.setSequence(sequence);
+
+	                sequencer.start();
+
+	                while (sequencer.isRunning()) {
+	                    Thread.sleep(1000);
+	                }
+
+	                sequencer.close();
+	            } else {
+	                System.out.println("No se pudo cargar el archivo MIDI.");
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
 	        }
+	    }).start();
+	}
+    
+    public void stopSound() {
+    	if (sequence != null) {
+    		sequencer.close();
     	}
     }
     
-	private static void initTempFile() {
-	    final File dir = new File(Minecraft.getMinecraft().mcDataDir, Haru.NAME + File.separator + "sound");
-	    final File firstInitFile = new File(dir, "sound.txt");
-		
-        if (firstInitFile.exists()) {
+    public static boolean checkFirstStart() {
+        String content = "[Haru] Init Sound | DONT DELETE THIS";
+        
+        File soundDir = new File(Haru.MAIN_DIR, "sound");
+        File soundFile = new File(soundDir, "sound.txt");
+        
+        if (!soundDir.exists()) {
+            if (soundDir.mkdirs()) {
+                System.out.println("Carpeta 'sound' creada.");
+            } else {
+                System.out.println("Error al crear la carpeta 'sound'.");
+                return false;
+            }
+        }
+
+        if (soundFile.exists()) {
             try {
-                String content = new String(Files.readAllBytes(firstInitFile.toPath())).trim();
-                if (!EXPECTED_CONTENT.equals(content)) {
-                    if (firstInitFile.delete()) {
-                        Haru.instance.getLogger().info("Delete sound.txt, invalid content.");
-                        Haru.instance.firstStart = true;
-                    } else {
-                    	Haru.instance.getLogger().error("Failed.");
-                        return;
-                    }
+                String fileContent = new String(Files.readAllBytes(soundFile.toPath()));
+                
+                if (!fileContent.equals(content)) {
+                	Haru.firstStart = true;
+                    Files.write(soundFile.toPath(), content.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
                 } else {
-                    return;
+                	Haru.firstStart = false;
                 }
             } catch (IOException e) {
-            	Haru.instance.getLogger().error("Failed to read", e);
-                return;
+                e.printStackTrace();
+                return false;
             }
         } else {
-        	Haru.instance.firstStart = true;
-        }
-
-        if (!dir.exists() && !dir.mkdirs()) {
-        	Haru.instance.getLogger().error("Failed dir.");
-            return;
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(firstInitFile))) {
-            writer.write(EXPECTED_CONTENT);
-            Haru.instance.getLogger().info("Created sound.txt.");
-        } catch (IOException e) {
-        	Haru.instance.getLogger().error("Failed created", e);
-        }
-	}
-
-	public static boolean checkFirstStart() {
-	    final File dir = new File(Minecraft.getMinecraft().mcDataDir, Haru.NAME + File.separator + "sound");
-	    final File firstInitFile = new File(dir, "sound.txt");
-		
-        if (firstInitFile.exists()) {
+        	Haru.firstStart = true;
             try {
-                String content = new String(Files.readAllBytes(firstInitFile.toPath())).trim();
-                if (EXPECTED_CONTENT.equals(content)) {
-                	Haru.instance.firstStart = false;
-                    Haru.instance.getLogger().info("Start detected, canceling sound...");
-                } else {
-                	Haru.instance.firstStart = true;
-                    Haru.instance.getLogger().info("Contenido incorrecto, activando sonido...");
-                    initTempFile();
-                }
+                Files.write(soundFile.toPath(), content.getBytes());
             } catch (IOException e) {
-            	Haru.instance.getLogger().error("Error leyendo el archivo sound.txt", e);
+                e.printStackTrace();
+                return false;
             }
-        } else {
-        	Haru.instance.firstStart = true;
-            Haru.instance.getLogger().info("No sound.txt found, initializing sound...");
-            initTempFile();
         }
-        return false;
-	}
+        
+        return Haru.firstStart;
+    }
 	
-    public static boolean isOptifineLoaded() {
+    public boolean isOptifineLoaded() {
         File modsFolder = new File(mc.mcDataDir, "run/mods");
 
         if (!modsFolder.exists() || !modsFolder.isDirectory()) {

@@ -8,6 +8,7 @@ import cc.unknown.module.Module;
 import cc.unknown.ui.drag.Drag;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.client.ColorUtil;
+import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.impl.GradientBlur;
 import net.minecraft.client.gui.ScaledResolution;
 
@@ -55,11 +56,11 @@ public class ArrayListDraggable extends Drag {
     }
 
     private int getModuleWidth(Module module) {
-        return (int) setting.getFont().getStringWidth(module.getName());
+        return (int) FontUtil.getFontRenderer("consolas.ttf", (int) setting.fontSize.get()).getStringWidth(module.getName());
     }
 
     private int getModuleHeight() {
-        return setting.getFont().getHeight();
+        return FontUtil.getFontRenderer("consolas.ttf", (int) setting.fontSize.get()).getHeight();
     }
 
     private void renderModule(Module module, float localX, float localY, float offset, int width, int height,  float alphaAnimation, int middle, float lastWidth, int index, int totalModules) {
@@ -92,10 +93,10 @@ public class ArrayListDraggable extends Drag {
         float textY = localY + offset + 6;
 
         if (localX < middle) {
-        	setting.getFont().drawStringWithShadow(text, localX, textY, color);
+        	FontUtil.getFontRenderer("consolas.ttf", (int) setting.fontSize.get()).drawStringWithShadow(text, localX, textY, color);
         } else {
             float textX = localX - width + this.width - 2;
-            setting.getFont().drawStringWithShadow(text, textX, textY, color);
+            FontUtil.getFontRenderer("consolas.ttf", (int) setting.fontSize.get()).drawStringWithShadow(text, textX, textY, color);
         }
     }
 

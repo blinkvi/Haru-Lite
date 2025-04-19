@@ -3,6 +3,7 @@ package cc.unknown;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -68,21 +69,21 @@ public class Haru {
     private WebSocketCore webSocket;
     
     private final CustomLogger logger = new CustomLogger();
+    
     private final DiscordHandler discordHandler = new DiscordHandler();
     private final List<Object> registeredHandlers = Collections.synchronizedList(new ArrayList<>());
     public final ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(4);
     private final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    
-    public static final File MAIN_DIR = new File(Minecraft.getMinecraft().mcDataDir, Haru.NAME);
+    private static final Minecraft mc = Minecraft.getMinecraft();
+
+    public static final File MAIN_DIR = new File(mc.mcDataDir, Haru.NAME);
     public static final File DLL_DIR = new File(MAIN_DIR, "dlls");
     public static final File CFG_DIR = new File(MAIN_DIR, "configs");
     public static final File DRAG_DIR = new File(MAIN_DIR, "draggable");
     public static final File CS_DIR = new File(MAIN_DIR, "cosmetics");
     public static final File SCRIPT_DIR = new File(MAIN_DIR, "scripts");
     
-    private final Minecraft mc = Minecraft.getMinecraft();
-
-    public boolean firstStart;
+    public static boolean firstStart;
 
     @EventHandler
     public void startMod(FMLInitializationEvent ignored) { }
@@ -188,16 +189,23 @@ public class Haru {
     }
     
     public void createDirectories() {
-        try {
-            Files.createDirectories(MAIN_DIR.toPath());
-            Files.createDirectories(DLL_DIR.toPath());
-            Files.createDirectories(CFG_DIR.toPath());
-            Files.createDirectories(DRAG_DIR.toPath());
-            Files.createDirectories(CS_DIR.toPath());
-            Files.createDirectories(SCRIPT_DIR.toPath());
-            logger.info("Dirs created successfully.");
-        } catch (IOException e) {
-            System.err.println("Error al crear directorios: " + e.getMessage());
+        Path[] directories = {
+            MAIN_DIR.toPath(),
+            DLL_DIR.toPath(),
+            CFG_DIR.toPath(),
+            DRAG_DIR.toPath(),
+            CS_DIR.toPath(),
+            SCRIPT_DIR.toPath()
+        };
+
+        for (Path dir : directories) {
+            try {
+                Files.createDirectories(dir);
+            } catch (IOException e) {
+            	logger.error("Failed to create directory " + dir + ": " + e.getMessage(), e);	
+            }
         }
+
+        logger.info("All directories were created successfully (or already existed).");
     }
 }

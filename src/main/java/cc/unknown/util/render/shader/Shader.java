@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import cc.unknown.handlers.ShaderHandler;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.render.RenderUtil;
-import cc.unknown.util.render.shader.api.GaussianFilter;
+import cc.unknown.util.render.shader.filters.GaussianFilter;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.texture.TextureUtil;
 

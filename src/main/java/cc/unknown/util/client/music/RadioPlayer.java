@@ -9,7 +9,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
-import cc.unknown.module.impl.visual.MusicPlayer;
+import cc.unknown.module.impl.visual.Radio;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.system.StopWatch;
 import javazoom.jl.decoder.JavaLayerException;
@@ -21,7 +21,7 @@ public class RadioPlayer implements Accessor {
     private final StopWatch timer = new StopWatch();
 
     public void start(final String url) {
-    	MusicPlayer musicPlayer = getModule(MusicPlayer.class);
+    	Radio musicPlayer = getModule(Radio.class);
     	assert musicPlayer != null;
     	
         if (this.timer.hasPassed(5L)) {

@@ -1,5 +1,7 @@
 package cc.unknown.ui.menu;
 
-public class CosmeticsMenu {
+import net.minecraft.client.gui.GuiScreen;
+
+public class CosmeticsMenu extends GuiScreen {
 
 }

@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "MusicPlayer", description = "Time to listen to radio.", category = Category.VISUAL)
-public class MusicPlayer extends Module {
+public class Radio extends Module {
 	
 	private final ModeValue mode = new ModeValue("Mode", this, "Local", "Rock", "Phonk", "Trap", "NCS", "Party", "Classic", "NightCore", "Other", "90s", "Local");
 	

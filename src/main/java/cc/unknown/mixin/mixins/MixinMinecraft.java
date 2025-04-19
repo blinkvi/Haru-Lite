@@ -17,8 +17,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.sun.jna.Platform;
-
 import cc.unknown.Haru;
 import cc.unknown.event.GameEvent;
 import cc.unknown.event.player.AttackEvent;
@@ -131,6 +129,15 @@ public abstract class MixinMinecraft implements IMinecraft {
 		}
 	}
 
+	@Inject(method = { "toggleFullscreen" }, at = { @At("RETURN") })
+	public void toggleFullscreen(CallbackInfo info) {
+		if (!this.fullscreen) {
+			Display.setResizable(false);
+			Display.setResizable(true);
+		}
+
+	}
+
 	@Inject(method = "startGame", at = @At("TAIL"))
 	private void disableGlErrorChecking(CallbackInfo ci) {
 		this.enableGLErrorChecking = false;
@@ -166,7 +173,9 @@ public abstract class MixinMinecraft implements IMinecraft {
 	public void clickMouse(boolean swing, boolean events) {
 		if (this.leftClickCounter <= 0) {
 			if (events) {
-				if (this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && objectMouseOver.entityHit instanceof EntityLivingBase) {
+				if (this.objectMouseOver != null
+						&& this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY
+						&& objectMouseOver.entityHit instanceof EntityLivingBase) {
 					final AttackEvent event = new AttackEvent((EntityLivingBase) this.objectMouseOver.entityHit);
 					MinecraftForge.EVENT_BUS.post(event);
 
@@ -211,14 +220,6 @@ public abstract class MixinMinecraft implements IMinecraft {
 		Display.setTitle("Loading Haru...");
 	}
 
-	@Inject(method = "toggleFullscreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setFullscreen(Z)V", remap = false))
-	private void resolveScreenState(CallbackInfo ci) {
-		if (!this.fullscreen && Platform.isWindows()) {
-			Display.setResizable(false);
-			Display.setResizable(true);
-		}
-	}
-
 	@Redirect(method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At(value = "INVOKE", target = "Ljava/lang/System;gc()V"))
 	private void optimizedWorldSwapping() {
 	}
@@ -241,6 +242,9 @@ public abstract class MixinMinecraft implements IMinecraft {
 			this.entityRenderer.getMapItemRenderer().clearLoadedMaps();
 		}
 	}
+	
+    @Overwrite
+    public void startTimerHackThread() { }
 
 	@Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/SkinManager;<init>(Lnet/minecraft/client/renderer/texture/TextureManager;Ljava/io/File;Lcom/mojang/authlib/minecraft/MinecraftSessionService;)V"))
 	public void splashSkinManager(CallbackInfo callback) {

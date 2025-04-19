@@ -1,4 +1,4 @@
-package cc.unknown.util.render.shader.api;
+package cc.unknown.util.render.shader.filters;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.Kernel;
@@ -109,6 +109,7 @@ public class GaussianFilter extends ConvolveFilter {
         this.kernel = makeKernel(radius);
     }
 
+    @Override
     public BufferedImage filter(BufferedImage src, BufferedImage dst) {
         int width = src.getWidth();
         int height = src.getHeight();
@@ -126,6 +127,7 @@ public class GaussianFilter extends ConvolveFilter {
         return dst;
     }
 
+    @Override
     public String toString() {
         return "Blur/Gaussian Blur...";
     }

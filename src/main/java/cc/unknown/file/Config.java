@@ -2,16 +2,14 @@ package cc.unknown.file;
 
 import java.awt.Color;
 import java.io.File;
+import java.util.Arrays;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import cc.unknown.Haru;
-import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
-import cc.unknown.ui.click.Window;
 import cc.unknown.util.render.client.ColorUtil;
-import cc.unknown.util.value.Value;
 import cc.unknown.util.value.impl.BoolValue;
 import cc.unknown.util.value.impl.ColorValue;
 import cc.unknown.util.value.impl.ModeValue;
@@ -25,7 +23,7 @@ public class Config extends Directory {
 
     @Override
     public void load(JsonObject object) {
-        for (Module module : getModuleManager().getModules()) {
+        getModuleManager().getModules().forEach(module -> {
             if (object.has(module.getName())) {
                 JsonObject moduleObject = object.get(module.getName()).getAsJsonObject();
 
@@ -44,7 +42,7 @@ public class Config extends Directory {
                 if (moduleObject.has("values")) {
                     JsonObject valuesObject = moduleObject.get("values").getAsJsonObject();
 
-                    for (Value value : module.getValues()) {
+                    module.getValues().forEach(value -> {
                         if (valuesObject.has(value.getName())) {
                             JsonElement theValue = valuesObject.get(value.getName());
 
@@ -57,12 +55,14 @@ public class Config extends Directory {
                             } else if (value instanceof MultiBoolValue) {
                                 MultiBoolValue multi = (MultiBoolValue) value;
                                 multi.getToggled().forEach(opt -> opt.set(false));
+
                                 if (!theValue.getAsString().isEmpty()) {
-                                    for (String str : theValue.getAsString().split(", ")) {
-                                        multi.getValues().stream()
-                                                .filter(b -> b.getName().equalsIgnoreCase(str))
-                                                .forEach(b -> b.set(true));
-                                    }
+                                    Arrays.stream(theValue.getAsString().split(", "))
+                                            .forEach(str ->
+                                                    multi.getValues().stream()
+                                                            .filter(b -> b.getName().equalsIgnoreCase(str))
+                                                            .forEach(b -> b.set(true))
+                                            );
                                 }
                             } else if (value instanceof ColorValue) {
                                 JsonObject colorValues = theValue.getAsJsonObject();
@@ -71,24 +71,19 @@ public class Config extends Directory {
                                         colorValues.get("alpha").getAsFloat()));
                             }
                         }
-                    }
+                    });
                 }
             }
-        }
+        });
 
         if (object.has("settings")) {
             JsonObject settingsObject = object.getAsJsonObject("settings");
 
-            for (Window window : Haru.instance.getDropGui().getWindows()) {
-                if (window.getCategory() == Category.SETTINGS) {
-                    // Bool
-                    for (BoolValue bool : window.getSettingBools()) {
-                        if (settingsObject.has(bool.getName())) {
-                            bool.set(settingsObject.get(bool.getName()).getAsBoolean());
-                        }
-                    }
-                }
-            }
+            Haru.instance.getDropGui().getWindows().stream()
+                    .filter(window -> window.getCategory() == Category.SETTINGS)
+                    .flatMap(window -> window.getSettingBools().stream())
+                    .filter(bool -> settingsObject.has(bool.getName()))
+                    .forEach(bool -> bool.set(settingsObject.get(bool.getName()).getAsBoolean()));
         }
     }
 
@@ -96,15 +91,16 @@ public class Config extends Directory {
     public JsonObject save() {
         JsonObject object = new JsonObject();
 
-        for (Module module : getModuleManager().getModules()) {
+        getModuleManager().getModules().forEach(module -> {
             JsonObject moduleObject = new JsonObject();
-            
+
             moduleObject.addProperty("enabled", module.isEnabled());
             moduleObject.addProperty("keyBind", module.getKeyBind());
             moduleObject.addProperty("hidden", module.isHidden());
 
             JsonObject valuesObject = new JsonObject();
-            for (Value value : module.getValues()) {
+
+            module.getValues().forEach(value -> {
                 if (value instanceof SliderValue) {
                     valuesObject.addProperty(value.getName(), ((SliderValue) value).get());
                 } else if (value instanceof BoolValue) {
@@ -120,23 +116,20 @@ public class Config extends Directory {
                     colorValues.addProperty("alpha", colorValue.getAlpha());
                     valuesObject.add(colorValue.getName(), colorValues);
                 }
-            }
+            });
 
             moduleObject.add("values", valuesObject);
             object.add(module.getName(), moduleObject);
-        }
+        });
 
         JsonObject settingsObject = new JsonObject();
-        for (Window window : Haru.instance.getDropGui().getWindows()) {
-            if (window.getCategory() == Category.SETTINGS) {
-                for (BoolValue bool : window.getSettingBools()) {
-                    settingsObject.addProperty(bool.getName(), bool.get());
-                }
-            }
-        }
-        
-        object.add("settings", settingsObject);
+        Haru.instance.getDropGui().getWindows().stream()
+                .filter(window -> window.getCategory() == Category.SETTINGS)
+                .flatMap(window -> window.getSettingBools().stream())
+                .forEach(bool -> settingsObject.addProperty(bool.getName(), bool.get()));
 
+        object.add("settings", settingsObject);
         return object;
     }
+
 }

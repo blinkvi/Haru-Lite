@@ -9,12 +9,16 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+import cc.unknown.Haru;
+import cc.unknown.util.client.system.SystemUtil;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSelectWorld;
+import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -26,67 +30,81 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.GuiModList;
 
 @Mixin(GuiMainMenu.class)
-public abstract class MixinGuiMainMenu extends GuiScreen {
+public abstract class MixinGuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	@Shadow
 	private DynamicTexture viewportTexture;
+	
 	@Shadow
 	private ResourceLocation backgroundTexture;
-	@Unique
-	private static final ResourceLocation[] customPanorama = new ResourceLocation[] {
-			new ResourceLocation("haru/images/panorama_0.png"), new ResourceLocation("haru/images/panorama_1.png"),
-			new ResourceLocation("haru/images/panorama_2.png"), new ResourceLocation("haru/images/panorama_3.png"),
-			new ResourceLocation("haru/images/panorama_4.png"), new ResourceLocation("haru/images/panorama_5.png") };
 	
+	@Unique
+	private static final ResourceLocation[] customPanorama = new ResourceLocation[6];
 
+	static {
+	    for (int i = 0; i < 6; i++) {
+	        customPanorama[i] = new ResourceLocation("haru/images/backgrounds/christmas/panorama_" + i + ".png");
+	    }
+	}
+	
 	@Shadow
 	private int panoramaTimer;
 
 	@Overwrite
 	public void initGui() {
-		this.viewportTexture = new DynamicTexture(256, 256);
-		this.backgroundTexture = this.mc.getTextureManager().getDynamicTextureLocation("background",this.viewportTexture);
-		int j = this.height / 4 + 48;
+	    ScaledResolution scaled = new ScaledResolution(this.mc);
+	    int scaledWidth = scaled.getScaledWidth();
+	    int scaledHeight = scaled.getScaledHeight();
 
-		this.addSingleplayerMultiplayerButtons(j, 24);
+	    this.viewportTexture = new DynamicTexture(256, 256);
+	    this.backgroundTexture = this.mc.getTextureManager().getDynamicTextureLocation("background", this.viewportTexture);
+	    int j = scaledHeight / 4 + 48;
 
-		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, j + 72 + 12, 98, 20, I18n.format("menu.options")));
-		this.buttonList.add(new GuiButton(4, this.width / 2 + 2, j + 72 + 12, 98, 20, I18n.format("menu.quit")));
+	    this.addSingleplayerMultiplayerButtons(j, 24);
+
+	    this.buttonList.add(new GuiButton(0, scaledWidth / 2 - 100, j + 72 + 12, 98, 20, I18n.format("menu.options")));
+	    this.buttonList.add(new GuiButton(3, scaledWidth / 2 + 2, j + 72 + 12, 98, 20, I18n.format("menu.quit")));
 	}
-
 
 	@Overwrite
 	private void addSingleplayerMultiplayerButtons(int p_73969_1_, int p_73969_2_) {
-		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer")));
-		this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer")));
-		this.buttonList.add(new GuiButton(6, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, 200, 20, I18n.format("fml.menu.mods")));
-	}
+	    ScaledResolution scaled = new ScaledResolution(this.mc);
+	    int scaledWidth = scaled.getScaledWidth();
 
+	    this.buttonList.add(new GuiButton(1, scaledWidth / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer")));
+	    this.buttonList.add(new GuiButton(2, scaledWidth / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer")));
+	    this.buttonList.add(new GuiButton(4, scaledWidth / 2 - 100, p_73969_1_ + p_73969_2_ * 2, 200, 20, I18n.format("fml.menu.mods")));
+	}
+	
 	@Overwrite
 	public void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 0) {
+		switch (button.id) {
+		case 0:
 			this.mc.displayGuiScreen(new GuiOptions((GuiMainMenu) (Object) this, this.mc.gameSettings));
-		}
-
-		if (button.id == 1) {
+			break;
+		case 1:
 			this.mc.displayGuiScreen(new GuiSelectWorld((GuiMainMenu) (Object) this));
-		}
-
-		if (button.id == 2) {
+			break;
+		case 2:
 			this.mc.displayGuiScreen(new GuiMultiplayer((GuiMainMenu) (Object) this));
-		}
-
-		if (button.id == 4) {
+			break;
+		case 3:
 			this.mc.shutdown();
-		}
-
-		if (button.id == 6) {
+			break;
+		case 4:
 			this.mc.displayGuiScreen(new GuiModList((GuiMainMenu) (Object) this));
+			break;
 		}
 	}
 
 	@Overwrite
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.renderSkybox(mouseX, mouseY, partialTicks);
+        
+        if (Haru.firstStart) {
+        	SystemUtil.playSound();
+        	Haru.firstStart = false;
+        }
+		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 

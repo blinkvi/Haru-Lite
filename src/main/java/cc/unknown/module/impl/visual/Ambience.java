@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
+
 @SuppressWarnings("rawtypes")
 @ModuleInfo(name = "Ambience", description = "Change the time.", category = Category.VISUAL)
 public class Ambience extends Module {

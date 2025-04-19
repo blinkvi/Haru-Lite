@@ -73,7 +73,7 @@ public class ReflectUtil implements Accessor {
     public Timer getTimer() {
     	return ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, mc, "timer", "field_71428_T");
     }
-    
+
     public float getLastReportedYaw() {
     	return ObfuscationReflectionHelper.getPrivateValue(EntityPlayerSP.class, mc.thePlayer, "lastReportedYaw", "field_175164_bL");
     }
@@ -82,28 +82,28 @@ public class ReflectUtil implements Accessor {
     	return ObfuscationReflectionHelper.getPrivateValue(EntityPlayerSP.class, mc.thePlayer, "lastReportedPitch", "field_175165_bM");
     }
     
-    public int getMotionX() {
-        return ObfuscationReflectionHelper.getPrivateValue(S12PacketEntityVelocity.class, new S12PacketEntityVelocity(), "motionX", "field_149415_b");
+    public int getMotionX(S12PacketEntityVelocity packet) {
+        return ObfuscationReflectionHelper.getPrivateValue(S12PacketEntityVelocity.class, packet, "motionX", "field_149415_b");
     }
     
-    public int getMotionY() {
-    	return ObfuscationReflectionHelper.getPrivateValue(S12PacketEntityVelocity.class, new S12PacketEntityVelocity(), "motionY", "field_149416_c");
+    public int getMotionY(S12PacketEntityVelocity packet) {
+    	return ObfuscationReflectionHelper.getPrivateValue(S12PacketEntityVelocity.class, packet, "motionY", "field_149416_c");
     }
     
-    public int getMotionZ() {
-    	return ObfuscationReflectionHelper.getPrivateValue(S12PacketEntityVelocity.class, new S12PacketEntityVelocity(), "motionZ", "field_149414_d");
+    public int getMotionZ(S12PacketEntityVelocity packet) {
+    	return ObfuscationReflectionHelper.getPrivateValue(S12PacketEntityVelocity.class, packet, "motionZ", "field_149414_d");
     }
     
-    public void setMotionX(int val) {
-        ObfuscationReflectionHelper.setPrivateValue(S12PacketEntityVelocity.class, new S12PacketEntityVelocity(), val, "motionX", "field_149415_b");
+    public void setMotionX(S12PacketEntityVelocity packet, int val) {
+        ObfuscationReflectionHelper.setPrivateValue(S12PacketEntityVelocity.class, packet, val, "motionX", "field_149415_b");
     }
     
-    public void setMotionY(int val) {
-    	ObfuscationReflectionHelper.setPrivateValue(S12PacketEntityVelocity.class, new S12PacketEntityVelocity(), val, "motionY", "field_149416_c");
+    public void setMotionY(S12PacketEntityVelocity packet, int val) {
+    	ObfuscationReflectionHelper.setPrivateValue(S12PacketEntityVelocity.class, packet, val, "motionY", "field_149416_c");
     }
     
-    public void setMotionZ(int val) {
-    	ObfuscationReflectionHelper.setPrivateValue(S12PacketEntityVelocity.class, new S12PacketEntityVelocity(), val, "motionZ", "field_149414_d");
+    public void setMotionZ(S12PacketEntityVelocity packet, int val) {
+    	ObfuscationReflectionHelper.setPrivateValue(S12PacketEntityVelocity.class, packet, val, "motionZ", "field_149414_d");
     }
     
     public void setServerSprintState(boolean bool) {
@@ -114,16 +114,16 @@ public class ReflectUtil implements Accessor {
     	return ObfuscationReflectionHelper.getPrivateValue(EntityPlayerSP.class, mc.thePlayer, "serverSprintState", "field_175171_bO");
     }
     
-    public void setYawC03(float flot) {
-    	ObfuscationReflectionHelper.setPrivateValue(C03PacketPlayer.class, new C03PacketPlayer(), flot, "yaw", "field_149476_e");
+    public void setYawC03(C03PacketPlayer packet, float flot) {
+    	ObfuscationReflectionHelper.setPrivateValue(C03PacketPlayer.class, packet, flot, "yaw", "field_149476_e");
     }
     
-    public void setPitchC03(float flot) {
-    	ObfuscationReflectionHelper.setPrivateValue(C03PacketPlayer.class, new C03PacketPlayer(), flot, "pitch", "field_149473_f");
+    public void setPitchC03(C03PacketPlayer packet, float flot) {
+    	ObfuscationReflectionHelper.setPrivateValue(C03PacketPlayer.class, packet, flot, "pitch", "field_149473_f");
     }
     
-    public void setRotatingC03(boolean bool) {
-    	ObfuscationReflectionHelper.setPrivateValue(C03PacketPlayer.class, new C03PacketPlayer(), bool, "rotating", "field_149481_i");
+    public void setRotatingC03(C03PacketPlayer packet, boolean bool) {
+    	ObfuscationReflectionHelper.setPrivateValue(C03PacketPlayer.class, packet, bool, "rotating", "field_149481_i");
     }
     
     public void setItemInUse(int block) {

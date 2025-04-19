@@ -16,7 +16,6 @@ import cc.unknown.util.render.font.FontRenderer;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
 import cc.unknown.util.render.shader.impl.GradientBlur;
-import cc.unknown.util.render.shader.impl.ShaderRoundedRect;
 import cc.unknown.util.value.impl.BoolValue;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +26,6 @@ public class Window implements IComponent {
     private final List<ModuleComponent> moduleComponents;
     private final List<BoolValue> settingBools = new ArrayList<>();
 	private final GradientBlur gradientBlur = new GradientBlur();
-    private final ShaderRoundedRect roundedRect = new ShaderRoundedRect(3, true, true);
     
     private final Category category;
     public float x, y, dragX, dragY;

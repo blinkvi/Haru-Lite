@@ -1,4 +1,4 @@
-package cc.unknown.util.render.shader.api;
+package cc.unknown.util.render.shader.filters;
 
 import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
@@ -6,6 +6,9 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.Kernel;
+
+import cc.unknown.util.render.shader.api.AbstractBufferedImageOp;
+import cc.unknown.util.render.shader.api.ImageMath;
 
 public class ConvolveFilter extends AbstractBufferedImageOp {
     public static int CLAMP_EDGES = 1;
@@ -185,6 +188,7 @@ public class ConvolveFilter extends AbstractBufferedImageOp {
         return Math.min(c, 255);
     }
 
+    @Override
     public BufferedImage filter(BufferedImage src, BufferedImage dst) {
         int width = src.getWidth();
         int height = src.getHeight();
@@ -205,22 +209,27 @@ public class ConvolveFilter extends AbstractBufferedImageOp {
         return dst;
     }
 
+    @Override
     public BufferedImage createCompatibleDestImage(BufferedImage src, ColorModel dstCM) {
         return super.createCompatibleDestImage(src, dstCM);
     }
 
+    @Override
     public Rectangle2D getBounds2D(BufferedImage src) {
         return super.getBounds2D(src);
     }
 
+    @Override
     public Point2D getPoint2D(Point2D srcPt, Point2D dstPt) {
         return super.getPoint2D(srcPt, dstPt);
     }
 
+    @Override
     public RenderingHints getRenderingHints() {
         return super.getRenderingHints();
     }
 
+    @Override
     public String toString() {
         return "Blur/Convolve...";
     }
