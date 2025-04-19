@@ -10,7 +10,7 @@ import cc.unknown.event.player.AttackEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.MathUtil;
+import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.player.FriendUtil;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
@@ -31,12 +31,12 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @ModuleInfo(name = "AimAssist", description = "Assists with aiming at opponents in a legitimate manner.", category = Category.COMBAT)
 public class AimAssist extends Module {
 
-	private final SliderValue hSpeed = new SliderValue("HorizontalSpeed", this, 3.4f, 0.1f, 10, 0.01f);
-	private final SliderValue hMult  = new SliderValue("HorizontalMult",  this, 3.5f, 0.1f, 10, 0.01f);
+	private final SliderValue hSpeed = new SliderValue("HorizontalSpeed", this, 3.4f, 0.1f, 20, 0.01f);
+	private final SliderValue hMult  = new SliderValue("HorizontalMult",  this, 3.5f, 0.1f, 20, 0.01f);
 	
 	private BoolValue vertical = new BoolValue("Vertical", this, false);
-	private SliderValue vSpeed = new SliderValue("VerticalSpeed", this, 2.1f, 0.1f, 10, 0.01f, vertical::get);
-	private SliderValue vMult = new SliderValue("VerticalMult", this, 2.3f, 0.1f, 10, 0.01f, vertical::get);
+	private SliderValue vSpeed = new SliderValue("VerticalSpeed", this, 2.1f, 0.1f, 20, 0.01f, vertical::get);
+	private SliderValue vMult = new SliderValue("VerticalMult", this, 2.3f, 0.1f, 20, 0.01f, vertical::get);
 	
 	private final SliderValue angle = new SliderValue("Angle", this, 180, 0, 180, 1);
 	private final SliderValue distance = new SliderValue("Distance", this, 4f, 1f, 8f, 0.1f);

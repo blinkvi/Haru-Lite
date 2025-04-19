@@ -9,9 +9,12 @@ import java.nio.charset.StandardCharsets;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class Browser {
 
-    public static String postExternal(final String url, final String post, final boolean json) {
+    public String postExternal(final String url, final String post, final boolean json) {
         try {
             final HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
             connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36");
@@ -54,7 +57,7 @@ public class Browser {
         }
     }
 
-    public static String getBearerResponse(final String url, final String bearer) {
+    public String getBearerResponse(final String url, final String bearer) {
         try {
             final HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
             connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36");

@@ -1,7 +1,7 @@
 package cc.unknown.socket;
 import cc.unknown.socket.api.HookRetriever;
 import cc.unknown.socket.impl.IRCSocket;
-import cc.unknown.util.client.netty.NetworkUtil;
+import cc.unknown.util.client.network.NetworkUtil;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;

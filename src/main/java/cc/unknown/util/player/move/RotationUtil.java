@@ -5,7 +5,7 @@ import static java.lang.Math.hypot;
 import org.jetbrains.annotations.NotNull;
 
 import cc.unknown.util.Accessor;
-import cc.unknown.util.client.MathUtil;
+import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.structure.vectors.Vector2f;
 import cc.unknown.util.structure.vectors.Vector3d;
 import net.minecraft.client.entity.AbstractClientPlayer;

@@ -12,7 +12,7 @@ import cc.unknown.util.Accessor;
 import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.util.ResourceLocation;
 
-public class UsernameGenerator implements Accessor {
+public class AltGen implements Accessor {
 
     public static String[] retrieve() {
         try {

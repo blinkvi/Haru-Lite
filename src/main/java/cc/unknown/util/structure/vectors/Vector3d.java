@@ -1,42 +1,18 @@
 package cc.unknown.util.structure.vectors;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 
+@Getter
+@Setter
+@AllArgsConstructor
 public class Vector3d {
     public double x;
     public double y;
     public double z;
-    
-    public Vector3d(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
-
-	public double getX() {
-		return x;
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public double getY() {
-		return y;
-	}
-
-	public void setY(double y) {
-		this.y = y;
-	}
-
-	public double getZ() {
-		return z;
-	}
-
-	public void setZ(double z) {
-		this.z = z;
-	}
 
 	public Vector3d(Entity entity) {
         this(entity.posX, entity.posY, entity.posZ);
@@ -75,13 +51,5 @@ public class Vector3d {
         double deltaY = this.y - entity.posY;
         double deltaZ = this.z - entity.posZ;
         return MathHelper.sqrt_double(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Vector3d)) return false;
-
-        Vector3d vector = (Vector3d) obj;
-        return ((Math.floor(x) == Math.floor(vector.x)) && Math.floor(y) == Math.floor(vector.y) && Math.floor(z) == Math.floor(vector.z));
     }
 }

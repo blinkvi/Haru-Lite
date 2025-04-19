@@ -40,13 +40,9 @@ public class CosmeticSocket extends WebSocketCore {
 	            }
 	        }
 
-	        cosmeticList.removeIf(cosmetic ->
-	            !cosmetic.getName().equalsIgnoreCase(superCosmetic.getName()) &&
-	            cosmetic.getLastUpdated().isBefore(LocalDateTime.now().minusHours(4))
-	        );
-
-	        cosmeticList.removeIf(cosmetic ->
-	            cosmetic.getName().equalsIgnoreCase(superCosmetic.getName())
+	        cosmeticList.removeIf(cosmetic -> 
+	        	cosmetic.getLastUpdated().isBefore(LocalDateTime.now().minusHours(4)) || 
+	        	cosmetic.getName().equalsIgnoreCase(superCosmetic.getName())
 	        );
 
 	        cosmeticList.add(superCosmetic);

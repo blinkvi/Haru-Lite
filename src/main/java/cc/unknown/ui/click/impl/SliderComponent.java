@@ -6,7 +6,7 @@ import org.lwjgl.input.Mouse;
 
 import cc.unknown.module.impl.visual.ClickGUI;
 import cc.unknown.ui.click.complement.Component;
-import cc.unknown.util.client.MathUtil;
+import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;

@@ -4,7 +4,7 @@ import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.MathUtil;
+import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.player.move.MoveUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,4 +1,4 @@
-package cc.unknown.util.client.netty;
+package cc.unknown.util.client.network;
 
 import java.util.ArrayList;
 import java.util.List;

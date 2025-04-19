@@ -8,7 +8,7 @@ import cc.unknown.event.player.OutgoingEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.netty.PacketUtil;
+import cc.unknown.util.client.network.PacketUtil;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;

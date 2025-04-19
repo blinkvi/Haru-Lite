@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import cc.unknown.event.player.InboundEvent;
 import cc.unknown.event.player.OutgoingEvent;
-import cc.unknown.util.client.netty.PPSCounter;
-import cc.unknown.util.client.netty.PacketUtil;
+import cc.unknown.util.client.network.PPSCounter;
+import cc.unknown.util.client.network.PacketUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import net.minecraft.network.INetHandler;

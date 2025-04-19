@@ -29,7 +29,7 @@ public final class ClickGUI extends Module {
 			new BoolValue("RoundedOutline", false),
 			new BoolValue("RoundedButtons", false),
 			new BoolValue("Shaders", false),
-			new BoolValue("ToolTips", false)));
+			new BoolValue("ToolTips", true)));
 	
 	
 	public final SliderValue alpha = new SliderValue("AlphaBackground", this, 150, 20, 255, 1);

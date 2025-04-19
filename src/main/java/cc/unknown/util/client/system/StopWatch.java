@@ -15,7 +15,7 @@ public class StopWatch {
     public boolean hasPassed(long delay) {
         return System.currentTimeMillis() - delay >= startTime;
     }
-
+    
     public boolean hasElapsed(double delay, boolean reset) {
         if (System.currentTimeMillis() - this.startTime >= delay) {
             if (reset) reset();

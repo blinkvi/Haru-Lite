@@ -7,7 +7,7 @@ import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.dll.LoaderUtil;
-import cc.unknown.util.client.netty.NetworkUtil;
+import cc.unknown.util.client.network.NetworkUtil;
 import cc.unknown.util.render.client.ChatUtil;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.util.value.impl.BoolValue;

@@ -1,4 +1,4 @@
-package cc.unknown.util.client.netty;
+package cc.unknown.util.client.network;
 
 import cc.unknown.util.client.system.StopWatch;
 import net.minecraft.network.Packet;

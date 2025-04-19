@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import cc.unknown.module.impl.visual.Interface;
 import cc.unknown.ui.drag.Drag;
-import cc.unknown.util.client.netty.NetworkUtil;
+import cc.unknown.util.client.network.NetworkUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
 import net.minecraft.client.gui.ScaledResolution;

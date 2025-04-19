@@ -1,7 +1,7 @@
 package cc.unknown.util.render.client;
 
 import cc.unknown.util.Accessor;
-import cc.unknown.util.client.netty.PacketUtil;
+import cc.unknown.util.client.network.PacketUtil;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.util.ChatComponentText;
 

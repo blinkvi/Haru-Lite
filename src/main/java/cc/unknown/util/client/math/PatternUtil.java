@@ -1,4 +1,4 @@
-package cc.unknown.util.client;
+package cc.unknown.util.client.math;
 
 import java.util.Arrays;
 

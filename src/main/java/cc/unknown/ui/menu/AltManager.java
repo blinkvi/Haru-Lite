@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 import cc.unknown.mixin.impl.IMinecraft;
 import cc.unknown.ui.menu.impl.TextField;
 import cc.unknown.util.alt.MicrosoftAccount;
-import cc.unknown.util.alt.UsernameGenerator;
+import cc.unknown.util.alt.AltGen;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.structure.vectors.Vector2d;
 import net.minecraft.client.gui.GuiButton;
@@ -97,7 +97,7 @@ public class AltManager extends GuiScreen {
         }
     	
         if (typedChar == '\r') {            
-            if (UsernameGenerator.validate(inputText)) {
+            if (AltGen.validate(inputText)) {
                 usernameBox.setText(inputText);
                 status = gray + "Logeado como > " + green + inputText;
                 ((IMinecraft) mc).setSession(new Session(inputText, "none", "none", "mojang"));
@@ -116,8 +116,8 @@ public class AltManager extends GuiScreen {
 
     	switch (button.id) {
         case 1:        	
-        	String name = UsernameGenerator.generate();
-        	if (name != null && UsernameGenerator.validate(name)) {
+        	String name = AltGen.generate();
+        	if (name != null && AltGen.validate(name)) {
         		usernameBox.setText(name);
         	}
         	status = gray + "Logeado como > " + green + name;

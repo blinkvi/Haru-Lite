@@ -4,7 +4,7 @@ import java.util.List;
 
 import cc.unknown.event.player.InboundEvent;
 import cc.unknown.util.Accessor;
-import cc.unknown.util.client.netty.PacketUtil;
+import cc.unknown.util.client.network.PacketUtil;
 import cc.unknown.util.player.move.MoveUtil;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.inventory.GuiContainer;

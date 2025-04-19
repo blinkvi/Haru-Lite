@@ -6,7 +6,7 @@ import java.util.Map;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.netty.ServerUtil;
+import cc.unknown.util.client.network.ServerUtil;
 import cc.unknown.util.render.client.ChatUtil;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

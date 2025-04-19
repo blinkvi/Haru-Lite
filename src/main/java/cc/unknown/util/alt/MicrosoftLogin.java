@@ -18,7 +18,7 @@ import com.google.gson.annotations.SerializedName;
 
 import cc.unknown.ui.menu.AltManager;
 import cc.unknown.util.Accessor;
-import cc.unknown.util.client.netty.NetworkUtil;
+import cc.unknown.util.client.network.NetworkUtil;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.util.structure.comparators.ValuePair;
 

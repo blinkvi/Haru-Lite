@@ -4,16 +4,13 @@ import java.util.function.Consumer;
 
 import com.google.gson.JsonObject;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class MicrosoftAccount extends Account {
     private String refreshToken;
-
-    public String getRefreshToken() {
-		return refreshToken;
-	}
-
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
 
 	public MicrosoftAccount(String name, String uuid, String accessToken, String refreshToken) {
         super(name, uuid, accessToken);

@@ -2,6 +2,7 @@ package cc.unknown.ui.click;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -29,7 +30,7 @@ public class DropGui extends GuiScreen {
     private Window win;
 
     public DropGui() {
-    	ScaledResolution sr = new ScaledResolution(Accessor.mc);
+        ScaledResolution sr = new ScaledResolution(Accessor.mc);
         float screenWidth = sr.getScaledWidth();
         float screenHeight = sr.getScaledHeight();
 
@@ -39,11 +40,14 @@ public class DropGui extends GuiScreen {
         startX = (screenWidth - buttonWidth) / 2.0f;
         startY = screenHeight / 4.0f;
 
-        for (int i = 0; i < Category.values().length; i++) {
+        final int[] index = {0};
+
+        Arrays.stream(Category.values()).forEach(category -> {
             x = startX;
-            y = startY + i * (buttonWidth / 2 - spacingY);
-            windows.add(new Window(Category.values()[i], x, y));
-        }
+            y = startY + index[0] * (buttonWidth / 2 - spacingY);
+            windows.add(new Window(category, x, y));
+            index[0]++;
+        });
     }
 
     @Override

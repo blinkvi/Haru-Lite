@@ -3,7 +3,7 @@ import java.util.List;
 
 import cc.unknown.handlers.CPSHandler;
 import cc.unknown.util.Accessor;
-import cc.unknown.util.client.MathUtil;
+import cc.unknown.util.client.math.MathUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.client.settings.KeyBinding;

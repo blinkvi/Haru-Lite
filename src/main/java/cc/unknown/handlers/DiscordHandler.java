@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import cc.unknown.Haru;
 import cc.unknown.util.Accessor;
-import cc.unknown.util.client.netty.ServerUtil;
+import cc.unknown.util.client.network.ServerUtil;
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.arikia.dev.drpc.DiscordRichPresence;
@@ -31,10 +31,10 @@ public class DiscordHandler implements Accessor {
 				while (running) {
 					if (mc.thePlayer != null) {
 						if (mc.isSingleplayer()) {
-							updateStatus("", "Practicing godlike movement... totally not cheating.");
+							updateStatus("", "Practicing godlike movement.");
 						} else if (ServerUtil.isConnectedToKnownServer(mc.getCurrentServerData().serverIP)) {
 							updateStatus("User: " + getUser(),
-									"Cheating on... I mean, playing on " + ServerUtil.serverName);
+									"Cheating on " + ServerUtil.serverName);
 						} else if (mc.currentScreen instanceof GuiDownloadTerrain) {
 							updateStatus("Loading world...", "Hope you didn't just crash.");
 						}

@@ -9,7 +9,7 @@ import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.module.impl.move.NoClip;
-import cc.unknown.util.client.MathUtil;
+import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.player.move.MoveUtil;
 import cc.unknown.util.value.impl.BoolValue;
 import cc.unknown.util.value.impl.ModeValue;

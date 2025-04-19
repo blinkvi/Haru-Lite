@@ -1,13 +1,12 @@
 package cc.unknown.ui.click;
 
 import java.awt.Color;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import cc.unknown.Haru;
-import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.impl.visual.ClickGUI;
 import cc.unknown.ui.click.complement.IComponent;
@@ -17,6 +16,7 @@ import cc.unknown.util.render.font.FontRenderer;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
 import cc.unknown.util.render.shader.impl.GradientBlur;
+import cc.unknown.util.render.shader.impl.ShaderRoundedRect;
 import cc.unknown.util.value.impl.BoolValue;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +27,7 @@ public class Window implements IComponent {
     private final List<ModuleComponent> moduleComponents;
     private final List<BoolValue> settingBools = new ArrayList<>();
 	private final GradientBlur gradientBlur = new GradientBlur();
+    private final ShaderRoundedRect roundedRect = new ShaderRoundedRect(3, true, true);
     
     private final Category category;
     public float x, y, dragX, dragY;
@@ -70,7 +71,7 @@ public class Window implements IComponent {
             RenderUtil.drawBorderedRect(x - 2.1f, y, width + 3.5f, height, 1F, new Color(19, 19, 19, 160).getRGB(), outlineColor.getRGB());
         }
 
-        float componentOffsetY = 15;
+        int componentOffsetY = 15;
         
         if (expand) {
             if (category == Category.SETTINGS) {
@@ -89,13 +90,17 @@ public class Window implements IComponent {
             	    componentOffsetY += 12;
             	}
             } else if (moduleComponents != null) {
-                for (ModuleComponent module : moduleComponents) {
+                AtomicInteger offsetY = new AtomicInteger(componentOffsetY);
+
+                moduleComponents.forEach(module -> {
                     module.x = x;
-                    module.y = y + componentOffsetY;
+                    module.y = y + offsetY.get();
                     module.width = width;
                     module.drawScreen(mouseX, mouseY);
-                    componentOffsetY += module.height;
-                }
+                    offsetY.addAndGet((int) module.height);
+                });
+
+                componentOffsetY = offsetY.get();
             }
         }
 
@@ -147,13 +152,5 @@ public class Window implements IComponent {
     public void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
-    }
-    
-    public void rebuildModuleCache() {
-    	moduleComponents.clear();
-        @SuppressWarnings("unchecked")
-		java.util.List<Module> sortedModules = (List<Module>) Haru.instance.getModuleManager().getModules();
-        sortedModules.sort((o1, o2) -> Collator.getInstance().compare(o1.getName(), o2.getName()));
-        sortedModules.forEach(module -> moduleComponents.add(new ModuleComponent(module)));
     }
 }
