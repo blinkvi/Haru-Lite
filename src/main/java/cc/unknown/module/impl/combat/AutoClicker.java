@@ -8,7 +8,6 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
-import cc.unknown.util.client.math.PatternUtil;
 import cc.unknown.util.client.system.StopWatch;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
@@ -28,7 +27,6 @@ public class AutoClicker extends Module {
     
     private final SliderValue min = new SliderValue("MinCPS", this, 10, 1, 25);
     private final SliderValue max = new SliderValue("MaxCPS", this, 14, 1, 25);
-    private final SliderValue amount = new SliderValue("Amount", this, 0.2f, 0, 1, 0.1f, () -> !this.randomization.is("Normal"));
     private final SliderValue boost = new SliderValue("Boost", this, 5, 1, 99, () -> this.conditionals.isEnabled("CPSBoost") && this.randomization.is("Normal"));
     
     private final ModeValue randomization = new ModeValue("Randomization", this, "Normal", "Normal", "Extra", "Extra+");
@@ -64,11 +62,31 @@ public class AutoClicker extends Module {
     	if (mc.currentScreen != null || !mc.inGameHasFocus) return;
     	if (!mc.gameSettings.keyBindAttack.isKeyDown()) return;
 
-    	if (stopWatch == null) return;
-
     	ReflectUtil.setLeftClickCounter(0);
 
-    	clickDelay = getClickDelay();
+		switch (randomization.getMode()) {
+		case "Normal":
+			if (conditionals.isEnabled("CPSBoost")) {
+				clickDelay = (long) (1000 / MathUtil.randomizeDouble(min.getValue(), max.getValue()) + boost.getValue());
+			} else {
+				clickDelay = (long) (1000 / MathUtil.randomizeDouble(min.getValue(), max.getValue()));
+			}
+			break;
+		case "Extra":
+		    long currentTime = stopWatch.getElapsedTime();
+		    
+		    if (currentTime >= 10) {
+		        clickDelay = (long) (2000 / MathUtil.nextSecureGaussian(min.getValue(), max.getValue()));
+		    }
+		    
+		    if (currentTime >= 50) {
+		        clickDelay = (long) (1000 / MathUtil.nextSecureGaussian(min.getValue(), max.getValue()));
+		    }
+		    break;
+		case "Extra+":
+			clickDelay =  (long) (2000 / MathUtil.randomDouble(min.getValue(), max.getValue()));
+			break;
+		}
 
     	if (stopWatch.hasPassed(clickDelay)) {
     		PlayerUtil.leftClick(true);
@@ -79,14 +97,10 @@ public class AutoClicker extends Module {
     @SubscribeEvent
     public void onPrePosition(PrePositionEvent event) {
         if (conditionals.isEnabled("Inventory") && mc.currentScreen instanceof GuiContainer) {
-        	InventoryUtil.guiClicker(mc.currentScreen, 0, getClickDelay());
+        	InventoryUtil.guiClicker(mc.currentScreen, 0, clickDelay);
         }
     }
 
-    public long getClickDelay() {
-        return conditionals.isEnabled("CPSBoost") ? PatternUtil.randomization(randomization.getMode(), (int) MathUtil.randomizeDouble(min.getValue(), max.getValue()) + (int) boost.getValue(), amount.getValue()) : PatternUtil.randomization(randomization.getMode(), (int) MathUtil.randomizeDouble(min.getValue(), max.getValue()), amount.getValue());
-    }
-    
     private void reset() {
     	InventoryUtil.inventoryStopWatch.reset();
     	clickDelay = 0L;

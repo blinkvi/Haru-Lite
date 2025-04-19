@@ -4,18 +4,21 @@ import java.util.Arrays;
 
 import org.lwjgl.input.Keyboard;
 
+import cc.unknown.event.player.InboundEvent;
 import cc.unknown.event.player.PostVelocityEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.module.impl.move.NoClip;
+import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.player.move.MoveUtil;
 import cc.unknown.util.value.impl.BoolValue;
 import cc.unknown.util.value.impl.ModeValue;
 import cc.unknown.util.value.impl.MultiBoolValue;
 import cc.unknown.util.value.impl.SliderValue;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "Velocity", description = "Modifies the knockback you get.", category = Category.COMBAT)
@@ -39,21 +42,63 @@ public class Velocity extends Module {
         	mc.thePlayer.setJumping(mc.thePlayer.onGround);
         }
     };
-
+    
     @SubscribeEvent
+    public void onInbound(InboundEvent event) {
+    	if (mode.is("Normal")) {
+	        if (event.isCanceled()) return;
+	
+	        Packet<?> packet = event.getPacket();
+	
+	        if (packet instanceof S12PacketEntityVelocity) {
+	            S12PacketEntityVelocity velocity = (S12PacketEntityVelocity) packet;
+	
+	            if (velocity.getEntityID() != mc.thePlayer.getEntityId()) return;
+	
+	            double horizontalScale = horizontal.getValue();
+	            double verticalScale = vertical.getValue();
+	
+	            if (horizontalScale == 0) {
+	                if (verticalScale != 0) {
+	                    mc.thePlayer.motionY = velocity.getMotionY() / 8000.0D * verticalScale;
+	                }
+	
+	                event.setCanceled(true);
+	                return;
+	            }
+	
+	            // Escala los valores originales
+	            int motionX = (int) (velocity.getMotionX() * horizontalScale);
+	            int motionY = (int) (velocity.getMotionY() * verticalScale);
+	            int motionZ = (int) (velocity.getMotionZ() * horizontalScale);
+	
+	            ReflectUtil.setMotionX(velocity, motionX);
+	            ReflectUtil.setMotionY(velocity, motionY);
+	            ReflectUtil.setMotionZ(velocity, motionZ);
+	
+	            event.setPacket(velocity);
+	        }
+    	}
+    }
+
+    /*@SubscribeEvent
     public void onLivingUpdate(LivingUpdateEvent event) {
         if (!shouldApplyVelocity()) return;
                 
         double horizontal = this.horizontal.getValue() * 100 / 100.0;
         double vertical = this.vertical.getValue() * 100 / 100.0;
 
-        if (mode.is("Normal") && mc.thePlayer.maxHurtTime > 0 && mc.thePlayer.hurtTime == mc.thePlayer.maxHurtTime) {
-        	assert horizontal != 1 || vertical != 1;
-        	mc.thePlayer.motionX *= horizontal;
-        	mc.thePlayer.motionZ *= horizontal;
-        	mc.thePlayer.motionY *= vertical;
+        if (mode.is("Normal") && mc.thePlayer.maxHurtTime > 0 && mc.thePlayer.hurtTime == mc.thePlayer.maxHurtTime) {        	
+        	if (horizontal != 1) {
+            	mc.thePlayer.motionX *= horizontal;
+            	mc.thePlayer.motionZ *= horizontal;	
+        	}
+        	
+        	if (vertical != 1) {
+        		mc.thePlayer.motionY *= vertical;
+        	}
         }
-    }
+    }*/
 
     private boolean shouldApplyVelocity() {
     	if (!isInGame()) return false;

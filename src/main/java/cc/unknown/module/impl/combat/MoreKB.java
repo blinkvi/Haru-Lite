@@ -33,7 +33,7 @@ public class MoreKB extends Module {
         
         if (mc.thePlayer.onGround && MoveUtil.isMoving()) {
             if (mc.thePlayer.hurtTime != 9) {
-                mc.thePlayer.sprintingTicksLeft = (int) MathUtil.getSafeRandom(0, 10);
+                mc.thePlayer.sprintingTicksLeft = (int) MathUtil.randomizeSafeInt(0, 10);
             } else {
                 mc.thePlayer.sprintingTicksLeft = 0;
             }

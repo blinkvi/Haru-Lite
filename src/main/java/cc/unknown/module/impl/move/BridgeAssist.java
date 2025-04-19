@@ -23,7 +23,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "BridgeAssist", description = "Automatically sneaks for you when you are near the edge of a block.", category = Category.MOVE)	
 public class BridgeAssist extends Module {
     
-	private final SliderValue delay = new SliderValue("Delay", this, 0, 0, 1, 0.1f);
     private final SliderValue pitch = new SliderValue("Angle", this, 45, 0, 90, 5, () -> this.conditionals.isEnabled("AngleCheck"));
     
 	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
@@ -56,15 +55,13 @@ public class BridgeAssist extends Module {
     	
     	if (!isShifting && shouldBridge) {
     		event.setSneak(false);
-    	}
+    	}  	
     }
     
     @SubscribeEvent
     public void onPreAttack(PrePositionEvent event) {
     	if (noBridge()) return;
-    	 
-        boolean shift = delay.getValue() > 0;
-        
+    	         
         if (conditionals.isEnabled("RequireSneak")) {
             if (!Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode())) {
                shouldBridge = false;
@@ -94,11 +91,6 @@ public class BridgeAssist extends Module {
         
 		if (mc.thePlayer.onGround) {
 			if (PlayerUtil.isOnEdgeWithBlockCheck(Double.MIN_VALUE)) {
-				if (shift) {
-				    stopWatch.setStartTime((int) (delay.getValue() * 1000));
-				    stopWatch.reset();
-				}
-
 				isShifting = true;
 				shouldBridge = true;
 			} 
@@ -113,12 +105,12 @@ public class BridgeAssist extends Module {
 				shouldBridge = false;
 			}
 			
-			else if (mc.thePlayer.isSneaking() && (Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()) && conditionals.isEnabled("RequireSneak")) && (!shift || stopWatch.isFinished())) {
+			else if (mc.thePlayer.isSneaking() && (Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()) && conditionals.isEnabled("RequireSneak")) && (stopWatch.isFinished())) {
 				isShifting = false;
 				shouldBridge = true;
 			}
 			
-			else if (mc.thePlayer.isSneaking() && !conditionals.isEnabled("RequireSneak") && (!shift || stopWatch.isFinished())) {
+			else if (mc.thePlayer.isSneaking() && !conditionals.isEnabled("RequireSneak") && (stopWatch.isFinished())) {
 				isShifting = false;
 				shouldBridge = true;
 			}

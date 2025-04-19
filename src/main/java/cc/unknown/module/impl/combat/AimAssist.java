@@ -1,6 +1,5 @@
 package cc.unknown.module.impl.combat;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -72,9 +71,9 @@ public class AimAssist extends Module {
 	
 	@SubscribeEvent
 	public void onPostTick(ClientTickEvent event) {
-    	if (event.phase == Phase.START) return;
+	    if (event.phase == Phase.START) return;
 	    if (noAim()) return;
-	    
+
         if (!conditionals.isEnabled("LockTarget") || target == null || !onTarget()) {
             target = getEnemy();
         }
@@ -83,17 +82,15 @@ public class AimAssist extends Module {
 	        return;
 	    }
 	    
-	    float yawOffset = MathUtil.nextRandomFloat(Math.min(hSpeed.getValue(), hMult.getValue()) * 10f, Math.max(hSpeed.getValue(), hMult.getValue()) * 10f) / 180f;
+	    float yawOffset = MathUtil.randomFloat(Math.min(hSpeed.getValue(), hMult.getValue()) * 10f, Math.max(hSpeed.getValue(), hMult.getValue()) * 10f) / 180f;
 	    float yawFov = (float) PlayerUtil.fovFromTarget(target);
 	    float yawAdjustment = getSpeedRandomize(speedMode.getMode(), yawFov, yawOffset, hSpeed.getValue(), hMult.getValue());
 
-	    float pitchOffset = MathUtil.nextRandomFloat(Math.min(vSpeed.getValue(), vMult.getValue()) * 10f, Math.max(vSpeed.getValue(), vMult.getValue()) * 10f) / 90f;
-	    
+	    float pitchOffset = MathUtil.randomFloat(Math.min(vSpeed.getValue(), vMult.getValue()) * 10f, Math.max(vSpeed.getValue(), vMult.getValue()) * 10f) / 90f;
 	    float pitchEntity = (float) PlayerUtil.pitchFromTarget(target);
 	    
 	    float resultVertical = getSpeedRandomize(speedMode.getMode(), pitchEntity, pitchOffset, vSpeed.getValue(), vMult.getValue());
 
-	    
 	    if (onTarget()) {
 	        applyYaw(yawFov, yawAdjustment);
 	        applyPitch(resultVertical);
@@ -106,13 +103,32 @@ public class AimAssist extends Module {
 	@Override
 	public void onDisable() {
 		target = null;
+		lockedTargets.clear();
 	}
 
 	private EntityPlayer getEnemy() {
-	    int fov = (int) angle.getValue();
-	    Vec3 playerPos = new Vec3(mc.thePlayer);
-
-	    return mc.theWorld.playerEntities.stream().filter(player -> isValidTarget(player, fov)).filter(player -> !lockedTargets.contains(player)).min(Comparator.comparingDouble(player -> playerPos.distanceTo(player.getPositionVector()))).orElse(null);
+        int fov = (int) angle.getValue();
+        Vec3 playerPos = new Vec3(mc.thePlayer);
+        EntityPlayer bestTarget = null;
+        double bestScore = Double.MAX_VALUE;
+        
+        for (EntityPlayer player : mc.theWorld.playerEntities) {
+            if (lockedTargets.contains(player) && !isValidTarget(player, fov)) {
+                continue;
+            }
+            if (!isValidTarget(player, fov)) {
+                continue;
+            }
+            
+            double score = playerPos.distanceTo(player.getPositionVector());
+            if (score < bestScore) {
+                bestTarget = player;
+                bestScore = score;
+            }
+        }
+        
+        return bestTarget;
+        
 	}
 	
 	private boolean isValidTarget(EntityPlayer player, int fov) {
@@ -170,18 +186,18 @@ public class AimAssist extends Module {
 
 	    switch (mode) {
 	        case "Random":
-	            randomComplement = MathUtil.nextRandomFloat(complement - 1.47328f, complement + 2.48293f);
-	            result = calculateResult(fov, offset, speed, MathUtil.nextRandomFloat(speed - 4.723847f, speed));
+	            randomComplement = MathUtil.randomFloat(complement / 100f, (complement + 0.5f) / 100f);
+	            result = calculateResult(fov, offset, speed, MathUtil.randomFloat(speed, speed + 0.3f));
 	            break;
 
 	        case "Secure":
-	            randomComplement = MathUtil.nextSecureFloat(complement - 1.47328f, complement + 2.48293f);
-	            result = calculateResult(fov, offset, speed, MathUtil.nextSecureFloat(speed - 4.723847f, speed));
+	            randomComplement = MathUtil.nextSecureFloat(complement / 100f, (complement + 0.5f) / 100f);
+	            result = calculateResult(fov, offset, speed, MathUtil.nextSecureFloat(speed, speed + 0.3f));
 	            break;
 
 	        case "Gaussian":
-	            randomComplement = (float) ((complement + MathUtil.getRandomGaussian(0.5f)) / 100f);
-	            result = calculateResult(fov, offset, speed, (float) (speed + MathUtil.getRandomGaussian(0.3f)));
+	            randomComplement = (float) ((complement + MathUtil.randomGaussian(0.5f)) / 100f);
+	            result = calculateResult(fov, offset, speed, (float) (speed + MathUtil.randomGaussian(0.3f)));
 	            break;
 	    }
 

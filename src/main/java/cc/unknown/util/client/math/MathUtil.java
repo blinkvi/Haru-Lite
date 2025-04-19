@@ -9,35 +9,33 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class MathUtil implements Accessor {
 
-    /* ------------------------- RANDOM BÁSICO ------------------------- */
-
-    public int nextRandomInt(int origin, int bound) {
+    public int randomInt(int origin, int bound) {
         return origin == bound ? origin : ThreadLocalRandom.current().nextInt(origin, bound);
     }
 
-    public long nextRandomLong(long origin, long bound) {
-        return origin == bound ? origin : ThreadLocalRandom.current().nextLong(origin, bound);
-    }
-
-    public float nextRandomFloat(float origin, float bound) {
+    public float randomFloat(float origin, float bound) {
         return origin == bound ? origin : (float) ThreadLocalRandom.current().nextDouble(origin, bound);
     }
 
-    public double nextRandomDouble(double origin, double bound) {
+    public double randomDouble(double origin, double bound) {
         return origin == bound ? origin : ThreadLocalRandom.current().nextDouble(origin, bound);
+    }
+    
+    public double randomGaussian(double average) {
+        return ThreadLocalRandom.current().nextGaussian() * average;
     }
 
     public double nextDouble(double min, double max) {
         if (min == max || max - min <= 0D) return min;
         return min + ((max - min) * Math.random());
     }
-
-    public long getSafeRandom(long min, long max) {
-        double randomPercent = nextRandomDouble(0.7, 1.3);
-        return (long) (randomPercent * nextRandomLong(min, max + 1));
+    
+    public int randomizeSafeInt(int min, int max) {
+    	double randomPercent = randomDouble(0.7, 1.3);
+    	return (int) (randomPercent * randomInt(min, max + 1));
     }
 
-    public int randomizeInt(float min, float max) {
+    public int randomizeInt(int min, int max) {
         return (int) randomizeDouble(min, max);
     }
 
@@ -48,8 +46,6 @@ public class MathUtil implements Accessor {
     public double randomizeDouble(double min, double max) {
         return Math.random() * (max - min) + min;
     }
-
-    /* ------------------------- RANDOM SEGURO ------------------------- */
 
     public int nextSecureInt(int origin, int bound) {
         return origin + new SecureRandom().nextInt(bound - origin);
@@ -62,8 +58,10 @@ public class MathUtil implements Accessor {
     public double nextSecureDouble(double origin, double bound) {
         return origin + new SecureRandom().nextDouble() * (bound - origin);
     }
-
-    /* ------------------------- LERP ------------------------- */
+    
+    public double nextSecureGaussian(double origin, double bound) {
+        return origin + new SecureRandom().nextGaussian() * (bound - origin);
+    }
 
     public int lerpInt(int a, int b, int c) {
         return a + c * (b - a);
@@ -76,12 +74,6 @@ public class MathUtil implements Accessor {
     public double lerpDouble(double a, double b, double c) {
         return a + c * (b - a);
     }
-
-    public long lerpLong(long a, long b, long c) {
-        return a + c * (b - a);
-    }
-
-    /* ------------------------- UTILIDADES ------------------------- */
 
     public double clamp(double min, double max, double n) {
         return Math.max(min, Math.min(max, n));
@@ -103,22 +95,8 @@ public class MathUtil implements Accessor {
     }
 
     public boolean chanceApply(float value) {
-        return nextRandomInt(0, 100) < (value * 100);
+        return randomInt(0, 100) < (value * 100);
     }
-
-    /* ------------------------- GAUSSIANA ------------------------- */
-
-    public double getRandomGaussian(double average) {
-        return ThreadLocalRandom.current().nextGaussian() * average;
-    }
-
-    public float calculateGaussian(float x, float sigma) {
-        double PI = Math.PI;
-        double output = 1.0 / Math.sqrt(2.0 * PI * (sigma * sigma));
-        return (float) (output * Math.exp(-(x * x) / (2.0 * (sigma * sigma))));
-    }
-
-    /* ------------------------- TRIGONOMETRÍA ------------------------- */
 
     public double randomSin() {
         return Math.sin(nextDouble(0.0, Math.PI * 2));
