@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -40,6 +41,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
 import net.minecraft.util.Util;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(Minecraft.class)
@@ -236,12 +238,23 @@ public abstract class MixinMinecraft implements IMinecraft {
 	private void keepShadersOnPerspectiveChange(EntityRenderer entityRenderer, Entity entityIn) {
 	}
 
-	@Inject(method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At("HEAD"))
-	private void clearLoadedMaps(WorldClient worldClientIn, String loadingMessage, CallbackInfo ci) {
-		if (worldClientIn != this.theWorld) {
-			this.entityRenderer.getMapItemRenderer().clearLoadedMaps();
-		}
-	}
+
+    @Inject(method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At("HEAD"))
+    private void patcher$clearLoadedMaps(WorldClient worldClientIn, String loadingMessage, CallbackInfo ci) {
+        if (worldClientIn != this.theWorld) {
+            this.entityRenderer.getMapItemRenderer().clearLoadedMaps();
+        }
+    }
+
+    @Inject(
+        method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V",
+        at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;theWorld:Lnet/minecraft/client/multiplayer/WorldClient;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER)
+    )
+    private void patcher$clearRenderCache(CallbackInfo ci) {
+        MinecraftForgeClient.getRenderPass();
+        MinecraftForgeClientAccessor.getRegionCache().invalidateAll();
+        MinecraftForgeClientAccessor.getRegionCache().cleanUp();
+    }
 	
     @Overwrite
     public void startTimerHackThread() { }

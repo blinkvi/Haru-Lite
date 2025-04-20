@@ -37,7 +37,7 @@ public class SettingsHandler implements Accessor {
                 if (getModule(NoSlow.class).isEnabled() && getModule(NoItemRelease.class).isEnabled()) return;
 
                 int foodUseDuration = mc.thePlayer.getItemInUseDuration();
-                if (foodUseDuration >= 26) {
+                if (foodUseDuration >= 20) {
                     mc.thePlayer.stopUsingItem();
                 }
             });

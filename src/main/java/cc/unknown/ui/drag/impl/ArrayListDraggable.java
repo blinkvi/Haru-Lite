@@ -75,13 +75,13 @@ public class ArrayListDraggable extends Drag {
         if (localX < middle) {
         	if (setting.shaders.get()) {
         		gradientBlur.set(localX - PADDING, localY + offset, width + 3, (int) (height + PADDING + setting.textHeight.get()), 0);
-        		RenderUtil.drawBloomShadow(localX - PADDING, localY + offset, width + 3, height + PADDING + setting.textHeight.get(), 14, 18, setting.color(index * 200), true,  true, true, false, false);
+        		RenderUtil.drawBloomShadow(localX - PADDING, localY + offset, width + 3, height + PADDING + setting.textHeight.get(), 14, 18, setting.color(index * 200), true, false, false, false, false);
         	}
             RenderUtil.drawRoundedRect(localX - PADDING, localY + offset, width + 3, height + PADDING + setting.textHeight.get(), 8, setting.backgroundColor(index));
         } else {
         	if (setting.shaders.get()) {
         		gradientBlur.set(localX + this.width - 4 - width, localY + offset + 2, width + 3, (int) (height + PADDING + setting.textHeight.get()), 0);
-        		RenderUtil.drawBloomShadow(localX + this.width - 4 - width, localY + offset + 2, width + 3, height + PADDING + setting.textHeight.get(), 14, 18, setting.color(index * 200), true,  true, true, false, false);
+        		RenderUtil.drawBloomShadow(localX + this.width - 4 - width, localY + offset + 2, width + 3, height + PADDING + setting.textHeight.get(), 14, 18, setting.color(index * 200), true, false, false, false, false);
         	}
             RenderUtil.drawRoundedRect(localX + this.width - 4 - width, localY + offset + 2, width + 3, height + PADDING + setting.textHeight.get(), 8, setting.backgroundColor(index));
         }
@@ -93,10 +93,10 @@ public class ArrayListDraggable extends Drag {
         float textY = localY + offset + 6;
 
         if (localX < middle) {
-        	FontUtil.getFontRenderer("consolas.ttf", (int) setting.fontSize.get()).drawStringWithShadow(text, localX, textY, color);
+        	FontUtil.getFontRenderer("consolas.ttf", (int) setting.fontSize.get()).drawStringWithShadow(text, localX, textY - 3, color);
         } else {
             float textX = localX - width + this.width - 2;
-            FontUtil.getFontRenderer("consolas.ttf", (int) setting.fontSize.get()).drawStringWithShadow(text, textX, textY, color);
+            FontUtil.getFontRenderer("consolas.ttf", (int) setting.fontSize.get()).drawStringWithShadow(text, textX, textY - 1, color);
         }
     }
 

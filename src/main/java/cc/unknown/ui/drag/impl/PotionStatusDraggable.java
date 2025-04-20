@@ -5,8 +5,10 @@ import java.util.ArrayList;
 
 import cc.unknown.module.impl.visual.Interface;
 import cc.unknown.ui.drag.Drag;
+import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
+import cc.unknown.util.render.shader.impl.GradientBlur;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
@@ -37,6 +39,11 @@ public class PotionStatusDraggable extends Drag {
         float localHeight = FontUtil.getFontRenderer("interRegular.ttf", (int) fontSize).getHeight() + padding * 2 + 3f;
 
         RoundedUtil.drawRound(posX, posY, width, height, 6, new Color(getModule(Interface.class).backgroundColor(), true));
+    	if (setting.shaders.get()) {
+    		new GradientBlur().set((int) posX, (int) posY, (int) width, (int) height, 0);
+    		RenderUtil.drawBloomShadow(posX, posY, width, height, 20, 6, setting.color(0), true, false, false, false, false);
+    	}
+        
         FontUtil.getFontRenderer("interSemiBold.ttf", (int) fontSize).drawCenteredString(title, posX + width / 2, posY + padding + 2, -1);
         FontUtil.getFontRenderer("nursultan.ttf", 14).drawString("E", posX + width - 16, posY + 9, setting.color(0));
 

@@ -180,8 +180,9 @@ public final class RenderUtil implements Accessor {
 	public void renderItemStack(EntityPlayer target, float x, float y, float scale) {
 		renderItemStack(target, x, y, scale, scale);
 	}
-	
-	public void image(final ResourceLocation imageLocation, final float x, final float y, final float width, final float height) {
+
+	public void image(final ResourceLocation imageLocation, final float x, final float y, final float width,
+			final float height) {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GlStateManager.enableBlend();
@@ -190,12 +191,14 @@ public final class RenderUtil implements Accessor {
 		ColorUtil.color(Color.WHITE);
 		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
 		mc.getTextureManager().bindTexture(imageLocation);
-		Gui.drawModalRectWithCustomSizedTexture((int) x, (int) y, (int) 0, (int) 0, (int) width, (int) height, width, height);
+		Gui.drawModalRectWithCustomSizedTexture((int) x, (int) y, (int) 0, (int) 0, (int) width, (int) height, width,
+				height);
 		GlStateManager.resetColor();
 		GlStateManager.disableBlend();
 	}
 
-	public void image(final ResourceLocation imageLocation, final int x, final int y, final int width, final int height) {
+	public void image(final ResourceLocation imageLocation, final int x, final int y, final int width,
+			final int height) {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		GlStateManager.enableBlend();
@@ -294,36 +297,35 @@ public final class RenderUtil implements Accessor {
 		GL11.glColor4f(1, 1, 1, 1);
 	}
 
-    public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor)
-    {
-    	float zLevel = 0;
-        float f = (float)(startColor >> 24 & 255) / 255.0F;
-        float f1 = (float)(startColor >> 16 & 255) / 255.0F;
-        float f2 = (float)(startColor >> 8 & 255) / 255.0F;
-        float f3 = (float)(startColor & 255) / 255.0F;
-        float f4 = (float)(endColor >> 24 & 255) / 255.0F;
-        float f5 = (float)(endColor >> 16 & 255) / 255.0F;
-        float f6 = (float)(endColor >> 8 & 255) / 255.0F;
-        float f7 = (float)(endColor & 255) / 255.0F;
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.shadeModel(7425);
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos((double)right, (double)top, (double)zLevel).color(f1, f2, f3, f).endVertex();
-        worldrenderer.pos((double)left, (double)top, (double)zLevel).color(f1, f2, f3, f).endVertex();
-        worldrenderer.pos((double)left, (double)bottom, (double)zLevel).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos((double)right, (double)bottom, (double)zLevel).color(f5, f6, f7, f4).endVertex();
-        tessellator.draw();
-        GlStateManager.shadeModel(7424);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
-    }
-	
+	public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+		float zLevel = 0;
+		float f = (float) (startColor >> 24 & 255) / 255.0F;
+		float f1 = (float) (startColor >> 16 & 255) / 255.0F;
+		float f2 = (float) (startColor >> 8 & 255) / 255.0F;
+		float f3 = (float) (startColor & 255) / 255.0F;
+		float f4 = (float) (endColor >> 24 & 255) / 255.0F;
+		float f5 = (float) (endColor >> 16 & 255) / 255.0F;
+		float f6 = (float) (endColor >> 8 & 255) / 255.0F;
+		float f7 = (float) (endColor & 255) / 255.0F;
+		GlStateManager.disableTexture2D();
+		GlStateManager.enableBlend();
+		GlStateManager.disableAlpha();
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+		GlStateManager.shadeModel(7425);
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+		worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+		worldrenderer.pos((double) right, (double) top, (double) zLevel).color(f1, f2, f3, f).endVertex();
+		worldrenderer.pos((double) left, (double) top, (double) zLevel).color(f1, f2, f3, f).endVertex();
+		worldrenderer.pos((double) left, (double) bottom, (double) zLevel).color(f5, f6, f7, f4).endVertex();
+		worldrenderer.pos((double) right, (double) bottom, (double) zLevel).color(f5, f6, f7, f4).endVertex();
+		tessellator.draw();
+		GlStateManager.shadeModel(7424);
+		GlStateManager.disableBlend();
+		GlStateManager.enableAlpha();
+		GlStateManager.enableTexture2D();
+	}
+
 	public void drawGradientRect(final double left, final double top, double right, double bottom,
 			final boolean sideways, final int startColor, final int endColor) {
 		right = left + right;
@@ -602,55 +604,66 @@ public final class RenderUtil implements Accessor {
 		drawBloomShadow(x, y, width, height, blurRadius, 0, color, scissor, false, false, false, false);
 	}
 
-	public void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int roundRadius,
-			int color, boolean scissor) {
+	public void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int roundRadius, int color,
+			boolean scissor) {
 		drawBloomShadow(x, y, width, height, blurRadius, roundRadius, color, scissor, false, false, false, false);
 	}
 
-	public void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int roundRadius, int color, boolean scissor, boolean cut_top, boolean cut_bottom, boolean cut_left, boolean cut_right) {
-		width = width + blurRadius * 2;
-		height = height + blurRadius * 2;
-		x -= blurRadius + 0.75f;
-		y -= blurRadius + 0.75f;
+	public void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int roundRadius, int color, boolean scissor, boolean cutTop, boolean cutBottom, boolean cutLeft, boolean cutRight) {
+		float expandedWidth = width + blurRadius * 2;
+		float expandedHeight = height + blurRadius * 2;
+		float drawX = x - blurRadius - 0.75f;
+		float drawY = y - blurRadius - 0.75f;
 
-		int identifier = Arrays.deepHashCode(new Object[] { width, height, blurRadius, roundRadius });
+		int identifier = Arrays.deepHashCode(new Object[] { expandedWidth, expandedHeight, blurRadius, roundRadius,
+				scissor, cutTop, cutBottom, cutLeft, cutRight });
+
 		if (!shadowCache.containsKey(identifier)) {
-			if (width <= 0)
-				width = 1;
-			if (height <= 0)
-				height = 1;
-			BufferedImage original = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB_PRE);
+			int texWidth = (int) Math.max(expandedWidth, 1);
+			int texHeight = (int) Math.max(expandedHeight, 1);
+
+			BufferedImage original = new BufferedImage(texWidth, texHeight, BufferedImage.TYPE_INT_ARGB_PRE);
 			Graphics g = original.getGraphics();
 			g.setColor(new Color(-1));
-			g.fillRoundRect(blurRadius, blurRadius, (int) (width - blurRadius * 2), (int) (height - blurRadius * 2), roundRadius, roundRadius);
+			g.fillRoundRect(blurRadius, blurRadius, texWidth - blurRadius * 2, texHeight - blurRadius * 2, roundRadius,
+					roundRadius);
 			g.dispose();
-			GaussianFilter op = new GaussianFilter(blurRadius);
-			BufferedImage blurred = op.filter(original, null);
-			int cut_x = blurRadius, cut_y = blurRadius, cut_w = (int) (width - blurRadius * 2),
-					cut_h = (int) (height - blurRadius * 2);
-			if (cut_top) {
-				cut_y = 0;
-				cut_h = (int) (height - blurRadius);
+
+			GaussianFilter filter = new GaussianFilter(blurRadius);
+			BufferedImage blurred = filter.filter(original, null);
+
+			int cutX = blurRadius;
+			int cutY = blurRadius;
+			int cutW = texWidth - blurRadius * 2;
+			int cutH = texHeight - blurRadius * 2;
+
+			if (cutTop) {
+				cutY = 0;
+				cutH = texHeight - blurRadius;
 			}
 
-			if (cut_bottom) {
-				cut_h = (int) (height - blurRadius);
+			if (cutBottom) {
+				cutH = texHeight - blurRadius;
 			}
 
-			if (cut_left) {
-				cut_x = 0;
-				cut_w = (int) (width - blurRadius);
+			if (cutLeft) {
+				cutX = 0;
+				cutW = texWidth - blurRadius;
 			}
 
-			if (cut_right) {
-				cut_w = (int) (width - blurRadius);
+			if (cutRight) {
+				cutW = texWidth - blurRadius;
 			}
-			if (scissor)
-				blurred = new ShaderScissor(cut_x, cut_y, cut_w, cut_h, blurred, 1, false, false).generate();
-			shadowCache.put(identifier,
-					TextureUtil.uploadTextureImageAllocate(TextureUtil.glGenTextures(), blurred, true, false));
+
+			if (scissor) {
+				blurred = new ShaderScissor(cutX, cutY, cutW, cutH, blurred, 1, false, false).generate();
+			}
+
+			int textureID = TextureUtil.uploadTextureImageAllocate(TextureUtil.glGenTextures(), blurred, true, false);
+			shadowCache.put(identifier, textureID);
 		}
-		drawImage(shadowCache.get(identifier), x, y, width, height, color);
+
+		drawImage(shadowCache.get(identifier), drawX, drawY, expandedWidth, expandedHeight, color);
 	}
 
 	public void disableGL2D() {

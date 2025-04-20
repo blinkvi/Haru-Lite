@@ -60,7 +60,7 @@ public class Window implements IComponent {
         
     	if (getModule(ClickGUI.class).pref.isEnabled("Shaders")) {
     		gradientBlur.set(x, y, (int) width, (int) height, 0);
-    		RenderUtil.drawBloomShadow(x, y, width, height, 14, 18, outlineColor.getRGB(), true,  true, true, false, false);
+    		RenderUtil.drawBloomShadow(x, y, width, height, 14, 18, outlineColor.getRGB(), true, false, false, false, false);
     	}
 
         if (getModule(ClickGUI.class).pref.isEnabled("RoundedOutline")) {
