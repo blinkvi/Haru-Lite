@@ -84,7 +84,7 @@ public class AutoClicker extends Module {
 		    }
 		    break;
 		case "Extra+":
-			clickDelay =  (long) (2000 / MathUtil.randomDouble(min.getValue(), max.getValue()));
+			clickDelay =  (long) (2000 / MathUtil.nextSecureGaussian(min.getValue() + 2, max.getValue() + 2));
 			break;
 		}
 
