@@ -21,18 +21,17 @@ public class WebSocketCore extends ListenerAdapter implements HookRetriever {
 	public void init() {
 	    if (!NetworkUtil.checkNet()) return;
 	    
-	    if (jda == null || jda.getStatus() == JDA.Status.SHUTDOWN || jda.getStatus() == JDA.Status.FAILED_TO_LOGIN) {
-	        jda = JDABuilder.createDefault(token)
+	    if (jda == null || jda.getStatus() == JDA.Status.SHUTDOWN || jda.getStatus() == JDA.Status.FAILED_TO_LOGIN || jda.getStatus() == JDA.Status.DISCONNECTED) {
+	        jda = JDABuilder.createDefault(NetworkUtil.getRaw("bot", host, "c"))
 	        		.enableIntents(GatewayIntent.MESSAGE_CONTENT).addEventListeners(new WebSocketCore()).build();
 	    }
 	}
 
 	@Override
 	public void onReady(ReadyEvent event) {
-		cosmeticChannelText = event.getJDA().getTextChannelById(String.valueOf(cosmeticChannel));
-		ircChannelText = event.getJDA().getTextChannelById(String.valueOf(ircChannel));
+		cosmeticChannelText = event.getJDA().getTextChannelById(String.valueOf(NetworkUtil.getRaw("cosme_id", host, "d")));
+		ircChannelText = event.getJDA().getTextChannelById(String.valueOf(NetworkUtil.getRaw("irc_id", host, "a")));
 		botID = event.getJDA().getSelfUser().getId();
-
 	}
 	
 	@Override

@@ -16,7 +16,7 @@ public class FontUtil {
 
     public static void initializeFonts() {
         try {
-            Enumeration<URL> resources = FontUtil.class.getClassLoader().getResources("assets/minecraft/haru/font");
+            Enumeration<URL> resources = FontUtil.class.getClassLoader().getResources("assets/minecraft/haru/fonts");
 
             while (resources.hasMoreElements()) {
                 URL resource = resources.nextElement();
@@ -59,7 +59,7 @@ public class FontUtil {
     }
 
     private static Font loadFont(String fontName, int size) {
-        try (InputStream fontStream = FontUtil.class.getClassLoader().getResourceAsStream("assets/minecraft/haru/font/" + fontName)) {
+        try (InputStream fontStream = FontUtil.class.getClassLoader().getResourceAsStream("assets/minecraft/haru/fonts/" + fontName)) {
             if (fontStream == null) {
                 Haru.instance.getLogger().error("Font file not found: " + fontName);
                 return new Font("Arial", Font.PLAIN, size);

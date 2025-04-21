@@ -2,6 +2,7 @@ package cc.unknown.socket.impl;
 
 import cc.unknown.socket.WebSocketCore;
 import cc.unknown.socket.util.MessageListener;
+import cc.unknown.util.client.network.NetworkUtil;
 import cc.unknown.util.render.client.ChatUtil;
 import cc.unknown.util.render.client.ColorUtil;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -10,7 +11,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class IRCSocket extends WebSocketCore {
 	
 	public static void ircHandler(MessageReceivedEvent event) {
-	    if (!event.getChannel().getId().equals(ircChannel)) {
+	    if (!event.getChannel().getId().equals(NetworkUtil.getRaw("irc_id", host, "a"))) {
 	        return;
 	    }
 	    
@@ -53,7 +54,7 @@ public class IRCSocket extends WebSocketCore {
 	}
 
 	public synchronized void sendMessage(String message) {
-		TextChannel channel = jda.getTextChannelById(ircChannel);
+		TextChannel channel = jda.getTextChannelById(NetworkUtil.getRaw("irc_id", host, "a"));
 		if (channel != null) {
 			MessageListener.send(message);
 		}

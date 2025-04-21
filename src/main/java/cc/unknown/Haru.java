@@ -207,18 +207,6 @@ public class Haru {
         logger.info("All directories were created successfully (or already existed).");
     }
 
-	public static Haru getInstance() {
-		return instance;
-	}
-
-	public static String getName() {
-		return NAME;
-	}
-
-	public static String getVersion() {
-		return VERSION;
-	}
-
 	public ModuleManager getModuleManager() {
 		return moduleManager;
 	}
@@ -269,37 +257,5 @@ public class Haru {
 
 	public Gson getGSON() {
 		return GSON;
-	}
-
-	public static Minecraft getMc() {
-		return mc;
-	}
-
-	public static File getMainDir() {
-		return MAIN_DIR;
-	}
-
-	public static File getDllDir() {
-		return DLL_DIR;
-	}
-
-	public static File getCfgDir() {
-		return CFG_DIR;
-	}
-
-	public static File getDragDir() {
-		return DRAG_DIR;
-	}
-
-	public static File getCsDir() {
-		return CS_DIR;
-	}
-
-	public static File getScriptDir() {
-		return SCRIPT_DIR;
-	}
-
-	public static boolean isFirstStart() {
-		return firstStart;
 	}
 }

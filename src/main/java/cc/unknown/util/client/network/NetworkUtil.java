@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import cc.unknown.socket.security.AESUtil;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.render.client.ChatUtil;
 import cc.unknown.util.structure.comparators.ValuePair;
@@ -176,27 +177,24 @@ public class NetworkUtil implements Accessor {
         }
     }
 
-    public static String getRaw(String url, String instruction) {
+    public static String getRaw(String name, String url, String instruction) {
         try {
             URL website = new URL(url);
             try (BufferedReader br = new BufferedReader(new InputStreamReader(website.openStream()))) {
-                StringBuilder response = new StringBuilder();
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] parts = line.split(" \\| ");
-                    if (parts.length == 2 && parts[1].equals(instruction)) {
-                        response.append(parts[0]);
-                        break;
+                    if (parts.length == 2 && parts[0].equals(instruction)) {
+                        return AESUtil.decrypt(parts[1].trim());
                     }
                 }
-                return response.toString().trim();
             }
-
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
     
     public static boolean isServer(String server) {

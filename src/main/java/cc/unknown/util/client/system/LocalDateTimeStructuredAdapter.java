@@ -12,36 +12,36 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 public class LocalDateTimeStructuredAdapter implements JsonDeserializer<LocalDateTime>, JsonSerializer<LocalDateTime> {
+
     @Override
     public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        JsonObject obj = json.getAsJsonObject();
-        JsonObject date = obj.get("date").getAsJsonObject();
-        JsonObject time = obj.get("time").getAsJsonObject();
+        JsonObject root = json.getAsJsonObject();
+        JsonObject date = root.getAsJsonObject("date");
+        JsonObject time = root.getAsJsonObject("time");
 
-        return LocalDateTime.of(
-            date.get("year").getAsInt(),
-            date.get("month").getAsInt(),
-            date.get("day").getAsInt(),
-            time.get("hour").getAsInt(),
-            time.get("minute").getAsInt()
-        );
+        int year = date.get("year").getAsInt();
+        int month = date.get("month").getAsInt();
+        int day = date.get("day").getAsInt();
+        int hour = time.get("hour").getAsInt();
+
+        return LocalDateTime.of(year, month, day, hour, 0);
     }
 
     @Override
     public JsonElement serialize(LocalDateTime src, Type typeOfSrc, JsonSerializationContext context) {
-        JsonObject result = new JsonObject();
-        JsonObject date = new JsonObject();
-        JsonObject time = new JsonObject();
+        JsonObject root = new JsonObject();
 
+        JsonObject date = new JsonObject();
         date.addProperty("year", src.getYear());
         date.addProperty("month", src.getMonthValue());
         date.addProperty("day", src.getDayOfMonth());
 
+        JsonObject time = new JsonObject();
         time.addProperty("hour", src.getHour());
-        time.addProperty("minute", src.getMinute());
 
-        result.add("date", date);
-        result.add("time", time);
-        return result;
+        root.add("date", date);
+        root.add("time", time);
+
+        return root;
     }
 }
