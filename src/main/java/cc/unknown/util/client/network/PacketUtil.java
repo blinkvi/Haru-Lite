@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import cc.unknown.util.Accessor;
 import cc.unknown.util.structure.vectors.Vec3;
-import lombok.experimental.UtilityClass;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.Packet;
 import net.minecraft.network.ThreadQuickExitException;
@@ -14,12 +13,11 @@ import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.INetHandlerPlayServer;
 import net.minecraft.network.play.client.C03PacketPlayer;
 
-@UtilityClass
 public class PacketUtil implements Accessor {
-    public List<Packet<INetHandlerPlayServer>> skipSendEvent = new ArrayList<>();
-    public List<Packet<INetHandlerPlayClient>> skipReceiveEvent = new ArrayList<>();
+    public static List<Packet<INetHandlerPlayServer>> skipSendEvent = new ArrayList<>();
+    public static List<Packet<INetHandlerPlayClient>> skipReceiveEvent = new ArrayList<>();
 
-    public void sendNoEvent(Packet<?> packet) {
+    public static void sendNoEvent(Packet<?> packet) {
         if (packet == null)
             return;
         try {
@@ -30,7 +28,7 @@ public class PacketUtil implements Accessor {
         }
     }
 
-    public void send(Packet<?> packet) {
+    public static void send(Packet<?> packet) {
         if (packet == null)
             return;
         try {
@@ -40,7 +38,7 @@ public class PacketUtil implements Accessor {
         }
     }
 
-    public void receiveNoEvent(Packet<?> packet) {
+    public static void receiveNoEvent(Packet<?> packet) {
         if (packet == null)
             return;
         try {
@@ -53,7 +51,7 @@ public class PacketUtil implements Accessor {
         }
     }
 
-    public void receive(Packet<?> packet) {
+    public static void receive(Packet<?> packet) {
         if (packet == null)
             return;
         try {
@@ -62,7 +60,7 @@ public class PacketUtil implements Accessor {
         } catch (ThreadQuickExitException ignored) { }
     }
 
-    public Optional<Vec3> getPos(Packet<?> packet) {
+    public static Optional<Vec3> getPos(Packet<?> packet) {
         if (packet instanceof C03PacketPlayer.C06PacketPlayerPosLook) {
             final C03PacketPlayer.C06PacketPlayerPosLook p = (C03PacketPlayer.C06PacketPlayerPosLook) packet;
             return Optional.of(new Vec3(p.getPositionX(), p.getPositionY(), p.getPositionZ()));
@@ -75,7 +73,7 @@ public class PacketUtil implements Accessor {
     }
 
     @SuppressWarnings("unchecked")
-    public <H extends INetHandler> Packet<H> castPacket(Packet<?> packet) throws ClassCastException {
+    public static <H extends INetHandler> Packet<H> castPacket(Packet<?> packet) throws ClassCastException {
         return (Packet<H>) packet;
     }
 

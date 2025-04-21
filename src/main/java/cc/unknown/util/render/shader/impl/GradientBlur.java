@@ -7,12 +7,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import cc.unknown.util.Accessor;
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.client.renderer.texture.TextureUtil;
 
-@Getter
-@Setter
 public class GradientBlur implements Accessor {
     private float x, y;
     private int width, height, delay;
@@ -52,7 +48,51 @@ public class GradientBlur implements Accessor {
         }
     }
 	
-    public class Timer {
+    public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getDelay() {
+		return delay;
+	}
+
+	public void setDelay(int delay) {
+		this.delay = delay;
+	}
+
+	public Timer getTimer() {
+		return timer;
+	}
+
+	public class Timer {
         private long lastCheck = getSystemTime();
 
         public boolean hasReach(float mil) {

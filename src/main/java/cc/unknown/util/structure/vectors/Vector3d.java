@@ -1,18 +1,42 @@
 package cc.unknown.util.structure.vectors;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 
-@Getter
-@Setter
-@AllArgsConstructor
 public class Vector3d {
     public double x;
     public double y;
     public double z;
+
+	public Vector3d(double x, double y, double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	public double getZ() {
+		return z;
+	}
+
+	public void setZ(double z) {
+		this.z = z;
+	}
 
 	public Vector3d(Entity entity) {
         this(entity.posX, entity.posY, entity.posZ);

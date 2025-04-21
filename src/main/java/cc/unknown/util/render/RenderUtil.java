@@ -42,7 +42,6 @@ import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.util.render.shader.filters.GaussianFilter;
 import cc.unknown.util.render.shader.impl.ShaderScissor;
-import lombok.experimental.UtilityClass;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
@@ -60,14 +59,13 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
-@UtilityClass
 public final class RenderUtil implements Accessor {
 
-	private final Map<Integer, Integer> shadowCache = new HashMap<>();
-	private final Map<EntityPlayer, float[][]> rotationMap = new HashMap<>();
-	private final float DEGREES_IN_RADIAN = 57.295776f;
+	private static final Map<Integer, Integer> shadowCache = new HashMap<>();
+	private static final Map<EntityPlayer, float[][]> rotationMap = new HashMap<>();
+	private static final float DEGREES_IN_RADIAN = 57.295776f;
 
-	public void drawRect(double left, double top, double right, double bottom, int color) {
+	public static void drawRect(double left, double top, double right, double bottom, int color) {
 		double j;
 		if (left < right) {
 			j = left;
@@ -101,11 +99,11 @@ public final class RenderUtil implements Accessor {
 		GlStateManager.disableBlend();
 	}
 
-	public void drawRect(float left, float top, float width, float height, Color color) {
+	public static void drawRect(float left, float top, float width, float height, Color color) {
 		drawRect(left, top, width, height, color.getRGB());
 	}
 
-	public void drawRect(float left, float top, float width, float height, int color) {
+	public static void drawRect(float left, float top, float width, float height, int color) {
 		float right = left + width, bottom = top + height;
 		if (left < right) {
 			float i = left;
@@ -122,15 +120,15 @@ public final class RenderUtil implements Accessor {
 		Gui.drawRect((int) left, (int) top, (int) right, (int) bottom, color);
 	}
 
-	public void renderItemStack(ItemStack stack, double x, double y, float scale) {
+	public static void renderItemStack(ItemStack stack, double x, double y, float scale) {
 		renderItemStack(stack, x, y, scale, false);
 	}
 
-	public void renderItemStack(ItemStack stack, double x, double y, float scale, boolean enchantedText) {
+	public static void renderItemStack(ItemStack stack, double x, double y, float scale, boolean enchantedText) {
 		renderItemStack(stack, x, y, scale, enchantedText, scale);
 	}
 
-	public void renderItemStack(ItemStack stack, double x, double y, float scale, boolean enchantedText,
+	public static void renderItemStack(ItemStack stack, double x, double y, float scale, boolean enchantedText,
 			float textScale) {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, x);
@@ -147,7 +145,7 @@ public final class RenderUtil implements Accessor {
 		GlStateManager.popMatrix();
 	}
 
-	public void renderItemStack(EntityPlayer target, float x, float y, float scale, boolean enchantedText,
+	public static void renderItemStack(EntityPlayer target, float x, float y, float scale, boolean enchantedText,
 			float textScale, boolean bg, boolean info) {
 		List<ItemStack> items = new ArrayList<>();
 		if (target.getHeldItem() != null) {
@@ -169,19 +167,19 @@ public final class RenderUtil implements Accessor {
 		}
 	}
 
-	public void renderItemStack(EntityPlayer target, float x, float y, float scale, boolean bg, boolean info) {
+	public static void renderItemStack(EntityPlayer target, float x, float y, float scale, boolean bg, boolean info) {
 		renderItemStack(target, x, y, scale, false, 0, bg, info);
 	}
 
-	public void renderItemStack(EntityPlayer target, float x, float y, float scale, float textScale) {
+	public static void renderItemStack(EntityPlayer target, float x, float y, float scale, float textScale) {
 		renderItemStack(target, x, y, scale, true, textScale, false, false);
 	}
 
-	public void renderItemStack(EntityPlayer target, float x, float y, float scale) {
+	public static void renderItemStack(EntityPlayer target, float x, float y, float scale) {
 		renderItemStack(target, x, y, scale, scale);
 	}
 
-	public void image(final ResourceLocation imageLocation, final float x, final float y, final float width,
+	public static void image(final ResourceLocation imageLocation, final float x, final float y, final float width,
 			final float height) {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
@@ -197,7 +195,7 @@ public final class RenderUtil implements Accessor {
 		GlStateManager.disableBlend();
 	}
 
-	public void image(final ResourceLocation imageLocation, final int x, final int y, final int width,
+	public static void image(final ResourceLocation imageLocation, final int x, final int y, final int width,
 			final int height) {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
@@ -212,7 +210,7 @@ public final class RenderUtil implements Accessor {
 		GlStateManager.disableBlend();
 	}
 
-	public void image(final File imageFile, final int x, final int y, final int width, final int height) {
+	public static void image(final File imageFile, final int x, final int y, final int width, final int height) {
 		if (!imageFile.exists())
 			return;
 
@@ -239,12 +237,12 @@ public final class RenderUtil implements Accessor {
 		}
 	}
 
-	public void setAlphaLimit(float limit) {
+	public static void setAlphaLimit(float limit) {
 		GlStateManager.enableAlpha();
 		GlStateManager.alphaFunc(GL_GREATER, (float) (limit * .01));
 	}
 
-	public void drawRoundedRect(double d, double e, double g, double h, float radius, int color) {
+	public static void drawRoundedRect(double d, double e, double g, double h, float radius, int color) {
 		float x1 = (float) (d + g), // @off
 				y1 = (float) (e + h);
 		final float f = (color >> 24 & 0xFF) / 255.0F, f1 = (color >> 16 & 0xFF) / 255.0F,
@@ -297,7 +295,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glColor4f(1, 1, 1, 1);
 	}
 
-	public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+	public static void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
 		float zLevel = 0;
 		float f = (float) (startColor >> 24 & 255) / 255.0F;
 		float f1 = (float) (startColor >> 16 & 255) / 255.0F;
@@ -326,7 +324,7 @@ public final class RenderUtil implements Accessor {
 		GlStateManager.enableTexture2D();
 	}
 
-	public void drawGradientRect(final double left, final double top, double right, double bottom,
+	public static void drawGradientRect(final double left, final double top, double right, double bottom,
 			final boolean sideways, final int startColor, final int endColor) {
 		right = left + right;
 		bottom = top + bottom;
@@ -356,7 +354,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glEnable(3553);
 	}
 
-	public void drawBorder(float x, float y, float width, float height, final float outlineThickness,
+	public static void drawBorder(float x, float y, float width, float height, final float outlineThickness,
 			int outlineColor) {
 		glEnable(GL_LINE_SMOOTH);
 		ColorUtil.color(outlineColor);
@@ -385,23 +383,23 @@ public final class RenderUtil implements Accessor {
 		glDisable(GL_LINE_SMOOTH);
 	}
 
-	public void drawBorderedRect(float x, float y, float width, float height, final float outlineThickness,
+	public static void drawBorderedRect(float x, float y, float width, float height, final float outlineThickness,
 			int rectColor, int outlineColor) {
 		drawRect(x, y, width, height, rectColor);
 		drawBorder(x, y, width, height, outlineThickness, outlineColor);
 	}
 
-	public void drawHorizontalGradientSideways(double x, double y, double width, double height, int leftColor,
+	public static void drawHorizontalGradientSideways(double x, double y, double width, double height, int leftColor,
 			int rightColor) {
 		drawGradientRect(x, y, width, height, true, leftColor, rightColor);
 	}
 
-	public void drawVerticalGradientSideways(double x, double y, double width, double height, int topColor,
+	public static void drawVerticalGradientSideways(double x, double y, double width, double height, int topColor,
 			int bottomColor) {
 		drawGradientRect(x, y, width, height, false, topColor, bottomColor);
 	}
 
-	public void setupRenderState(Color color, float width) {
+	public static void setupRenderState(Color color, float width) {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
@@ -411,7 +409,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glDepthMask(false);
 	}
 
-	public void restoreRenderState() {
+	public static void restoreRenderState() {
 		GL11.glDepthMask(true);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -419,7 +417,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 
-	public void updatePlayerAngles(EntityPlayer entityPlayer, ModelBiped modelBiped) {
+	public static void updatePlayerAngles(EntityPlayer entityPlayer, ModelBiped modelBiped) {
 		rotationMap.put(entityPlayer,
 				new float[][] {
 						{ modelBiped.bipedHead.rotateAngleX, modelBiped.bipedHead.rotateAngleY,
@@ -434,7 +432,7 @@ public final class RenderUtil implements Accessor {
 								modelBiped.bipedLeftLeg.rotateAngleZ } });
 	}
 
-	public void drawSkeleton(EntityPlayer player, float partialTicks) {
+	public static void drawSkeleton(EntityPlayer player, float partialTicks) {
 		float[][] entPos = rotationMap.get(player);
 		if (entPos != null) {
 			glPushMatrix();
@@ -463,7 +461,7 @@ public final class RenderUtil implements Accessor {
 		}
 	}
 
-	private void drawLimbs(float[][] entPos, float yOff, boolean sneaking, float xOff, float rotationYawHead) {
+	private static void drawLimbs(float[][] entPos, float yOff, boolean sneaking, float xOff, float rotationYawHead) {
 		// draw arms
 		for (int i = 1; i <= 2; i++) {
 			drawArm(entPos[i + 2], i == 1 ? -0.125F : 0.125F, yOff);
@@ -488,7 +486,7 @@ public final class RenderUtil implements Accessor {
 		drawSpine(yOff);
 	}
 
-	private void drawArm(float[] rotations, float xOffset, float yOff) {
+	private static void drawArm(float[] rotations, float xOffset, float yOff) {
 		glPushMatrix();
 		glTranslatef(xOffset, yOff, 0.0F);
 		applyRotations(rotations);
@@ -499,7 +497,7 @@ public final class RenderUtil implements Accessor {
 		glPopMatrix();
 	}
 
-	private void drawLimb(float[] rotations, float xOffset, float yOff) {
+	private static void drawLimb(float[] rotations, float xOffset, float yOff) {
 		glPushMatrix();
 		glTranslatef(xOffset, yOff, 0.0F);
 		applyRotations(rotations);
@@ -510,7 +508,7 @@ public final class RenderUtil implements Accessor {
 		glPopMatrix();
 	}
 
-	private void drawHead(float[] rotations, float yOff) {
+	private static void drawHead(float[] rotations, float yOff) {
 		glPushMatrix();
 		glTranslatef(0.0F, yOff + 0.55F, 0.0F);
 		applyRotations(rotations);
@@ -521,7 +519,7 @@ public final class RenderUtil implements Accessor {
 		glPopMatrix();
 	}
 
-	private void applyRotations(float[] rotations) {
+	private static void applyRotations(float[] rotations) {
 		if (rotations[0] != 0.0F) {
 			glRotatef(rotations[0] * DEGREES_IN_RADIAN, 1.0F, 0.0F, 0.0F);
 		}
@@ -533,7 +531,7 @@ public final class RenderUtil implements Accessor {
 		}
 	}
 
-	private void drawSpine(float yOff) {
+	private static void drawSpine(float yOff) {
 		glPushMatrix();
 		glTranslated(0.0F, yOff, 0.0F);
 		glBegin(GL_LINE_STRIP);
@@ -559,7 +557,7 @@ public final class RenderUtil implements Accessor {
 		glPopMatrix();
 	}
 
-	public void drawImage(int image, float x, float y, float width, float height, int color) {
+	public static void drawImage(int image, float x, float y, float width, float height, int color) {
 		enableGL2D();
 		glPushMatrix();
 		GlStateManager.alphaFunc(GL11.GL_GREATER, 0.01f);
@@ -594,22 +592,22 @@ public final class RenderUtil implements Accessor {
 		disableGL2D();
 	}
 
-	public void drawBloomShadow(float x, float y, float width, float height, int blurRadius, Color color,
+	public static void drawBloomShadow(float x, float y, float width, float height, int blurRadius, Color color,
 			boolean scissor) {
 		drawBloomShadow(x, y, width, height, blurRadius, 0, color.getRGB(), scissor, false, false, false, false);
 	}
 
-	public void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int color,
+	public static void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int color,
 			boolean scissor) {
 		drawBloomShadow(x, y, width, height, blurRadius, 0, color, scissor, false, false, false, false);
 	}
 
-	public void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int roundRadius, int color,
+	public static void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int roundRadius, int color,
 			boolean scissor) {
 		drawBloomShadow(x, y, width, height, blurRadius, roundRadius, color, scissor, false, false, false, false);
 	}
 
-	public void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int roundRadius, int color, boolean scissor, boolean cutTop, boolean cutBottom, boolean cutLeft, boolean cutRight) {
+	public static void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int roundRadius, int color, boolean scissor, boolean cutTop, boolean cutBottom, boolean cutLeft, boolean cutRight) {
 		float expandedWidth = width + blurRadius * 2;
 		float expandedHeight = height + blurRadius * 2;
 		float drawX = x - blurRadius - 0.75f;
@@ -666,7 +664,7 @@ public final class RenderUtil implements Accessor {
 		drawImage(shadowCache.get(identifier), drawX, drawY, expandedWidth, expandedHeight, color);
 	}
 
-	public void disableGL2D() {
+	public static void disableGL2D() {
 		GL11.glEnable(3553);
 		GL11.glDisable(3042);
 		GL11.glEnable(2929);
@@ -675,7 +673,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glHint(3155, 4352);
 	}
 
-	public void enableGL2D() {
+	public static void enableGL2D() {
 		GL11.glDisable(2929);
 		GL11.glEnable(3042);
 		GL11.glDisable(3553);
@@ -686,7 +684,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glHint(3155, 4354);
 	}
 
-	public void drawTriangle(float cx, float cy, float r, float n, Color color) {
+	public static void drawTriangle(float cx, float cy, float r, float n, Color color) {
 		GL11.glPushMatrix();
 		cx *= 2.0;
 		cy *= 2.0;
@@ -729,14 +727,14 @@ public final class RenderUtil implements Accessor {
 		GL11.glPopMatrix();
 	}
 
-	public float getExtraWidth() {
+	public static float getExtraWidth() {
 		if (mc.gameSettings.thirdPersonView == 0) {
 			return 2;
 		}
 		return 1;
 	}
 
-	public void drawRectangle(float x, float y, float width, float height, float lineWidth, boolean filled) {
+	public static void drawRectangle(float x, float y, float width, float height, float lineWidth, boolean filled) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(x - 0.05f, y - 0.15f, 0.0f);
 
@@ -760,7 +758,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glPopMatrix();
 	}
 
-	public void drawStar(float x, float y, float radius) {
+	public static void drawStar(float x, float y, float radius) {
 		final int POINTS = 5;
 		final float[] angles = new float[POINTS * 2];
 
@@ -785,7 +783,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glEnd();
 	}
 
-	public void drawStar(float centerX, float centerY, float radius, float rotationOffset) {
+	public static void drawStar(float centerX, float centerY, float radius, float rotationOffset) {
 		int points = 5;
 		double angleIncrement = Math.PI / points;
 		GL11.glBegin(GL11.GL_LINE_LOOP);
@@ -799,7 +797,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glEnd();
 	}
 
-	public void drawTriangle(float x, float y, float base, float height, float rotationAngle) {
+	public static void drawTriangle(float x, float y, float base, float height, float rotationAngle) {
 		float[] vertices = new float[6];
 
 		vertices[0] = -base / 2;
@@ -825,7 +823,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glPopMatrix();
 	}
 
-	public void drawCircle(float radius, float lineWidth) {
+	public static void drawCircle(float radius, float lineWidth) {
 		GL11.glLineWidth(lineWidth * getExtraWidth());
 		GL11.glBegin(GL11.GL_LINE_STRIP);
 		for (int i = 0; i <= 360; i += 5) {
@@ -835,7 +833,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glEnd();
 	}
 
-	public void drawDecorativeCircle(float radius, float lineWidth) {
+	public static void drawDecorativeCircle(float radius, float lineWidth) {
 		GL11.glLineWidth(lineWidth * getExtraWidth());
 		GL11.glBegin(GL11.GL_LINE_STRIP);
 		for (int i = 0; i <= 360; i += 5) {
@@ -852,14 +850,14 @@ public final class RenderUtil implements Accessor {
 		GL11.glEnd();
 	}
 
-	public void drawSegment(float x, float y, float angle, float offset, float inwardOffset) {
+	public static void drawSegment(float x, float y, float angle, float offset, float inwardOffset) {
 		GL11.glVertex2f(x + (float) Math.cos(angle) * offset, y + (float) Math.sin(angle) * offset);
 		GL11.glVertex2f(x, y);
 		GL11.glVertex2f(x - (float) Math.cos(angle) * inwardOffset, y - (float) Math.sin(angle) * inwardOffset);
 		GL11.glVertex2f(x, y);
 	}
 
-	public void drawCircleWithOffsets(float radius, float offset, float inwardOffset, float lineWidth) {
+	public static void drawCircleWithOffsets(float radius, float offset, float inwardOffset, float lineWidth) {
 		GL11.glLineWidth(lineWidth * getExtraWidth());
 		GL11.glBegin(GL11.GL_LINE_STRIP);
 		for (int i = 0; i <= 360; i += 5) {
@@ -879,7 +877,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glEnd();
 	}
 
-	public void drawCircle(float radius, float lineWidth, Color color) {
+	public static void drawCircle(float radius, float lineWidth, Color color) {
 		ColorUtil.color(color);
 		GL11.glLineWidth(lineWidth * getExtraWidth());
 		GL11.glBegin(GL11.GL_LINE_STRIP);
@@ -890,7 +888,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glEnd();
 	}
 
-	public void drawArc(float radius, int startAngle, int endAngle, float lineWidth, Color color) {
+	public static void drawArc(float radius, int startAngle, int endAngle, float lineWidth, Color color) {
 		ColorUtil.color(color);
 		GL11.glLineWidth(lineWidth * getExtraWidth());
 		GL11.glBegin(GL11.GL_LINE_STRIP);
@@ -901,7 +899,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glEnd();
 	}
 
-	public void drawLineExtensions(float radius, float extensionLength, int[] angles) {
+	public static void drawLineExtensions(float radius, float extensionLength, int[] angles) {
 		GL11.glLineWidth(4.0f * getExtraWidth());
 		GL11.glBegin(GL11.GL_LINES);
 		for (int angle : angles) {
@@ -913,7 +911,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glEnd();
 	}
 
-	public void drawHaloRectangles() {
+	public static void drawHaloRectangles() {
 		ColorUtil.color(new Color(161, 253, 228, 220));
 		drawRectangle(0.20f, 0.02f, 0.26f, 0.26f, 4f, false);
 		drawRectangle(0.2f, 0.3f, 0.4f, 0.4f, 6f, false);
@@ -922,15 +920,15 @@ public final class RenderUtil implements Accessor {
 		drawRectangle(0.12f, 0.49f, 0.1f, 0f, 6f, false);
 	}
 
-	private double interpolate(final double current, final double previous, final double multiplier) {
+	private static double interpolate(final double current, final double previous, final double multiplier) {
 		return previous + (current - previous) * multiplier;
 	}
 
-	private float interpolate(final float current, final float previous, final float multiplier) {
+	private static float interpolate(final float current, final float previous, final float multiplier) {
 		return previous + (current - previous) * multiplier;
 	}
 
-	public void drawBlock(BlockPos blockPos, Color color, boolean slice) {
+	public static void drawBlock(BlockPos blockPos, Color color, boolean slice) {
 		double x = blockPos.getX() - (mc.getRenderManager()).viewerPosX;
 		double y = blockPos.getY() - (mc.getRenderManager()).viewerPosY;
 		double z = blockPos.getZ() - (mc.getRenderManager()).viewerPosZ;
@@ -951,7 +949,7 @@ public final class RenderUtil implements Accessor {
 		GL11.glDisable(3042);
 	}
 
-	public void drawAroundAxis(AxisAlignedBB axis, Color color) {
+	public static void drawAroundAxis(AxisAlignedBB axis, Color color) {
 		Tessellator tess = Tessellator.getInstance();
 		WorldRenderer wr = tess.getWorldRenderer();
 		float r = color.getRed() / 255.0F;

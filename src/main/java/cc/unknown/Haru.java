@@ -43,7 +43,6 @@ import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.system.CustomLogger;
 import cc.unknown.util.client.system.SystemUtil;
 import cc.unknown.util.render.font.FontUtil;
-import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -51,7 +50,6 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 @Mod(modid = "betterclouds", name = "better clouds", version = "Lite")
-@Getter
 public class Haru {
     public static Haru instance = new Haru();
 
@@ -208,4 +206,100 @@ public class Haru {
 
         logger.info("All directories were created successfully (or already existed).");
     }
+
+	public static Haru getInstance() {
+		return instance;
+	}
+
+	public static String getName() {
+		return NAME;
+	}
+
+	public static String getVersion() {
+		return VERSION;
+	}
+
+	public ModuleManager getModuleManager() {
+		return moduleManager;
+	}
+
+	public CosmeticManager getCosmeticManager() {
+		return cosmeticManager;
+	}
+
+	public CommandManager getCmdManager() {
+		return cmdManager;
+	}
+
+	public ConfigManager getCfgManager() {
+		return cfgManager;
+	}
+
+	public PositionManager getPositionManager() {
+		return positionManager;
+	}
+
+	public DragManager getDragManager() {
+		return dragManager;
+	}
+
+	public DropGui getDropGui() {
+		return dropGui;
+	}
+
+	public WebSocketCore getWebSocket() {
+		return webSocket;
+	}
+
+	public CustomLogger getLogger() {
+		return logger;
+	}
+
+	public DiscordHandler getDiscordHandler() {
+		return discordHandler;
+	}
+
+	public List<Object> getRegisteredHandlers() {
+		return registeredHandlers;
+	}
+
+	public ScheduledExecutorService getThreadPool() {
+		return threadPool;
+	}
+
+	public Gson getGSON() {
+		return GSON;
+	}
+
+	public static Minecraft getMc() {
+		return mc;
+	}
+
+	public static File getMainDir() {
+		return MAIN_DIR;
+	}
+
+	public static File getDllDir() {
+		return DLL_DIR;
+	}
+
+	public static File getCfgDir() {
+		return CFG_DIR;
+	}
+
+	public static File getDragDir() {
+		return DRAG_DIR;
+	}
+
+	public static File getCsDir() {
+		return CS_DIR;
+	}
+
+	public static File getScriptDir() {
+		return SCRIPT_DIR;
+	}
+
+	public static boolean isFirstStart() {
+		return firstStart;
+	}
 }

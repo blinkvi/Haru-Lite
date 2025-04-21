@@ -11,17 +11,15 @@ import com.google.gson.GsonBuilder;
 import cc.unknown.file.cosmetics.SuperCosmetic;
 import cc.unknown.socket.WebSocketCore;
 import cc.unknown.util.client.system.LocalDateTimeStructuredAdapter;
-import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Message;
 
-@UtilityClass
 public class CosmeticSocket extends WebSocketCore {
-	public List<SuperCosmetic> cosmeticList = new ArrayList<>();
-	public Message latestChatMessage;
+	public static List<SuperCosmetic> cosmeticList = new ArrayList<>();
+	public static Message latestChatMessage;
 	
-	private Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeStructuredAdapter()).create();
+	private static Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeStructuredAdapter()).create();
 
-	public void tick(SuperCosmetic superCosmetic) {
+	public static void tick(SuperCosmetic superCosmetic) {
 	    getCosmeticChannel().getHistory().retrievePast(30).queue(messages -> {
 	        latestChatMessage = null;
 

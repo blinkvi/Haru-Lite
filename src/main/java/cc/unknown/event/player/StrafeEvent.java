@@ -1,16 +1,10 @@
 package cc.unknown.event.player;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.player.move.MoveUtil;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 @Cancelable
-@AllArgsConstructor
-@Getter
-@Setter
 public class StrafeEvent extends Event implements Accessor {
 
     private float forward;
@@ -19,7 +13,55 @@ public class StrafeEvent extends Event implements Accessor {
     private float yaw;
     private StrafeType strafeType;
 	
-    public StrafeEvent(StrafeType strafeType) {
+    public StrafeEvent(float forward, float strafe, float friction, float yaw, StrafeType strafeType) {
+		this.forward = forward;
+		this.strafe = strafe;
+		this.friction = friction;
+		this.yaw = yaw;
+		this.strafeType = strafeType;
+	}
+
+	public float getForward() {
+		return forward;
+	}
+
+	public void setForward(float forward) {
+		this.forward = forward;
+	}
+
+	public float getStrafe() {
+		return strafe;
+	}
+
+	public void setStrafe(float strafe) {
+		this.strafe = strafe;
+	}
+
+	public float getFriction() {
+		return friction;
+	}
+
+	public void setFriction(float friction) {
+		this.friction = friction;
+	}
+
+	public float getYaw() {
+		return yaw;
+	}
+
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+
+	public StrafeType getStrafeType() {
+		return strafeType;
+	}
+
+	public void setStrafeType(StrafeType strafeType) {
+		this.strafeType = strafeType;
+	}
+
+	public StrafeEvent(StrafeType strafeType) {
     	this.strafeType = strafeType;
     }
 	

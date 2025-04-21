@@ -13,8 +13,6 @@ import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import lombok.AllArgsConstructor;
-
 public class Webhook {
 	public final String url;
     public String content;
@@ -190,34 +188,51 @@ public class Webhook {
             return this;
         }
 
-        @AllArgsConstructor
         public class Footer {
             public String text;
             public String iconUrl;
+			public Footer(String text, String iconUrl) {
+				this.text = text;
+				this.iconUrl = iconUrl;
+			}
         }
 
-        @AllArgsConstructor
         public class Thumbnail {
             public String url;
+
+			public Thumbnail(String url) {
+				this.url = url;
+			}
         }
 
-        @AllArgsConstructor
         public class Image {
             public String url;
+
+			public Image(String url) {
+				this.url = url;
+			}
         }
 
-        @AllArgsConstructor
         public class Author {
             public String name;
             public String url;
             public String iconUrl;
+			public Author(String name, String url, String iconUrl) {
+				this.name = name;
+				this.url = url;
+				this.iconUrl = iconUrl;
+			}
         }
         
-        @AllArgsConstructor
         public class Field {
             public String name;
             public String value;
             public boolean inline;
+			public Field(String name, String value, boolean inline) {
+				this.name = name;
+				this.value = value;
+				this.inline = inline;
+			}
         }
     }
 

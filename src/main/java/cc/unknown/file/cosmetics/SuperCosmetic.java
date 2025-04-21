@@ -3,9 +3,6 @@ package cc.unknown.file.cosmetics;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import lombok.Getter;
-
-@Getter
 public class SuperCosmetic {
 	private String name;
 	private String halo;
@@ -27,6 +24,42 @@ public class SuperCosmetic {
 		this.accesories = accesories;
 		this.cape = cape;
 		this.lastUpdated = LocalDateTime.now();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getHalo() {
+		return halo;
+	}
+
+	public String getHat() {
+		return hat;
+	}
+
+	public String getPet() {
+		return pet;
+	}
+
+	public String getAura() {
+		return aura;
+	}
+
+	public String getWings() {
+		return wings;
+	}
+
+	public String getAccesories() {
+		return accesories;
+	}
+
+	public String getCape() {
+		return cape;
+	}
+
+	public LocalDateTime getLastUpdated() {
+		return lastUpdated;
 	}
 
 	@Override

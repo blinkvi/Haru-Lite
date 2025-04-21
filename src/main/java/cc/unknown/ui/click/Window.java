@@ -17,11 +17,7 @@ import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
 import cc.unknown.util.render.shader.impl.GradientBlur;
 import cc.unknown.util.value.impl.BoolValue;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 public class Window implements IComponent {
     private final List<ModuleComponent> moduleComponents;
     private final List<BoolValue> settingBools = new ArrayList<>();
@@ -151,4 +147,84 @@ public class Window implements IComponent {
         this.x = x;
         this.y = y;
     }
+
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	public float getDragX() {
+		return dragX;
+	}
+
+	public void setDragX(float dragX) {
+		this.dragX = dragX;
+	}
+
+	public float getDragY() {
+		return dragY;
+	}
+
+	public void setDragY(float dragY) {
+		this.dragY = dragY;
+	}
+
+	public float getWidth() {
+		return width;
+	}
+
+	public void setWidth(float width) {
+		this.width = width;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
+	}
+
+	public boolean isExpand() {
+		return expand;
+	}
+
+	public void setExpand(boolean expand) {
+		this.expand = expand;
+	}
+
+	public boolean isDragging() {
+		return dragging;
+	}
+
+	public void setDragging(boolean dragging) {
+		this.dragging = dragging;
+	}
+
+	public List<ModuleComponent> getModuleComponents() {
+		return moduleComponents;
+	}
+
+	public List<BoolValue> getSettingBools() {
+		return settingBools;
+	}
+
+	public GradientBlur getGradientBlur() {
+		return gradientBlur;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
 }

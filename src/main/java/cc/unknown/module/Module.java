@@ -15,12 +15,8 @@ import cc.unknown.util.Accessor;
 import cc.unknown.util.structure.list.SList;
 import cc.unknown.util.value.Value;
 import cc.unknown.util.value.impl.SliderValue;
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraftforge.common.MinecraftForge;
 
-@Getter
-@Setter
 public abstract class Module implements Accessor {
 
 	private final SList<Value> values = new SList<>();
@@ -67,7 +63,7 @@ public abstract class Module implements Accessor {
         return mod == null || mod.isDisabled();
     }
 
-    public void toggle() {
+	public void toggle() {
         setEnabled(!isEnabled());
     }
 
@@ -157,4 +153,56 @@ public abstract class Module implements Accessor {
 	        max.setValue(maxValue);
 	    }
     }
+
+	public SList<Value> getValues() {
+		return values;
+	}
+
+	public ModuleInfo getModuleInfo() {
+		return moduleInfo;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public int getKeyBind() {
+		return keyBind;
+	}
+
+	public boolean isHidden() {
+		return hidden;
+	}
+
+	public boolean isState() {
+		return state;
+	}
+
+	public boolean isExpanded() {
+		return expanded;
+	}
+	
+    public void setKeyBind(int keyBind) {
+		this.keyBind = keyBind;
+	}
+
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
+	}
+
+	public void setState(boolean state) {
+		this.state = state;
+	}
+
+	public void setExpanded(boolean expanded) {
+		this.expanded = expanded;
+	}
 }

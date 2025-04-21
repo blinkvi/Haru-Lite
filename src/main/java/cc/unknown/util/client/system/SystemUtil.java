@@ -12,17 +12,13 @@ import javax.sound.midi.Sequencer;
 
 import cc.unknown.Haru;
 import cc.unknown.util.Accessor;
-import lombok.SneakyThrows;
-import lombok.experimental.UtilityClass;
 import net.minecraft.util.ResourceLocation;
 
-@UtilityClass
 public class SystemUtil implements Accessor {	
-	private Sequence sequence;
-	private Sequencer sequencer;
+	private static Sequence sequence;
+	private static Sequencer sequencer;
 	
-	@SneakyThrows
-	public void playSound() {
+	public static void playSound() {
 	    new Thread(() -> {
 	        try {
 	            ResourceLocation resourceLocation = new ResourceLocation("haru/sound/elfen.mid");
@@ -105,7 +101,7 @@ public class SystemUtil implements Accessor {
         return Haru.firstStart;
     }
 	
-    public boolean isOptifineLoaded() {
+    public static boolean isOptifineLoaded() {
         File modsFolder = new File(mc.mcDataDir, "run/mods");
 
         if (!modsFolder.exists() || !modsFolder.isDirectory()) {

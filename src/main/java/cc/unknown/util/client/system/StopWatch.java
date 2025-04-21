@@ -1,10 +1,5 @@
 package cc.unknown.util.client.system;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 public class StopWatch {
     private long startTime;
 
@@ -63,4 +58,12 @@ public class StopWatch {
     public long getElapsedTime() {
         return System.currentTimeMillis() - this.startTime;
     }
+
+	public long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
 }

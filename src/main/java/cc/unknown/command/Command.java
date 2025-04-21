@@ -8,16 +8,20 @@ import static cc.unknown.util.render.client.ColorUtil.reset;
 
 import cc.unknown.util.Accessor;
 import cc.unknown.util.render.client.ChatUtil;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-@Getter
 public abstract class Command implements Accessor {
 
     protected final String prefix;
 
-    public abstract void execute(String[] args);
+    public Command(String prefix) {
+		this.prefix = prefix;
+	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public abstract void execute(String[] args);
 
     public void error(String message) {
         ChatUtil.display(String.format("%s[%s*%s] %s", pink, red, pink, reset + message));

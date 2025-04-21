@@ -1,18 +1,30 @@
 package cc.unknown.util.structure.vectors;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public final class Vector2d {
     public double x, y;
 
-    public Vector2d offset(double x, double y) {
+    public Vector2d(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	public Vector2d offset(double x, double y) {
         return new Vector2d(this.x + x, this.y + y);
     }
 

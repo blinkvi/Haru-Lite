@@ -1,10 +1,7 @@
 package cc.unknown.util.render.shader.api;
 
-import lombok.experimental.UtilityClass;
-
-@UtilityClass
 public class ImageMath {
-	public void premultiply(int[] p, int offset, int length) {
+	public static void premultiply(int[] p, int offset, int length) {
 	    for (int i = offset; i < length; i++) {
 	        int rgb = p[i];
 	        int a = (rgb >> 24) & 0xFF;
@@ -17,7 +14,7 @@ public class ImageMath {
 	    }
 	}
 
-	public void unpremultiply(int[] p, int offset, int length) {
+	public static void unpremultiply(int[] p, int offset, int length) {
 	    for (int i = offset; i < length; i++) {
 	        int rgb = p[i];
 	        int a = (rgb >> 24) & 0xFF;
