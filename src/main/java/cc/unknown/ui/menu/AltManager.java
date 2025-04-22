@@ -10,10 +10,10 @@ import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 
-import cc.unknown.mixin.impl.IMinecraft;
+import cc.unknown.mixin.interfaces.IMinecraft;
 import cc.unknown.ui.menu.impl.TextField;
-import cc.unknown.util.alt.MicrosoftAccount;
 import cc.unknown.util.alt.AltGen;
+import cc.unknown.util.alt.MicrosoftAccount;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.structure.vectors.Vector2d;
 import net.minecraft.client.gui.GuiButton;

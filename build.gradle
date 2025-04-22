@@ -121,7 +121,6 @@ jar {
     manifest {
         attributes(
                 'MixinConfigs': 'mixins.haru.json',
-                'FMLAT': "haru_at.cfg",
                 'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
                 'TweakOrder': 0,
                 "FMLCorePlugin": "cc.unknown.mixin.MixinLoader",

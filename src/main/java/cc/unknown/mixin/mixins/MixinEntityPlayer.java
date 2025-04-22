@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import cc.unknown.mixin.impl.IEntityPlayer;
+import cc.unknown.mixin.interfaces.IEntityPlayer;
 import cc.unknown.util.client.system.StopWatch;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerCapabilities;

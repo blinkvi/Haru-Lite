@@ -1,4 +1,4 @@
-package cc.unknown.mixin.impl;
+package cc.unknown.mixin.interfaces;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

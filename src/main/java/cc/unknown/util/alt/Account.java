@@ -2,7 +2,7 @@ package cc.unknown.util.alt;
 
 import com.google.gson.JsonObject;
 
-import cc.unknown.mixin.impl.IMinecraft;
+import cc.unknown.mixin.interfaces.IMinecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Session;
 

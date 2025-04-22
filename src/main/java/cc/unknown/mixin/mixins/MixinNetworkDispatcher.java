@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import cc.unknown.mixin.impl.FMLHandshakeFilter;
+import cc.unknown.mixin.interfaces.FMLHandshakeFilter;
 import io.netty.channel.ChannelConfig;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.embedded.EmbeddedChannel;

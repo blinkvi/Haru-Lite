@@ -1,4 +1,4 @@
-package cc.unknown.mixin.impl;
+package cc.unknown.mixin.interfaces;
 
 import net.minecraft.util.Session;
 

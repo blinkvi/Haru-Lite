@@ -3,7 +3,7 @@ package cc.unknown.mixin.mixins;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-import cc.unknown.mixin.impl.IWorldRenderer;
+import cc.unknown.mixin.interfaces.IWorldRenderer;
 import cc.unknown.util.render.client.ColorUtil;
 import net.minecraft.client.renderer.WorldRenderer;
 

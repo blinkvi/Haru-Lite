@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -21,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import cc.unknown.Haru;
 import cc.unknown.event.GameEvent;
 import cc.unknown.event.player.AttackEvent;
-import cc.unknown.mixin.impl.IMinecraft;
+import cc.unknown.mixin.interfaces.IMinecraft;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -41,7 +40,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
 import net.minecraft.util.Util;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(Minecraft.class)
@@ -91,11 +89,7 @@ public abstract class MixinMinecraft implements IMinecraft {
 
 	@Shadow
 	public abstract ByteBuffer readImageToBuffer(InputStream imageStream) throws IOException;
-
-	@Override
-	public void setSession(final Session session) {
-		this.session = session;
-	}
+	
 
 	@Inject(method = "startGame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;ingameGUI:Lnet/minecraft/client/gui/GuiIngame;", shift = At.Shift.AFTER))
 	private void injectStartGame(CallbackInfo ci) {
@@ -246,16 +240,6 @@ public abstract class MixinMinecraft implements IMinecraft {
         }
     }
 
-    @Inject(
-        method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V",
-        at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;theWorld:Lnet/minecraft/client/multiplayer/WorldClient;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER)
-    )
-    private void patcher$clearRenderCache(CallbackInfo ci) {
-        MinecraftForgeClient.getRenderPass();
-        MinecraftForgeClientAccessor.getRegionCache().invalidateAll();
-        MinecraftForgeClientAccessor.getRegionCache().cleanUp();
-    }
-	
     @Overwrite
     public void startTimerHackThread() { }
 
