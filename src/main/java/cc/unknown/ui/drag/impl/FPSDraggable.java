@@ -37,7 +37,7 @@ public class FPSDraggable extends Drag {
         float adjustedX = Math.min(x, sr.getScaledWidth() - width);
         float adjustedY = Math.min(y, sr.getScaledHeight() - height);
 
-        RoundedUtil.drawRound(adjustedX, adjustedY, width, height - 2, 4.0F, new Color(getModule(Interface.class).backgroundColor(), true));
+        RoundedUtil.drawRound(adjustedX, adjustedY, width, height - 2, 6.0F, new Color(getModule(Interface.class).backgroundColor(), true));
     	if (setting.shaders.get()) {
     		new GradientBlur().set((int) adjustedX, (int) adjustedY, (int) width, (int) height, 0);
     		RenderUtil.drawBloomShadow(adjustedX, adjustedY, width, height, 20, 6, setting.color(0), true, false, false, false, false);

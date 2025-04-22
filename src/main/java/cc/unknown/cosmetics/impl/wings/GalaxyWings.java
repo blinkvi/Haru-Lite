@@ -58,9 +58,11 @@ public class GalaxyWings extends ModelBase implements LayerRenderer<AbstractClie
 				GL11.glScaled(-0.6, -0.6, 0.6);
 				GL11.glTranslated(0.0D, -1.45, 0.1D);
 				GL11.glTranslated(0.0D, 1.3D, 0.2D);
+				
 				if (entitylivingbaseIn.isSneaking()) {
 					GlStateManager.translate(0.0F, -0.142F, -0.0178F);
 				}
+				
 				GL11.glRotated(130, 1, 0, 0);
 				GL11.glRotated(180, 0, 1, 0);
 	
@@ -71,7 +73,7 @@ public class GalaxyWings extends ModelBase implements LayerRenderer<AbstractClie
 				
 				for (int j = 0; j < 2; j++) {
 					GL11.glEnable(2884);
-					float f11 = (float) (System.currentTimeMillis() % 1000L) / 1000.0F * 3.1415927F * 2.0F;
+					float f11 = (float) ((System.currentTimeMillis() % 1000L) / 1000.0F * Math.PI * 2.0F);
 					this.wing.rotateAngleX = (float) Math.toRadians(-80.0D) - (float) Math.cos(f11) * 0.2F;
 					this.wing.rotateAngleY = (float) Math.toRadians(20.0D) + (float) Math.sin(f11) * 0.4F;
 					this.wing.rotateAngleZ = (float) Math.toRadians(20.0D);

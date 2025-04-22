@@ -21,11 +21,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 public class Cosmetics extends Module {
 	boolean changed;
 
-	public final ModeValue haloType = new ModeValue("Halo", this, "Aris", "Aris", "Shiroko", "Reisa", "Natsu", "Hoshino", "None");
+	public final ModeValue haloType = new ModeValue("Halo", this, "None", "Aris", "Shiroko", "Reisa", "Natsu", "Hoshino", "None");
 	public final ModeValue capeType = new ModeValue("Cape", this, "None", "None", "Canada", "France", "Germany", "India", "Indonesia", "Italy", "Japan", "Korean", "UnitedKingdom", "UnitedStates", "Arcade", "Boost", "Dark", "Eyes", "Flame", "Kocho", "ZeroTwo", "Minecon2011", "Minecon2012", "Minecon2013", "Minecon2015", "Minecon2016");
 	public final ModeValue hatType = new ModeValue("Hat", this, HatType.NONE, HatType.values());
 	public final ModeValue petType = new ModeValue("Pet", this, PetType.NONE, PetType.values());
-	public final ModeValue auraType = new ModeValue("Aura", this, AuraType.ORBIT, AuraType.values());
+	public final ModeValue auraType = new ModeValue("Aura", this, AuraType.NONE, AuraType.values());
 	public final ModeValue wingsType = new ModeValue("Wings", this, WingsType.GALAXY, WingsType.values());
 	public final ModeValue accesoriesType = new ModeValue("Accesories", this, AccesoriesType.NONE, AccesoriesType.values());
 

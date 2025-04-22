@@ -7,6 +7,10 @@ public final class Vector2d {
 		this.x = x;
 		this.y = y;
 	}
+    
+    public Vector2d() {
+    	
+    }
 
 	public double getX() {
 		return x;

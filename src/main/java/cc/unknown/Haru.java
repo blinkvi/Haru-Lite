@@ -23,7 +23,6 @@ import cc.unknown.handlers.CPSHandler;
 import cc.unknown.handlers.CommandHandler;
 import cc.unknown.handlers.DiscordHandler;
 import cc.unknown.handlers.DragHandler;
-import cc.unknown.handlers.FixHandler;
 import cc.unknown.handlers.GuiMoveHandler;
 import cc.unknown.handlers.IRCHandler;
 import cc.unknown.handlers.KeyHandler;
@@ -128,7 +127,6 @@ public class Haru {
             new SpoofHandler(),
             new AutoJoinHandler(),
             new TransactionHandler(),
-            new FixHandler(),
             new ShaderHandler(),
             new DragHandler(),
             new IRCHandler(),

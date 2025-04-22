@@ -14,7 +14,7 @@ import net.minecraft.client.gui.ScaledResolution;
 public class WatermarkDraggable extends Drag {
     public WatermarkDraggable() {
         super("Watermark");
-        this.x = 0f;
+        this.x = 5f;
         this.y = 0f;
     }
     

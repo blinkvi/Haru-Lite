@@ -19,7 +19,7 @@ public enum AuraType {
                 this.imagePath = "";
             }
         } else {
-            this.imagePath = "haru/cosmes/" + fileName;
+            this.imagePath = "haru/cosmes/aura/" + fileName;
         }
     }
 	

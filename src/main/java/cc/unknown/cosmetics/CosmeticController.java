@@ -1,21 +1,17 @@
 package cc.unknown.cosmetics;
 
-import cc.unknown.cosmetics.impl.accessories.Bandana;
-import cc.unknown.cosmetics.impl.aura.BlazeAura;
-import cc.unknown.cosmetics.impl.aura.CreeperAura;
-import cc.unknown.cosmetics.impl.aura.EnchantingAura;
-import cc.unknown.cosmetics.impl.aura.OrbitAura;
-import cc.unknown.cosmetics.impl.cape.Cape;
-import cc.unknown.cosmetics.impl.halo.Halo;
-import cc.unknown.cosmetics.impl.hat.DougDimmadome;
-import cc.unknown.cosmetics.impl.hat.Tophat;
-import cc.unknown.cosmetics.impl.hat.WitchHat;
-import cc.unknown.cosmetics.impl.pet.DogPet;
-import cc.unknown.cosmetics.impl.wings.GalaxyWings;
+import cc.unknown.cosmetics.impl.accessories.*;
+import cc.unknown.cosmetics.impl.aura.*;
+import cc.unknown.cosmetics.impl.cape.*;
+import cc.unknown.cosmetics.impl.halo.*;
+import cc.unknown.cosmetics.impl.hat.*;
+import cc.unknown.cosmetics.impl.pet.*;
+import cc.unknown.cosmetics.impl.wings.*;
 import cc.unknown.socket.impl.CosmeticSocket;
 import cc.unknown.util.render.enums.CosmeticType;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 
 public class CosmeticController {
 
@@ -44,19 +40,43 @@ public class CosmeticController {
     public static float[] getTophatColor(AbstractClientPlayer player) {
         return new float[]{1, 0, 0};
     }
-
+    
     public static void addModels(RenderPlayer renderPlayer) {
-    	renderPlayer.addLayer(new DougDimmadome(renderPlayer));
-        renderPlayer.addLayer(new Tophat(renderPlayer));
-        renderPlayer.addLayer(new DogPet(renderPlayer));
-        renderPlayer.addLayer(new Bandana(renderPlayer));
-        renderPlayer.addLayer(new GalaxyWings(renderPlayer));
-        renderPlayer.addLayer(new WitchHat(renderPlayer));
-        renderPlayer.addLayer(new OrbitAura(renderPlayer));
-        renderPlayer.addLayer(new BlazeAura(renderPlayer));
-        renderPlayer.addLayer(new CreeperAura(renderPlayer));
-        renderPlayer.addLayer(new EnchantingAura(renderPlayer));
-        renderPlayer.addLayer(new Cape(renderPlayer));
-        renderPlayer.addLayer(new Halo(renderPlayer));
+        addLayer(
+            renderPlayer,
+            new Bandana(renderPlayer),
+            new Cape(renderPlayer),
+            new Halo(renderPlayer),
+            
+            // pet
+            new DogPet(renderPlayer),
+            
+            // hat
+            new DimmadomeHat(renderPlayer),
+            new Tophat(renderPlayer),
+            new WitchHat(renderPlayer),
+            
+            // aura
+            new OrbitAura(renderPlayer),
+            new BlazeAura(renderPlayer),
+            new CreeperAura(renderPlayer),
+            new EnchantingAura(renderPlayer),
+            
+            // Wings
+            new GalaxyWings(renderPlayer),
+            new ShanaWings(renderPlayer),
+            new KuroyukihimeWings(renderPlayer),
+            new AngelicWings(renderPlayer),
+            new DemonWings(renderPlayer),
+            new MetalWings(renderPlayer),
+            new MechWings(renderPlayer)
+        );
+    }
+
+    @SafeVarargs
+    private static void addLayer(RenderPlayer renderPlayer, LayerRenderer<AbstractClientPlayer>... layers) {
+        for (LayerRenderer<AbstractClientPlayer> layer : layers) {
+            renderPlayer.addLayer(layer);
+        }
     }
 }

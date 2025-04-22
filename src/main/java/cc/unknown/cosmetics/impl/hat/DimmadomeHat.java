@@ -14,11 +14,11 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
-public class DougDimmadome extends CosmeticBase {
+public class DimmadomeHat extends CosmeticBase {
 	
 	private final ModelDougDimmadomeHat modelDougDimmadomeHat;
 	
-	public DougDimmadome(RenderPlayer renderPlayer) {
+	public DimmadomeHat(RenderPlayer renderPlayer) {
 		super(renderPlayer);
 		modelDougDimmadomeHat = new ModelDougDimmadomeHat(renderPlayer);
 	}
