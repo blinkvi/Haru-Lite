@@ -1,9 +1,9 @@
-package cc.unknown.util.value.impl;
+package cc.unknown.value.impl;
 
 import java.util.function.Supplier;
 
 import cc.unknown.module.Module;
-import cc.unknown.util.value.Value;
+import cc.unknown.value.Value;
 import net.minecraft.util.MathHelper;
 
 public class SliderValue extends Value {

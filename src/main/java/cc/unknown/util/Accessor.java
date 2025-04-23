@@ -54,7 +54,7 @@ public interface Accessor {
     }
 
     default CustomLogger getLogger() {
-    	return Haru.instance.getLogger();
+    	return getInstance().getLogger();
     }
 
     default <T extends Module> T getModule(final Class<T> clazz) {

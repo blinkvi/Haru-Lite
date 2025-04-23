@@ -261,8 +261,8 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         MinecraftForge.EVENT_BUS.post(event);
 
         if (isUsingItem() && !isRiding()) {
-            movementInput.moveStrafe *= event.getStrafeMultiplier();
-            movementInput.moveForward *= event.getForwardMultiplier();
+            movementInput.moveStrafe *= event.strafeMultiplier;
+            movementInput.moveForward *= event.forwardMultiplier;
             sprintToggleTimer = 0;
         }
 
@@ -272,7 +272,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         pushOutOfBlocks(posX + (double)width * 0.35D, getEntityBoundingBox().minY + 0.5D, posZ + (double)width * 0.35D);
         boolean flag3 = (float)getFoodStats().getFoodLevel() > 6.0F || capabilities.allowFlying;
 
-        if (onGround && !flag1 && !flag2 && (omniSprint || movementInput.moveForward >= f) && !isSprinting() && flag3 && (!isUsingItem() || event.isSprint()) && !isPotionActive(Potion.blindness)) {
+        if (onGround && !flag1 && !flag2 && (omniSprint || movementInput.moveForward >= f) && !isSprinting() && flag3 && (!isUsingItem() || event.sprint) && !isPotionActive(Potion.blindness)) {
         	if (sprintToggleTimer <= 0 && !mc.gameSettings.keyBindSprint.isKeyDown()) {
         		sprintToggleTimer = 7;
         	} else {
@@ -280,9 +280,9 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         	}
         }
         
-        if (!isSprinting() && (omniSprint || movementInput.moveForward >= f) && flag3 && (!isUsingItem() || event.isSprint()) && !isPotionActive(Potion.blindness) && mc.gameSettings.keyBindSprint.isKeyDown()) setSprinting(true); 
+        if (!isSprinting() && (omniSprint || movementInput.moveForward >= f) && flag3 && (!isUsingItem() || event.sprint) && !isPotionActive(Potion.blindness) && mc.gameSettings.keyBindSprint.isKeyDown()) setSprinting(true); 
         
-        if (!event.isSprint() && isUsingItem() && !isRiding()) setSprinting(false); 
+        if (!event.sprint && isUsingItem() && !isRiding()) setSprinting(false); 
 
         if (isSprinting() && (!omniSprint && (movementInput.moveForward < f || isCollidedHorizontally || !flag3))) setSprinting(false);
         

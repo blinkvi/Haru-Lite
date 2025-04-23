@@ -16,6 +16,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 public class RotationUtil implements Accessor {
@@ -58,6 +59,42 @@ public class RotationUtil implements Accessor {
 		Vector2f target2 = getRotations(entity2.posX, entity2.posY + entity2.getEyeHeight(), entity2.posZ);
 		return (float) hypot(Math.abs(getAngleDifference(target.x, target2.x)), Math.abs(target.y - target2.y));
 	}
+	
+    public static boolean rayCastIgnoreWall(float yaw, float pitch, @NotNull EntityLivingBase target) {
+        yaw = toPositive(yaw);
+
+        AxisAlignedBB targetBox = target.getEntityBoundingBox();
+
+        float minYaw = Float.MAX_VALUE;
+        float maxYaw = Float.MIN_VALUE;
+        float minPitch = Float.MAX_VALUE;
+        float maxPitch = Float.MIN_VALUE;
+
+        for (double x : new double[]{targetBox.minX, targetBox.maxX}) {
+            for (double y : new double[]{targetBox.minY, targetBox.maxY}) {
+                for (double z : new double[]{targetBox.minZ, targetBox.maxZ}) {
+                    final Vec3 hitPos = new Vec3(x, y, z);
+
+                    final float yaw1 = toPositive(getYaw(hitPos));
+                    final float pitch1 = getPitch(hitPos);
+
+                    if (minYaw > yaw1) minYaw = yaw1;
+                    if (maxYaw < yaw1) maxYaw = yaw1;
+                    if (minPitch > pitch1) minPitch = pitch1;
+                    if (maxPitch < pitch1) maxPitch = pitch1;
+                }
+            }
+        }
+
+        return yaw >= minYaw && yaw <= maxYaw && pitch >= minPitch && pitch <= maxPitch;
+    }
+
+    public static float toPositive(float yaw) {
+        if (yaw > 0) return yaw;
+
+        return 360 + (yaw % 360);
+    }
+
 
 	public static float getRotationDifference(final Vector2f a, final Vector2f b) {
 		float yawDiff = Math.abs(getAngleDifference(a.x, b.x));
@@ -124,6 +161,22 @@ public class RotationUtil implements Accessor {
 	public static float getPitch(@NotNull BlockPos pos) {
 		return getPitch(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
 	}
+	
+    public static MovingObjectPosition rayCast(final Vec3 from, final double distance, final float yaw, final float pitch) {
+        final float n4 = -yaw * 0.017453292f;
+        final float n5 = -pitch * 0.017453292f;
+        final float cos = MathHelper.cos(n4 - 3.1415927f);
+        final float sin = MathHelper.sin(n4 - 3.1415927f);
+        final float n6 = -MathHelper.cos(n5);
+        final Vec3 vec3 = new Vec3(sin * n6, MathHelper.sin(n5), cos * n6);
+        return mc.theWorld.rayTraceBlocks(from, from.addVector(vec3.xCoord * distance, vec3.yCoord * distance, vec3.zCoord * distance), false, false, false);
+    }
+
+
+    public static MovingObjectPosition rayCast(final double distance, final float yaw, final float pitch) {
+        final Vec3 getPositionEyes = mc.thePlayer.getPositionEyes(1.0f);
+        return rayCast(getPositionEyes, distance, yaw, pitch);
+    }
 
 	public static float getPitch(@NotNull AbstractClientPlayer from, @NotNull Vec3 pos) {
 		double diffX = pos.xCoord - from.posX;
@@ -349,5 +402,4 @@ public class RotationUtil implements Accessor {
 					mc.thePlayer.rotationPitch + MathHelper.wrapAngleTo180_float(pitch - mc.thePlayer.rotationPitch));
 		}
 	}
-
 }

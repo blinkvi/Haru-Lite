@@ -39,7 +39,7 @@ public class WatermarkDraggable extends Drag {
         RoundedUtil.drawRound(x, y, width, height - 2, 6.0F, new Color(getModule(Interface.class).backgroundColor(), true));
     	if (setting.shaders.get()) {
     		new GradientBlur().set((int) x, (int) y, (int) width, (int) height, 0);
-    		RenderUtil.drawBloomShadow(x, y, width, height, 20, 6, setting.color(0), true, false, false, false, false);
+    		RenderUtil.drawBloomShadow(x, y, width, height, 20, 6, setting.color(0));
     	}
         FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).drawString(title, x + padding + 2.0f, y + (height / 2) - 3, setting.color());
     }

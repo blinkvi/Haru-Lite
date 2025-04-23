@@ -13,8 +13,8 @@ import cc.unknown.util.player.FriendUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.client.ColorUtil;
-import cc.unknown.util.value.impl.BoolValue;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.impl.BoolValue;
+import cc.unknown.value.impl.SliderValue;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -56,6 +56,6 @@ public class ESP extends Module {
         if (redDamage.get() && player.hurtTime > 0) return new Color(255, 0, 0).getRGB();
         if (colorTeams.get()) return ColorUtil.getColorFromTags(player);
         if (FriendUtil.isFriend(name)) return new Color(0, 255, 0).getRGB();
-        return getModule(Interface.class).color(0);
+        return getModule(Interface.class).color();
     }
 }

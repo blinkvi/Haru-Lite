@@ -1,7 +1,9 @@
 package cc.unknown.ui.drag.impl;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import cc.unknown.Haru;
 import cc.unknown.module.Module;
@@ -16,8 +18,6 @@ public class ArrayListDraggable extends Drag {
 
     private final int PADDING = 2;
     
-    private final GradientBlur gradientBlur = new GradientBlur();
-
     public ArrayListDraggable() {
         super("ArrayList");
         this.x = 10;
@@ -31,21 +31,23 @@ public class ArrayListDraggable extends Drag {
         int middle = sr.getScaledWidth() / 2;
         List<Module> enabledModules = getEnabledModules();
 
-        float offset = 0;
-        float lastWidth = 0;
+        AtomicReference<Float> offset = new AtomicReference<>(0f);
+        AtomicReference<Float> lastWidth = new AtomicReference<>(0f);
 
-        for (int i = 0; i < enabledModules.size(); i++) {
-            Module module = enabledModules.get(i);
-            int width = getModuleWidth(module);
-            int height = getModuleHeight() - 2;
+        IntStream.range(0, enabledModules.size())
+            .mapToObj(i -> enabledModules.get(i))
+            .forEach(module -> {
+                int width = getModuleWidth(module);
+                int height = getModuleHeight() - 2;
 
-            renderModule(module, renderX, renderY, offset, width, height, 1.0f, middle, lastWidth, i, enabledModules.size());
+                renderModule(module, renderX, renderY, offset.get(), width, height, 1.0f, middle, lastWidth.get(), enabledModules.indexOf(module), enabledModules.size());
 
-            if (!module.isHidden()) {
-                offset = calculateNextOffset(module, height, offset);
-            }
-            lastWidth = width;
-        }
+                if (!module.isHidden()) {
+                    offset.set(calculateNextOffset(module, height, offset.get()));
+                }
+
+                lastWidth.set((float) width);
+            });
     }
 
     private List<Module> getEnabledModules() {
@@ -74,14 +76,14 @@ public class ArrayListDraggable extends Drag {
     private void renderBackground(float localX, float localY, float offset, int width, int height, int middle, int index) {
         if (localX < middle) {
         	if (setting.shaders.get()) {
-        		gradientBlur.set(localX - PADDING, localY + offset, width + 3, (int) (height + PADDING + setting.textHeight.get()), 0);
-        		RenderUtil.drawBloomShadow(localX - PADDING, localY + offset, width + 3, height + PADDING + setting.textHeight.get(), 14, 18, setting.color(index * 200), true, false, false, false, false);
+        		new GradientBlur().set(localX - PADDING, localY + offset, width + 3, (int) (height + PADDING + setting.textHeight.get()), 0);
+        		RenderUtil.drawBloomShadow(localX - PADDING, localY + offset, width + 3, height + PADDING + setting.textHeight.get(), 14, 18, setting.color(index * 200));
         	}
             RenderUtil.drawRoundedRect(localX - PADDING, localY + offset, width + 3, height + PADDING + setting.textHeight.get(), 8, setting.backgroundColor(index));
         } else {
         	if (setting.shaders.get()) {
-        		gradientBlur.set(localX + this.width - 4 - width, localY + offset + 2, width + 3, (int) (height + PADDING + setting.textHeight.get()), 0);
-        		RenderUtil.drawBloomShadow(localX + this.width - 4 - width, localY + offset + 2, width + 3, height + PADDING + setting.textHeight.get(), 14, 18, setting.color(index * 200), true, false, false, false, false);
+        		new GradientBlur().set(localX + this.width - 4 - width, localY + offset + 2, width + 3, (int) (height + PADDING + setting.textHeight.get()), 0);
+        		RenderUtil.drawBloomShadow(localX + this.width - 4 - width, localY + offset + 2, width + 3, height + PADDING + setting.textHeight.get(), 14, 18, setting.color(index * 200));
         	}
             RenderUtil.drawRoundedRect(localX + this.width - 4 - width, localY + offset + 2, width + 3, height + PADDING + setting.textHeight.get(), 8, setting.backgroundColor(index));
         }

@@ -21,6 +21,8 @@ import cc.unknown.Haru;
 import cc.unknown.event.GameEvent;
 import cc.unknown.event.player.AttackEvent;
 import cc.unknown.mixin.interfaces.IMinecraft;
+import cc.unknown.module.impl.combat.Piercing;
+import cc.unknown.module.impl.combat.Reach;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -239,9 +241,23 @@ public abstract class MixinMinecraft implements IMinecraft {
             this.entityRenderer.getMapItemRenderer().clearLoadedMaps();
         }
     }
+    
+    /**
+     * @reason to fix reach and hitBox won't work with autoClicker
+     */
+    @Inject(method = "clickMouse", at = @At("HEAD"))
+    private void onLeftClickMouse(CallbackInfo ci) {
+    	Haru.instance.getModuleManager().getModule(Reach.class).call();
+    	Haru.instance.getModuleManager().getModule(Piercing.class).call();
+    }
 
     @Overwrite
     public void startTimerHackThread() { }
+    
+	@Override
+	public void setSession(Session session) {
+		this.session = session;
+	}
 
 	@Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/SkinManager;<init>(Lnet/minecraft/client/renderer/texture/TextureManager;Ljava/io/File;Lcom/mojang/authlib/minecraft/MinecraftSessionService;)V"))
 	public void splashSkinManager(CallbackInfo callback) {

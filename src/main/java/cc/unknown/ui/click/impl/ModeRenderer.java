@@ -2,15 +2,14 @@ package cc.unknown.ui.click.impl;
 
 import java.util.List;
 
-import cc.unknown.ui.click.complement.Component;
 import cc.unknown.util.render.font.FontUtil;
-import cc.unknown.util.value.impl.ModeValue;
+import cc.unknown.value.impl.ModeValue;
 
-public class ModeComponent extends Component {
+public class ModeRenderer extends Component {
 
     private final ModeValue value;
 
-    public ModeComponent(ModeValue value) {
+    public ModeRenderer(ModeValue value) {
         this.value = value;
         height = 11;
     }

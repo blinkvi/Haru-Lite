@@ -5,7 +5,7 @@ import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.impl.SliderValue;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S03PacketTimeUpdate;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
@@ -38,7 +38,7 @@ public class Ambience extends Module {
 
 	@SubscribeEvent
 	public void onInbound(InboundEvent event) {
-		Packet packet = event.getPacket();
+		Packet packet = event.packet;
 		
 		if (packet instanceof S03PacketTimeUpdate) {
 			event.setCanceled(true);

@@ -1,4 +1,4 @@
-package cc.unknown.util.value;
+package cc.unknown.value;
 import java.util.Optional;
 import java.util.function.Supplier;
 

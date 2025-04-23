@@ -2,6 +2,8 @@ package cc.unknown.mixin;
 
 import java.util.Map;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
@@ -17,28 +19,30 @@ public class MixinLoader implements IFMLLoadingPlugin {
 		MixinEnvironment.getDefaultEnvironment().setSide(MixinEnvironment.Side.CLIENT);
 	}
 
-	@Override
-	public String getModContainerClass() {
-		return null;
-	}
+    @NotNull
+    @Override
+    public String[] getASMTransformerClass() {
+        return new String[0];
+    }
 
-	@Override
-	public String getSetupClass() {
-		return null;
-	}
+    @Nullable
+    @Override
+    public String getModContainerClass() {
+        return null;
+    }
 
-	@Override
-	public void injectData(Map<String, Object> data) {
+    @Nullable
+    @Override
+    public String getSetupClass() {
+        return null;
+    }
 
-	}
+    @Override
+    public void injectData(Map<String, Object> data) { }
 
-	@Override
-	public String getAccessTransformerClass() {
-		return null;
-	}
-
-	@Override
-	public String[] getASMTransformerClass() {
-		return null;
-	}
+    @Nullable
+    @Override
+    public String getAccessTransformerClass() {
+        return null;
+    }
 }

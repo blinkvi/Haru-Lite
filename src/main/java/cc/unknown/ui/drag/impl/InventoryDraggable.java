@@ -1,6 +1,9 @@
 package cc.unknown.ui.drag.impl;
 
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.IntStream;
 
 import cc.unknown.ui.drag.Drag;
 import cc.unknown.util.render.RenderUtil;
@@ -34,29 +37,39 @@ public class InventoryDraggable extends Drag {
         float adjustedX = Math.min(x, sr.getScaledWidth() - width);
         float adjustedY = Math.min(y, sr.getScaledHeight() - height);
 
-        RoundedUtil.drawRound(adjustedX, adjustedY, width, height, 5.5F, new Color(setting.backgroundColor(), true));
-    	if (setting.shaders.get()) {
-    		new GradientBlur().set((int) adjustedX, (int) adjustedY, (int) width, (int) height, 0);
-    		RenderUtil.drawBloomShadow(adjustedX, adjustedY, width, height, 20, 6, setting.color(0), true, false, false, false, false);
-    	}
-    	
+        RoundedUtil.drawRound(adjustedX, adjustedY, width, height, 6F, new Color(setting.backgroundColor(), true));
+        if (setting.shaders.get()) {
+            new GradientBlur().set((int) adjustedX, (int) adjustedY, (int) width, (int) height, 0);
+            RenderUtil.drawBloomShadow(adjustedX, adjustedY, width, height, 20, 6, setting.color(0));
+        }
+
         FontUtil.getFontRenderer("interSemiBold.ttf", 15).drawString("Inventory", adjustedX + 19.0F, adjustedY + 5.5F, new Color(255, 255, 255, 255).getRGB());
         FontUtil.getFontRenderer("nursultan.ttf", 16).drawString("A", adjustedX + 5.0F, adjustedY + 6.0F, -1);
 
         float startX = adjustedX + 0.7F;
         float startY = adjustedY + 17.5F;
 
-        for (int i = 9; i < 36; ++i) {
-            ItemStack slot = mc.thePlayer.inventory.getStackInSlot(i);
-            RenderUtil.renderItemStack(slot, startX, startY, 0.80F);
+        List<Integer> rowBreakIndexes = Arrays.asList(0, 27);
 
-            startX += itemWidth + columnSpacing;
+        IntStream.range(9, 36)
+            .mapToObj(i -> {
+                ItemStack slot = mc.thePlayer.inventory.getStackInSlot(i);
+                float finalStartX = startX + (i - 9) % 9 * (itemWidth + columnSpacing);
+                float finalStartY = startY + (i - 9) / 9 * rowSpacing;
 
-            if (i == 17 || i == 26) {
-                startY += rowSpacing - 1;
-                startX = adjustedX + 0.7F;
-            }
-        }
+                if (rowBreakIndexes.contains(i)) {
+                    finalStartX = adjustedX + 0.7F;
+                }
+
+                return new Object[] {slot, finalStartX, finalStartY};
+            })
+            .forEach(obj -> {
+                ItemStack slot = (ItemStack) obj[0];
+                float xPos = (float) obj[1];
+                float yPos = (float) obj[2];
+
+                RenderUtil.renderItemStack(slot, xPos, yPos, 0.80F);
+            });
     }
     
     @Override

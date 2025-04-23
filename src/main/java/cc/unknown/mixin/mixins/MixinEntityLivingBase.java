@@ -2,16 +2,13 @@ package cc.unknown.mixin.mixins;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import cc.unknown.Haru;
-import cc.unknown.event.player.JumpEvent;
 import cc.unknown.module.impl.visual.AntiDebuff;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.BaseAttributeMap;
@@ -21,9 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.CombatTracker;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(EntityLivingBase.class)
 public abstract class MixinEntityLivingBase extends MixinEntity {
@@ -109,36 +104,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity {
 	
 	@Shadow
 	public float limbSwing;
-	
-	@Overwrite
-	protected void jump() {
-		float jumpMotion = this.getJumpUpwardsMotion();
 
-		if (this.isPotionActive(Potion.jump)) {
-			jumpMotion += (float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
-		}
-
-		if ((Object) this == Minecraft.getMinecraft().thePlayer) {
-			final JumpEvent event = new JumpEvent(jumpMotion, this.rotationYaw);
-			MinecraftForge.EVENT_BUS.post(event);
-			jumpMotion = event.getJumpMotion();
-			this.rotationYaw = event.getYaw();
-
-			if (event.isCanceled()) {
-				return;
-			}
-		}
-
-		this.motionY = jumpMotion;
-
-		if (this.isSprinting()) {
-			float f = this.rotationYaw * 0.017453292F;
-			this.motionX -= MathHelper.sin(f) * 0.2F;
-			this.motionZ += MathHelper.cos(f) * 0.2F;
-		}
-
-		this.isAirBorne = true;
-	}
 
     @Inject(method = "isPotionActive(Lnet/minecraft/potion/Potion;)Z", at = @At("HEAD"), cancellable = true)
     private void isPotionActive(Potion potion, CallbackInfoReturnable<Boolean> ci) {

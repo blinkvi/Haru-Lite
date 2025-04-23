@@ -15,7 +15,7 @@ import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.player.move.MoveUtil;
 import cc.unknown.util.player.move.RotationUtil;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.impl.SliderValue;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

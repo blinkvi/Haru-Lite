@@ -34,8 +34,8 @@ public abstract class MixinBlock {
 			if (event.isCanceled())
 				return;
 
-			if (event.getBoundingBox() != null && event.getMaskBoundingBox().intersectsWith(event.getBoundingBox())) {
-				list.add(event.getBoundingBox());
+			if (event.boundingBox != null && event.maskBoundingBox.intersectsWith(event.boundingBox)) {
+				list.add(event.boundingBox);
 			}
 		} else {
 			if (axisalignedbb != null && mask.intersectsWith(axisalignedbb)) {

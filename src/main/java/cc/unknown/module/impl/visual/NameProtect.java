@@ -6,7 +6,7 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.util.render.enums.RankType;
-import cc.unknown.util.value.impl.ModeValue;
+import cc.unknown.value.impl.ModeValue;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

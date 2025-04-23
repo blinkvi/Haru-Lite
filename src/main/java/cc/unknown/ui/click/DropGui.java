@@ -19,13 +19,13 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
 
 public class DropGui extends GuiScreen {
-    private final SList<Window> windows = new SList<>();
+    private final SList<PanelRenderer> windows = new SList<>();
     private int guiYMoveLeft = 0;
     private static final int SCROLL_SPEED = 30;
     public float startX, startY;
     public float x, y;
     public float buttonWidth, spacingY;
-    private Window win;
+    private PanelRenderer win;
 
     public DropGui() {
         ScaledResolution sr = new ScaledResolution(Accessor.mc);
@@ -43,7 +43,7 @@ public class DropGui extends GuiScreen {
         Arrays.stream(Category.values()).forEach(category -> {
             x = startX;
             y = startY + index[0] * (buttonWidth / 2 - spacingY);
-            windows.add(new Window(category, x, y));
+            windows.add(new PanelRenderer(category, x, y));
             index[0]++;
         });
     }
@@ -67,7 +67,7 @@ public class DropGui extends GuiScreen {
             if (step == 0) {
                 guiYMoveLeft = 0;
             } else {
-                for (Window window : windows) {
+                for (PanelRenderer window : windows) {
                     window.y = window.y + step;
                 }
                 guiYMoveLeft -= step;
@@ -117,15 +117,23 @@ public class DropGui extends GuiScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if (keyCode == Keyboard.KEY_UP) {
-            guiYMoveLeft += SCROLL_SPEED;
-        } else if (keyCode == Keyboard.KEY_DOWN) {
-            guiYMoveLeft -= SCROLL_SPEED;
-        } else if (keyCode == Keyboard.KEY_ESCAPE) {
-            mc.displayGuiScreen(null);
+        switch (keyCode) {
+            case Keyboard.KEY_UP:
+                guiYMoveLeft += SCROLL_SPEED;
+                break;
+            case Keyboard.KEY_DOWN:
+                guiYMoveLeft -= SCROLL_SPEED;
+                break;
+            case Keyboard.KEY_ESCAPE:
+                mc.displayGuiScreen(null);
+                break;
+            default:
+                break;
         }
+
         super.keyTyped(typedChar, keyCode);
     }
+
 
     @Override
     public boolean doesGuiPauseGame() {
@@ -138,7 +146,7 @@ public class DropGui extends GuiScreen {
         super.onGuiClosed();
     }
 
-	public SList<Window> getWindows() {
+	public SList<PanelRenderer> getWindows() {
 		return windows;
 	}
 
@@ -174,7 +182,7 @@ public class DropGui extends GuiScreen {
 		return spacingY;
 	}
 
-	public Window getWin() {
+	public PanelRenderer getWin() {
 		return win;
 	}
 }

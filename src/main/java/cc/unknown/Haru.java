@@ -3,11 +3,12 @@ package cc.unknown;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public class Haru {
     public static Haru instance = new Haru();
 
     public static final String NAME = "Haru";
-    public static final String VERSION = "Lite";
+    public static final String VERSION = "Reborn";
 
     private ModuleManager moduleManager;
     private CosmeticManager cosmeticManager;
@@ -110,7 +111,7 @@ public class Haru {
     }
 
     private void register(Object... handlers) {
-        for (Object handler : handlers) {
+        Arrays.stream(handlers).forEach(handler -> {
             try {
                 registeredHandlers.add(handler);
                 MinecraftForge.EVENT_BUS.register(handler);
@@ -118,7 +119,7 @@ public class Haru {
             } catch (Exception e) {
                 logger.error("Failed to register handler: " + handler.getClass().getSimpleName(), e);
             }
-        }
+        });
     }
 
     private void registerHandlers() {
@@ -185,22 +186,16 @@ public class Haru {
     }
     
     public void createDirectories() {
-        Path[] directories = {
-            MAIN_DIR.toPath(),
-            DLL_DIR.toPath(),
-            CFG_DIR.toPath(),
-            DRAG_DIR.toPath(),
-            CS_DIR.toPath(),
-            SCRIPT_DIR.toPath()
-        };
-
-        for (Path dir : directories) {
+    	Stream.of(MAIN_DIR, DLL_DIR, CFG_DIR, DRAG_DIR, CS_DIR, SCRIPT_DIR)
+        .filter(Objects::nonNull)
+        .map(File::toPath)
+        .forEach(dir -> {
             try {
                 Files.createDirectories(dir);
             } catch (IOException e) {
-            	logger.error("Failed to create directory " + dir + ": " + e.getMessage(), e);	
+                logger.error("Failed to create directory " + dir + ": " + e.getMessage(), e);
             }
-        }
+        });
 
         logger.info("All directories were created successfully (or already existed).");
     }
@@ -245,15 +240,11 @@ public class Haru {
 		return discordHandler;
 	}
 
-	public List<Object> getRegisteredHandlers() {
-		return registeredHandlers;
-	}
-
-	public ScheduledExecutorService getThreadPool() {
-		return threadPool;
-	}
-
 	public Gson getGSON() {
 		return GSON;
+	}
+	
+	public static String getUser() {
+		return mc.getSession().getUsername();
 	}
 }

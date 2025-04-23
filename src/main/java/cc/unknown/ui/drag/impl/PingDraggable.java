@@ -14,8 +14,8 @@ import net.minecraft.client.gui.ScaledResolution;
 public class PingDraggable extends Drag {
     public PingDraggable() {
         super("Ping");
-        this.x = 0f;
-        this.y = 0f;
+        this.x = 2f;
+        this.y = 2f;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PingDraggable extends Drag {
         RoundedUtil.drawRound(adjustedX, adjustedY, width, height - 2, 6.0F, new Color(getModule(Interface.class).backgroundColor(), true));
     	if (setting.shaders.get()) {
     		new GradientBlur().set((int) adjustedX, (int) adjustedY, (int) width, (int) height, 0);
-    		RenderUtil.drawBloomShadow(adjustedX, adjustedY, width, height, 20, 6, setting.color(0), true, false, false, false, false);
+    		RenderUtil.drawBloomShadow(adjustedX, adjustedY, width, height, 20, 6, setting.color(0));
     	}
         FontUtil.getFontRenderer("nursultan.ttf", 18).drawString("Q", adjustedX + padding, adjustedY + (height / 2) - 3, setting.color());
         FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).drawString(pingText, adjustedX + padding + iconSize * 2.5F, adjustedY + (height / 2) - 3, -1);

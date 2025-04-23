@@ -606,6 +606,10 @@ public final class RenderUtil implements Accessor {
 			boolean scissor) {
 		drawBloomShadow(x, y, width, height, blurRadius, roundRadius, color, scissor, false, false, false, false);
 	}
+	
+	public static void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int roundRadius, int color) {
+		drawBloomShadow(x, y, width, height, blurRadius, roundRadius, color, true, false, false, false, false);
+	}
 
 	public static void drawBloomShadow(float x, float y, float width, float height, int blurRadius, int roundRadius, int color, boolean scissor, boolean cutTop, boolean cutBottom, boolean cutLeft, boolean cutRight) {
 		float expandedWidth = width + blurRadius * 2;

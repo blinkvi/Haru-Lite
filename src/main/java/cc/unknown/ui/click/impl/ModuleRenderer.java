@@ -2,41 +2,40 @@ package cc.unknown.ui.click.impl;
 
 import java.awt.Color;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import cc.unknown.module.Module;
 import cc.unknown.module.impl.visual.ClickGUI;
-import cc.unknown.ui.click.complement.Component;
-import cc.unknown.ui.click.complement.IComponent;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontRenderer;
 import cc.unknown.util.render.font.FontUtil;
-import cc.unknown.util.value.Value;
-import cc.unknown.util.value.impl.BoolValue;
-import cc.unknown.util.value.impl.ColorValue;
-import cc.unknown.util.value.impl.ModeValue;
-import cc.unknown.util.value.impl.MultiBoolValue;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.impl.BoolValue;
+import cc.unknown.value.impl.ColorValue;
+import cc.unknown.value.impl.ModeValue;
+import cc.unknown.value.impl.MultiBoolValue;
+import cc.unknown.value.impl.SliderValue;
 
-public class ModuleComponent implements IComponent {
+public class ModuleRenderer extends Component {
     public float x, y, width, height;
     private final Module module;
     private final CopyOnWriteArrayList<Component> values = new CopyOnWriteArrayList<>();
 
-    public ModuleComponent(Module module) {
+    public ModuleRenderer(Module module) {
         this.module = module;
-        for (Value value : module.getValues()) {
+        module.getValues().stream()
+        .forEach(value -> {
             if (value instanceof BoolValue) {
-                values.add(new BooleanComponent((BoolValue) value));
+                values.add(new BooleanRenderer((BoolValue) value));
             } else if (value instanceof ColorValue) {
-                values.add(new ColorComponent((ColorValue) value));
+                values.add(new ColorRenderer((ColorValue) value));
             } else if (value instanceof SliderValue) {
-                values.add(new SliderComponent((SliderValue) value));
+                values.add(new SliderRenderer((SliderValue) value));
             } else if (value instanceof ModeValue) {
-                values.add(new ModeComponent((ModeValue) value));
+                values.add(new ModeRenderer((ModeValue) value));
             } else if (value instanceof MultiBoolValue) {
-                values.add(new MultiBooleanComponent((MultiBoolValue) value));
+                values.add(new MultiBooleanRenderer((MultiBoolValue) value));
             }
-        }
+        });
     }
 
     @Override
@@ -56,7 +55,7 @@ public class ModuleComponent implements IComponent {
 	        }
     	}
         
-        float yOffset = 11;
+        int yOffset = 11;
         String moduleName = module.getName().substring(0, 1).toUpperCase() + module.getName().substring(1);
         
         float textWidth = (float) fontRenderer.getStringWidth(moduleName);
@@ -65,19 +64,24 @@ public class ModuleComponent implements IComponent {
         fontRenderer.drawString(moduleName, textX, y + 4F, module.isEnabled() ? getModule(ClickGUI.class).mainColor.get().getRGB() : new Color(160, 160, 160).getRGB());
 
         if (module.isExpanded()) {
-            for (Component component : values) {
-                if (!component.isVisible()) continue;
-                component.x = x;
-                component.y = y + yOffset;
-                component.width = width;
-                component.drawScreen(mouseX, mouseY);
-                yOffset += component.height;
-            }
+            AtomicInteger offset = new AtomicInteger(yOffset);
+
+            values.stream()
+                .filter(Component::isVisible)
+                .forEach(component -> {
+                    component.x = x;
+                    component.y = y + offset.get();
+                    component.width = width;
+                    component.drawScreen(mouseX, mouseY);
+                    offset.addAndGet((int) component.height);
+                });
+
+            yOffset = offset.get();
         }
 
         this.height = yOffset;
 
-        IComponent.super.drawScreen(mouseX, mouseY);
+        super.drawScreen(mouseX, mouseY);
     }
 
     @Override
@@ -95,11 +99,9 @@ public class ModuleComponent implements IComponent {
         }
 
         if (module.isExpanded()) {
-            for (Component value : values) {
-                value.mouseClicked(mouseX, mouseY, mouseButton);
-            }
+            values.stream().forEach(value -> value.mouseClicked(mouseX, mouseY, mouseButton));
         }
 
-        IComponent.super.mouseClicked(mouseX, mouseY, mouseButton);
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 }

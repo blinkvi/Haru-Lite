@@ -4,17 +4,16 @@ import java.awt.Color;
 
 import org.lwjgl.input.Mouse;
 
-import cc.unknown.ui.click.complement.Component;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
-import cc.unknown.util.value.impl.ColorValue;
+import cc.unknown.value.impl.ColorValue;
 
-public class ColorComponent extends Component {
+public class ColorRenderer extends Component {
 
     private final ColorValue value;
     private boolean expanded;
 
-    public ColorComponent(ColorValue value) {
+    public ColorRenderer(ColorValue value) {
         this.value = value;
         height = 11;
     }

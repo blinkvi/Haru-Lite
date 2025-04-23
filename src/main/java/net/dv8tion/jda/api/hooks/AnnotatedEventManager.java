@@ -35,7 +35,7 @@ import net.dv8tion.jda.internal.utils.ClassWalker;
 
 /**
  * Implementation for {@link net.dv8tion.jda.api.hooks.IEventManager IEventManager}
- * which checks for {@link net.dv8tion.jda.api.hooks.SubscribeEvent SubscribeEvent} annotations on both
+ * which checks for {@link net.dv8tion.jda.api.hooks.JDAEvent SubscribeEvent} annotations on both
  * <b>static</b> and <b>member</b> methods.
  *
  * <p>Listeners for this manager do <u>not</u> need to implement {@link net.dv8tion.jda.api.hooks.EventListener EventListener}
@@ -53,7 +53,7 @@ import net.dv8tion.jda.internal.utils.ClassWalker;
  *
  * @see net.dv8tion.jda.api.hooks.InterfacedEventManager
  * @see net.dv8tion.jda.api.hooks.IEventManager
- * @see net.dv8tion.jda.api.hooks.SubscribeEvent
+ * @see net.dv8tion.jda.api.hooks.JDAEvent
  */
 public class AnnotatedEventManager implements IEventManager
 {
@@ -144,7 +144,7 @@ public class AnnotatedEventManager implements IEventManager
         Method[] allMethods = c.getDeclaredMethods();
         for (Method m : allMethods)
         {
-            if (!m.isAnnotationPresent(SubscribeEvent.class))
+            if (!m.isAnnotationPresent(JDAEvent.class))
                 continue;
             //Skip member methods if listener is a Class
             if (isClass && !Modifier.isStatic(m.getModifiers()))

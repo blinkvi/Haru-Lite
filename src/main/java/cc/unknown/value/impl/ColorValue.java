@@ -1,11 +1,11 @@
-package cc.unknown.util.value.impl;
+package cc.unknown.value.impl;
 
 import java.awt.Color;
 import java.util.function.Supplier;
 
 import cc.unknown.module.Module;
 import cc.unknown.util.render.client.ColorUtil;
-import cc.unknown.util.value.Value;
+import cc.unknown.value.Value;
 
 public class ColorValue extends Value {
     private float hue = 0;

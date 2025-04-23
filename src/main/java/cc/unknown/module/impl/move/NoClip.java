@@ -40,24 +40,24 @@ public class NoClip extends Module {
 	public void onBlockAABB(BlockAABBEvent event) {
 		if (!BlockUtil.insideBlock()) return;
 
-		Block block = event.getBlock();
-		BlockPos pos = event.getBlockPos();
+		Block block = event.block;
+		BlockPos pos = event.blockPos;
 		double x = pos.getX(), y = pos.getY(), z = pos.getZ();
 
 		boolean isSneaking = mc.gameSettings.keyBindSneak.isKeyDown();
 		boolean isAirBlock = block instanceof BlockAir;
 
-		event.setBoundingBox(null);
+		event.boundingBox = null;
 
 		if (!isSneaking) {
 			AxisAlignedBB expandedBox = AxisAlignedBB.fromBounds(-15, -1, -15, 15, 1, 15);
 
 			if (y < mc.thePlayer.posY) {
-				event.setBoundingBox(expandedBox.offset(x, y, z));
+				event.boundingBox = expandedBox.offset(x, y, z);
 			}
 
 			if (!isAirBlock) {
-				event.setBoundingBox(expandedBox.offset(x, y, z));
+				event.boundingBox = expandedBox.offset(x, y, z);
 			}
 		}
 	}

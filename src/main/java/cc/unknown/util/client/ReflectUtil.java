@@ -2,6 +2,7 @@ package cc.unknown.util.client;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import cc.unknown.util.Accessor;
 import net.minecraft.client.Minecraft;
@@ -15,116 +16,116 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.util.Timer;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+@SuppressWarnings("unchecked")
 public class ReflectUtil implements Accessor {
 	
 	public static void setBlockHitDelay(int val) {
-		ObfuscationReflectionHelper.setPrivateValue(PlayerControllerMP.class, mc.playerController, val, "blockHitDelay", "field_78781_i");
+		setPrivateField(PlayerControllerMP.class, mc.playerController, val, "blockHitDelay", "field_78781_i");
 	}
 
 	public static void setRightClickDelayTimer(int val) {
-		ObfuscationReflectionHelper.setPrivateValue(Minecraft.class, mc, val, "rightClickTimer", "field_71467_ac");
+		setPrivateField(Minecraft.class, mc, val, "rightClickTimer", "field_71467_ac");
 	}
 	
 	public static void setLeftClickCounter(int val) {
-		ObfuscationReflectionHelper.setPrivateValue(Minecraft.class, mc, val, "leftClickCounter", "field_71429_W");
+		setPrivateField(Minecraft.class, mc, val, "leftClickCounter", "field_71429_W");
 	}
 
 	public static void setJumpTicks(int val) {
-		ObfuscationReflectionHelper.setPrivateValue(EntityLivingBase.class, mc.thePlayer, val, "jumpTicks", "field_70773_bE");
+		setPrivateField(EntityLivingBase.class, mc.thePlayer, val, "jumpTicks", "field_70773_bE");
 	}
 
 	public static void setCurBlockDamage(float val) {
-        ObfuscationReflectionHelper.setPrivateValue(PlayerControllerMP.class, mc.playerController, val, "curBlockDamageMP", "field_78770_f");
+        setPrivateField(PlayerControllerMP.class, mc.playerController, val, "curBlockDamageMP", "field_78770_f");
 	}
 	
 	public static boolean isInWeb() {
-		return ObfuscationReflectionHelper.getPrivateValue(Entity.class, mc.thePlayer, "isInWeb", "field_70134_J");
+		return getPrivateField(Entity.class, mc.thePlayer, "isInWeb", "field_70134_J");
 	}
 
 	public static void setInWeb(boolean bool) {
-		ObfuscationReflectionHelper.setPrivateValue(Entity.class, mc.thePlayer, bool, "isInWeb", "field_70134_J");
+		setPrivateField(Entity.class, mc.thePlayer, bool, "isInWeb", "field_70134_J");
 	}
 
 	public static double getRenderPosX() {
-		return ObfuscationReflectionHelper.getPrivateValue(RenderManager.class, mc.getRenderManager(), "renderPosX", "field_78725_b");
+		return getPrivateField(RenderManager.class, mc.getRenderManager(), "renderPosX", "field_78725_b");
 	}
 	
 	public static double getRenderPosY() {
-		return ObfuscationReflectionHelper.getPrivateValue(RenderManager.class, mc.getRenderManager(), "renderPosY", "field_78726_c");
+		return getPrivateField(RenderManager.class, mc.getRenderManager(), "renderPosY", "field_78726_c");
 	}
 
 	public static double getRenderPosZ() {
-    	return ObfuscationReflectionHelper.getPrivateValue(RenderManager.class, mc.getRenderManager(), "renderPosZ", "field_78723_d");
+    	return getPrivateField(RenderManager.class, mc.getRenderManager(), "renderPosZ", "field_78723_d");
 	}
 	
 	public static int getBlockHitDelay() {
-    	return ObfuscationReflectionHelper.getPrivateValue(PlayerControllerMP.class, mc.playerController, "blockHitDelay", "field_78781_i");
+    	return getPrivateField(PlayerControllerMP.class, mc.playerController, "blockHitDelay", "field_78781_i");
 	}
 	
     public static float getCurBlockDamage() {
-    	return ObfuscationReflectionHelper.getPrivateValue(PlayerControllerMP.class, mc.playerController, "curBlockDamageMP", "field_78770_f");
+    	return getPrivateField(PlayerControllerMP.class, mc.playerController, "curBlockDamageMP", "field_78770_f");
     }
 	
     public static Timer getTimer() {
-    	return ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, mc, "timer", "field_71428_T");
+    	return getPrivateField(Minecraft.class, mc, "timer", "field_71428_T");
     }
 
     public static float getLastReportedYaw() {
-    	return ObfuscationReflectionHelper.getPrivateValue(EntityPlayerSP.class, mc.thePlayer, "lastReportedYaw", "field_175164_bL");
+    	return getPrivateField(EntityPlayerSP.class, mc.thePlayer, "lastReportedYaw", "field_175164_bL");
     }
     
     public static float getLastReportedPitch() {
-    	return ObfuscationReflectionHelper.getPrivateValue(EntityPlayerSP.class, mc.thePlayer, "lastReportedPitch", "field_175165_bM");
+    	return getPrivateField(EntityPlayerSP.class, mc.thePlayer, "lastReportedPitch", "field_175165_bM");
     }
     
     public static int getMotionX(S12PacketEntityVelocity packet) {
-        return ObfuscationReflectionHelper.getPrivateValue(S12PacketEntityVelocity.class, packet, "motionX", "field_149415_b");
+        return getPrivateField(S12PacketEntityVelocity.class, packet, "motionX", "field_149415_b");
     }
     
     public static int getMotionY(S12PacketEntityVelocity packet) {
-    	return ObfuscationReflectionHelper.getPrivateValue(S12PacketEntityVelocity.class, packet, "motionY", "field_149416_c");
+    	return getPrivateField(S12PacketEntityVelocity.class, packet, "motionY", "field_149416_c");
     }
     
     public static int getMotionZ(S12PacketEntityVelocity packet) {
-    	return ObfuscationReflectionHelper.getPrivateValue(S12PacketEntityVelocity.class, packet, "motionZ", "field_149414_d");
+    	return getPrivateField(S12PacketEntityVelocity.class, packet, "motionZ", "field_149414_d");
     }
     
     public static void setMotionX(S12PacketEntityVelocity packet, int val) {
-        ObfuscationReflectionHelper.setPrivateValue(S12PacketEntityVelocity.class, packet, val, "motionX", "field_149415_b");
+        setPrivateField(S12PacketEntityVelocity.class, packet, val, "motionX", "field_149415_b");
     }
     
     public static void setMotionY(S12PacketEntityVelocity packet, int val) {
-    	ObfuscationReflectionHelper.setPrivateValue(S12PacketEntityVelocity.class, packet, val, "motionY", "field_149416_c");
+    	setPrivateField(S12PacketEntityVelocity.class, packet, val, "motionY", "field_149416_c");
     }
     
     public static void setMotionZ(S12PacketEntityVelocity packet, int val) {
-    	ObfuscationReflectionHelper.setPrivateValue(S12PacketEntityVelocity.class, packet, val, "motionZ", "field_149414_d");
+    	setPrivateField(S12PacketEntityVelocity.class, packet, val, "motionZ", "field_149414_d");
     }
     
     public static void setServerSprintState(boolean bool) {
-    	ObfuscationReflectionHelper.setPrivateValue(EntityPlayerSP.class, mc.thePlayer, bool, "serverSprintState", "field_175171_bO");
+    	setPrivateField(EntityPlayerSP.class, mc.thePlayer, bool, "serverSprintState", "field_175171_bO");
     }
     
     public static boolean isServerSprintState() {
-    	return ObfuscationReflectionHelper.getPrivateValue(EntityPlayerSP.class, mc.thePlayer, "serverSprintState", "field_175171_bO");
+    	return getPrivateField(EntityPlayerSP.class, mc.thePlayer, "serverSprintState", "field_175171_bO");
     }
     
     public static void setYawC03(C03PacketPlayer packet, float flot) {
-    	ObfuscationReflectionHelper.setPrivateValue(C03PacketPlayer.class, packet, flot, "yaw", "field_149476_e");
+    	setPrivateField(C03PacketPlayer.class, packet, flot, "yaw", "field_149476_e");
     }
     
     public static void setPitchC03(C03PacketPlayer packet, float flot) {
-    	ObfuscationReflectionHelper.setPrivateValue(C03PacketPlayer.class, packet, flot, "pitch", "field_149473_f");
+    	setPrivateField(C03PacketPlayer.class, packet, flot, "pitch", "field_149473_f");
     }
     
     public static void setRotatingC03(C03PacketPlayer packet, boolean bool) {
-    	ObfuscationReflectionHelper.setPrivateValue(C03PacketPlayer.class, packet, bool, "rotating", "field_149481_i");
+    	setPrivateField(C03PacketPlayer.class, packet, bool, "rotating", "field_149481_i");
     }
     
     public static void setItemInUse(int block) {
-    	ObfuscationReflectionHelper.setPrivateValue(EntityPlayerSP.class, mc.thePlayer, block, "itemInUseCount", "field_71072_f");
+    	setPrivateField(EntityPlayerSP.class, mc.thePlayer, block, "itemInUseCount", "field_71072_f");
     }
     
     public static Vec3 getVectorForRotation(float pitch, float yaw) {
@@ -151,7 +152,7 @@ public class ReflectUtil implements Accessor {
 
     public static void setGameSetting(Minecraft mc, String fieldName, boolean value) {
         try {
-            ObfuscationReflectionHelper.setPrivateValue(GameSettings.class, mc.gameSettings, value, fieldName);
+            setPrivateField(GameSettings.class, mc.gameSettings, value, fieldName);
             return;
         } catch (Exception ignored) {
         }
@@ -165,21 +166,23 @@ public class ReflectUtil implements Accessor {
             e.printStackTrace();
         }
     }
+    
     /**
-     * This method is used to invoke a private method on a specified instance.
-     * It searches for a method by its name from a list of possible names and invokes it with parameters.
-     * 
-     * @param <T> The type of the instance that the method is invoked on.
-     * @param classToAccess The class to which the method belongs.
-     * @param instance The instance of the class on which the method will be invoked.
-     * @param values The list of values, where:
-     *               - Any string elements represent method names.
-     *               - Class elements represent the parameter types.
-     *               - Object elements represent the argument values.
-     * 
-     * @throws Exception If the method invocation fails or the method doesn't exist.
-     * 
-     * @author xAmwy
+     * Invokes a private method on the specified instance using reflection.
+     * <p>
+     * Usage pattern:
+     * <pre>
+     * getPrivateMethod(Minecraft.class, mc, "func_147116_af", clickMouse);
+     * </pre>
+     *
+     * @param classToAccess The class where the method is declared.
+     * @param instance      The instance on which the method will be invoked (null for static).
+     * @param values        An ordered sequence:
+     *                      - First half: parameter types (Class<?>)
+     *                      - Second half: parameter values (Object)
+     *                      - Then: possible method names (String...)
+     * @param <T>           Type of the instance (or supertype).
+     * @return The result of the method invocation, or null if failed.
      */
     public static <T> Object getPrivateMethod(Class<? super T> classToAccess, T instance, Object... values) {
         try {
@@ -192,7 +195,7 @@ public class ReflectUtil implements Accessor {
             }
 
             if (stringIndex == -1 || stringIndex % 2 != 0) {
-                throw new IllegalArgumentException("Invalid method call parameters.");
+                throw new IllegalArgumentException("Invalid method call parameters. Expected: types, values, names.");
             }
 
             int paramCount = stringIndex / 2;
@@ -204,22 +207,19 @@ public class ReflectUtil implements Accessor {
                 args[i] = values[i + paramCount];
             }
 
-            String[] methodNames = new String[values.length - stringIndex];
-            for (int i = stringIndex; i < values.length; i++) {
-                methodNames[i - stringIndex] = (String) values[i];
-            }
+            String[] methodNames = Arrays.copyOfRange(values, stringIndex, values.length, String[].class);
 
-            Method method = null;
-            for (String name : methodNames) {
-                try {
-                    method = classToAccess.getDeclaredMethod(name, paramTypes);
-                    break;
-                } catch (NoSuchMethodException ignored) {}
-            }
-
-            if (method == null) {
-                throw new NoSuchMethodException("No matching method found in class: " + classToAccess.getName());
-            }
+            Method method = Arrays.stream(methodNames)
+                    .map(name -> {
+                        try {
+                            return classToAccess.getDeclaredMethod(name, paramTypes);
+                        } catch (NoSuchMethodException ignored) {
+                            return null;
+                        }
+                    })
+                    .filter(m -> m != null)
+                    .findFirst()
+                    .orElseThrow(() -> new NoSuchMethodException("No matching method found in class: " + classToAccess.getName()));
 
             method.setAccessible(true);
             return method.invoke(instance, args);
@@ -228,4 +228,84 @@ public class ReflectUtil implements Accessor {
             return null;
         }
     }
+ 
+    
+    /**
+     * Retrieves the value of a private field from a given object using reflection.
+     *
+     * @param clazz      The class declaring the field.
+     * @param instance   The object instance from which the field is retrieved (or null for static).
+     * @param fieldNames A list of possible field names (e.g., obfuscated names).
+     * @param <T>        The expected return type.
+     * @return The value of the field, or null if an error occurs.
+     */
+    public static <T> T getPrivateField(Class<?> clazz, Object instance, String... fieldNames) {
+        try {
+            Field field = Arrays.stream(fieldNames)
+                    .map(name -> {
+                        try {
+                            return clazz.getDeclaredField(name);
+                        } catch (NoSuchFieldException e) {
+                            return null;
+                        }
+                    })
+                    .filter(f -> f != null)
+                    .findFirst()
+                    .orElseThrow(() -> new NoSuchFieldException("No matching field found in class: " + clazz.getName()));
+
+            field.setAccessible(true);
+            Object value;
+
+            Class<?> type = field.getType();
+            if (type.isPrimitive()) {
+                if (type == int.class) value = field.getInt(instance);
+                else if (type == float.class) value = field.getFloat(instance);
+                else if (type == double.class) value = field.getDouble(instance);
+                else if (type == boolean.class) value = field.getBoolean(instance);
+                else if (type == long.class) value = field.getLong(instance);
+                else if (type == short.class) value = field.getShort(instance);
+                else if (type == byte.class) value = field.getByte(instance);
+                else if (type == char.class) value = field.getChar(instance);
+                else throw new UnsupportedOperationException("Unsupported primitive type: " + type);
+            } else {
+                value = field.get(instance);
+            }
+
+            return (T) value;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Sets the value of a private field on a given object using reflection.
+     *
+     * @param classToAccess The class declaring the field.
+     * @param instance      The object instance whose field should be modified (or null for static).
+     * @param value         The value to set.
+     * @param fieldNames    A list of possible field names (e.g., obfuscated names).
+     * @param <T>           The type of the instance.
+     */
+    public static <T> void setPrivateField(Class<? super T> classToAccess, T instance, Object value, String... fieldNames) {
+        try {
+            Field field = Arrays.stream(fieldNames)
+                    .map(name -> {
+                        try {
+                            return classToAccess.getDeclaredField(name);
+                        } catch (NoSuchFieldException e) {
+                            return null;
+                        }
+                    })
+                    .filter(f -> f != null)
+                    .findFirst()
+                    .orElseThrow(() -> new NoSuchFieldException("No matching field found in class: " + classToAccess.getName()));
+
+            field.setAccessible(true);
+            field.set(instance, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

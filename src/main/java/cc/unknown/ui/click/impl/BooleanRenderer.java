@@ -3,17 +3,16 @@ package cc.unknown.ui.click.impl;
 import java.awt.Color;
 
 import cc.unknown.module.impl.visual.ClickGUI;
-import cc.unknown.ui.click.complement.Component;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
-import cc.unknown.util.value.impl.BoolValue;
+import cc.unknown.value.impl.BoolValue;
 
-public class BooleanComponent extends Component {
+public class BooleanRenderer extends Component {
 
     private final BoolValue value;
     private boolean expanded = false;
 
-    public BooleanComponent(BoolValue value) {
+    public BooleanRenderer(BoolValue value) {
         this.value = value;
         height = 11;
     }

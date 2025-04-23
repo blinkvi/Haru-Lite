@@ -2,7 +2,6 @@ package cc.unknown.module.impl.visual;
 
 import cc.unknown.Haru;
 import cc.unknown.file.cosmetics.SuperCosmetic;
-import cc.unknown.handlers.DiscordHandler;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -12,7 +11,7 @@ import cc.unknown.util.render.enums.AuraType;
 import cc.unknown.util.render.enums.HatType;
 import cc.unknown.util.render.enums.PetType;
 import cc.unknown.util.render.enums.WingsType;
-import cc.unknown.util.value.impl.ModeValue;
+import cc.unknown.value.impl.ModeValue;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -45,7 +44,7 @@ public class Cosmetics extends Module {
 		if (event.phase == Phase.END) return;
 		if (!(mc.thePlayer.ticksExisted % 200 == 0)) return;
 		
-	    String username = DiscordHandler.getUser();
+	    String username = Haru.getUser();
 	    boolean capeChanged = !capeType.is(prevCapeMode);
 	    boolean haloChanged = !haloType.is(prevHaloMode);
 	    boolean hatChanged = !hatType.is(prevHatMode);

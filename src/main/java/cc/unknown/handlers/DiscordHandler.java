@@ -33,7 +33,7 @@ public class DiscordHandler implements Accessor {
 						if (mc.isSingleplayer()) {
 							updateStatus("", "Practicing godlike movement.");
 						} else if (ServerUtil.isConnectedToKnownServer(mc.getCurrentServerData().serverIP)) {
-							updateStatus("User: " + getUser(),
+							updateStatus("User: " + Haru.getUser(),
 									"Cheating on " + ServerUtil.serverName);
 						} else if (mc.currentScreen instanceof GuiDownloadTerrain) {
 							updateStatus("Loading world...", "Hope you didn't just crash.");
@@ -73,9 +73,5 @@ public class DiscordHandler implements Accessor {
 				.setSecrets(joinSecret, spectateSecret).setStartTimestamps(timeElapsed);
 
 		DiscordRPC.discordUpdatePresence(rpc.build());
-	}
-
-	public static String getUser() {
-		return mc.getSession().getUsername();
 	}
 }

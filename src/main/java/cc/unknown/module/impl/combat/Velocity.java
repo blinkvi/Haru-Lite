@@ -13,10 +13,10 @@ import cc.unknown.module.impl.move.NoClip;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.player.move.MoveUtil;
-import cc.unknown.util.value.impl.BoolValue;
-import cc.unknown.util.value.impl.ModeValue;
-import cc.unknown.util.value.impl.MultiBoolValue;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.impl.BoolValue;
+import cc.unknown.value.impl.ModeValue;
+import cc.unknown.value.impl.MultiBoolValue;
+import cc.unknown.value.impl.SliderValue;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -24,9 +24,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "Velocity", description = "Modifies the knockback you get.", category = Category.COMBAT)
 public class Velocity extends Module {
     private final ModeValue mode = new ModeValue("Mode", this, "Normal", "Jump", "Normal");
-    private final SliderValue chance = new SliderValue("Chance", this, 1, 0, 1, 0.1f);
     private final SliderValue horizontal = new SliderValue("Horizontal", this, 0.9f, 0, 1, 0.1f, () -> mode.is("Normal"));
     private final SliderValue vertical = new SliderValue("Vertical", this, 1, 0, 1, 0.1f, () -> mode.is("Normal"));
+    private final SliderValue chance = new SliderValue("Chance", this, 1, 0, 1, 0.1f);
     
 	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
 			new BoolValue("LiquidCheck", true),
@@ -48,7 +48,7 @@ public class Velocity extends Module {
     	if (mode.is("Normal")) {
 	        if (event.isCanceled()) return;
 	
-	        Packet<?> packet = event.getPacket();
+	        Packet<?> packet = event.packet;
 	
 	        if (packet instanceof S12PacketEntityVelocity) {
 	            S12PacketEntityVelocity velocity = (S12PacketEntityVelocity) packet;
@@ -67,7 +67,6 @@ public class Velocity extends Module {
 	                return;
 	            }
 	
-	            // Escala los valores originales
 	            int motionX = (int) (velocity.getMotionX() * horizontalScale);
 	            int motionY = (int) (velocity.getMotionY() * verticalScale);
 	            int motionZ = (int) (velocity.getMotionZ() * horizontalScale);
@@ -76,7 +75,7 @@ public class Velocity extends Module {
 	            ReflectUtil.setMotionY(velocity, motionY);
 	            ReflectUtil.setMotionZ(velocity, motionZ);
 	
-	            event.setPacket(velocity);
+	            event.packet = velocity;
 	        }
     	}
     }

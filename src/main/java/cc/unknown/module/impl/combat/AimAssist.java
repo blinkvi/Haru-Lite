@@ -14,10 +14,10 @@ import cc.unknown.util.player.FriendUtil;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.structure.vectors.Vec3;
-import cc.unknown.util.value.impl.BoolValue;
-import cc.unknown.util.value.impl.ModeValue;
-import cc.unknown.util.value.impl.MultiBoolValue;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.impl.BoolValue;
+import cc.unknown.value.impl.ModeValue;
+import cc.unknown.value.impl.MultiBoolValue;
+import cc.unknown.value.impl.SliderValue;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -58,8 +58,8 @@ public class AimAssist extends Module {
 	
 	@SubscribeEvent
 	public void onAttack(AttackEvent event) {        
-		if (event.getTarget() instanceof EntityPlayer) {
-            EntityPlayer newTarget = (EntityPlayer) event.getTarget();            
+		if (event.target instanceof EntityPlayer) {
+            EntityPlayer newTarget = (EntityPlayer) event.target;            
 			if (conditionals.isEnabled("LockTarget")) {
 	            lockedTargets.add(newTarget);
 	            if (target == null) {

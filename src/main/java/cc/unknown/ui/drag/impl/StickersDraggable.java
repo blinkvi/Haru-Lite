@@ -3,7 +3,6 @@ package cc.unknown.ui.drag.impl;
 import cc.unknown.ui.drag.Drag;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.enums.StickersType;
-import cc.unknown.util.render.shader.impl.GradientBlur;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
 
@@ -27,10 +26,6 @@ public class StickersDraggable extends Drag {
                 (int) sticker.getHeight()
             );
         }
-    	if (setting.shaders.get()) {
-    		new GradientBlur().set((int) renderX, (int) renderY, (int) width, (int) height, 0);
-    		RenderUtil.drawBloomShadow(renderX, renderY, width, height, 20, 6, setting.color(0), true, false, false, false, false);
-    	}
     }
     
     @Override

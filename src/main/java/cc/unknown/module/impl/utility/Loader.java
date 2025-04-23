@@ -10,7 +10,7 @@ import cc.unknown.util.client.dll.LoaderUtil;
 import cc.unknown.util.client.network.NetworkUtil;
 import cc.unknown.util.render.client.ChatUtil;
 import cc.unknown.util.render.client.ColorUtil;
-import cc.unknown.util.value.impl.BoolValue;
+import cc.unknown.value.impl.BoolValue;
 
 @ModuleInfo(name = "Loader", description = "Inject sliky or vape (debug enabled)", category = Category.UTILITY)
 public class Loader extends Module {

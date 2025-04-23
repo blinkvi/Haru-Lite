@@ -1,9 +1,9 @@
-package cc.unknown.util.value.impl;
+package cc.unknown.value.impl;
 
 import java.util.function.Supplier;
 
 import cc.unknown.module.Module;
-import cc.unknown.util.value.Value;
+import cc.unknown.value.Value;
 
 public class BoolValue extends Value {
     private boolean value;

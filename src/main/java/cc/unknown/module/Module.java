@@ -13,8 +13,8 @@ import cc.unknown.module.impl.visual.Interface;
 import cc.unknown.ui.drag.impl.ArrayListDraggable;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.structure.list.SList;
-import cc.unknown.util.value.Value;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.Value;
+import cc.unknown.value.impl.SliderValue;
 import net.minecraftforge.common.MinecraftForge;
 
 public abstract class Module implements Accessor {

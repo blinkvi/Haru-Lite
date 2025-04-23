@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 
 import cc.unknown.Haru;
 import cc.unknown.file.Directory;
-import cc.unknown.handlers.DiscordHandler;
 import cc.unknown.module.impl.visual.Cosmetics;
 import cc.unknown.util.client.system.LocalDateTimeStructuredAdapter;
 
@@ -43,7 +42,7 @@ public class CosmeticFile extends Directory {
         if (cosmetics == null) return null;
 
         SuperCosmetic cosmetic = new SuperCosmetic(
-            DiscordHandler.getUser(),
+            Haru.getUser(),
             cosmetics.haloType.getMode(),
             cosmetics.hatType.getMode(),
             cosmetics.petType.getMode(),

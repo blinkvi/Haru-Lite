@@ -22,7 +22,7 @@ public class TransactionHandler implements Accessor {
 	
 	@SubscribeEvent
 	public void onInbound(InboundEvent event) {
-        final Packet<?> packet = event.getPacket();
+        final Packet<?> packet = event.packet;
         if (!toggle.get()) return;
         
         if (packet instanceof S32PacketConfirmTransaction) {

@@ -39,7 +39,7 @@ public class CPSDraggable extends Drag {
         RoundedUtil.drawRound(adjustedX, adjustedY, width, height - 2, 6.0F, new Color(getModule(Interface.class).backgroundColor(), true));
     	if (setting.shaders.get()) {
     		new GradientBlur().set((int) adjustedX, (int) adjustedY, (int) width, (int) height, 0);
-    		RenderUtil.drawBloomShadow(adjustedX, adjustedY, width, height, 20, 6, setting.color(0), true, false, false, false, false);
+    		RenderUtil.drawBloomShadow(adjustedX, adjustedY, width, height, 20, 6, setting.color(0));
     	}
         FontUtil.getFontRenderer("neverlose.ttf", 24).drawString("e", adjustedX + padding, adjustedY + (height / 2) - 4, setting.color());
         FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).drawString(cpsText, adjustedX + padding + iconSize * 2.5F, adjustedY + (height / 2) - 3, -1);

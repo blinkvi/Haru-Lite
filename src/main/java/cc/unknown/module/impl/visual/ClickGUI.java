@@ -10,11 +10,11 @@ import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.render.enums.StickersType;
-import cc.unknown.util.value.impl.BoolValue;
-import cc.unknown.util.value.impl.ColorValue;
-import cc.unknown.util.value.impl.ModeValue;
-import cc.unknown.util.value.impl.MultiBoolValue;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.impl.BoolValue;
+import cc.unknown.value.impl.ColorValue;
+import cc.unknown.value.impl.ModeValue;
+import cc.unknown.value.impl.MultiBoolValue;
+import cc.unknown.value.impl.SliderValue;
 
 @ModuleInfo(name = "ClickGUI", description = "Provides a graphical user interface (GUI).", category = Category.VISUAL, key = Keyboard.KEY_RSHIFT)
 public final class ClickGUI extends Module {
@@ -31,11 +31,10 @@ public final class ClickGUI extends Module {
 			new BoolValue("Shaders", false),
 			new BoolValue("ToolTips", true)));
 	
+	public final SliderValue alpha = new SliderValue("AlphaBackground", this, 120, 20, 190, 10);
 	
-	public final SliderValue alpha = new SliderValue("AlphaBackground", this, 150, 20, 255, 1);
-	
-    public final ColorValue outlineColor = new ColorValue("OutlineColor", this, new Color(128, 128, 255));
-    public final ColorValue mainColor = new ColorValue("MainColor", this, new Color(164, 53, 144));
+    public final ColorValue outlineColor = new ColorValue("OutlineColor", this, new Color(255, 0, 0));
+    public final ColorValue mainColor = new ColorValue("MainColor", this, new Color(255, 0, 0));
     
     @Override
     public void onEnable() {

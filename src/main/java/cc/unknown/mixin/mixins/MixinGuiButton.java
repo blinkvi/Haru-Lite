@@ -46,7 +46,7 @@ public abstract class MixinGuiButton {
 			int textWidth = (int) FontUtil.getFontRenderer("comfortaa.ttf", 16).getStringWidth(displayString);
 			int textHeight = (int) FontUtil.getFontRenderer("comfortaa.ttf", 16).getHeight();
 			float centeredX = xPosition + (width / 2.0f) - (textWidth / 2.0f);
-			float centeredY = yPosition + (height / 1.5f) - (textHeight / 1.5f);
+			float centeredY = yPosition + (height / 1.6f) - (textHeight / 1.6f);
 			
 			this.mouseDragged(mc, mouseX, mouseY);
 			

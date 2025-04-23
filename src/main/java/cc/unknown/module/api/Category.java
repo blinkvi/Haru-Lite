@@ -6,7 +6,7 @@ public enum Category {
     UTILITY("Utility"),
     VISUAL("Visual"),
     SETTINGS("Settings"),
-    SCRIPT("Scripts");
+    CONFIG("Config");
 
     private final String name;
 

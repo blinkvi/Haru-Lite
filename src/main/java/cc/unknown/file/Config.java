@@ -10,11 +10,11 @@ import com.google.gson.JsonObject;
 import cc.unknown.Haru;
 import cc.unknown.module.api.Category;
 import cc.unknown.util.render.client.ColorUtil;
-import cc.unknown.util.value.impl.BoolValue;
-import cc.unknown.util.value.impl.ColorValue;
-import cc.unknown.util.value.impl.ModeValue;
-import cc.unknown.util.value.impl.MultiBoolValue;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.impl.BoolValue;
+import cc.unknown.value.impl.ColorValue;
+import cc.unknown.value.impl.ModeValue;
+import cc.unknown.value.impl.MultiBoolValue;
+import cc.unknown.value.impl.SliderValue;
 
 public class Config extends Directory {
     public Config(String name) {

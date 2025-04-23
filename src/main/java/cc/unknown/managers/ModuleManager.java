@@ -33,7 +33,7 @@ public final class ModuleManager extends SList<Module> {
         		AimAssist.class,
         		AutoClicker.class,
         		Teams.class,
-        		//Reach.class,
+        		Reach.class,
         		//HitBox.class,
         		Piercing.class,
         		MoreKB.class,

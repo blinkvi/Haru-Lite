@@ -64,16 +64,16 @@ public class Blink extends Module {
 
 	@SubscribeEvent
 	public void onOutgoing(OutgoingEvent event) {
-		packets.add(event.getPacket());
+		packets.add(event.packet);
 		event.setCanceled(true);
 	}
 
 	@SubscribeEvent
 	public void onInbound(InboundEvent event) {
-		if (event.getPacket() instanceof S18PacketEntityTeleport || event.getPacket() instanceof S14PacketEntity
-				|| event.getPacket() instanceof S14PacketEntity.S15PacketEntityRelMove
-				|| event.getPacket() instanceof S14PacketEntity.S16PacketEntityLook
-				|| event.getPacket() instanceof S14PacketEntity.S17PacketEntityLookMove) {
+		if (event.packet instanceof S18PacketEntityTeleport || event.packet instanceof S14PacketEntity
+				|| event.packet instanceof S14PacketEntity.S15PacketEntityRelMove
+				|| event.packet instanceof S14PacketEntity.S16PacketEntityLook
+				|| event.packet instanceof S14PacketEntity.S17PacketEntityLookMove) {
 			return;
 		}
 	}

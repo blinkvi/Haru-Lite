@@ -1,4 +1,4 @@
-package cc.unknown.util.value.impl;
+package cc.unknown.value.impl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import cc.unknown.module.Module;
-import cc.unknown.util.value.Value;
+import cc.unknown.value.Value;
 
 public class ModeValue extends Value {
     private int index;

@@ -6,8 +6,8 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.network.NetworkUtil;
 import cc.unknown.util.client.network.PacketUtil;
-import cc.unknown.util.value.impl.BoolValue;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.impl.BoolValue;
+import cc.unknown.value.impl.SliderValue;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -20,9 +20,9 @@ public class NoSlow extends Module {
 	public void onSlowDown(SlowDownEvent event) {
 	    if (!isInGame()) return;
 	    if (mc.thePlayer.moveForward != 0.0F || mc.thePlayer.moveStrafing != 0.0F) {
-	        event.setSprint(true);
-	        event.setForwardMultiplier(speed.getValue());
-	        event.setStrafeMultiplier(speed.getValue());
+	        event.sprint = true;
+	        event.forwardMultiplier = speed.getValue();
+	        event.strafeMultiplier = speed.getValue();
 	    }
 	}
 	

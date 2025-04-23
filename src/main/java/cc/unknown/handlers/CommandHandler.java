@@ -11,8 +11,8 @@ public class CommandHandler {
 	
 	@SubscribeEvent
 	public void onOutgoing(OutgoingEvent event) {
-	    if (event.getPacket() instanceof C01PacketChatMessage) {
-	        C01PacketChatMessage packet = (C01PacketChatMessage) event.getPacket();
+	    if (event.packet instanceof C01PacketChatMessage) {
+	        C01PacketChatMessage packet = (C01PacketChatMessage) event.packet;
 	        String message = packet.getMessage();
 
 	        if (message.startsWith(".")) {

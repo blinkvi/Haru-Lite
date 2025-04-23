@@ -9,35 +9,18 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 @Cancelable
 public class BlockAABBEvent extends Event {
-	private final World world;
-	private final Block block;
-	private final BlockPos blockPos;
-	private AxisAlignedBB boundingBox;
-	private final AxisAlignedBB maskBoundingBox;
-	public BlockAABBEvent(World world, Block block, BlockPos blockPos, AxisAlignedBB boundingBox,
-			AxisAlignedBB maskBoundingBox) {
+	public final World world;
+	public final Block block;
+	public final BlockPos blockPos;
+	public AxisAlignedBB boundingBox;
+	public final AxisAlignedBB maskBoundingBox;
+
+	public BlockAABBEvent(World world, Block block, BlockPos blockPos, AxisAlignedBB boundingBox, AxisAlignedBB maskBoundingBox) {
 		this.world = world;
 		this.block = block;
 		this.blockPos = blockPos;
 		this.boundingBox = boundingBox;
 		this.maskBoundingBox = maskBoundingBox;
 	}
-	public AxisAlignedBB getBoundingBox() {
-		return boundingBox;
-	}
-	public void setBoundingBox(AxisAlignedBB boundingBox) {
-		this.boundingBox = boundingBox;
-	}
-	public World getWorld() {
-		return world;
-	}
-	public Block getBlock() {
-		return block;
-	}
-	public BlockPos getBlockPos() {
-		return blockPos;
-	}
-	public AxisAlignedBB getMaskBoundingBox() {
-		return maskBoundingBox;
-	}
+
 }

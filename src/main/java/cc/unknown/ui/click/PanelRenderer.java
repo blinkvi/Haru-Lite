@@ -9,17 +9,17 @@ import java.util.stream.Collectors;
 import cc.unknown.Haru;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.impl.visual.ClickGUI;
-import cc.unknown.ui.click.complement.IComponent;
-import cc.unknown.ui.click.impl.ModuleComponent;
+import cc.unknown.ui.click.impl.Component;
+import cc.unknown.ui.click.impl.ModuleRenderer;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontRenderer;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
 import cc.unknown.util.render.shader.impl.GradientBlur;
-import cc.unknown.util.value.impl.BoolValue;
+import cc.unknown.value.impl.BoolValue;
 
-public class Window implements IComponent {
-    private final List<ModuleComponent> moduleComponents;
+public class PanelRenderer extends Component {
+    private final List<ModuleRenderer> moduleComponents;
     private final List<BoolValue> settingBools = new ArrayList<>();
 	private final GradientBlur gradientBlur = new GradientBlur();
     
@@ -28,7 +28,7 @@ public class Window implements IComponent {
     private float width = 100, height = 0;
     private boolean expand, dragging = false;
 
-    public Window(Category category, float x, float y) {
+    public PanelRenderer(Category category, float x, float y) {
         this.category = category;
         this.x = x;
         this.y = y;
@@ -36,11 +36,12 @@ public class Window implements IComponent {
         this.settingBools.add(new BoolValue("NoHitDelay", null, false));
         this.settingBools.add(new BoolValue("NoJumpDelay", null, false));
         this.settingBools.add(new BoolValue("NoUseDelay", null, false));
+        this.settingBools.add(new BoolValue("JumpCircle", null, false));
         
         this.moduleComponents = Haru.instance.getModuleManager()
                 .getModulesByCategory(category)
                 .stream()
-                .map(ModuleComponent::new)
+                .map(ModuleRenderer::new)
                 .collect(Collectors.toList());
     }
 
@@ -56,7 +57,7 @@ public class Window implements IComponent {
         
     	if (getModule(ClickGUI.class).pref.isEnabled("Shaders")) {
     		gradientBlur.set(x, y, (int) width, (int) height, 0);
-    		RenderUtil.drawBloomShadow(x, y, width, height, 14, 18, outlineColor.getRGB(), true, false, false, false, false);
+    		RenderUtil.drawBloomShadow(x, y, width, height, 14, 18, outlineColor.getRGB());
     	}
 
         if (getModule(ClickGUI.class).pref.isEnabled("RoundedOutline")) {
@@ -104,14 +105,14 @@ public class Window implements IComponent {
         float centeredX = (float) (x + (width - fontRenderer.getStringWidth(categoryName)) / 2F);
         fontRenderer.drawString(categoryName, centeredX, y + 5F, -1);
 
-        IComponent.super.drawScreen(mouseX, mouseY);
+        super.drawScreen(mouseX, mouseY);
     }
 
     @Override
     public void mouseReleased(int mouseX, int mouseY, int state) {
         dragging = false;
         moduleComponents.forEach(module -> module.mouseReleased(mouseX, mouseY, state));
-        IComponent.super.mouseReleased(mouseX, mouseY, state);
+        super.mouseReleased(mouseX, mouseY, state);
     }
 
     @Override
@@ -140,7 +141,7 @@ public class Window implements IComponent {
             }
         }
 
-        IComponent.super.mouseClicked(mouseX, mouseY, mouseButton);
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
     
     public void setPosition(float x, float y) {
@@ -212,7 +213,7 @@ public class Window implements IComponent {
 		this.dragging = dragging;
 	}
 
-	public List<ModuleComponent> getModuleComponents() {
+	public List<ModuleRenderer> getModuleComponents() {
 		return moduleComponents;
 	}
 

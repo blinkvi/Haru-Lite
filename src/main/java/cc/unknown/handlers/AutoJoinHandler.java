@@ -30,7 +30,7 @@ public class AutoJoinHandler implements Accessor {
     
     @SubscribeEvent
     public void onServer(InboundEvent event) {
-		final Packet<?> packet = event.getPacket();		
+		final Packet<?> packet = event.packet;
 		if (isInGame()) {
 			if (packet instanceof S08PacketPlayerPosLook)
 				joining = false;

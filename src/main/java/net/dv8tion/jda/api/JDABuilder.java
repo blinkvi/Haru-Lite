@@ -789,7 +789,7 @@ public class JDABuilder
      *     <br>This is the default EventManager.</li>
      *
      *     <li>{@link net.dv8tion.jda.api.hooks.AnnotatedEventManager AnnotatedEventManager} which uses the Annotation
-     *         {@link net.dv8tion.jda.api.hooks.SubscribeEvent @SubscribeEvent} to mark the methods that listen for events.</li>
+     *         {@link net.dv8tion.jda.api.hooks.JDAEvent @SubscribeEvent} to mark the methods that listen for events.</li>
      * </ul>
      * <br>You can also create your own EventManager (See {@link net.dv8tion.jda.api.hooks.IEventManager}).
      *

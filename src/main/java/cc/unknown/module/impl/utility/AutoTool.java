@@ -9,9 +9,9 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.system.StopWatch;
 import cc.unknown.util.player.InventoryUtil;
-import cc.unknown.util.value.impl.BoolValue;
-import cc.unknown.util.value.impl.MultiBoolValue;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.impl.BoolValue;
+import cc.unknown.value.impl.MultiBoolValue;
+import cc.unknown.value.impl.SliderValue;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -46,7 +46,7 @@ public class AutoTool extends Module {
 	public void onAttack(AttackEvent event) {
         if (conditionals.isEnabled("AutoSword")) {
             if (!mc.thePlayer.isEating()) {
-                InventoryUtil.bestSword(event.getTarget());
+                InventoryUtil.bestSword(event.target);
             }
         }
     }

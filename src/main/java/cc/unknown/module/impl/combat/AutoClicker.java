@@ -11,10 +11,10 @@ import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.client.system.StopWatch;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
-import cc.unknown.util.value.impl.BoolValue;
-import cc.unknown.util.value.impl.ModeValue;
-import cc.unknown.util.value.impl.MultiBoolValue;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.impl.BoolValue;
+import cc.unknown.value.impl.ModeValue;
+import cc.unknown.value.impl.MultiBoolValue;
+import cc.unknown.value.impl.SliderValue;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -69,7 +69,7 @@ public class AutoClicker extends Module {
 			if (conditionals.isEnabled("CPSBoost")) {
 				clickDelay = (long) (1000 / MathUtil.randomizeDouble(min.getValue(), max.getValue()) + boost.getValue());
 			} else {
-				clickDelay = (long) (1000 / MathUtil.randomizeDouble(min.getValue(), max.getValue()));
+				clickDelay = (long) (1000 / MathUtil.randomizeSafeInt((int)min.getValue(), (int)max.getValue()));
 			}
 			break;
 		case "Extra":

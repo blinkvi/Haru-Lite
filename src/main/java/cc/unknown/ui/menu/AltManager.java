@@ -10,7 +10,9 @@ import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 
+import cc.unknown.Haru;
 import cc.unknown.mixin.interfaces.IMinecraft;
+import cc.unknown.module.impl.visual.Interface;
 import cc.unknown.ui.menu.impl.TextField;
 import cc.unknown.util.alt.AltGen;
 import cc.unknown.util.alt.MicrosoftAccount;
@@ -55,8 +57,7 @@ public class AltManager extends GuiScreen {
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
         GlStateManager.disableAlpha();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        
-        drawGradient(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), 0, 0xFF1E3A8A);        
+        drawGradient(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), 0, Haru.instance.getModuleManager().getModule(Interface.class).color());
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.enableAlpha();
         GlStateManager.disableBlend();
@@ -113,7 +114,6 @@ public class AltManager extends GuiScreen {
     
     @Override
     public void actionPerformed(final GuiButton button) {
-
     	switch (button.id) {
         case 1:        	
         	String name = AltGen.generate();

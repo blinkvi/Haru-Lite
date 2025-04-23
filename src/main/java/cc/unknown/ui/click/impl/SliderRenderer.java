@@ -5,18 +5,17 @@ import java.awt.Color;
 import org.lwjgl.input.Mouse;
 
 import cc.unknown.module.impl.visual.ClickGUI;
-import cc.unknown.ui.click.complement.Component;
 import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
-import cc.unknown.util.value.impl.SliderValue;
+import cc.unknown.value.impl.SliderValue;
 
-public class SliderComponent extends Component {
+public class SliderRenderer extends Component {
 
     private final SliderValue value;
 
-    public SliderComponent(SliderValue value) {
+    public SliderRenderer(SliderValue value) {
         this.value = value;
         height = 11;
     }

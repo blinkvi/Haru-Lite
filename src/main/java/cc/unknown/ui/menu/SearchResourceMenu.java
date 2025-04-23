@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import cc.unknown.ui.menu.impl.TextField;
 import cc.unknown.util.Accessor;
@@ -39,44 +41,37 @@ public class SearchResourceMenu implements Accessor {
         selectedList.drawScreen(mouseX, mouseY, partialTicks);
         parent.drawCenteredString(fontRendererObj, I18n.format("resourcePack.title"), width / 2, 16, 16777215);
     }
-
+    
     public GuiResourcePackAvailable updateList(TextField search, GuiResourcePackAvailable clone, List<ResourcePackListEntry> available, Minecraft mc, int width, int height) {
-        GuiResourcePackAvailable availableList;
+        List<ResourcePackListEntry> entries;
+
         if (search == null || search.getText().isEmpty()) {
-        	availableList = new GuiResourcePackAvailable(mc, 200, height, available);
-        	availableList.setSlotXBoundsFromLeft(width / 2 - 4 - 200);
-            clone.registerScrollButtons(7, 8);
+            entries = available;
         } else {
-        	availableList = new GuiResourcePackAvailable(mc, 200, height, Arrays.asList(clone.getList().stream()
-                .filter(listEntry -> {
+            String text = search.getText().toLowerCase();
+            entries = clone.getList().stream().filter(entry -> {
                 try {
                     Method method = ResourcePackListEntry.class.getDeclaredMethod("func_148312_b");
                     method.setAccessible(true);
-                    String name = ChatColor.stripColor(((String) method.invoke(listEntry)).
-                        replaceAll("[^A-Za-z0-9 ]", "").trim().toLowerCase());
-                    String text = search.getText().toLowerCase();
+
+                    String name = ChatColor.stripColor(((String) method.invoke(entry))).replaceAll("[^A-Za-z0-9 ]", "").trim().toLowerCase();
 
                     if (name.endsWith("zip")) {
-                        name = name.subSequence(0, name.length() - 3).toString();
+                        name = name.substring(0, name.length() - 3);
                     }
 
-                    for (String s : text.split(" ")) {
-                        if (!name.contains(s.toLowerCase())) {
-                            return false;
-                        }
-                    }
+                    return Arrays.stream(text.split(" ")).allMatch(name::contains) || name.startsWith(text) || name.equalsIgnoreCase(text);
 
-                    return name.startsWith(text) || name.contains(text) || name.equalsIgnoreCase(text);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return true;
                 }
-            }).toArray(ResourcePackListEntry[]::new)));
-
-        	availableList.setSlotXBoundsFromLeft(width / 2 - 4 - 200);
-        	availableList.registerScrollButtons(7, 8);
+            }).collect(Collectors.toList());
         }
 
+        GuiResourcePackAvailable availableList = new GuiResourcePackAvailable(mc, 200, height, entries);
+        availableList.setSlotXBoundsFromLeft(width / 2 - 4 - 200);
+        availableList.registerScrollButtons(7, 8);
         return availableList;
     }
     
@@ -122,16 +117,18 @@ public class SearchResourceMenu implements Accessor {
         }
 
         public static String translateAlternateColorCodes(char altColorChar, String textToTranslate) {
-            char[] b = textToTranslate.toCharArray();
-            int bound = b.length - 1;
-            for (int i = 0; i < bound; i++) {
-                if (b[i] == altColorChar && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1) {
-                    b[i] = ChatColor.COLOR_CHAR;
-                    b[i + 1] = Character.toLowerCase(b[i + 1]);
-                }
-            }
-
-            return new String(b);
+            return IntStream.range(0, textToTranslate.length())
+                    .mapToObj(i -> {
+                        char c = textToTranslate.charAt(i);
+                        if (c == altColorChar && i + 1 < textToTranslate.length()) {
+                            char nextChar = textToTranslate.charAt(i + 1);
+                            if ("0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(nextChar) > -1) {
+                                return String.valueOf(ChatColor.COLOR_CHAR) + Character.toLowerCase(nextChar);
+                            }
+                        }
+                        return String.valueOf(c);
+                    })
+                    .collect(Collectors.joining());
         }
 
         @Override

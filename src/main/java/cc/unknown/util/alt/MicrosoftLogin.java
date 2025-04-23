@@ -173,9 +173,6 @@ public class MicrosoftLogin implements Accessor {
                 	writeText(httpExchange, "<html>\n"
                 			+ "    <body>\n"
                 			+ "        <p>Authentication completed.</p>\n"
-                			+ "        <script>\n"
-                			+ "            alert(\"You may now close this tab.\");\n"
-                			+ "        </script>\n"
                 			+ "    </body>\n"
                 			+ "</html>");
                 }
