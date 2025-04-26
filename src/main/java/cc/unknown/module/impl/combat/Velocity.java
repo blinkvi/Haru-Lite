@@ -45,6 +45,8 @@ public class Velocity extends Module {
     
     @SubscribeEvent
     public void onInbound(InboundEvent event) {
+    	if (!shouldApplyVelocity()) return;
+    	
     	if (mode.is("Normal")) {
 	        if (event.isCanceled()) return;
 	
@@ -79,25 +81,6 @@ public class Velocity extends Module {
 	        }
     	}
     }
-
-    /*@SubscribeEvent
-    public void onLivingUpdate(LivingUpdateEvent event) {
-        if (!shouldApplyVelocity()) return;
-                
-        double horizontal = this.horizontal.getValue() * 100 / 100.0;
-        double vertical = this.vertical.getValue() * 100 / 100.0;
-
-        if (mode.is("Normal") && mc.thePlayer.maxHurtTime > 0 && mc.thePlayer.hurtTime == mc.thePlayer.maxHurtTime) {        	
-        	if (horizontal != 1) {
-            	mc.thePlayer.motionX *= horizontal;
-            	mc.thePlayer.motionZ *= horizontal;	
-        	}
-        	
-        	if (vertical != 1) {
-        		mc.thePlayer.motionY *= vertical;
-        	}
-        }
-    }*/
 
     private boolean shouldApplyVelocity() {
     	if (!isInGame()) return false;

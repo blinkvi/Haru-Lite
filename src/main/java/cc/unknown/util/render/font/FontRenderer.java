@@ -118,9 +118,9 @@ public class FontRenderer extends CFont {
         if (text == null)
 			return 0;
         
-        RenderTextEvent renderTextEvent = new RenderTextEvent(text);
-        MinecraftForge.EVENT_BUS.post(renderTextEvent);
-        text = renderTextEvent.getString();
+        RenderTextEvent event = new RenderTextEvent(text);
+        MinecraftForge.EVENT_BUS.post(event);
+        text = event.string;
 
         if (color == 0x20FFFFFF)
 			color = 0xFFFFFF;
@@ -260,9 +260,9 @@ public class FontRenderer extends CFont {
         if (text == null)
 			return 0;
         
-        RenderTextEvent renderTextEvent = new RenderTextEvent(text);
-        MinecraftForge.EVENT_BUS.post(renderTextEvent);
-        text = renderTextEvent.getString();
+        RenderTextEvent event = new RenderTextEvent(text);
+        MinecraftForge.EVENT_BUS.post(event);
+        text = event.string;
 
         CFont.CharData[] currentData = this.charData;
         float alpha = (float) ((color >> 24) & 255) / 255f;
@@ -391,9 +391,9 @@ public class FontRenderer extends CFont {
         if (text == null)
 			return 0;
         
-        RenderTextEvent renderTextEvent = new RenderTextEvent(text);
-        MinecraftForge.EVENT_BUS.post(renderTextEvent);
-        text = renderTextEvent.getString();
+        RenderTextEvent event = new RenderTextEvent(text);
+        MinecraftForge.EVENT_BUS.post(event);
+        text = event.string;
 
         CFont.CharData[] currentData = this.charData;
         float alpha = (float) ((color >> 24) & 0xFF) / 255f;
@@ -518,9 +518,9 @@ public class FontRenderer extends CFont {
         if (text == null)
 			return 0;
         
-        RenderTextEvent renderTextEvent = new RenderTextEvent(text);
-        MinecraftForge.EVENT_BUS.post(renderTextEvent);
-        text = renderTextEvent.getString();
+        RenderTextEvent event = new RenderTextEvent(text);
+        MinecraftForge.EVENT_BUS.post(event);
+        text = event.string;
 
         float width = 0;
         CFont.CharData[] currentData = charData;

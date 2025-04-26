@@ -23,7 +23,7 @@ public class NameProtect extends Module {
 	public void onRenderText(RenderTextEvent event) {
 		if (!isInGame()) return;
 
-		String text = event.getString();
+		String text = event.string;
 		String ownName = mc.getSession().getUsername();
 		String displayName = name.isEmpty() ? "You" : name;
 
@@ -44,7 +44,7 @@ public class NameProtect extends Module {
 			}
 
 			text = text.replace(ownName, displayName);
-			event.setString(text);
+			event.string = text;
 		}
 	}
 }

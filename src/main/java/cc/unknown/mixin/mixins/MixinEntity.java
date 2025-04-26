@@ -216,10 +216,10 @@ public abstract class MixinEntity {
 				return;
 			}
 
-			forward = event.getForward();
-			strafe = event.getStrafe();
-			friction = event.getFriction();
-			yaw = event.getYaw();
+			forward = event.forward;
+			strafe = event.strafe;
+			friction = event.friction;
+			yaw = event.yaw;
 		}
 
 		float f = strafe * strafe + forward * forward;

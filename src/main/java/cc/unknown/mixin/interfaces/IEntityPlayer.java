@@ -1,8 +1,8 @@
 package cc.unknown.mixin.interfaces;
 
-import cc.unknown.util.client.system.StopWatch;
+import cc.unknown.util.client.system.Clock;
 
 public interface IEntityPlayer {
-	StopWatch getHideSneakHeight();
+	Clock getHideSneakHeight();
 
 }

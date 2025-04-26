@@ -1,8 +1,10 @@
 package cc.unknown.util.player;
-import java.util.List;
+import java.nio.ByteBuffer;
 
-import cc.unknown.handlers.CPSHandler;
+import org.lwjgl.input.Mouse;
+
 import cc.unknown.util.Accessor;
+import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
@@ -19,8 +21,8 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 public class PlayerUtil implements Accessor {
 	
@@ -127,15 +129,24 @@ public class PlayerUtil implements Accessor {
     	return name.contains("CLICK DERECHO") || name.contains("MEJORAS") || name.contains("[NPC]") || name.contains("[SHOP]") || name.contains("CLIQUE PARA ABRIR");
     }
     
+    public static void setMouseButtonState(int mouseButton, boolean held) {
+        MouseEvent event = new MouseEvent();
+
+        ReflectUtil.setPrivateField(MouseEvent.class, event, mouseButton, "button");
+        ReflectUtil.setPrivateField(MouseEvent.class, event, held, "buttonstate");
+        MinecraftForge.EVENT_BUS.post(event);
+
+        ByteBuffer buttons = ReflectUtil.getPrivateField(Mouse.class, null, "buttons");
+        buttons.put(mouseButton, (byte)(held ? 1 : 0));
+        ReflectUtil.setPrivateField(Mouse.class, null, buttons, "buttons");
+     }
+    
     public static void leftClick(boolean state) {
     	setState(mc.gameSettings.keyBindAttack.getKeyCode(), state);
-    	if (!mc.thePlayer.isBlocking()) CPSHandler.addLeftClicks();
     }
     
     public static void rightClick(boolean state) {
     	setState(mc.gameSettings.keyBindUseItem.getKeyCode(), state);
-		if (InventoryUtil.getAnyBlock() || InventoryUtil.getProjectiles())
-			CPSHandler.addRightClicks();
     }
     
     public static void setShift(boolean state) {
@@ -186,48 +197,7 @@ public class PlayerUtil implements Accessor {
 		double v = ((double) (mc.thePlayer.rotationYaw - fovToTarget(entity)) % 360.0D + 540.0D) % 360.0D - 180.0D;
 		return v > 0.0D && v < (double) fov || (double) (-fov) < v && v < 0.0D;
 	}
-
-	
-    public static Entity getPointedEntityRayTrace(double reachDistance) {
-        if (mc.getRenderViewEntity() == null) return null;
-
-        Entity pointedEntity = null;
-        Vec3 vec3 = mc.getRenderViewEntity().getPositionEyes(1.0F);
-        Vec3 lookVec = mc.getRenderViewEntity().getLook(1.0F);
-        Vec3 vec32 = vec3.addVector(lookVec.xCoord * reachDistance, lookVec.yCoord * reachDistance, lookVec.zCoord * reachDistance);
-        float f1 = 1.0F;
-        List<Entity> list = mc.theWorld.getEntitiesWithinAABBExcludingEntity(mc.getRenderViewEntity(), mc.getRenderViewEntity().getEntityBoundingBox().addCoord(lookVec.xCoord * reachDistance, lookVec.yCoord * reachDistance, lookVec.zCoord * reachDistance).expand(f1, f1, f1));
-        double d2 = reachDistance;
-
-        for (Entity entity : list) {
-            if (entity.canBeCollidedWith()) {
-                float collisionBorderSize = 0.13F;
-                AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(collisionBorderSize, collisionBorderSize, collisionBorderSize);
-                MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
-
-                if (axisalignedbb.isVecInside(vec3)) {
-                    if (0.0D < d2 || d2 == 0.0D) {
-                        pointedEntity = entity;
-                        d2 = 0.0D;
-                    }
-                } else if (movingobjectposition != null) {
-                    double distance = vec3.distanceTo(movingobjectposition.hitVec);
-                    if (distance < d2 || d2 == 0.0D) {
-                        if (entity == mc.getRenderViewEntity().ridingEntity && !entity.canRiderInteract()) {
-                            if (d2 == 0.0D) {
-                                pointedEntity = entity;
-                            }
-                        } else {
-                            pointedEntity = entity;
-                            d2 = distance;
-                        }
-                    }
-                }
-            }
-        }
-        return pointedEntity;
-    }
-    
+   
     public static float getCompleteHealth(EntityLivingBase entity) {
         if (entity == null) return 0;
         return entity.getHealth() + entity.getAbsorptionAmount();

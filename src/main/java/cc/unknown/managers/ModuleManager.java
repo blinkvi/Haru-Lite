@@ -59,7 +59,6 @@ public final class ModuleManager extends SList<Module> {
                 Ambience.class,
                 BedPlates.class,
                 Cosmetics.class,
-                BreakProgress.class,
                 Radio.class,
                 NameProtect.class,
                 NameTags.class,

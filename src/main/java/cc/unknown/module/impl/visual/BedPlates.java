@@ -20,7 +20,7 @@ import java.util.List;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.system.StopWatch;
+import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.SliderValue;
@@ -43,7 +43,7 @@ public class BedPlates extends Module {
     private final List<BlockPos> beds = new ArrayList<>();
     private final List<List<Block>> bedBlocks = new ArrayList<>();
     private BlockPos[] bed = null;
-    private StopWatch stopWatch = new StopWatch();
+    private Clock stopWatch = new Clock();
     
     private final BoolValue firstBed = new BoolValue("RenderFirstBed", this, true);
     private final BoolValue showDistance = new BoolValue("ShowDistance", this, true);

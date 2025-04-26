@@ -9,7 +9,7 @@ import cc.unknown.managers.ModuleManager;
 import cc.unknown.module.Module;
 import cc.unknown.ui.click.DropGui;
 import cc.unknown.util.client.system.CustomLogger;
-import cc.unknown.util.client.system.StopWatch;
+import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.render.client.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
@@ -25,8 +25,8 @@ public interface Accessor {
         return mc.thePlayer != null && mc.theWorld != null;
     }
     
-    default StopWatch getStopWatch() {
-    	return new StopWatch();
+    default Clock getStopWatch() {
+    	return new Clock();
     }
     
     default DropGui getDropGui() {

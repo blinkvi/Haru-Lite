@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 
 import java.awt.Color;
+import java.util.Arrays;
 
 import cc.unknown.event.render.UpdatePlayerAnglesEvent;
 import cc.unknown.module.Module;
@@ -14,6 +15,7 @@ import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.value.impl.BoolValue;
+import cc.unknown.value.impl.MultiBoolValue;
 import cc.unknown.value.impl.SliderValue;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -22,11 +24,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "ESP", description = "Renders an in-game ESP (Extra Sensory Perception) overlay.", category = Category.VISUAL)
 public class ESP extends Module {    
 
-	private final BoolValue colorTeams = new BoolValue("ColorTeams", this, false);
-	private final BoolValue checkInvis = new BoolValue("ShowInvisibles", this, false);
-	private final BoolValue redDamage = new BoolValue("RedOnDamage", this, false);
-	
     public final SliderValue skeletalWidth = new SliderValue("Width", this, 0.5f, 0.1f, 5f, 0.1f);
+    
+	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
+			new BoolValue("ColorTeams", true),
+			new BoolValue("ShowInvisibles", true),
+			new BoolValue("RedOnDamage", true)));
 
     @SubscribeEvent
     public void onUpdatePlayerAngles(UpdatePlayerAnglesEvent event) {
@@ -37,7 +40,7 @@ public class ESP extends Module {
 	public void onRender3D(RenderWorldLastEvent event) {
         for (EntityPlayer player : mc.theWorld.playerEntities) {
             if (PlayerUtil.unusedNames(player)) continue;
-            if (player.isInvisible() && !checkInvis.get()) continue;
+            if (player.isInvisible() && !conditionals.isEnabled("ShowInvisibles")) continue;
             if (mc.thePlayer == player) continue;
 
             float partialTicks = event.partialTicks;
@@ -53,8 +56,8 @@ public class ESP extends Module {
 
     private int getPlayerColor(EntityPlayer player) {
         String name = player.getName();
-        if (redDamage.get() && player.hurtTime > 0) return new Color(255, 0, 0).getRGB();
-        if (colorTeams.get()) return ColorUtil.getColorFromTags(player);
+        if (conditionals.isEnabled("RedOnDamage") && player.hurtTime > 0) return new Color(255, 0, 0).getRGB();
+        if (conditionals.isEnabled("ColorTeams")) return ColorUtil.getColorFromTags(player);
         if (FriendUtil.isFriend(name)) return new Color(0, 255, 0).getRGB();
         return getModule(Interface.class).color();
     }

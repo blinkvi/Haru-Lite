@@ -1,10 +1,14 @@
 package cc.unknown.util.client.system;
 
-public class StopWatch {
+public class Clock {
     private long startTime;
 
-    public StopWatch() {
+    public Clock() {
         reset();
+    }
+    
+    public Clock(long lasts){
+        this.startTime = lasts;
     }
     
     public boolean hasPassed(long delay) {

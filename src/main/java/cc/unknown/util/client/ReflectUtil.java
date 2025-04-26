@@ -166,24 +166,7 @@ public class ReflectUtil implements Accessor {
             e.printStackTrace();
         }
     }
-    
-    /**
-     * Invokes a private method on the specified instance using reflection.
-     * <p>
-     * Usage pattern:
-     * <pre>
-     * getPrivateMethod(Minecraft.class, mc, "func_147116_af", clickMouse);
-     * </pre>
-     *
-     * @param classToAccess The class where the method is declared.
-     * @param instance      The instance on which the method will be invoked (null for static).
-     * @param values        An ordered sequence:
-     *                      - First half: parameter types (Class<?>)
-     *                      - Second half: parameter values (Object)
-     *                      - Then: possible method names (String...)
-     * @param <T>           Type of the instance (or supertype).
-     * @return The result of the method invocation, or null if failed.
-     */
+
     public static <T> Object getPrivateMethod(Class<? super T> classToAccess, T instance, Object... values) {
         try {
             int stringIndex = -1;
@@ -209,17 +192,13 @@ public class ReflectUtil implements Accessor {
 
             String[] methodNames = Arrays.copyOfRange(values, stringIndex, values.length, String[].class);
 
-            Method method = Arrays.stream(methodNames)
-                    .map(name -> {
-                        try {
-                            return classToAccess.getDeclaredMethod(name, paramTypes);
-                        } catch (NoSuchMethodException ignored) {
-                            return null;
-                        }
-                    })
-                    .filter(m -> m != null)
-                    .findFirst()
-                    .orElseThrow(() -> new NoSuchMethodException("No matching method found in class: " + classToAccess.getName()));
+            Method method = Arrays.stream(methodNames).map(name -> {
+            	try {
+            		return classToAccess.getDeclaredMethod(name, paramTypes);
+            	} catch (NoSuchMethodException ignored) {
+            		return null;
+            	}
+            }).filter(m -> m != null).findFirst().orElseThrow(() -> new NoSuchMethodException("No matching method found in class: " + classToAccess.getName()));
 
             method.setAccessible(true);
             return method.invoke(instance, args);
@@ -229,29 +208,15 @@ public class ReflectUtil implements Accessor {
         }
     }
  
-    
-    /**
-     * Retrieves the value of a private field from a given object using reflection.
-     *
-     * @param clazz      The class declaring the field.
-     * @param instance   The object instance from which the field is retrieved (or null for static).
-     * @param fieldNames A list of possible field names (e.g., obfuscated names).
-     * @param <T>        The expected return type.
-     * @return The value of the field, or null if an error occurs.
-     */
     public static <T> T getPrivateField(Class<?> clazz, Object instance, String... fieldNames) {
         try {
-            Field field = Arrays.stream(fieldNames)
-                    .map(name -> {
-                        try {
-                            return clazz.getDeclaredField(name);
-                        } catch (NoSuchFieldException e) {
-                            return null;
-                        }
-                    })
-                    .filter(f -> f != null)
-                    .findFirst()
-                    .orElseThrow(() -> new NoSuchFieldException("No matching field found in class: " + clazz.getName()));
+            Field field = Arrays.stream(fieldNames).map(name -> {
+            	try {
+            		return clazz.getDeclaredField(name);
+            	} catch (NoSuchFieldException e) {
+            		return null;
+            	}
+            }).filter(f -> f != null).findFirst().orElseThrow(() -> new NoSuchFieldException("No matching field found in class: " + clazz.getName()));
 
             field.setAccessible(true);
             Object value;
@@ -278,28 +243,15 @@ public class ReflectUtil implements Accessor {
         }
     }
 
-    /**
-     * Sets the value of a private field on a given object using reflection.
-     *
-     * @param classToAccess The class declaring the field.
-     * @param instance      The object instance whose field should be modified (or null for static).
-     * @param value         The value to set.
-     * @param fieldNames    A list of possible field names (e.g., obfuscated names).
-     * @param <T>           The type of the instance.
-     */
     public static <T> void setPrivateField(Class<? super T> classToAccess, T instance, Object value, String... fieldNames) {
         try {
-            Field field = Arrays.stream(fieldNames)
-                    .map(name -> {
-                        try {
-                            return classToAccess.getDeclaredField(name);
-                        } catch (NoSuchFieldException e) {
-                            return null;
-                        }
-                    })
-                    .filter(f -> f != null)
-                    .findFirst()
-                    .orElseThrow(() -> new NoSuchFieldException("No matching field found in class: " + classToAccess.getName()));
+            Field field = Arrays.stream(fieldNames).map(name -> {
+            	try {
+            		return classToAccess.getDeclaredField(name);
+            	} catch (NoSuchFieldException e) {
+            		return null;
+            	}
+            }).filter(f -> f != null).findFirst().orElseThrow(() -> new NoSuchFieldException("No matching field found in class: " + classToAccess.getName()));
 
             field.setAccessible(true);
             field.set(instance, value);

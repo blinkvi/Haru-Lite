@@ -10,7 +10,7 @@ import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.module.impl.utility.AutoTool;
-import cc.unknown.util.client.system.StopWatch;
+import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.value.impl.BoolValue;
@@ -32,7 +32,7 @@ public class BridgeAssist extends Module {
 			new BoolValue("OnlyBlocks", true),
 			new BoolValue("OnlyBackwards", false)));
 
-    private StopWatch stopWatch = new StopWatch();
+    private Clock stopWatch = new Clock();
     private boolean shouldBridge = false, isShifting = false;
     private int slot;
     
@@ -50,11 +50,11 @@ public class BridgeAssist extends Module {
     @SubscribeEvent
     public void onMoveInput(MoveInputEvent event) {
     	if (isShifting && shouldBridge) {
-    		event.setSneak(true);
+    		event.sneak = true;
     	}
     	
     	if (!isShifting && shouldBridge) {
-    		event.setSneak(false);
+    		event.sneak = false;
     	}  	
     }
     

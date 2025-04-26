@@ -28,7 +28,6 @@ public class SystemUtil implements Accessor {
 	            if (midiStream != null) {
 	                sequencer = MidiSystem.getSequencer();
 	                if (sequencer == null) {
-	                    System.out.println("No se encontró un secuenciador MIDI.");
 	                    return;
 	                }
 
@@ -44,8 +43,6 @@ public class SystemUtil implements Accessor {
 	                }
 
 	                sequencer.close();
-	            } else {
-	                System.out.println("No se pudo cargar el archivo MIDI.");
 	            }
 	        } catch (Exception e) {
 	            e.printStackTrace();
@@ -60,7 +57,7 @@ public class SystemUtil implements Accessor {
     }
     
     public static boolean checkFirstStart() {
-        String content = "[Haru] Init Sound | DONT DELETE THIS";
+        String content = "[Haru] Init Sound";
         
         File soundDir = new File(Haru.MAIN_DIR, "sound");
         File soundFile = new File(soundDir, "sound.txt");

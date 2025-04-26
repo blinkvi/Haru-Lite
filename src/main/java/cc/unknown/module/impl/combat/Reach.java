@@ -44,17 +44,17 @@ public class Reach extends Module {
 		correctValues(min, max);
 	}
 	
+	@SubscribeEvent
+	public void onPostTick(ClientTickEvent event) {
+		if (event.phase == Phase.START) return;
+		correctValues(min, max);
+	}
+	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onMouse(MouseEvent event) {
 		if (event.button >= 0 && event.buttonstate && isInGame()) {
 			call();
 		}
-	}
-
-	@SubscribeEvent
-	public void onPostTick(ClientTickEvent event) {
-		if (event.phase == Phase.START) return;
-		correctValues(min, max);
 	}
 
 	public void call() {

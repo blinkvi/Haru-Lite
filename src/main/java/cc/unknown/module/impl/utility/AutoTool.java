@@ -7,7 +7,7 @@ import cc.unknown.handlers.SpoofHandler;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.system.StopWatch;
+import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.MultiBoolValue;
@@ -31,7 +31,7 @@ public class AutoTool extends Module {
 
     private int oldSlot;
     public boolean wasDigging;
-    private final StopWatch delayTimer = new StopWatch();
+    private final Clock delayTimer = new Clock();
 
     @Override
     public void onDisable() {

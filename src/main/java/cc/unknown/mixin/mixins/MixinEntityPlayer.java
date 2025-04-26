@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import cc.unknown.event.player.JumpEvent;
 import cc.unknown.mixin.interfaces.IEntityPlayer;
-import cc.unknown.util.client.system.StopWatch;
+import cc.unknown.util.client.system.Clock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.item.ItemStack;
@@ -38,7 +38,7 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements
 	public abstract boolean isPlayerSleeping();
 	
 	@Unique
-	public StopWatch hideSneakHeight = new StopWatch();
+	public Clock hideSneakHeight = new Clock();
 	
 	@Inject(method = "jump", at = @At("HEAD"))
     public void preJump(CallbackInfo ci) {
@@ -61,7 +61,7 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements
 	}
 	
 	@Override
-	public StopWatch getHideSneakHeight() {
+	public Clock getHideSneakHeight() {
 		return hideSneakHeight;
 	}
 }

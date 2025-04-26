@@ -7,57 +7,17 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 @Cancelable
 public class StrafeEvent extends Event implements Accessor {
 
-    private float forward;
-    private float strafe;
-    private float friction;
-    private float yaw;
-    private StrafeType strafeType;
+	public float forward;
+    public float strafe;
+    public float friction;
+    public float yaw;
+    public StrafeType strafeType;
 	
     public StrafeEvent(float forward, float strafe, float friction, float yaw, StrafeType strafeType) {
 		this.forward = forward;
 		this.strafe = strafe;
 		this.friction = friction;
 		this.yaw = yaw;
-		this.strafeType = strafeType;
-	}
-
-	public float getForward() {
-		return forward;
-	}
-
-	public void setForward(float forward) {
-		this.forward = forward;
-	}
-
-	public float getStrafe() {
-		return strafe;
-	}
-
-	public void setStrafe(float strafe) {
-		this.strafe = strafe;
-	}
-
-	public float getFriction() {
-		return friction;
-	}
-
-	public void setFriction(float friction) {
-		this.friction = friction;
-	}
-
-	public float getYaw() {
-		return yaw;
-	}
-
-	public void setYaw(float yaw) {
-		this.yaw = yaw;
-	}
-
-	public StrafeType getStrafeType() {
-		return strafeType;
-	}
-
-	public void setStrafeType(StrafeType strafeType) {
 		this.strafeType = strafeType;
 	}
 
@@ -74,13 +34,13 @@ public class StrafeEvent extends Event implements Accessor {
 	}
 	
 	public void setSpeed(final double speed, final double motionMultiplier) {
-        setFriction((float) (getForward() != 0 && getStrafe() != 0 ? speed * 0.98F : speed));
+		friction = (float) (forward != 0 && strafe != 0 ? speed * 0.98F : speed);
         mc.thePlayer.motionX *= motionMultiplier;
         mc.thePlayer.motionZ *= motionMultiplier;
     }
 
     public void setSpeed(final double speed) {
-        setFriction((float) (getForward() != 0 && getStrafe() != 0 ? speed * 0.98F : speed));
+    	friction = (float) (forward != 0 && strafe != 0 ? speed * 0.98F : speed);
         MoveUtil.stop();
     }
     

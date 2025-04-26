@@ -12,7 +12,6 @@ import cc.unknown.Haru;
 
 public class FontUtil {
     private static final Map<String, FontRenderer> fontRenderers = new ConcurrentHashMap<>();
-    private static final Map<String, Font> customFonts = new ConcurrentHashMap<>();
 
     public static void initializeFonts() {
         try {
@@ -46,15 +45,6 @@ public class FontUtil {
         return fontRenderers.computeIfAbsent(key, k -> {
             Font font = loadFont(fontName, size);
             return (font != null) ? new FontRenderer(font, true, true) : null;
-        });
-    }
-
-    public static Font getCustomFont(String fontName, int size) {
-        String key = fontName + size;
-
-        return customFonts.computeIfAbsent(key, k -> {
-            Font font = loadFont(fontName, size);
-            return (font != null) ? font.deriveFont((float) size) : new Font("SansSerif", Font.PLAIN, size);
         });
     }
 

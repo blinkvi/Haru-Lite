@@ -133,11 +133,10 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
     	MinecraftForge.EVENT_BUS.post(event);
         if (event.isCanceled()) {
-        	//Sakura.instance.getEventBus().handle(new MotionEvent.Post(posX, posY, posZ, rotationYaw, rotationPitch, onGround, isSprinting(), isSneaking()));
         	return;
         }
 
-        boolean flag = event.isSprinting();
+        boolean flag = event.isSprinting;
         if (flag != serverSprintState) {
             if (flag) {
                 sendQueue.addToSendQueue(new C0BPacketEntityAction((EntityPlayerSP) (Object) this, C0BPacketEntityAction.Action.START_SPRINTING));
@@ -148,7 +147,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
             serverSprintState = flag;
         }
 
-        boolean flag1 = event.isSneaking();
+        boolean flag1 = event.isSneaking;
         if (flag1 != serverSneakState) {
             if (flag1) {
                 sendQueue.addToSendQueue(new C0BPacketEntityAction((EntityPlayerSP) (Object) this, C0BPacketEntityAction.Action.START_SNEAKING));
@@ -160,12 +159,12 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         }
 
         if (isCurrentViewEntity()) {
-            double d0 = event.getX() - lastReportedPosX;
-            double d1 = event.getY() - lastReportedPosY;
-            double d2 = event.getZ() - lastReportedPosZ;
+            double d0 = event.x - lastReportedPosX;
+            double d1 = event.y - lastReportedPosY;
+            double d2 = event.z - lastReportedPosZ;
             
-            float yaw = event.getYaw();
-            float pitch = event.getPitch();
+            float yaw = event.yaw;
+            float pitch = event.pitch;
             
             double d3 = yaw - lastReportedYaw;
             double d4 = pitch - lastReportedPitch;
@@ -174,25 +173,25 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
             boolean flag3 = d3 != 0.0 || d4 != 0.0;
             if (ridingEntity == null) {
                 if (flag2 && flag3) {
-                    sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(event.getX(), event.getY(), event.getZ(), yaw, pitch, event.isOnGround()));
+                    sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(event.x, event.y, event.z, yaw, pitch, event.onGround));
                 } else if (flag2) {
-                    sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(event.getX(), event.getY(), event.getZ(), event.isOnGround()));
+                    sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(event.x, event.y, event.z, event.onGround));
                 } else if (flag3) {
-                    sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(yaw, pitch, event.isOnGround()));
+                    sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(yaw, pitch, event.onGround));
                 } else {
-                    sendQueue.addToSendQueue(new C03PacketPlayer(event.isOnGround()));
+                    sendQueue.addToSendQueue(new C03PacketPlayer(event.onGround));
                 }
             } else {
-                sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(motionX, -999.0D, motionZ, yaw, pitch, event.isOnGround()));
+                sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(motionX, -999.0D, motionZ, yaw, pitch, event.onGround));
                 flag2 = false;
             }
 
             ++positionUpdateTicks;
 
             if (flag2) {
-                lastReportedPosX = event.getX();
-                lastReportedPosY = event.getY();
-                lastReportedPosZ = event.getZ();
+                lastReportedPosX = event.x;
+                lastReportedPosY = event.y;
+                lastReportedPosZ = event.z;
                 positionUpdateTicks = 0;
             }
 

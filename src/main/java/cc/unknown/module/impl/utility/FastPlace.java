@@ -9,16 +9,13 @@ import org.lwjgl.input.Keyboard;
 import com.google.common.collect.Sets;
 
 import cc.unknown.event.player.PrePositionEvent;
-import cc.unknown.handlers.CPSHandler;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.ReflectUtil;
-import cc.unknown.util.client.system.StopWatch;
+import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.ModeValue;
 import cc.unknown.value.impl.MultiBoolValue;
 import cc.unknown.value.impl.SliderValue;
 import net.minecraft.block.Block;
@@ -34,11 +31,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "FastPlace", description = "Autoclicker for rightclicking.", category = Category.UTILITY)
 public class FastPlace extends Module {
 
-    private final ModeValue mode = new ModeValue("Mode", this, "Expert", "Simple", "Expert");
 
-    private final SliderValue tick = new SliderValue("Ticks", this, 0, 0, 5, () -> mode.is("Simple"));
-    private final SliderValue cps = new SliderValue("CPS", this, 10, 1, 25, () -> mode.is("Expert"));
-    private final SliderValue deltaCPS = new SliderValue("DeltaCPS", this, 2, 0, 20, () -> mode.is("Expert"));
+    private final SliderValue cps = new SliderValue("CPS", this, 10, 1, 25);
+    private final SliderValue deltaCPS = new SliderValue("DeltaCPS", this, 2, 0, 20);
     private final SliderValue delay = new SliderValue("StartDelay", this, 0, 0, 200, 10);
 
     public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
@@ -48,8 +43,8 @@ public class FastPlace extends Module {
             new BoolValue("Inventory", false),
             new BoolValue("OnlyClick", true)));
 
-    private final StopWatch stopWatch = new StopWatch();
-    private final StopWatch startDelay = new StopWatch();
+    private final Clock stopWatch = new Clock();
+    private final Clock startDelay = new Clock();
     
     private final Set<Item> BLACKLISTED_ITEMS = Sets.newHashSet(Items.compass, Items.clock, Items.ender_pearl, Items.fishing_rod, Items.stone_sword, Items.diamond_sword, Items.golden_sword, Items.iron_sword, Items.wooden_sword, Items.nether_star, Items.emerald, Items.cake, Items.skull);
     private final Set<Block> BLACKLISTED_BLOCKS = Sets.newHashSet(Blocks.obsidian);
@@ -67,7 +62,7 @@ public class FastPlace extends Module {
     @SubscribeEvent
     public void onPreAttack(PrePositionEvent event) {
         if (conditionals.isEnabled("Inventory") && mc.currentScreen instanceof GuiContainer) {
-        	InventoryUtil.guiClicker(mc.currentScreen, 1, mode.is("Expert") ? (1000 / getRandomizedCPS()) : (long) (tick.getValue() * 50));
+        	InventoryUtil.guiClicker(mc.currentScreen, 1, 1000 / getRandomizedCPS());
         }
     }
 
@@ -90,29 +85,17 @@ public class FastPlace extends Module {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
         }
         
-        switch (mode.getMode()) {
-        case "Expert":
-        	expert();
-        	break;
-        case "Simple":
-        	ReflectUtil.setRightClickDelayTimer((int) tick.getValue());
-            if (InventoryUtil.getAnyBlock() || InventoryUtil.getProjectiles())
-                CPSHandler.addRightClicks();
-        	break;
+        int cps = getRandomizedCPS();
+        if (stopWatch.hasPassed(1000 / cps)) {
+            PlayerUtil.rightClick(true);
+            PlayerUtil.setMouseButtonState(1, true);
+            stopWatch.reset();
         }
 
         startDelay.reset();
     }
 
-    private void expert() {
-        int randomizedCPS = getRandomizedCPS();
-        if (stopWatch.hasPassed(1000 / randomizedCPS)) {
-            PlayerUtil.rightClick(true);
-            stopWatch.reset();
-        }
-    }
-
-    private int getRandomizedCPS() {
+    public int getRandomizedCPS() {
         int baseCPS = Math.round(cps.getValue());
         int delta = Math.min(Math.round(deltaCPS.getValue()), 20);
         int minCPS = Math.max(1, baseCPS - delta);

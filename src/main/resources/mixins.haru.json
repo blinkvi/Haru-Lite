@@ -4,7 +4,6 @@
     "refmap": "mixins.haru.refmap.json",
     "compatibilityLevel": "JAVA_8",
     "mixins": [
-    	"MinecraftForgeClientAccessor",
     	"MixinMinecraft",
     	"MixinTextureUtil",
     	"MixinSplashProgress",

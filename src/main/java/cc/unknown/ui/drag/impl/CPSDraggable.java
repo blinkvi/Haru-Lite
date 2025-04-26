@@ -27,7 +27,7 @@ public class CPSDraggable extends Drag {
         float iconSize = 5.0f;
         float padding = 5.0F;
 
-        String cpsText = CPSHandler.getLeftCps() + " | " + CPSHandler.getRightCps() + " CPS";
+        String cpsText = CPSHandler.getLeftClickCounter() + " | " + CPSHandler.getRightClickCounter() + " CPS";
         float cpsWidth = (float) (FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).getStringWidth(cpsText) + iconSize * 2.5F + 10);
 
         width = iconSize * 2.5F + cpsWidth - 20 + padding * 2;

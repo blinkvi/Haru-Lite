@@ -30,14 +30,16 @@ public final class NameTags extends Module {
 	private final SliderValue distance = new SliderValue("Distance", this, 2.4f, 1, 7, 0.1f);
 	private final SliderValue scale = new SliderValue("Scale", this, 2.4f, 0.1f, 10, 0.1f);
 	private final BoolValue shadow = new BoolValue("Shadow", this, true, () -> mode.is("Default"));
-	private final BoolValue showHealth = new BoolValue("ShowHealth", this, false);
-	private final BoolValue onlyRenderName = new BoolValue("OnlyRenderName", this, false);
-	private final BoolValue checkInvis = new BoolValue("ShowInvisibles", this, true);
-	private final BoolValue showArmor = new BoolValue("ShowArmor", this, false);
-	public final MultiBoolValue armor = new MultiBoolValue("Armor", this, showArmor::get, Arrays.asList(
+	
+	public final MultiBoolValue armor = new MultiBoolValue("Armor", this, Arrays.asList(
 			new BoolValue("Enchants", true),
 			new BoolValue("Durability", false),
 			new BoolValue("StackSize", false)));
+	
+	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
+			new BoolValue("ShowHealth", true),
+			new BoolValue("OnlyRenderName", true),
+			new BoolValue("ShowInvisibles", true)));
 	    
     @SubscribeEvent
     public void onRenderLiving(Pre<? extends EntityLivingBase> event) {
@@ -46,17 +48,17 @@ public final class NameTags extends Module {
             event.setCanceled(true);
             String name;
 
-            if (!checkInvis.get() && player.isInvisible()) {
+            if (!conditionals.isEnabled("ShowInvisibles") && player.isInvisible()) {
                 return;
             }
             
-            if (onlyRenderName.get()) {
+            if (conditionals.isEnabled("OnlyRenderName")) {
             	name = player.getName();
             } else {
             	name = player.getDisplayName().getFormattedText();
             }
             
-            if (showHealth.get()) {
+            if (conditionals.isEnabled("ShowHealth")) {
                 name = name + " " + PlayerUtil.getHealthStr(player) + " HP";
             }
             
@@ -84,7 +86,7 @@ public final class NameTags extends Module {
 	    GlStateManager.rotate(mc.getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
 	    GlStateManager.scale(-scale * scaleRatio, -scale * scaleRatio, scale * scaleRatio);
 
-	    if (showArmor.get()) {
+	    if (armor.canDisplay()) {
 	        renderArmor(player);
 	    }
 
@@ -125,7 +127,7 @@ public final class NameTags extends Module {
 	    GlStateManager.pushMatrix();
 	    GlStateManager.enableBlend();
 	    GlStateManager.enableAlpha();
-	    fixGlintShit();
+	    //fixGlintShit();
 	    mc.getRenderItem().zLevel = -150.0F;
 
 	    GlStateManager.disableDepth();
@@ -259,7 +261,7 @@ public final class NameTags extends Module {
 		}
 	}
 	
-	private static void fixGlintShit() {
+	/*private static void fixGlintShit() {
         GlStateManager.disableLighting();
         GlStateManager.disableDepth();
         GlStateManager.disableBlend();
@@ -275,5 +277,5 @@ public final class NameTags extends Module {
         GlStateManager.enableTexture2D();
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
-    }
+    }*/
 }

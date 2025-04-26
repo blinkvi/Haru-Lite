@@ -11,7 +11,6 @@ import cc.unknown.value.Value;
 public class MultiBoolValue extends Value {
     private final List<BoolValue> options;
     private int index;
-    private float animation;
 
     public MultiBoolValue(String name, Module module, Supplier<Boolean> visible, List<BoolValue> options) {
         super(name, module, visible);
@@ -73,14 +72,6 @@ public class MultiBoolValue extends Value {
 
 	public void setIndex(int index) {
 		this.index = index;
-	}
-
-	public float getAnimation() {
-		return animation;
-	}
-
-	public void setAnimation(float animation) {
-		this.animation = animation;
 	}
 
 	public List<BoolValue> getOptions() {

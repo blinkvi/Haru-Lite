@@ -13,11 +13,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @ModuleInfo(name = "FreeLook", description = "Allows the player to freely move their camera around the viewpoint.", category = Category.UTILITY, key = Keyboard.KEY_LMENU)
 public class FreeLook extends Module {
 
-    private boolean freeLookingactivated;
+    private boolean bool;
 
     @Override
     public void onDisable() {
-        freeLookingactivated = false;
+        bool = false;
         CameraUtil.freelooking = false;
         mc.gameSettings.thirdPersonView = 0;
     }
@@ -35,13 +35,13 @@ public class FreeLook extends Module {
         }
         
         if (Keyboard.isKeyDown(getKeyBind())) {
-            if (!freeLookingactivated) {
-                freeLookingactivated = true;
+            if (!bool) {
+                bool = true;
                 CameraUtil.enable();
                 CameraUtil.cameraYaw += 180;
                 mc.gameSettings.thirdPersonView = 1;
             }
-        } else if (freeLookingactivated) {
+        } else if (bool) {
             stop();
         }
     }
@@ -49,7 +49,7 @@ public class FreeLook extends Module {
     private void stop() {
         toggle();
         CameraUtil.freelooking = false;
-        freeLookingactivated = false;
+        bool = false;
         mc.gameSettings.thirdPersonView = 0;
     }
 }

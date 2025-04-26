@@ -11,14 +11,14 @@ import javax.net.ssl.TrustManager;
 
 import cc.unknown.module.impl.visual.Radio;
 import cc.unknown.util.Accessor;
-import cc.unknown.util.client.system.StopWatch;
+import cc.unknown.util.client.system.Clock;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
 public class RadioPlayer implements Accessor {
     private Thread thread;
     private Player player = null;
-    private final StopWatch timer = new StopWatch();
+    private final Clock timer = new Clock();
 
     public void start(final String url) {
     	Radio musicPlayer = getModule(Radio.class);

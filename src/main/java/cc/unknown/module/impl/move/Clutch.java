@@ -9,7 +9,7 @@ import cc.unknown.handlers.SpoofHandler;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.system.StopWatch;
+import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.player.BlockUtil;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
@@ -27,7 +27,7 @@ public class Clutch extends Module {
 
 	private int lastSlot;
 	
-	private final StopWatch stopWatch = new StopWatch();
+	private final Clock stopWatch = new Clock();
 
 	@Override
 	public void onEnable() {
