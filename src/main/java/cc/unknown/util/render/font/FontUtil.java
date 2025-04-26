@@ -2,11 +2,18 @@ package cc.unknown.util.render.font;
 
 import java.awt.Font;
 import java.io.File;
-import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import cc.unknown.Haru;
 
@@ -17,20 +24,16 @@ public class FontUtil {
         try {
             Enumeration<URL> resources = FontUtil.class.getClassLoader().getResources("assets/minecraft/haru/fonts");
 
-            while (resources.hasMoreElements()) {
-                URL resource = resources.nextElement();
-                File file = new File(resource.toURI());
+            List<URL> resourceList = Collections.list(resources);
+            
+            resourceList.stream()
+                .map(FontUtil::safeToURI)
+                .filter(Objects::nonNull)
+                .map(File::new)
+                .filter(File::isDirectory)
+                .flatMap(file -> Arrays.stream(file.listFiles((dir, name) -> name.endsWith(".ttf") || name.endsWith(".otf"))))
+                .forEach(fontFile -> getFontRenderer(fontFile.getName(), 16));
 
-                if (file.isDirectory()) {
-                    File[] fontFiles = file.listFiles((dir, name) -> name.endsWith(".ttf") || name.endsWith(".otf"));
-
-                    if (fontFiles != null) {
-                        for (File fontFile : fontFiles) {
-                            getFontRenderer(fontFile.getName(), 16);
-                        }
-                    }
-                }
-            }
         } catch (Exception e) {
             Haru.instance.getLogger().error("Error loading fonts: " + e.getMessage());
             e.printStackTrace();
@@ -38,26 +41,42 @@ public class FontUtil {
 
         Haru.instance.getLogger().info("Fonts initialized successfully.");
     }
+    
+    private static URI safeToURI(URL url) {
+        try {
+            return url.toURI();
+        } catch (URISyntaxException e) {
+            Haru.instance.getLogger().error("Invalid URL syntax: " + url);
+            return null;
+        }
+    }
 
     public static FontRenderer getFontRenderer(String fontName, int size) {
         String key = fontName + size;
 
         return fontRenderers.computeIfAbsent(key, k -> {
-            Font font = loadFont(fontName, size);
-            return (font != null) ? new FontRenderer(font, true, true) : null;
+            return Stream.of(loadFont(fontName, size)).filter(font -> font != null).map(font -> new FontRenderer(font, true, true)).findFirst().orElse(null);
         });
     }
 
     private static Font loadFont(String fontName, int size) {
-        try (InputStream fontStream = FontUtil.class.getClassLoader().getResourceAsStream("assets/minecraft/haru/fonts/" + fontName)) {
-            if (fontStream == null) {
-                Haru.instance.getLogger().error("Font file not found: " + fontName);
-                return new Font("Arial", Font.PLAIN, size);
-            }
-            return Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont((float) size);
-        } catch (Exception e) {
+        return Optional.ofNullable(FontUtil.class.getClassLoader().getResourceAsStream("assets/minecraft/haru/fonts/" + fontName))
+            .map(stream -> {
+                try {
+                    return Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont((float) size);
+                } catch (Exception e) {
+                    return handleFontLoadingError(fontName, e, size);
+                }
+            })
+            .orElseGet(() -> handleFontLoadingError(fontName, null, size));
+    }
+    
+    private static Font handleFontLoadingError(String fontName, Exception e, int size) {
+        if (e != null) {
             Haru.instance.getLogger().error("Error loading font: " + fontName + " - " + e.getMessage());
-            return new Font("Arial", Font.PLAIN, size);
+        } else {
+            Haru.instance.getLogger().error("Font file not found: " + fontName);
         }
+        return new Font("Arial", Font.PLAIN, size);
     }
 }

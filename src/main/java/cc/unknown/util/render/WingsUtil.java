@@ -15,7 +15,7 @@ public class WingsUtil implements Accessor {
         float angle = 0F;
         
         int flapTime = totalTime;
-        if (player.capabilities.isFlying & player.isAirBorne) {
+        if (!player.onGround) {
             flapTime = flyingTime;
         }
         

@@ -17,14 +17,12 @@ public class CPSHandler implements Accessor {
 	@SubscribeEvent
 	public void onMouseUpdate(MouseEvent mouse) {
 		if (mouse.buttonstate) {
-			if (mouse.button == 0) {
-				if (!mc.thePlayer.isBlocking()) {
-					addLeftClick();
-				}
-			} else if (mouse.button == 1) {
-				if (InventoryUtil.getAnyBlock() || InventoryUtil.getProjectiles()) {
-					addRightClick();
-				}
+			if (mouse.button == 0 && !mc.thePlayer.isBlocking()) {
+				addLeftClick();
+			}
+			
+			if (mouse.button == 1 || (InventoryUtil.getAnyBlock() || InventoryUtil.getProjectiles())) {
+				addRightClick();
 			}
 		}
 	}

@@ -32,14 +32,13 @@ public class Piercing extends Module {
 		if (!Haru.instance.getModuleManager().getModule(Piercing.class).isEnabled()) return;
 		if (mc.thePlayer != null && mc.theWorld != null) {
 
-			double r = 3;
-			Object[] o = getEntity(r);
+			Object[] o = getEntity(3.0D, 0.0D, null);
 
 			if (o != null) {
 				if (!RotationUtil.rayCastIgnoreWall(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch,
 						(EntityLivingBase) o[0])) return;
 				if (!Haru.instance.getModuleManager().getModule(Piercing.class).isEnabled()
-						&& RotationUtil.rayCast(r, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch) != null)
+						&& RotationUtil.rayCast(3.0D, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch) != null)
 					return;
 
 				Entity en = (Entity) o[0];
@@ -47,13 +46,6 @@ public class Piercing extends Module {
 				mc.pointedEntity = en;
 			}
 		}
-	}
-
-	private Object[] getEntity(double reach) {
-		if (!Haru.instance.getModuleManager().getModule(Piercing.class).isEnabled()) {
-			reach = mc.playerController.extendedReach() ? 6.0D : 3.0D;
-		}
-		return getEntity(reach, 0.0, null);
 	}
 
 	public Object[] getEntity(double reach, double expand, float[] rotations) {

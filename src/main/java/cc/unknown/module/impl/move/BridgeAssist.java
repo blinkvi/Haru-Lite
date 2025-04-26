@@ -90,7 +90,7 @@ public class BridgeAssist extends Module {
 		}
         
 		if (mc.thePlayer.onGround) {
-			if (PlayerUtil.isOnEdgeWithBlockCheck(Double.MIN_VALUE)) {
+			if (PlayerUtil.checkEdge(0.20)) {
 				isShifting = true;
 				shouldBridge = true;
 			} 
@@ -116,7 +116,7 @@ public class BridgeAssist extends Module {
 			}
 		}
 		
-		else if (shouldBridge && (PlayerUtil.checkEdge(0.30))) {
+		else if (shouldBridge && (PlayerUtil.checkEdge(0.20))) {
 			isShifting = true;
 		}
 		

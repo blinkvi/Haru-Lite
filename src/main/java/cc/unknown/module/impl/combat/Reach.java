@@ -30,8 +30,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @ModuleInfo(name = "Reach", description = "Sets the attack range.", category = Category.COMBAT)
 public class Reach extends Module {
 
-	private final SliderValue min = new SliderValue("Min", this, 3.1f, 0, 6, 0.05f);
-	private final SliderValue max = new SliderValue("Min", this, 3.1f, 0, 6, 0.05f);
+	private final SliderValue min = new SliderValue("Min", this, 3.1f, 2.9f, 6, 0.05f);
+	private final SliderValue max = new SliderValue("Min", this, 3.1f, 2.9f, 6, 0.05f);
 	private final SliderValue chance = new SliderValue("Chance", this, 1, 0, 1, 0.1f);
 
 	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
