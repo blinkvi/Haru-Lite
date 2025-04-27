@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+import cc.unknown.event.player.PlaceEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.spongepowered.asm.mixin.Final;
@@ -202,6 +203,11 @@ public abstract class MixinMinecraft implements IMinecraft {
             this.entityRenderer.getMapItemRenderer().clearLoadedMaps();
         }
     }
+
+	@Inject(method = "rightClickMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;swingItem()V", shift = At.Shift.AFTER))
+	private void onPlace(CallbackInfo ci) {
+		MinecraftForge.EVENT_BUS.post(new PlaceEvent());
+	}
     
     /**
      * @reason to fix reach and hitBox won't work with autoClicker
