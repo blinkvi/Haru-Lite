@@ -8,11 +8,9 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import cc.unknown.ui.menu.AltManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -60,11 +58,6 @@ public abstract class MixinGuiMultiplayer extends GuiScreen {
 		}
 	}
 
-	@Redirect(method = "actionPerformed(Lnet/minecraft/client/gui/GuiButton;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;displayGuiScreen(Lnet/minecraft/client/gui/GuiScreen;)V"))
-	private void redirectToMainMenu(Minecraft mc, GuiScreen screen) {
-		mc.displayGuiScreen(new GuiMainMenu());
-	}
-	
 	@Overwrite
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.enabled) {
