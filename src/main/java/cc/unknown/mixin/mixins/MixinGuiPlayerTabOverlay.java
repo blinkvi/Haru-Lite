@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.NetworkManager;
 
@@ -29,10 +28,5 @@ public class MixinGuiPlayerTabOverlay {
 	@Redirect(method = "renderPlayerlist", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkManager;getIsencrypted()Z"))
 	public boolean removePlayerHead(NetworkManager instance) {
 		return true;
-	}
-
-	@Redirect(method = "renderPlayerlist", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiPlayerTabOverlay;getPlayerName(Lnet/minecraft/client/network/NetworkPlayerInfo;)Ljava/lang/String;"))
-	private String renderTags(GuiPlayerTabOverlay instance, NetworkPlayerInfo info) {
-		return "[H] " + instance.getPlayerName(info);
 	}
 }

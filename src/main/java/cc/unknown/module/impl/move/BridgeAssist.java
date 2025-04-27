@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.lwjgl.input.Keyboard;
 
 import cc.unknown.event.player.MoveInputEvent;
-import cc.unknown.event.player.PrePositionEvent;
+import cc.unknown.event.player.SafeWalkEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -13,6 +13,7 @@ import cc.unknown.module.impl.utility.AutoTool;
 import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
+import cc.unknown.util.player.move.MoveUtil;
 import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.MultiBoolValue;
 import cc.unknown.value.impl.SliderValue;
@@ -59,7 +60,7 @@ public class BridgeAssist extends Module {
     }
     
     @SubscribeEvent
-    public void onPreAttack(PrePositionEvent event) {
+    public void onPreAttack(SafeWalkEvent event) {
     	if (noBridge()) return;
     	         
         if (conditionals.isEnabled("RequireSneak")) {
@@ -90,7 +91,9 @@ public class BridgeAssist extends Module {
 		}
         
 		if (mc.thePlayer.onGround) {
-			if (PlayerUtil.checkEdge(0.20)) {
+			if (PlayerUtil.checkAir(mc.thePlayer.posX + mc.thePlayer.motionX * 7,
+					mc.thePlayer.posY + MoveUtil.predictedSumMotion(mc.thePlayer.motionY, 7),
+					mc.thePlayer.posZ + mc.thePlayer.motionZ * 7)) {
 				isShifting = true;
 				shouldBridge = true;
 			} 

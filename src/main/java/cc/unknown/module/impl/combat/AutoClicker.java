@@ -37,9 +37,9 @@ public class AutoClicker extends Module {
 	private final ModeValue randomize = new ModeValue("Randomize", this, "Render", "Render", "Tick"); // events
 
 	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-			new BoolValue("Inventory", true),
-			new BoolValue("OnlyWeapon", true),
-			new BoolValue("BreakBlocks", true)));
+			new BoolValue("Inventory", false),
+			new BoolValue("OnlyWeapon", false),
+			new BoolValue("BreakBlocks", false)));
 	
 	private long lastClick;
 	private long leftHold;
