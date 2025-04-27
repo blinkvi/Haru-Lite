@@ -2,22 +2,16 @@ package cc.unknown.module.impl.move;
 
 import java.util.Arrays;
 
-import cc.unknown.event.player.OutgoingEvent;
-import cc.unknown.event.player.PlaceEvent;
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
-import net.minecraftforge.event.world.BlockEvent;
 import org.lwjgl.input.Keyboard;
 
 import cc.unknown.event.player.MoveInputEvent;
-import cc.unknown.event.player.SafeWalkEvent;
+import cc.unknown.event.player.PlaceEvent;
+import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.module.impl.utility.AutoTool;
-import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.player.InventoryUtil;
-import cc.unknown.util.player.PlayerUtil;
-import cc.unknown.util.player.move.MoveUtil;
 import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.MultiBoolValue;
 import cc.unknown.value.impl.SliderValue;
@@ -67,11 +61,7 @@ public class BridgeAssist extends Module {
 	}
     
     @SubscribeEvent
-<<<<<<< HEAD
-    public void onPreAttack(SafeWalkEvent event) {
-=======
     public void onPreMotion(PrePositionEvent event) {
->>>>>>> 31af22b64ee57b9ac2e9b9864fa35ebc56233a0d
     	if (noBridge()) return;
     	         
         if (conditionals.isEnabled("RequireSneak")) {
@@ -102,13 +92,7 @@ public class BridgeAssist extends Module {
 		}
 
 		if (mc.thePlayer.onGround) {
-<<<<<<< HEAD
-			if (PlayerUtil.checkAir(mc.thePlayer.posX + mc.thePlayer.motionX * 7,
-					mc.thePlayer.posY + MoveUtil.predictedSumMotion(mc.thePlayer.motionY, 7),
-					mc.thePlayer.posZ + mc.thePlayer.motionZ * 7)) {
-=======
 			if (shouldSneak()) {
->>>>>>> 31af22b64ee57b9ac2e9b9864fa35ebc56233a0d
 				isShifting = true;
 				shouldBridge = true;
 			} else if (!Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()) && conditionals.isEnabled("RequireSneak")) {
