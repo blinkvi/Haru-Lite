@@ -2,6 +2,10 @@ package cc.unknown.module.impl.move;
 
 import java.util.Arrays;
 
+import cc.unknown.event.player.OutgoingEvent;
+import cc.unknown.event.player.PlaceEvent;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraftforge.event.world.BlockEvent;
 import org.lwjgl.input.Keyboard;
 
 import cc.unknown.event.player.MoveInputEvent;
@@ -32,7 +36,6 @@ public class BridgeAssist extends Module {
 			new BoolValue("OnlyBlocks", true),
 			new BoolValue("OnlyBackwards", false)));
 
-    private Clock stopWatch = new Clock();
     private boolean shouldBridge = false, isShifting = false;
     private int slot;
     
@@ -43,7 +46,6 @@ public class BridgeAssist extends Module {
 
     @Override
     public void onDisable() {
-    	stopWatch.reset();
         if (conditionals.isEnabled("BlockSwitching")) mc.thePlayer.inventory.currentItem = slot;
     }
     
@@ -55,11 +57,16 @@ public class BridgeAssist extends Module {
     	
     	if (!isShifting && shouldBridge) {
     		event.sneak = false;
-    	}  	
+    	}
     }
+
+	@SubscribeEvent
+	public void onPlace(PlaceEvent event) {
+		isShifting = false;
+	}
     
     @SubscribeEvent
-    public void onPreAttack(PrePositionEvent event) {
+    public void onPreMotion(PrePositionEvent event) {
     	if (noBridge()) return;
     	         
         if (conditionals.isEnabled("RequireSneak")) {
@@ -88,40 +95,21 @@ public class BridgeAssist extends Module {
 			isShifting = false;
 			return;
 		}
-        
+
 		if (mc.thePlayer.onGround) {
-			if (PlayerUtil.checkEdge(0.20)) {
+			if (shouldSneak()) {
 				isShifting = true;
 				shouldBridge = true;
-			} 
-			
-			else if (mc.thePlayer.isSneaking() && !Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()) && conditionals.isEnabled("RequireSneak")) {
+			} else if (!Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()) && conditionals.isEnabled("RequireSneak")) {
 				isShifting = false;
 				shouldBridge = false;
-			}
-			
-			else if (conditionals.isEnabled("RequireSneak") && !Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode())) {
-				isShifting = false;
-				shouldBridge = false;
-			}
-			
-			else if (mc.thePlayer.isSneaking() && (Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()) && conditionals.isEnabled("RequireSneak")) && (stopWatch.isFinished())) {
+			} else if ((Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()) && conditionals.isEnabled("RequireSneak"))) {
 				isShifting = false;
 				shouldBridge = true;
 			}
-			
-			else if (mc.thePlayer.isSneaking() && !conditionals.isEnabled("RequireSneak") && (stopWatch.isFinished())) {
-				isShifting = false;
-				shouldBridge = true;
-			}
-		}
-		
-		else if (shouldBridge && (PlayerUtil.checkEdge(0.20))) {
-			isShifting = true;
-		}
-		
-		else {
+		} else {
 			isShifting = false;
+			shouldBridge = false;
 		}
     }
 
@@ -151,6 +139,51 @@ public class BridgeAssist extends Module {
         if (getModule(AutoTool.class).isEnabled() && getModule(AutoTool.class).wasDigging) return true;
     	return false;
     }
+
+	private boolean shouldSneak() {
+		double d6 = 0.05D;
+		double x = mc.thePlayer.motionX;
+		double z = mc.thePlayer.motionZ;
+
+		if (mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(x, -1.0D, 0.0D)).isEmpty()) {
+			if (x < d6 && x >= -d6) {
+				x = 0.0D;
+			} else if (x > 0.0D) {
+				x -= d6;
+			} else {
+				x += d6;
+			}
+		}
+
+		if (mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(0.0D, -1.0D, z)).isEmpty()) {
+			if (z < d6 && z >= -d6) {
+				z = 0.0D;
+			} else if (z > 0.0D) {
+				z -= d6;
+			} else {
+				z += d6;
+			}
+		}
+
+		if (mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(x, -1.0D, z)).isEmpty()) {
+			if (x < d6 && x >= -d6) {
+				x = 0.0D;
+			} else if (x > 0.0D) {
+				x -= d6;
+			} else {
+				x += d6;
+			}
+
+			if (z < d6 && z >= -d6) {
+				z = 0.0D;
+			} else if (z > 0.0D) {
+				z -= d6;
+			} else {
+				z += d6;
+			}
+		}
+		return x == 0 || z == 0;
+	}
     
     // pitch 78
     // yaw 225
