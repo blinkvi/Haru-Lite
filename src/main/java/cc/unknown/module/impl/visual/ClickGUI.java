@@ -38,7 +38,7 @@ public final class ClickGUI extends Module {
     
     @Override
     public void onEnable() {
-    	mc.displayGuiScreen(Haru.dropGui);
+    	mc.displayGuiScreen(Haru.instance.getDropGui());
         toggle();
         super.onEnable();
     }

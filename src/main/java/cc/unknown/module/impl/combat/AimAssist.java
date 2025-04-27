@@ -5,10 +5,7 @@ import java.util.Set;
 
 import org.lwjgl.input.Mouse;
 
-import cc.unknown.event.Listener;
-import cc.unknown.event.annotations.EventLink;
-import cc.unknown.event.impl.AttackEvent;
-import cc.unknown.event.impl.PostTickEvent;
+import cc.unknown.event.player.AttackEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -26,6 +23,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "AimAssist", description = "Assists with aiming at opponents in a legitimate manner.", category = Category.COMBAT)
 public class AimAssist extends Module {
@@ -56,8 +56,8 @@ public class AimAssist extends Module {
 	private final Set<EntityPlayer> lockedTargets = new HashSet<>();
 	public EntityPlayer target;
 	
-	@EventLink
-	public final Listener<AttackEvent> onAttack = event -> {
+	@SubscribeEvent
+	public void onAttack(AttackEvent event) {        
 		if (event.target instanceof EntityPlayer) {
             EntityPlayer newTarget = (EntityPlayer) event.target;            
 			if (conditionals.isEnabled("LockTarget")) {
@@ -67,12 +67,11 @@ public class AimAssist extends Module {
 	            }
 			}
 		}
-	};
+	}
 	
-	@EventLink
-	public final Listener<PostTickEvent> onPostTick = event -> {
-		if (!PlayerUtil.isInGame()) return;
-
+	@SubscribeEvent
+	public void onPostTick(ClientTickEvent event) {
+	    if (event.phase == Phase.START) return;
 	    if (noAim()) return;
 
         if (!conditionals.isEnabled("LockTarget") || target == null || !onTarget()) {
@@ -99,7 +98,7 @@ public class AimAssist extends Module {
 	        applyYaw(yawFov, yawAdjustment);
 	        applyPitch(resultVertical);
 	    }
-	};
+	}
 
 	@Override
 	public void onDisable() {

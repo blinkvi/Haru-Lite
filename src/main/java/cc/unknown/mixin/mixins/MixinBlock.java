@@ -6,8 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import cc.unknown.Haru;
-import cc.unknown.event.impl.BlockAABBEvent;
+import cc.unknown.event.player.BlockAABBEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -15,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(Block.class)
 public abstract class MixinBlock {
@@ -29,7 +29,7 @@ public abstract class MixinBlock {
 
 		if (collidingEntity == Minecraft.getMinecraft().thePlayer) {
 			final BlockAABBEvent event = new BlockAABBEvent(worldIn, (Block) (Object) this, pos, axisalignedbb, mask);
-			Haru.eventBus.handle(event);
+			MinecraftForge.EVENT_BUS.post(event);
 
 			if (event.isCanceled())
 				return;

@@ -33,7 +33,7 @@ public abstract class MixinItemRenderer {
 	private float prevEquippedProgress;
 	@Shadow
 	private ItemStack itemToRender;
-
+	
 	@Shadow
 	private int equippedItemSlot = -1;
 
@@ -73,14 +73,10 @@ public abstract class MixinItemRenderer {
 
 	@Inject(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderItemModelForEntity(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;)V"))
 	public void renderItem(EntityLivingBase entity, ItemStack item, TransformType transformType, CallbackInfo ci) {
-		if (!(item.getItem() instanceof ItemSword))
-			return;
-		if (!(entity instanceof EntityPlayer))
-			return;
-		if (!(((EntityPlayer) entity).getItemInUseCount() > 0))
-			return;
-		if (transformType != TransformType.THIRD_PERSON)
-			return;
+		if (!(item.getItem() instanceof ItemSword)) return;
+		if (!(entity instanceof EntityPlayer)) return;
+		if (!(((EntityPlayer) entity).getItemInUseCount() > 0)) return;
+		if (transformType != TransformType.THIRD_PERSON) return;
 		GlStateManager.rotate(-45.0F, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate(-20.0F, 1.0F, 0.0F, 0.0F);
 		GlStateManager.rotate(-60.0F, 0.0F, 0.0F, 1.0F);
@@ -107,7 +103,7 @@ public abstract class MixinItemRenderer {
 		rotateWithPlayerRotations(player, partialTicks);
 		GlStateManager.enableRescaleNormal();
 		GlStateManager.pushMatrix();
-
+		
 		if (itemToRender != null) {
 			if (itemToRender.getItem() instanceof ItemMap) {
 				renderItemMap(player, f2, f, f1);
@@ -163,6 +159,11 @@ public abstract class MixinItemRenderer {
 
 		if (this.itemToRender != null && itemstack != null) {
 			if (!this.itemToRender.getIsItemStackEqual(itemstack)) {
+				if (!this.itemToRender.getItem().shouldCauseReequipAnimation(this.itemToRender, itemstack, equippedItemSlot != SpoofHandler.getSpoofedSlot())) {
+					this.itemToRender = itemstack;
+					this.equippedItemSlot = SpoofHandler.getSpoofedSlot();;
+					return;
+				}
 				flag = true;
 			}
 		} else if (this.itemToRender == null && itemstack == null) {
@@ -178,7 +179,7 @@ public abstract class MixinItemRenderer {
 
 		if (this.equippedProgress < 0.1F) {
 			this.itemToRender = itemstack;
-			this.equippedItemSlot = SpoofHandler.getSpoofedSlot();
+			this.equippedItemSlot = SpoofHandler.getSpoofedSlot();;
 		}
 	}
 }

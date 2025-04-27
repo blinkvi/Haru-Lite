@@ -33,7 +33,7 @@ public final class PositionManager implements Accessor {
 
     public boolean load(Directory directory) {
         if (directory == null) {
-            Haru.logger.warn("Tried to load null config.");
+            Haru.instance.getLogger().warn("Tried to load null config.");
             return false;
         }
 
@@ -41,12 +41,12 @@ public final class PositionManager implements Accessor {
             JsonParser parser = new JsonParser();
             JsonObject json = parser.parse(reader).getAsJsonObject();
             directory.load(json);
-            Haru.logger.info("Loaded position: " + directory.getName());
+            Haru.instance.getLogger().info("Loaded position: " + directory.getName());
             return true;
         } catch (IOException e) {
-            Haru.logger.error("I/O error loading position: " + directory.getName(), e);
+            Haru.instance.getLogger().error("I/O error loading position: " + directory.getName(), e);
         } catch (Exception e) {
-            Haru.logger.error("Unexpected error loading position: " + directory.getName(), e);
+            Haru.instance.getLogger().error("Unexpected error loading position: " + directory.getName(), e);
         }
         return false;
     }
@@ -59,10 +59,10 @@ public final class PositionManager implements Accessor {
         try (FileWriter writer = new FileWriter(directory.getFile())) {
             JsonObject json = directory.save();
             getGSON().toJson(json, writer);
-            Haru.logger.info("Saved position: " + directory.getName());
+            Haru.instance.getLogger().info("Saved position: " + directory.getName());
             return true;
         } catch (IOException e) {
-            Haru.logger.error("Failed to save position: " + directory.getName(), e);
+            Haru.instance.getLogger().error("Failed to save position: " + directory.getName(), e);
         }
         return false;
     }
@@ -70,7 +70,7 @@ public final class PositionManager implements Accessor {
     public void saveFiles() {
         for (Directory directory : positions) {
             if (!save(directory)) {
-                Haru.logger.warn("Could not save position: " + directory.getName());
+                Haru.instance.getLogger().warn("Could not save position: " + directory.getName());
             }
         }
     }
@@ -83,7 +83,7 @@ public final class PositionManager implements Accessor {
             }
 
             if (!load(directory)) {
-                Haru.logger.warn("Could not load position: " + directory.getName());
+                Haru.instance.getLogger().warn("Could not load position: " + directory.getName());
             }
         }
     }
@@ -92,7 +92,7 @@ public final class PositionManager implements Accessor {
         try {
             File parent = file.getParentFile();
             if (!parent.exists() && !parent.mkdirs()) {
-                Haru.logger.warn("Could not create directories for: " + file.getAbsolutePath());
+                Haru.instance.getLogger().warn("Could not create directories for: " + file.getAbsolutePath());
                 return;
             }
 
@@ -100,9 +100,9 @@ public final class PositionManager implements Accessor {
                 writer.write(EMPTY_JSON);
             }
 
-            Haru.logger.info("Created empty position file: " + file.getName());
+            Haru.instance.getLogger().info("Created empty position file: " + file.getName());
         } catch (IOException e) {
-            Haru.logger.error("Failed to create position file: " + file.getName(), e);
+            Haru.instance.getLogger().error("Failed to create position file: " + file.getName(), e);
         }
     }
 }

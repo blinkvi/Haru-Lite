@@ -1,16 +1,15 @@
 package cc.unknown.module.impl.visual;
 
-import cc.unknown.event.Listener;
-import cc.unknown.event.annotations.EventLink;
-import cc.unknown.event.impl.RenderTextEvent;
+import cc.unknown.event.render.RenderTextEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.util.render.enums.RankType;
 import cc.unknown.value.impl.ModeValue;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "NameProtect", description = "Hide ur minecraft name", category = Category.VISUAL)
 public class NameProtect extends Module {
@@ -19,10 +18,10 @@ public class NameProtect extends Module {
 	private final ModeValue ranks = new ModeValue("Rank", this, () -> mode.is("Universocraft"), RankType.JUP, RankType.values());
 
 	public String name = "";
-	
-    @EventLink
-    public final Listener<RenderTextEvent> onRenderText = event -> {
-		if (!PlayerUtil.isInGame()) return;
+
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onRenderText(RenderTextEvent event) {
+		if (!isInGame()) return;
 
 		String text = event.string;
 		String ownName = mc.getSession().getUsername();
@@ -47,5 +46,5 @@ public class NameProtect extends Module {
 			text = text.replace(ownName, displayName);
 			event.string = text;
 		}
-    };
+	}
 }

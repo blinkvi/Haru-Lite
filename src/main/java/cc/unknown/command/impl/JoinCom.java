@@ -4,32 +4,29 @@ import java.util.HashMap;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import cc.unknown.command.ComInfo;
 import cc.unknown.command.Command;
 import cc.unknown.handlers.AutoJoinHandler;
-import cc.unknown.util.client.network.NetworkUtil;
 import cc.unknown.util.render.client.ChatUtil;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 
-@ComInfo(name = "join", description = "")
 public class JoinCom extends Command {
-	private HashMap<String, Item> hashMap = new HashMap<>();;
+	final HashMap<String, Item> hashMap;
+
+	public JoinCom() {
+		super("game");
+		this.hashMap = new HashMap<>();
+	}
 
 	@Override
 	public void execute(String[] args) {
-	    if (!NetworkUtil.isServer("universocraft.com")) {
-	        warning("This command is only available on UniversoCraft.");
-	        return;
-	    }
-	    
 	    if (args.length > 0 && (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("help"))) {
 	        ChatUtil.display(getList());
 	        return;
 	    }
 
 	    if (args.length < 2) {
-	        warning("Usage: .join <mode> <lobby>");
+	        warning("Uso: .game <modo> <lobby>");
 	        return;
 	    }
 
@@ -43,19 +40,19 @@ public class JoinCom extends Command {
 	    String gameName = args[0];
 
 	    if (!this.hashMap.containsKey(gameName)) {
-	        warning("Invalid mode. Use: .join list");
+	        warning("Modo inválido. Usa: .game list");
 	        return;
 	    }
 
 	    if (!args[1].matches("\\d+")) {
-	        warning("Invalid lobby number.");
+	        warning("Número de lobby inválido.");
 	        return;
 	    }
 
 	    int lobbyNumber = Integer.parseInt(args[1]);
 
 	    if (lobbyNumber <= 0) {
-	        warning("Lobby number must be greater than 0.");
+	        warning("El lobby debe ser mayor a 0.");
 	        return;
 	    }
 

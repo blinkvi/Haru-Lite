@@ -99,8 +99,4 @@ public class MathUtil implements Accessor {
     public static double randomSin() {
         return Math.sin(nextDouble(0.0, Math.PI * 2));
     }
-    
-    public static boolean isHovered(float x, float y, float width, float height, int mouseX, int mouseY) {
-        return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
-    }
 }

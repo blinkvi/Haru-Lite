@@ -1,13 +1,13 @@
 package cc.unknown.file;
 
+import com.google.gson.JsonObject;
+
 import java.io.File;
 import java.util.Objects;
 
-import com.google.gson.JsonObject;
+import cc.unknown.util.Accessor;
 
-import cc.unknown.util.Managers;
-
-public abstract class Directory implements Managers {
+public abstract class Directory implements Accessor {
     private final File file;
     private final String name;
 

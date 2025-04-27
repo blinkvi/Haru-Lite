@@ -16,7 +16,7 @@ public class GuiPosition extends Directory {
 
 	@Override
 	public void load(JsonObject object) {
-		for (PanelRenderer window : Haru.dropGui.getWindows()) {
+		for (PanelRenderer window : getDropGui().getWindows()) {
 			if (window == null) continue;
 			String name = window.getCategory().name();
 			if (object.has(name)) {
@@ -34,7 +34,7 @@ public class GuiPosition extends Directory {
 	@Override
 	public JsonObject save() {
 		JsonObject object = new JsonObject();
-		for (PanelRenderer window : Haru.dropGui.getWindows()) {
+		for (PanelRenderer window : getDropGui().getWindows()) {
 			JsonObject data = new JsonObject();
 			data.addProperty("x", window.getX());
 			data.addProperty("y", window.getY());

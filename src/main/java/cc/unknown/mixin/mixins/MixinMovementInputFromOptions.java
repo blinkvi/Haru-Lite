@@ -5,11 +5,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import cc.unknown.Haru;
-import cc.unknown.event.impl.MoveInputEvent;
+import cc.unknown.event.player.MoveInputEvent;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.MovementInputFromOptions;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(MovementInputFromOptions.class)
 public class MixinMovementInputFromOptions extends MovementInput {
@@ -43,7 +43,7 @@ public class MixinMovementInputFromOptions extends MovementInput {
 
 		final MoveInputEvent event = new MoveInputEvent(moveForward, moveStrafe, jump, sneak, 0.3D);
 
-		Haru.eventBus.handle(event);
+		MinecraftForge.EVENT_BUS.post(event);
 
 		final double sneakMultiplier = event.sneakSlowDownMultiplier;
 		this.moveForward = event.forward;

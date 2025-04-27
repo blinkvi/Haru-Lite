@@ -8,12 +8,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import cc.unknown.Haru;
-import cc.unknown.event.impl.Render2DEvent;
-import cc.unknown.event.impl.RenderWorldLastEvent;
+import cc.unknown.event.render.Render2DEvent;
 import cc.unknown.util.render.client.CameraUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -23,12 +19,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(EntityRenderer.class)
 public abstract class MixinEntityRenderer {
@@ -44,12 +39,6 @@ public abstract class MixinEntityRenderer {
 
 	@Shadow
 	private boolean cloudFog;
-	
-	@Inject(method = "renderWorldPass", at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/EntityRenderer;renderHand:Z", shift = At.Shift.BEFORE))
-	private void onRender3D(int pass, float partialTicks, long finishTimeNano, CallbackInfo ci) {
-	    this.mc.mcProfiler.endStartSection("render_last");	    
-	    Haru.eventBus.handle(new RenderWorldLastEvent(mc.renderGlobal, partialTicks));
-	}
 
 	@Overwrite
 	public void orientCamera(float partialTicks) {
@@ -59,27 +48,24 @@ public abstract class MixinEntityRenderer {
 		double d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double) partialTicks + (double) f;
 		double d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double) partialTicks;
 
-        if (entity instanceof EntityLivingBase && ((EntityLivingBase)entity).isPlayerSleeping())
-        {
-            f = (float)((double)f + 1.0D);
-            GlStateManager.translate(0.0F, 0.3F, 0.0F);
+		if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).isPlayerSleeping()) {
+			f = (float) ((double) f + 1.0D);
+			GlStateManager.translate(0.0F, 0.3F, 0.0F);
 
-            if (!this.mc.gameSettings.debugCamEnable)
-            {
-                BlockPos blockpos = new BlockPos(entity);
-                IBlockState iblockstate = this.mc.theWorld.getBlockState(blockpos);
-                Block block = iblockstate.getBlock();
+			if (!this.mc.gameSettings.debugCamEnable) {
+				BlockPos blockpos = new BlockPos(entity);
+				IBlockState iblockstate = this.mc.theWorld.getBlockState(blockpos);
+				net.minecraftforge.client.ForgeHooksClient.orientBedCamera(this.mc.theWorld, blockpos, iblockstate,
+						entity);
 
-                if (block == Blocks.bed)
-                {
-                    int j = ((EnumFacing)iblockstate.getValue(BlockBed.FACING)).getHorizontalIndex();
-                    GlStateManager.rotate((float)(j * 90), 0.0F, 1.0F, 0.0F);
-                }
-
-                GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F, 0.0F, -1.0F, 0.0F);
-                GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
-            }
-        } else if (this.mc.gameSettings.thirdPersonView > 0) {
+				GlStateManager.rotate(
+						entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F,
+						0.0F, -1.0F, 0.0F);
+				GlStateManager.rotate(
+						entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks,
+						-1.0F, 0.0F, 0.0F);
+			}
+		} else if (this.mc.gameSettings.thirdPersonView > 0) {
 			double d3 = (double) (this.thirdPersonDistanceTemp
 					+ (this.thirdPersonDistance - this.thirdPersonDistanceTemp) * partialTicks);
 
@@ -169,7 +155,7 @@ public abstract class MixinEntityRenderer {
 		GlStateManager.disableLighting();
 		GlStateManager.enableAlpha();
 
-		Haru.eventBus.handle(new Render2DEvent(new ScaledResolution(mc), partialTicks));
+		MinecraftForge.EVENT_BUS.post(new Render2DEvent(new ScaledResolution(mc), partialTicks));
 	}
 
 	@Redirect(method = "updateCameraAndRender", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;setAngles(FF)V"))

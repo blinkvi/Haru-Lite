@@ -6,10 +6,12 @@
     "mixins": [
     	"MixinMinecraft",
     	"MixinTextureUtil",
+    	"MixinSplashProgress",
 		"MixinNetworkManager",
 		"MixinS3EPacketTeams",
 		"MixinScoreBoard",
 		"MixinEmbeddedChannel",
+		"MixinNetworkDispatcher",
 		"MixinEntityPlayerSP",
 		"MixinEntityRenderer",
 		"MixinGuiIngame",
@@ -19,6 +21,7 @@
 		"MixinEntityLivingBase",
 		"MixinNetHandlerPlayClient",
 		"MixinRendererLivingEntity",
+		"MixinWorldRenderer",
 		"MixinGuiChat",
 		"MixinEnumFacing",
 		"MixinBlock",
@@ -30,7 +33,9 @@
 		"MixinGuiLanguage",
 		"MixinGuiContainer",
 		"MixinItemRenderer",
+		"MixinEventBus",
 		"MixinMinecraftServer",
+		"MixinAnvilChunkLoader",
 		"MixinGuiAchievement",
 		"MixinModelPlayer",
 		"MixinRenderPlayer",
@@ -66,9 +71,7 @@
 		"MixinGuiMainMenu",
 		"MixinGuiMultiplayer",
 		"MixinGuiButton",
-		"MixinRender",
-		"MixinGuiGameOver",
-		"MixinGuiOptions"
+		"MixinRender"
     	
     ]
 }

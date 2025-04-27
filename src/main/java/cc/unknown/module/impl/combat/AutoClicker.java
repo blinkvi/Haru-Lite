@@ -5,12 +5,7 @@ import java.util.Random;
 
 import org.lwjgl.input.Mouse;
 
-import cc.unknown.event.Listener;
-import cc.unknown.event.annotations.EventLink;
-import cc.unknown.event.impl.PostTickEvent;
-import cc.unknown.event.impl.PrePlayerTickEvent;
-import cc.unknown.event.impl.PrePositionEvent;
-import cc.unknown.event.impl.PreRenderTickEvent;
+import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -28,6 +23,10 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "AutoClicker", description = "Automatically clicks for you.", category = Category.COMBAT)
 public class AutoClicker extends Module {
@@ -66,15 +65,17 @@ public class AutoClicker extends Module {
 		leftDownTime = 0L;
 		leftUpTime = 0L;
 	}
+
+	@SubscribeEvent
+	public void onPostTick(ClientTickEvent event) {
+		if (event.phase == Phase.START) return;
+		correctValues(minCPS, maxCPS);
+	}
 	
-	@EventLink
-	public final Listener<PostTickEvent> onPostTick = event -> correctValues(minCPS, maxCPS);
-
-	@EventLink
-	public final Listener<PreRenderTickEvent> onPreRenderTick = event -> {
-		if (!PlayerUtil.isInGame()) return;
-
+	@SubscribeEvent
+	public void onRenderTick(TickEvent.RenderTickEvent event) {
 		if (mc.currentScreen != null && !(mc.currentScreen instanceof GuiInventory) && !(mc.currentScreen instanceof GuiChest)) return;
+
 		if (!randomize.is("Render")) return;
 
 		if (mode.is("Legit")) {
@@ -82,13 +83,12 @@ public class AutoClicker extends Module {
 		} else if (mode.is("Blatant")) {
 			skidClick(event, null);
 		}
-	};
-	
-	@EventLink
-	public final Listener<PrePlayerTickEvent> onPrePlayerTick = event -> {
-		if (!PlayerUtil.isInGame()) return;
-		
+	}
+
+	@SubscribeEvent
+	public void onTick(TickEvent.PlayerTickEvent event) {
 		if (mc.currentScreen != null && !(mc.currentScreen instanceof GuiInventory) && !(mc.currentScreen instanceof GuiChest)) return;
+
 		if (!randomize.is("Tick")) return;
 
 		if (mode.is("Legit")) {
@@ -96,17 +96,17 @@ public class AutoClicker extends Module {
 		} else if (mode.is("Blatant")) {
 			skidClick(null, event);
 		}
-	};
-	
-	@EventLink
-	public final Listener<PrePositionEvent> onPrePosition = event -> {
+	}
+
+	@SubscribeEvent
+	public void onPreAttack(PrePositionEvent event) {
 		if (conditionals.isEnabled("Inventory") && mc.currentScreen instanceof GuiContainer) {
 			InventoryUtil.guiClicker(mc.currentScreen, 1, getRandomizedCPS());
 		}
-	};
+	}
 
-	private void skidClick(PreRenderTickEvent renderTick, PrePlayerTickEvent playerTick) {
-		if (!PlayerUtil.isInGame()) return;
+	private void skidClick(TickEvent.RenderTickEvent renderTick, TickEvent.PlayerTickEvent playerTick) {
+		if (!isInGame()) return;
 
 		double speedLeft1 = 1.0 / io.netty.util.internal.ThreadLocalRandom.current().nextDouble(minCPS.getValue() - 0.2D, maxCPS.getValue());
 		double leftHoldLength = speedLeft1 / io.netty.util.internal.ThreadLocalRandom.current().nextDouble(minCPS.getValue() - 0.02D, maxCPS.getValue());

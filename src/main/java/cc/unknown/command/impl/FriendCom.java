@@ -1,11 +1,13 @@
 package cc.unknown.command.impl;
 
-import cc.unknown.command.ComInfo;
 import cc.unknown.command.Command;
 import cc.unknown.util.player.FriendUtil;
 
-@ComInfo(name = "friend", description = "")
 public final class FriendCom extends Command {
+
+	public FriendCom() {
+		super("friend");
+	}
 
 	@Override
 	public void execute(final String[] args) {

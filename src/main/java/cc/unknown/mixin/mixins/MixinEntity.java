@@ -7,10 +7,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import cc.unknown.Haru;
-import cc.unknown.event.impl.SafeWalkEvent;
-import cc.unknown.event.impl.StrafeEvent;
-import cc.unknown.event.impl.StrafeEvent.StrafeType;
+import cc.unknown.event.player.SafeWalkEvent;
+import cc.unknown.event.player.StrafeEvent;
+import cc.unknown.event.player.StrafeEvent.StrafeType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -29,6 +28,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(Entity.class)
 public abstract class MixinEntity {
@@ -210,7 +210,7 @@ public abstract class MixinEntity {
 
 		if (player) {
 			final StrafeEvent event = new StrafeEvent(forward, strafe, friction, yaw, StrafeType.PRE);
-			Haru.eventBus.handle(event);
+			MinecraftForge.EVENT_BUS.post(event);
 
 			if (event.isCanceled()) {
 				return;
@@ -241,7 +241,7 @@ public abstract class MixinEntity {
 		}
 
 		if (player) {
-			Haru.eventBus.handle(new StrafeEvent(StrafeType.POST));
+			MinecraftForge.EVENT_BUS.post(new StrafeEvent(StrafeType.POST));
 		}
 	}
 
@@ -269,10 +269,10 @@ public abstract class MixinEntity {
 			double d3 = x;
 			double d4 = y;
 			double d5 = z;
-			SafeWalkEvent event = new SafeWalkEvent();
+			SafeWalkEvent safeWalkEvent = new SafeWalkEvent();
 			if ((Entity) (Object)  this instanceof EntityPlayerSP)
-				Haru.eventBus.handle(event);
-			boolean flag = (this.onGround && this.isSneaking() || event.isCanceled())
+				MinecraftForge.EVENT_BUS.post(safeWalkEvent);
+			boolean flag = (this.onGround && this.isSneaking() || safeWalkEvent.isCanceled())
 					&& (Entity) (Object) this instanceof EntityPlayer;
 
 			if (flag) {

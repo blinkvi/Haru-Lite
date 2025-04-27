@@ -11,11 +11,11 @@ import java.io.IOException;
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.Haru;
+import cc.unknown.mixin.interfaces.IMinecraft;
 import cc.unknown.module.impl.visual.Interface;
 import cc.unknown.ui.menu.impl.TextField;
 import cc.unknown.util.alt.AltGen;
 import cc.unknown.util.alt.MicrosoftAccount;
-import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.structure.vectors.Vector2d;
 import net.minecraft.client.gui.GuiButton;
@@ -57,7 +57,7 @@ public class AltManager extends GuiScreen {
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
         GlStateManager.disableAlpha();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        drawGradient(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), 0, Haru.modMngr.getModule(Interface.class).color());
+        drawGradient(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), 0, Haru.instance.getModuleManager().getModule(Interface.class).color());
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.enableAlpha();
         GlStateManager.disableBlend();
@@ -101,14 +101,14 @@ public class AltManager extends GuiScreen {
             if (AltGen.validate(inputText)) {
                 usernameBox.setText(inputText);
                 status = gray + "Logeado como > " + green + inputText;
-                ReflectUtil.setSession(new Session(inputText, "none", "none", "mojang"));
+                ((IMinecraft) mc).setSession(new Session(inputText, "none", "none", "mojang"));
             } else {
                 status = red + "El nombre ingresado no es válido.";
             }
         }
         
         if (keyCode == 1) {            
-        	mc.displayGuiScreen(new GuiMultiplayer((GuiScreen) (Object) this));
+        	mc.displayGuiScreen(new GuiMultiplayer(this));
         }
     }
     
@@ -121,7 +121,7 @@ public class AltManager extends GuiScreen {
         		usernameBox.setText(name);
         	}
         	status = gray + "Logeado como > " + green + name;
-        	ReflectUtil.setSession(new Session(name, "none", "none", "mojang"));
+        	((IMinecraft) mc).setSession(new Session(name, "none", "none", "mojang"));
         	break;
         case 2:
         	status = gray + "Abriendo navegador...";

@@ -8,14 +8,12 @@ import cc.unknown.util.Accessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
-import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
-import net.minecraft.util.Session;
 import net.minecraft.util.Timer;
 import net.minecraft.util.Vec3;
 
@@ -69,10 +67,6 @@ public class ReflectUtil implements Accessor {
     public static float getCurBlockDamage() {
     	return getPrivateField(PlayerControllerMP.class, mc.playerController, "curBlockDamageMP", "field_78770_f");
     }
-    
-    public static boolean getDoneLoadingTerrain() {
-    	return getPrivateField(NetHandlerPlayClient.class, mc.getNetHandler(), "doneLoadingTerrain", "field_147309_h");
-    }
 	
     public static Timer getTimer() {
     	return getPrivateField(Minecraft.class, mc, "timer", "field_71428_T");
@@ -116,10 +110,6 @@ public class ReflectUtil implements Accessor {
     
     public static boolean isServerSprintState() {
     	return getPrivateField(EntityPlayerSP.class, mc.thePlayer, "serverSprintState", "field_175171_bO");
-    }
-    
-    public static void setSession(Session session) {
-    	setPrivateField(Minecraft.class, mc, session, "session", "field_178752_a");
     }
     
     public static void setYawC03(C03PacketPlayer packet, float flot) {

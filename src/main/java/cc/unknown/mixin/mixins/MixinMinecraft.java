@@ -6,9 +6,9 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -18,17 +18,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import cc.unknown.Haru;
-import cc.unknown.event.impl.AttackEvent;
-import cc.unknown.event.impl.GameEvent;
-import cc.unknown.event.impl.KeyInputEvent;
-import cc.unknown.event.impl.MouseEvent;
-import cc.unknown.event.impl.PostRenderTickEvent;
-import cc.unknown.event.impl.PostTickEvent;
-import cc.unknown.event.impl.PreRenderTickEvent;
-import cc.unknown.event.impl.PreTickEvent;
+import cc.unknown.event.GameEvent;
+import cc.unknown.event.player.AttackEvent;
+import cc.unknown.mixin.interfaces.IMinecraft;
 import cc.unknown.module.impl.combat.Piercing;
 import cc.unknown.module.impl.combat.Reach;
-import cc.unknown.util.client.ReflectUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -46,10 +40,17 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Session;
 import net.minecraft.util.Util;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(Minecraft.class)
-public abstract class MixinMinecraft {
+public abstract class MixinMinecraft implements IMinecraft {
+
+	@Shadow
+	@Mutable
+	@Final
+	private Session session;
 
 	@Shadow
 	private boolean fullscreen;
@@ -90,25 +91,11 @@ public abstract class MixinMinecraft {
 
 	@Shadow
 	public abstract ByteBuffer readImageToBuffer(InputStream imageStream) throws IOException;
-
-	@Inject(method = "runTick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;rightClickDelayTimer:I", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
-	private void preTickEvent(CallbackInfo ci) {
-		Haru.eventBus.handle(new PreTickEvent());
-	}
-
-	@Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/profiler/Profiler;endSection()V"))
-	private void postTickEvent(CallbackInfo ci) {
-		Haru.eventBus.handle(new PostTickEvent());
-	}
+	
 
 	@Inject(method = "startGame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;ingameGUI:Lnet/minecraft/client/gui/GuiIngame;", shift = At.Shift.AFTER))
 	private void injectStartGame(CallbackInfo ci) {
 		Haru.instance.init();
-	}
-	
-	@Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Keyboard;getEventKeyState()Z", shift = At.Shift.BY, by = 1))
-	private void afterKeyboardEvents(CallbackInfo ci) {
-		Haru.eventBus.handle(new KeyInputEvent());
 	}
 
 	@Inject(method = "shutdownMinecraftApplet", at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;info(Ljava/lang/String;)V", shift = At.Shift.BEFORE))
@@ -118,17 +105,7 @@ public abstract class MixinMinecraft {
 
 	@Inject(method = "runGameLoop", at = @At(value = "INVOKE", target = "Lnet/minecraft/profiler/Profiler;startSection(Ljava/lang/String;)V", ordinal = 1))
 	private void loopEvent(CallbackInfo ci) {
-		Haru.eventBus.handle(new GameEvent());
-	}
-
-	@Inject(method = "runGameLoop", at = @At(value = "FIELD", target = "L/net/minecraft/client/Minecraft;skipRenderWorld:Z", opcode = Opcodes.GETFIELD, shift = At.Shift.AFTER))
-	private void onRenderTickStart(CallbackInfo ci) {
-		Haru.eventBus.handle(new PreRenderTickEvent(ReflectUtil.getTimer().renderPartialTicks));
-	}
-
-	@Inject(method = "runGameLoop", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/EntityRenderer;updateCameraAndRender(FI)V", shift = At.Shift.AFTER))
-	private void onRenderTickEnd(CallbackInfo ci) {
-		Haru.eventBus.handle(new PostRenderTickEvent(ReflectUtil.getTimer().renderPartialTicks));
+		MinecraftForge.EVENT_BUS.post(new GameEvent());
 	}
 
 	@Redirect(method = "runTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/EffectRenderer;updateEffects()V"))
@@ -137,11 +114,6 @@ public abstract class MixinMinecraft {
 			effectRenderer.updateEffects();
 		} catch (Exception e) {
 		}
-	}
-
-	@Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;next()Z"))
-	private void onMouseNext(CallbackInfo ci) {
-		Haru.eventBus.handle(new MouseEvent());
 	}
 
 	@Inject(method = "setIngameFocus", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/MouseHelper;grabMouseCursor()V"))
@@ -203,7 +175,7 @@ public abstract class MixinMinecraft {
 						&& this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY
 						&& objectMouseOver.entityHit instanceof EntityLivingBase) {
 					final AttackEvent event = new AttackEvent((EntityLivingBase) this.objectMouseOver.entityHit);
-					Haru.eventBus.handle(event);
+					MinecraftForge.EVENT_BUS.post(event);
 
 					if (event.isCanceled())
 						return;
@@ -262,24 +234,29 @@ public abstract class MixinMinecraft {
 	private void keepShadersOnPerspectiveChange(EntityRenderer entityRenderer, Entity entityIn) {
 	}
 
-	@Inject(method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At("HEAD"))
-	private void patcher$clearLoadedMaps(WorldClient worldClientIn, String loadingMessage, CallbackInfo ci) {
-		if (worldClientIn != this.theWorld) {
-			this.entityRenderer.getMapItemRenderer().clearLoadedMaps();
-		}
-	}
 
-	/**
-	 * @reason to fix reach and hitBox won't work with autoClicker
-	 */
-	@Inject(method = "clickMouse", at = @At("HEAD"))
-	private void onLeftClickMouse(CallbackInfo ci) {
-		Haru.modMngr.getModule(Reach.class).call();
-		Haru.modMngr.getModule(Piercing.class).call();
-	}
+    @Inject(method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;Ljava/lang/String;)V", at = @At("HEAD"))
+    private void patcher$clearLoadedMaps(WorldClient worldClientIn, String loadingMessage, CallbackInfo ci) {
+        if (worldClientIn != this.theWorld) {
+            this.entityRenderer.getMapItemRenderer().clearLoadedMaps();
+        }
+    }
+    
+    /**
+     * @reason to fix reach and hitBox won't work with autoClicker
+     */
+    @Inject(method = "clickMouse", at = @At("HEAD"))
+    private void onLeftClickMouse(CallbackInfo ci) {
+    	Haru.instance.getModuleManager().getModule(Reach.class).call();
+    	Haru.instance.getModuleManager().getModule(Piercing.class).call();
+    }
 
-	@Overwrite
-	public void startTimerHackThread() {
+    @Overwrite
+    public void startTimerHackThread() { }
+    
+	@Override
+	public void setSession(Session session) {
+		this.session = session;
 	}
 
 	@Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/SkinManager;<init>(Lnet/minecraft/client/renderer/texture/TextureManager;Ljava/io/File;Lcom/mojang/authlib/minecraft/MinecraftSessionService;)V"))

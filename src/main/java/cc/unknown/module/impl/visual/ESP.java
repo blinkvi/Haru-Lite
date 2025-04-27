@@ -6,10 +6,7 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import java.awt.Color;
 import java.util.Arrays;
 
-import cc.unknown.event.Listener;
-import cc.unknown.event.annotations.EventLink;
-import cc.unknown.event.impl.RenderWorldLastEvent;
-import cc.unknown.event.impl.UpdatePlayerAnglesEvent;
+import cc.unknown.event.render.UpdatePlayerAnglesEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -21,6 +18,8 @@ import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.MultiBoolValue;
 import cc.unknown.value.impl.SliderValue;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "ESP", description = "Renders an in-game ESP (Extra Sensory Perception) overlay.", category = Category.VISUAL)
 public class ESP extends Module {    
@@ -32,13 +31,13 @@ public class ESP extends Module {
 			new BoolValue("ShowInvisibles", true),
 			new BoolValue("RedOnDamage", true)));
 
-    @EventLink
-    public final Listener<UpdatePlayerAnglesEvent> onUpdatePlayerAngles = event -> RenderUtil.updatePlayerAngles(event.entityPlayer, event.modelBiped);
+    @SubscribeEvent
+    public void onUpdatePlayerAngles(UpdatePlayerAnglesEvent event) {
+    	RenderUtil.updatePlayerAngles(event.entityPlayer, event.modelBiped);
+    }
     
-    @EventLink
-    public final Listener<RenderWorldLastEvent> onRender3D = event -> {
-		if (!PlayerUtil.isInGame()) return;
-
+	@SubscribeEvent
+	public void onRender3D(RenderWorldLastEvent event) {
         for (EntityPlayer player : mc.theWorld.playerEntities) {
             if (PlayerUtil.unusedNames(player)) continue;
             if (player.isInvisible() && !conditionals.isEnabled("ShowInvisibles")) continue;
@@ -53,7 +52,7 @@ public class ESP extends Module {
             RenderUtil.restoreRenderState();
             glPopMatrix();
         }
-    };
+    }
 
     private int getPlayerColor(EntityPlayer player) {
         String name = player.getName();

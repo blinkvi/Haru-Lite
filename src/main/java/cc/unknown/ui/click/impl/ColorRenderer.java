@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import org.lwjgl.input.Mouse;
 
-import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.value.impl.ColorValue;
@@ -42,8 +41,8 @@ public class ColorRenderer extends Component {
             RenderUtil.drawRect(x + 98 + 3.5f + hsba[1] * 60 - .5f, 0.5F + ((1 - hsba[2]) * 60) - .5f + y, 1.5f, 1.5f, new Color(0, 0, 0));
             RenderUtil.drawRect(x + 98 + 3.5F + hsba[1] * 60,  0.5F + ((1 - hsba[2]) * 60) + y, .5f, .5f, value.get());
 
-            final boolean onSB = MathUtil.isHovered(x + 98 + 3, y + 0.5F, width + 40, height + 70, mouseX, mouseY);
-            final boolean onHue = MathUtil.isHovered(x + 98 + 67, y, 10, 70, mouseX, mouseY);
+            final boolean onSB = isHovered(x + 98 + 3, y + 0.5F, width + 40, height + 70, mouseX, mouseY);
+            final boolean onHue = isHovered(x + 98 + 67, y, 10, 70, mouseX, mouseY);
 
             if (onHue && Mouse.isButtonDown(0)) {
             	data.hue = Math.min(Math.max((mouseY - y) / 60F, 0), 1);
@@ -70,7 +69,7 @@ public class ColorRenderer extends Component {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MathUtil.isHovered(x ,y, 100F, height, mouseX, mouseY)) {
+        if (isHovered(x ,y, 100F, height, mouseX, mouseY)) {
             if (mouseButton == 1) {
                 expanded = !expanded;
             }

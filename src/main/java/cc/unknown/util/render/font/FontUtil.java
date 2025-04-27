@@ -35,18 +35,18 @@ public class FontUtil {
                 .forEach(fontFile -> getFontRenderer(fontFile.getName(), 16));
 
         } catch (Exception e) {
-            Haru.logger.error("Error loading fonts: " + e.getMessage());
+            Haru.instance.getLogger().error("Error loading fonts: " + e.getMessage());
             e.printStackTrace();
         }
 
-        Haru.logger.info("Fonts initialized successfully.");
+        Haru.instance.getLogger().info("Fonts initialized successfully.");
     }
     
     private static URI safeToURI(URL url) {
         try {
             return url.toURI();
         } catch (URISyntaxException e) {
-            Haru.logger.error("Invalid URL syntax: " + url);
+            Haru.instance.getLogger().error("Invalid URL syntax: " + url);
             return null;
         }
     }
@@ -73,9 +73,9 @@ public class FontUtil {
     
     private static Font handleFontLoadingError(String fontName, Exception e, int size) {
         if (e != null) {
-            Haru.logger.error("Error loading font: " + fontName + " - " + e.getMessage());
+            Haru.instance.getLogger().error("Error loading font: " + fontName + " - " + e.getMessage());
         } else {
-            Haru.logger.error("Font file not found: " + fontName);
+            Haru.instance.getLogger().error("Font file not found: " + fontName);
         }
         return new Font("Arial", Font.PLAIN, size);
     }

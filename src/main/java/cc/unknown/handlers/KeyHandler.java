@@ -3,22 +3,21 @@ package cc.unknown.handlers;
 import org.lwjgl.input.Keyboard;
 
 import cc.unknown.Haru;
-import cc.unknown.event.Listener;
-import cc.unknown.event.annotations.EventLink;
-import cc.unknown.event.impl.KeyInputEvent;
-import cc.unknown.event.impl.MouseEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.impl.utility.FreeLook;
-import cc.unknown.util.Managers;
+import cc.unknown.util.Accessor;
+import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
-public class KeyHandler implements Managers {
+public class KeyHandler implements Accessor {
 	
-	@EventLink
-	public final Listener<KeyInputEvent> onKeyInput = event -> {
+	@SubscribeEvent
+	public void onKeyInput(KeyInputEvent event) {
 		int key = Keyboard.getEventKey();
 
 		if (key != Keyboard.CHAR_NONE && Keyboard.getEventKeyState()) {
-			Haru.modMngr.getModules().stream()
+			Haru.instance.getModuleManager().getModules().stream()
 				.filter(module -> module.getKeyBind() == key)
 				.findFirst()
 				.ifPresent(module -> {
@@ -33,20 +32,20 @@ public class KeyHandler implements Managers {
 					}
 				});
 		} else if (key != Keyboard.CHAR_NONE && !Keyboard.getEventKeyState()) {
-			Haru.modMngr.getModules().stream()
+			Haru.instance.getModuleManager().getModules().stream()
 				.filter(module -> module instanceof FreeLook && module.getKeyBind() == key && module.isEnabled())
 				.findFirst()
 				.ifPresent(Module::toggle);
 		}
-	};
+	}
 	
-	@EventLink
-	public final Listener<MouseEvent> onMouse = event -> {
+	@SubscribeEvent
+	public void onClick(MouseEvent event) {
 		if (event.button == 0) {
 	        if (mc.gameSettings.keyBindTogglePerspective.isPressed()) {
 	            mc.gameSettings.thirdPersonView = (mc.gameSettings.thirdPersonView + 1) % 3;
 	            mc.renderGlobal.setDisplayListEntitiesDirty();
 	        }
 		}
-	};
+	}
 }

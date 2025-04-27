@@ -1,7 +1,5 @@
 package cc.unknown.util.client.network;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -204,16 +202,4 @@ public class NetworkUtil implements Accessor {
                 && mc.getCurrentServerData() != null
                 && mc.getCurrentServerData().serverIP.toLowerCase().contains(server);
     }
-    
-	public static String getStringFromClipboard() {
-		try {
-			return getToolkit().getSystemClipboard().getContents(null).getTransferData(DataFlavor.stringFlavor).toString();
-		} catch(Exception e) {
-			return null;
-		}
-	}
-	
-	private static Toolkit getToolkit() {
-		return Toolkit.getDefaultToolkit();
-	}
 }

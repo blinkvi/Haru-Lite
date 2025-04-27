@@ -1,14 +1,21 @@
 package cc.unknown.command.impl;
 
-import cc.unknown.Haru;
-import cc.unknown.command.ComInfo;
+import org.apache.commons.lang3.StringUtils;
+
 import cc.unknown.command.Command;
 
-@ComInfo(name = "help", description = "")
 public final class HelpCom extends Command {
+
+    public HelpCom() {
+        super("help");
+    }
     
     @Override
     public void execute(final String[] args) {
-        Haru.comMngr.getCommands().forEach(c -> success(c.getName()));
+        getInstance().getCmdManager().getCommands().forEach(command -> 
+        success(StringUtils.capitalize(command.getPrefix()))
+        
+        		
+        );
     }
 }

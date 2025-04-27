@@ -51,7 +51,7 @@ public class ArrayListDraggable extends Drag {
     }
 
     private List<Module> getEnabledModules() {
-        return Haru.modMngr.getModules().stream()
+        return Haru.instance.getModuleManager().getModules().stream()
             .filter(module -> !module.isHidden() && module.isEnabled() && module.shouldDisplay(this))
             .sorted(Comparator.comparing(this::getModuleWidth).reversed())
             .collect(Collectors.toList());

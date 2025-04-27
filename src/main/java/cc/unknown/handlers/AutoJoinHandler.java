@@ -2,13 +2,9 @@ package cc.unknown.handlers;
 
 import java.util.List;
 
-import cc.unknown.event.Listener;
-import cc.unknown.event.annotations.EventLink;
-import cc.unknown.event.impl.InboundEvent;
-import cc.unknown.event.impl.PreTickEvent;
+import cc.unknown.event.player.InboundEvent;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.network.PacketUtil;
-import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.player.move.MoveUtil;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -20,6 +16,9 @@ import net.minecraft.network.play.client.C0EPacketClickWindow;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.network.play.server.S2DPacketOpenWindow;
 import net.minecraft.network.play.server.S2EPacketCloseWindow;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class AutoJoinHandler implements Accessor {
 	
@@ -29,10 +28,10 @@ public class AutoJoinHandler implements Accessor {
     private static int stage;
     private static boolean foundItem;
     
-	@EventLink
-	public final Listener<InboundEvent> onInbound = event -> {
+    @SubscribeEvent
+    public void onServer(InboundEvent event) {
 		final Packet<?> packet = event.packet;
-		if (PlayerUtil.isInGame()) {
+		if (isInGame()) {
 			if (packet instanceof S08PacketPlayerPosLook)
 				joining = false;
 			if (stage == 2 && packet instanceof S2DPacketOpenWindow)
@@ -40,11 +39,13 @@ public class AutoJoinHandler implements Accessor {
 			if (stage >= 3 && packet instanceof S2EPacketCloseWindow)
 				stage = 0;
 		}
-    };
+    }
     
-    @EventLink
-    public final Listener<PreTickEvent> onPreTick = event -> {
-        if (PlayerUtil.isInGame()) {
+    @SubscribeEvent
+    public void onPreTick(ClientTickEvent event) {
+    	if (event.phase == Phase.END) return;
+    	
+        if (isInGame()) {
             if (mc.currentScreen instanceof GuiChat || MoveUtil.isMoving()) {
                 joining = false;
                 return;
@@ -97,8 +98,8 @@ public class AutoJoinHandler implements Accessor {
                     break;
             }
         }
-    };
-
+    }
+	
     public static void init(Item name, int lobbyNumber) {
         joining = true;
         item = name;

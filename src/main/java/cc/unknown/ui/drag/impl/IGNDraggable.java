@@ -27,7 +27,7 @@ public class IGNDraggable extends Drag {
         float fontSize = 15f;
         float iconSize = 5.0f;
         float padding = 5.0F;
-        String playerName = mc.getSession().getUsername();
+        String playerName = mc.thePlayer.getName();
         
         float playerNameWidth = (float) FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).getStringWidth(playerName);
 

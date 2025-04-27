@@ -3,16 +3,12 @@ package cc.unknown.module.impl.utility;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import cc.unknown.event.Listener;
-import cc.unknown.event.annotations.EventLink;
-import cc.unknown.event.impl.InboundEvent;
-import cc.unknown.event.impl.OutgoingEvent;
-import cc.unknown.event.impl.PreTickEvent;
+import cc.unknown.event.player.InboundEvent;
+import cc.unknown.event.player.OutgoingEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.network.PacketUtil;
-import cc.unknown.util.player.PlayerUtil;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -21,6 +17,9 @@ import net.minecraft.network.play.server.S00PacketKeepAlive;
 import net.minecraft.network.play.server.S14PacketEntity;
 import net.minecraft.network.play.server.S18PacketEntityTeleport;
 import net.minecraft.network.play.server.S32PacketConfirmTransaction;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "Blink", description = "Fakes internet lag", category = Category.UTILITY)
 public class Blink extends Module {
@@ -41,10 +40,10 @@ public class Blink extends Module {
 		packets.clear();
 	}
 
-    @EventLink
-    public final Listener<PreTickEvent> onPreTick = event -> {
-		if (!PlayerUtil.isInGame()) return;
-
+	@SubscribeEvent
+	public void onPreTick(ClientTickEvent event) {
+    	if (event.phase == Phase.END) return;
+		if (mc.thePlayer == null) return;
 		while (!packets.isEmpty()) {
 			Packet<?> packet = packets.get(0);
 
@@ -61,21 +60,21 @@ public class Blink extends Module {
 			PacketUtil.sendNoEvent(packets.get(0));
 			packets.remove(packets.get(0));
 		}
-	};
+	}
 
-    @EventLink
-    public final Listener<OutgoingEvent> onOutgoing = event -> {
+	@SubscribeEvent
+	public void onOutgoing(OutgoingEvent event) {
 		packets.add(event.packet);
 		event.setCanceled(true);
-    };
-    
-    @EventLink
-    public final Listener<InboundEvent> onInbound = event -> {
+	}
+
+	@SubscribeEvent
+	public void onInbound(InboundEvent event) {
 		if (event.packet instanceof S18PacketEntityTeleport || event.packet instanceof S14PacketEntity
 				|| event.packet instanceof S14PacketEntity.S15PacketEntityRelMove
 				|| event.packet instanceof S14PacketEntity.S16PacketEntityLook
 				|| event.packet instanceof S14PacketEntity.S17PacketEntityLookMove) {
 			return;
 		}
-    };
+	}
 }

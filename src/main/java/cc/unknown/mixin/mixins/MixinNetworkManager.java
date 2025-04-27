@@ -7,9 +7,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import cc.unknown.Haru;
-import cc.unknown.event.impl.InboundEvent;
-import cc.unknown.event.impl.OutgoingEvent;
+import cc.unknown.event.player.InboundEvent;
+import cc.unknown.event.player.OutgoingEvent;
 import cc.unknown.util.client.network.PPSCounter;
 import cc.unknown.util.client.network.PacketUtil;
 import io.netty.channel.ChannelHandlerContext;
@@ -18,6 +17,7 @@ import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.ThreadQuickExitException;
+import net.minecraftforge.common.MinecraftForge;
 
 @SuppressWarnings("all")
 @Mixin(value = NetworkManager.class, priority = 1001)
@@ -35,7 +35,7 @@ public abstract class MixinNetworkManager extends SimpleChannelInboundHandler<Pa
         }
         
         OutgoingEvent event = new OutgoingEvent(packet);
-        Haru.eventBus.handle(event);
+        MinecraftForge.EVENT_BUS.post(event);
 
         if (event.isCanceled()) {
             ci.cancel();
@@ -54,7 +54,7 @@ public abstract class MixinNetworkManager extends SimpleChannelInboundHandler<Pa
         }
         
         InboundEvent event = new InboundEvent(packet);
-        Haru.eventBus.handle(event);
+        MinecraftForge.EVENT_BUS.post(event);
 
         if (event.isCanceled()) {
             ci.cancel();

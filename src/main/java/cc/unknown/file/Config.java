@@ -23,7 +23,7 @@ public class Config extends Directory {
 
     @Override
     public void load(JsonObject object) {
-    	Haru.modMngr.getModules().forEach(module -> {
+        getModuleManager().getModules().forEach(module -> {
             if (object.has(module.getName())) {
                 JsonObject moduleObject = object.get(module.getName()).getAsJsonObject();
 
@@ -79,7 +79,7 @@ public class Config extends Directory {
         if (object.has("settings")) {
             JsonObject settingsObject = object.getAsJsonObject("settings");
 
-            Haru.dropGui.getWindows().stream()
+            Haru.instance.getDropGui().getWindows().stream()
                     .filter(window -> window.getCategory() == Category.SETTINGS)
                     .flatMap(window -> window.getSettingBools().stream())
                     .filter(bool -> settingsObject.has(bool.getName()))
@@ -91,7 +91,7 @@ public class Config extends Directory {
     public JsonObject save() {
         JsonObject object = new JsonObject();
 
-        Haru.modMngr.getModules().forEach(module -> {
+        getModuleManager().getModules().forEach(module -> {
             JsonObject moduleObject = new JsonObject();
 
             moduleObject.addProperty("enabled", module.isEnabled());
@@ -123,7 +123,7 @@ public class Config extends Directory {
         });
 
         JsonObject settingsObject = new JsonObject();
-        Haru.dropGui.getWindows().stream()
+        Haru.instance.getDropGui().getWindows().stream()
                 .filter(window -> window.getCategory() == Category.SETTINGS)
                 .flatMap(window -> window.getSettingBools().stream())
                 .forEach(bool -> settingsObject.addProperty(bool.getName(), bool.get()));

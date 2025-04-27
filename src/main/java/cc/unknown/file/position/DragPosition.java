@@ -15,7 +15,7 @@ public class DragPosition extends Directory {
 
 	@Override
 	public void load(JsonObject object) {
-	    for (Drag widget : Haru.dragMngr.getDragList()) {
+	    for (Drag widget : getDragManager().getDragList()) {
 	        if (widget == null || widget.name == null) continue;
 	        
 	        if (object.has(widget.name)) {
@@ -35,7 +35,7 @@ public class DragPosition extends Directory {
 	@Override
 	public JsonObject save() {
 		JsonObject object = new JsonObject();
-		for (Drag widget : Haru.dragMngr.getDragList()) {
+		for (Drag widget : getDragManager().getDragList()) {
 			JsonObject widgetObj = new JsonObject();
 			widgetObj.addProperty("x", widget.x);
 			widgetObj.addProperty("y", widget.y);

@@ -6,14 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import cc.unknown.event.Listener;
-import cc.unknown.event.annotations.EventLink;
-import cc.unknown.event.impl.PreTickEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.music.RadioPlayer;
-import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.render.client.ChatUtil;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.util.structure.list.SList;
@@ -22,6 +18,10 @@ import cc.unknown.value.impl.SliderValue;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "MusicPlayer", description = "Time to listen to radio.", category = Category.VISUAL)
 public class Radio extends Module {
@@ -48,10 +48,9 @@ public class Radio extends Module {
         started = false;
     }
     
-    @EventLink
-    public final Listener<PreTickEvent> onPreTick = event -> {
-		if (!PlayerUtil.isInGame()) return;
-
+    @SubscribeEvent(priority = EventPriority.HIGH)
+	public void onPreTick(ClientTickEvent event) {
+    	if (event.phase == Phase.END) return;
         if (started) {
         	if (mode.is("Local")) {
         	    String userHome = System.getProperty("user.home");

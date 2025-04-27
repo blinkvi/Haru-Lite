@@ -2,7 +2,6 @@ package cc.unknown.ui.click.impl;
 
 import java.util.List;
 
-import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.value.impl.ModeValue;
 
@@ -26,7 +25,7 @@ public class ModeRenderer extends Component {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (MathUtil.isHovered(x, y, 100F, height, mouseX, mouseY)) {
+        if (isHovered(x, y, 100F, height, mouseX, mouseY)) {
             List<String> modes = value.getModes();
             
             if (modes.isEmpty()) {

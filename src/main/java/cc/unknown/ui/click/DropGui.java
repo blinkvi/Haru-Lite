@@ -56,7 +56,7 @@ public class DropGui extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
     	ScaledResolution sr = new ScaledResolution(Accessor.mc);	
-    	ClickGUI gui = Haru.modMngr.getModule(ClickGUI.class);
+    	ClickGUI gui = Haru.instance.getModuleManager().getModule(ClickGUI.class);
         StickersType sticker = gui.waifuType.getMode(StickersType.class);
         
         int alpha = Math.max(0, Math.min(255, (int) gui.alpha.getValue()));
@@ -142,7 +142,7 @@ public class DropGui extends GuiScreen {
     
     @Override
     public void onGuiClosed() {
-    	Haru.cfgMngr.saveFiles();
+    	Haru.instance.getCfgManager().saveFiles();
         super.onGuiClosed();
     }
 

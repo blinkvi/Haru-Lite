@@ -19,12 +19,9 @@ import org.lwjgl.opengl.Display;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import cc.unknown.event.Event;
-import cc.unknown.event.bus.EventBus;
 import cc.unknown.handlers.AutoJoinHandler;
 import cc.unknown.handlers.CPSHandler;
 import cc.unknown.handlers.CommandHandler;
-import cc.unknown.handlers.CosmeticHandler;
 import cc.unknown.handlers.DiscordHandler;
 import cc.unknown.handlers.DragHandler;
 import cc.unknown.handlers.GuiMoveHandler;
@@ -47,29 +44,34 @@ import cc.unknown.util.client.system.CustomLogger;
 import cc.unknown.util.client.system.SystemUtil;
 import cc.unknown.util.render.font.FontUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
+@Mod(modid = "betterclouds", name = "better clouds", version = "Lite")
 public class Haru {
     public static Haru instance = new Haru();
 
     public static final String NAME = "Haru";
     public static final String VERSION = "Reborn";
 
-    public static ModuleManager modMngr;
-    public static CosmeticManager cosmeMngr;
-    public static CommandManager comMngr;
-    public static ConfigManager cfgMngr;
-    public static PositionManager posMngr;
-    public static DragManager dragMngr;
+    private ModuleManager moduleManager;
+    private CosmeticManager cosmeticManager;
+    private CommandManager cmdManager;
+    private ConfigManager cfgManager;
+    private PositionManager positionManager;
+    private DragManager dragManager;
     
-    public static DropGui dropGui;
-    public static WebSocketCore webSocket;
+    private DropGui dropGui;
+    private WebSocketCore webSocket;
     
-    public static final CustomLogger logger = new CustomLogger();
-    public static final EventBus<Event> eventBus = new EventBus<>();
-    public static final DiscordHandler discordHandler = new DiscordHandler();
+    private final CustomLogger logger = new CustomLogger();
+    
+    private final DiscordHandler discordHandler = new DiscordHandler();
     private final List<Object> registeredHandlers = Collections.synchronizedList(new ArrayList<>());
     public final ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(4);
-    public final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     public static final File MAIN_DIR = new File(mc.mcDataDir, Haru.NAME);
@@ -77,8 +79,12 @@ public class Haru {
     public static final File CFG_DIR = new File(MAIN_DIR, "configs");
     public static final File DRAG_DIR = new File(MAIN_DIR, "draggable");
     public static final File CS_DIR = new File(MAIN_DIR, "cosmetics");
+    public static final File SCRIPT_DIR = new File(MAIN_DIR, "scripts");
     
     public static boolean firstStart;
+
+    @EventHandler
+    public void startMod(FMLInitializationEvent ignored) { }
     
     public void init() {
     	Display.setTitle(NAME + " " + VERSION);
@@ -95,9 +101,9 @@ public class Haru {
     }
     
     public void stop() {
-        cfgMngr.saveFiles();
-        cosmeMngr.saveFiles();
-        posMngr.saveFiles();
+        cfgManager.saveFiles();
+        cosmeticManager.saveFiles();
+        positionManager.saveFiles();
         discordHandler.stop();
         logger.info("Rich Presence Terminated.");
         System.gc();
@@ -108,7 +114,7 @@ public class Haru {
         Arrays.stream(handlers).forEach(handler -> {
             try {
                 registeredHandlers.add(handler);
-                eventBus.register(handler);
+                MinecraftForge.EVENT_BUS.register(handler);
                 logger.info(handler.getClass().getSimpleName() + " registered.");
             } catch (Exception e) {
                 logger.error("Failed to register handler: " + handler.getClass().getSimpleName(), e);
@@ -128,7 +134,6 @@ public class Haru {
             new SettingsHandler(),
             new CommandHandler(),
             new KeyHandler(),
-            new CosmeticHandler(),
             new GuiMoveHandler(),
             new CPSHandler()
         );
@@ -139,18 +144,18 @@ public class Haru {
     private void initializeManagers() {
         logger.info("Initializing managers...");
 
-        modMngr = new ModuleManager();
-        comMngr = new CommandManager();
-        cfgMngr = new ConfigManager();
-        posMngr = new PositionManager();
-        dragMngr = new DragManager();
-        cosmeMngr = new CosmeticManager();
+        moduleManager = new ModuleManager();
+        cmdManager = new CommandManager();
+        cfgManager = new ConfigManager();
+        positionManager = new PositionManager();
+        dragManager = new DragManager();
+        cosmeticManager = new CosmeticManager();
         dropGui = new DropGui();
 
-        cosmeMngr.init();
-        posMngr.init();
-        cfgMngr.init();
-        comMngr.init();
+        cosmeticManager.init();
+        positionManager.init();
+        cfgManager.init();
+        cmdManager.init();
 
         logger.info("Managers registered.");
     }
@@ -181,7 +186,7 @@ public class Haru {
     }
     
     public void createDirectories() {
-    	Stream.of(MAIN_DIR, DLL_DIR, CFG_DIR, DRAG_DIR, CS_DIR)
+    	Stream.of(MAIN_DIR, DLL_DIR, CFG_DIR, DRAG_DIR, CS_DIR, SCRIPT_DIR)
         .filter(Objects::nonNull)
         .map(File::toPath)
         .forEach(dir -> {
@@ -194,6 +199,50 @@ public class Haru {
 
         logger.info("All directories were created successfully (or already existed).");
     }
+
+	public ModuleManager getModuleManager() {
+		return moduleManager;
+	}
+
+	public CosmeticManager getCosmeticManager() {
+		return cosmeticManager;
+	}
+
+	public CommandManager getCmdManager() {
+		return cmdManager;
+	}
+
+	public ConfigManager getCfgManager() {
+		return cfgManager;
+	}
+
+	public PositionManager getPositionManager() {
+		return positionManager;
+	}
+
+	public DragManager getDragManager() {
+		return dragManager;
+	}
+
+	public DropGui getDropGui() {
+		return dropGui;
+	}
+
+	public WebSocketCore getWebSocket() {
+		return webSocket;
+	}
+
+	public CustomLogger getLogger() {
+		return logger;
+	}
+
+	public DiscordHandler getDiscordHandler() {
+		return discordHandler;
+	}
+
+	public Gson getGSON() {
+		return GSON;
+	}
 	
 	public static String getUser() {
 		return mc.getSession().getUsername();

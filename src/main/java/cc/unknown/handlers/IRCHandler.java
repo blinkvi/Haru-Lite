@@ -10,12 +10,12 @@ import java.util.concurrent.Executors;
 import org.apache.commons.lang3.StringUtils;
 
 import cc.unknown.Haru;
-import cc.unknown.event.Listener;
-import cc.unknown.event.annotations.EventLink;
-import cc.unknown.event.impl.OutgoingEvent;
+import cc.unknown.event.player.OutgoingEvent;
 import cc.unknown.socket.impl.IRCSocket;
 import cc.unknown.util.Accessor;
 import net.minecraft.network.play.client.C01PacketChatMessage;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class IRCHandler implements Accessor {
     
@@ -29,11 +29,11 @@ public class IRCHandler implements Accessor {
     
     public IRCHandler() {
     	irc.init();
-    	Haru.logger.info("IRC initialized.");
+    	Haru.instance.getLogger().info("IRC initialized.");
     }
     
-	@EventLink
-	public final Listener<OutgoingEvent> onOutgoing = event -> {
+    @SubscribeEvent(priority = EventPriority.LOW)
+	public void onOutgoing(OutgoingEvent event) {
 	    if (event.packet instanceof C01PacketChatMessage) {
 	        C01PacketChatMessage packet = (C01PacketChatMessage) event.packet;
 	        String message = packet.getMessage();
@@ -50,7 +50,7 @@ public class IRCHandler implements Accessor {
 	            }
 	        }
 	    }
-    };
+    }
     
     private boolean isBlocked(String message) {
         for (String word : blockWords) {

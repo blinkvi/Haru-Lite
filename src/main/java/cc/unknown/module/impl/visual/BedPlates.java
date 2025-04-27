@@ -17,16 +17,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import cc.unknown.event.Listener;
-import cc.unknown.event.annotations.EventLink;
-import cc.unknown.event.impl.EntityJoinWorldEvent;
-import cc.unknown.event.impl.PreTickEvent;
-import cc.unknown.event.impl.RenderWorldLastEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.system.Clock;
-import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.SliderValue;
@@ -38,6 +32,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "BedPlates", description = "Show information about beds.", category = Category.VISUAL)
 public class BedPlates extends Module {
@@ -50,6 +49,48 @@ public class BedPlates extends Module {
     private final BoolValue showDistance = new BoolValue("ShowDistance", this, true);
     private final SliderValue range = new SliderValue("Range", this, 10, 2, 30);
     private final SliderValue layers = new SliderValue("Layers", this, 3, 1, 10);
+    
+	@SubscribeEvent
+	public void onPostTick(ClientTickEvent event) {
+    	if (event.phase == Phase.START) return;
+    	try {
+        if (isInGame()) {
+            if (stopWatch.isFinished()) {
+            	stopWatch.setStartTime(1000);
+            	stopWatch.reset();
+            }
+            int i;
+            priorityLoop:
+            for (int n = i = (int) range.getValue(); i >= -n; --i) {
+                for (int j = -n; j <= n; ++j) {
+                    for (int k = -n; k <= n; ++k) {
+                        final BlockPos blockPos = new BlockPos(mc.thePlayer.posX + j, mc.thePlayer.posY + i, mc.thePlayer.posZ + k);
+                        final IBlockState getBlockState = mc.theWorld.getBlockState(blockPos);
+                        if (getBlockState.getBlock() == Blocks.bed && getBlockState.getValue(BlockBed.PART) == BlockBed.EnumPartType.FOOT) {
+                            if (firstBed.get()) {
+                                if (this.bed != null && isSamePos(blockPos, this.bed[0])) {
+                                    return;
+                                }
+                                this.bed = new BlockPos[]{blockPos, blockPos.offset(getBlockState.getValue(BlockBed.FACING))};
+                                return;
+                            } else {
+                                for (BlockPos pos : this.beds) {
+                                    if (isSamePos(blockPos, pos)) {
+                                        continue priorityLoop;
+                                    }
+                                }
+                                this.beds.add(blockPos);
+                                this.bedBlocks.add(new ArrayList<>());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    	} catch (NullPointerException e) {
+    		
+    	}
+    }
 
     @Override
     public void onDisable() {
@@ -57,50 +98,8 @@ public class BedPlates extends Module {
         this.bedBlocks.clear();
     }
     
-    @EventLink
-    public final Listener<PreTickEvent> onPreTick = event -> {
-    	
-    	try {
-	        if (PlayerUtil.isInGame()) {
-	            if (stopWatch.isFinished()) {
-	            	stopWatch.setStartTime(1000);
-	            	stopWatch.reset();
-	            }
-	            int i;
-	            priorityLoop:
-	            for (int n = i = (int) range.getValue(); i >= -n; --i) {
-	                for (int j = -n; j <= n; ++j) {
-	                    for (int k = -n; k <= n; ++k) {
-	                        final BlockPos blockPos = new BlockPos(mc.thePlayer.posX + j, mc.thePlayer.posY + i, mc.thePlayer.posZ + k);
-	                        final IBlockState getBlockState = mc.theWorld.getBlockState(blockPos);
-	                        if (getBlockState.getBlock() == Blocks.bed && getBlockState.getValue(BlockBed.PART) == BlockBed.EnumPartType.FOOT) {
-	                            if (firstBed.get()) {
-	                                if (this.bed != null && isSamePos(blockPos, this.bed[0])) {
-	                                    return;
-	                                }
-	                                this.bed = new BlockPos[]{blockPos, blockPos.offset(getBlockState.getValue(BlockBed.FACING))};
-	                                return;
-	                            } else {
-	                                for (BlockPos pos : this.beds) {
-	                                    if (isSamePos(blockPos, pos)) {
-	                                        continue priorityLoop;
-	                                    }
-	                                }
-	                                this.beds.add(blockPos);
-	                                this.bedBlocks.add(new ArrayList<>());
-	                            }
-	                        }
-	                    }
-	                }
-	            }
-	        }
-    	} catch (NullPointerException e) {
-    		
-    	}
-    };
-    
-    @EventLink
-    public final Listener<EntityJoinWorldEvent> onWorld = event -> {
+	@SubscribeEvent
+	public void onWorld(EntityJoinWorldEvent event) {
         if (event.entity == mc.thePlayer) {
             this.beds.clear();
             this.bedBlocks.clear();
@@ -108,9 +107,9 @@ public class BedPlates extends Module {
         }
     };
 
-    @EventLink
-    public final Listener<RenderWorldLastEvent> onRender3D = event -> {
-        if (PlayerUtil.isInGame()) {
+	@SubscribeEvent
+	public void onRender3D(RenderWorldLastEvent event) {
+        if (isInGame()) {
             if (firstBed.get() && this.bed != null) {
                 if (!(mc.theWorld.getBlockState(bed[0]).getBlock() instanceof BlockBed)) {
                     this.bed = null;
@@ -133,7 +132,7 @@ public class BedPlates extends Module {
                 this.drawPlate(blockPos, this.beds.indexOf(blockPos));
             }
         }
-    };
+    }
 
     private void drawPlate(BlockPos blockPos, int index) {
         float rotateX = mc.gameSettings.thirdPersonView == 2 ? -1.0F : 1.0F;

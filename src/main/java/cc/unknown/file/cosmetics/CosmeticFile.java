@@ -24,7 +24,7 @@ public class CosmeticFile extends Directory {
     @Override
     public void load(JsonObject object) {
         SuperCosmetic sc = gson.fromJson(object, SuperCosmetic.class);
-        Cosmetics cosmetics = Haru.modMngr.getModule(Cosmetics.class);
+        Cosmetics cosmetics = Haru.instance.getModuleManager().getModule(Cosmetics.class);
         if (cosmetics == null || sc == null) return;
         
         if (sc.getHalo() != null) cosmetics.haloType.setMode(sc.getHalo());
@@ -38,7 +38,7 @@ public class CosmeticFile extends Directory {
 
     @Override
     public JsonObject save() {
-        Cosmetics cosmetics = Haru.modMngr.getModule(Cosmetics.class);
+        Cosmetics cosmetics = Haru.instance.getModuleManager().getModule(Cosmetics.class);
         if (cosmetics == null) return null;
 
         SuperCosmetic cosmetic = new SuperCosmetic(

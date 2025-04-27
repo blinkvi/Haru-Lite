@@ -2,9 +2,6 @@ package cc.unknown.module.impl.visual;
 
 import java.util.Arrays;
 
-import cc.unknown.event.Listener;
-import cc.unknown.event.annotations.EventLink;
-import cc.unknown.event.impl.PreRenderLivingEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -15,6 +12,7 @@ import cc.unknown.value.impl.ModeValue;
 import cc.unknown.value.impl.MultiBoolValue;
 import cc.unknown.value.impl.SliderValue;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBow;
@@ -22,6 +20,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.client.event.RenderLivingEvent.Specials.Pre;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "NameTags", description = "Displays customizable nametags above players.", category = Category.VISUAL)
 public final class NameTags extends Module {
@@ -40,11 +40,9 @@ public final class NameTags extends Module {
 			new BoolValue("ShowHealth", true),
 			new BoolValue("OnlyRenderName", true),
 			new BoolValue("ShowInvisibles", true)));
-	
-	@EventLink
-	public final Listener<PreRenderLivingEvent> onPreRenderLiving = event -> {
-		if (!PlayerUtil.isInGame()) return;
-
+	    
+    @SubscribeEvent
+    public void onRenderLiving(Pre<? extends EntityLivingBase> event) {
         if (event.entity instanceof EntityPlayer && event.entity.deathTime == 0) {        
             EntityPlayer player = (EntityPlayer) event.entity;
             event.setCanceled(true);
@@ -66,9 +64,9 @@ public final class NameTags extends Module {
             
             renderNewTag(event, player, name);
         }
-	};
+    }
 	
-	private void renderNewTag(PreRenderLivingEvent event, EntityPlayer player, String name) {
+	private void renderNewTag(Pre<? extends EntityLivingBase> event, EntityPlayer player, String name) {
 	    if (PlayerUtil.unusedNames(player) && player.getName().contains("AstralMC-CTM")) {
 	        return;
 	    }
@@ -262,4 +260,22 @@ public final class NameTags extends Module {
 			return null;
 		}
 	}
+	
+	/*private static void fixGlintShit() {
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepth();
+        GlStateManager.disableBlend();
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepth();
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepth();
+        GlStateManager.disableTexture2D();
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
+        GlStateManager.enableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepth();
+    }*/
 }

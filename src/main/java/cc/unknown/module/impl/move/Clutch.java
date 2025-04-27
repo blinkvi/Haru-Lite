@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import cc.unknown.event.Listener;
-import cc.unknown.event.annotations.EventLink;
-import cc.unknown.event.impl.PrePositionEvent;
+import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.handlers.SpoofHandler;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
@@ -20,11 +18,12 @@ import cc.unknown.util.player.move.RotationUtil;
 import cc.unknown.value.impl.SliderValue;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "Clutch", description = "", category = Category.MOVE)
 public class Clutch extends Module {
 
-	private final SliderValue searchDist = new SliderValue("Search Distance", this, 4, 1, 6, 0.5f);
+	private final SliderValue searchDist = new SliderValue("Search Distance", this, 4, 1, 30, 0.5f);
 
 	private int lastSlot;
 	
@@ -44,10 +43,8 @@ public class Clutch extends Module {
 		PlayerUtil.rightClick(false);
 	}
 
-    @EventLink
-    public final Listener<PrePositionEvent> onPrePosition = event -> {
-		if (!PlayerUtil.isInGame()) return;
-
+	@SubscribeEvent
+	public void onPrePosition(PrePositionEvent event) {
 		if (lastSlot == -1) {
 			lastSlot = mc.thePlayer.inventory.currentItem;
 		}
@@ -73,7 +70,7 @@ public class Clutch extends Module {
 	            stopWatch.reset();
 	        }
 		}
-	};
+	}
 
 	private boolean startSearch() {
 	    BlockPos below = new BlockPos(

@@ -15,6 +15,7 @@ import cc.unknown.util.Accessor;
 import cc.unknown.util.structure.list.SList;
 import cc.unknown.value.Value;
 import cc.unknown.value.impl.SliderValue;
+import net.minecraftforge.common.MinecraftForge;
 
 public abstract class Module implements Accessor {
 
@@ -53,12 +54,12 @@ public abstract class Module implements Accessor {
     }
 
     public <M extends Module> boolean isEnabled(Class<M> module) {
-        Module mod = Haru.modMngr.getModule(module);
+        Module mod = Haru.instance.getModuleManager().getModule(module);
         return mod != null && mod.isEnabled();
     }
 
     public <M extends Module> boolean isDisabled(Class<M> module) {
-        Module mod = Haru.modMngr.getModule(module);
+        Module mod = Haru.instance.getModuleManager().getModule(module);
         return mod == null || mod.isDisabled();
     }
 
@@ -78,7 +79,7 @@ public abstract class Module implements Accessor {
     }
     
     private void enable() {
-    	Haru.eventBus.register(this);
+    	MinecraftForge.EVENT_BUS.register(this);
     	try {
             onEnable();
         } catch (Exception e) {
@@ -87,7 +88,7 @@ public abstract class Module implements Accessor {
     }
 
     private void disable() {
-    	Haru.eventBus.unregister(this);
+        MinecraftForge.EVENT_BUS.unregister(this);
         try {
             onDisable();
         } catch (Exception e) {
@@ -102,7 +103,7 @@ public abstract class Module implements Accessor {
     }
 
     public <M extends Module> M getModule(Class<M> clazz) {
-        return Haru.modMngr.getModule(clazz);
+        return Haru.instance.getModuleManager().getModule(clazz);
     }
 
     public void addValues(Value... settings) {
@@ -125,7 +126,7 @@ public abstract class Module implements Accessor {
             return false;
         }
         
-        Interface interfaces = Haru.modMngr.getModule(Interface.class);
+        Interface interfaces = Haru.instance.getModuleManager().getModule(Interface.class);
         Map<Category, Boolean> visibility = new HashMap<>();
         visibility.put(Category.COMBAT, interfaces.hideCategory.isEnabled("Combat"));
         visibility.put(Category.MOVE, interfaces.hideCategory.isEnabled("Move"));
