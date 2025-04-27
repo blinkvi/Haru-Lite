@@ -15,7 +15,7 @@ public class CPSHandler implements Accessor {
 	public static long rightClickTimer = 0L;
 
 	@SubscribeEvent
-	public void onMouseUpdate(MouseEvent mouse) {
+	public void onMouse(MouseEvent mouse) {
 		if (mouse.buttonstate) {
 			if (mouse.button == 0 && !mc.thePlayer.isBlocking()) {
 				addLeftClick();
