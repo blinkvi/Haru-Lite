@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
-import cc.unknown.event.player.PlaceEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.spongepowered.asm.mixin.Final;
@@ -21,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import cc.unknown.Haru;
 import cc.unknown.event.GameEvent;
 import cc.unknown.event.player.AttackEvent;
+import cc.unknown.event.player.PlaceEvent;
 import cc.unknown.mixin.interfaces.IMinecraft;
 import cc.unknown.module.impl.combat.Piercing;
 import cc.unknown.module.impl.combat.Reach;
@@ -203,7 +203,7 @@ public abstract class MixinMinecraft implements IMinecraft {
             this.entityRenderer.getMapItemRenderer().clearLoadedMaps();
         }
     }
-
+    
 	@Inject(method = "rightClickMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/EntityPlayerSP;swingItem()V", shift = At.Shift.AFTER))
 	private void onPlace(CallbackInfo ci) {
 		MinecraftForge.EVENT_BUS.post(new PlaceEvent());
