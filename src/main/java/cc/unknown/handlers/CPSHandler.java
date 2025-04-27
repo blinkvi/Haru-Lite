@@ -19,9 +19,7 @@ public class CPSHandler implements Accessor {
 		if (mouse.buttonstate) {
 			if (mouse.button == 0 && !mc.thePlayer.isBlocking()) {
 				addLeftClick();
-			}
-			
-			if (mouse.button == 1 || (InventoryUtil.getAnyBlock() || InventoryUtil.getProjectiles())) {
+			} else if (mouse.button == 1 || (InventoryUtil.getAnyBlock() || InventoryUtil.getProjectiles())) {
 				addRightClick();
 			}
 		}

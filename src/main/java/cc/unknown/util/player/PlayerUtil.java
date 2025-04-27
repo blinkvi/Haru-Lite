@@ -51,7 +51,7 @@ public class PlayerUtil implements Accessor {
     
     public static boolean checkEdge(double offset) {
     	AxisAlignedBB box = mc.thePlayer.getEntityBoundingBox();
-    	AxisAlignedBB adjustedBox = setMinY(box.offset(0, -0.2, 0).expand(-offset, 0, -offset), 0);
+    	AxisAlignedBB adjustedBox = setMinY(box.offset(0, -0.2, 0).expand(0, offset, 0), 0);
         return mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, adjustedBox).isEmpty();
     }
     

@@ -3,7 +3,6 @@ package cc.unknown.module.impl.move;
 import java.util.Arrays;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import cc.unknown.event.player.MoveInputEvent;
 import cc.unknown.event.player.PlaceEvent;
@@ -16,6 +15,7 @@ import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.MultiBoolValue;
 import cc.unknown.value.impl.SliderValue;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "BridgeAssist", description = "Automatically sneaks for you when you are near the edge of a block.", category = Category.MOVE)	
 public class BridgeAssist extends Module {
     
-	private final SliderValue edgeOffset = new SliderValue("EdgeOffset", this, 0.4f, 0, 1, 0.1f);
+	private final SliderValue edge = new SliderValue("Edge", this, 0.3f, 0, 0.5f, 0.1f);
     private final SliderValue pitch = new SliderValue("Angle", this, 45, 0, 90, 5, () -> this.conditionals.isEnabled("AngleCheck"));
     
 	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
@@ -48,14 +48,12 @@ public class BridgeAssist extends Module {
     
     @SubscribeEvent
     public void onMoveInput(MoveInputEvent event) {
-    	if (Mouse.isButtonDown(1)) {
-	    	if (isShifting && shouldBridge) {
-	    		event.sneak = true;
-	    	}
-	    	
-	    	if (!isShifting && shouldBridge) {
-	    		event.sneak = false;
-	    	}
+    	if (isShifting && shouldBridge) {
+    		event.sneak = true;
+    	}
+    	
+    	if (!isShifting && shouldBridge) {
+    		event.sneak = false;
     	}
     }
 
@@ -139,56 +137,116 @@ public class BridgeAssist extends Module {
     	return false;
     }
 
-	private boolean shouldSneak() {
-		float offset = edgeOffset.getValue();
-		double motionX = mc.thePlayer.motionX;
-		double motionZ = mc.thePlayer.motionZ;
+    private boolean shouldSneak() {
+    	EntityPlayerSP player = mc.thePlayer;
+        double dist = 0.4D;
+        double offset = (double) edge.getValue();
+        double motionY = player.motionY;
 
-		if (mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(motionX, -1.0D, 0.0D)).isEmpty()) {
-			if (motionX < offset && motionX >= -offset) {
-				motionX = 0.0D;
-			} else if (motionX > 0.0D) {
-				motionX -= offset;
-			} else {
-				motionX += offset;
-			}
-		}
+        // Check only X
+        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, -0.1D, -offset)).isEmpty()
+                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, 0.5D, -offset)).isEmpty()) {
+            if (offset < dist && offset >= -dist) {
+                offset = 0.0D;
+            } else if (offset > 0.0D) {
+                offset -= dist;
+            } else {
+                offset += dist;
+            }
+        }
 
-		if (mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(0.0D, -1.0D, motionZ)).isEmpty()) {
-			if (motionZ < offset && motionZ >= -offset) {
-				motionZ = 0.0D;
-			} else if (motionZ > 0.0D) {
-				motionZ -= offset;
-			} else {
-				motionZ += offset;
-			}
-		}
+        // Check only Z
+        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(-offset, -0.1D, offset)).isEmpty()
+                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(-offset, 0.5D, offset)).isEmpty()) {
+            if (offset < dist && offset >= -dist) {
+                offset = 0.0D;
+            } else if (offset > 0.0D) {
+                offset -= dist;
+            } else {
+                offset += dist;
+            }
+        }
 
-		if (mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(motionX, -1.0D, motionZ)).isEmpty()) {
-			if (motionX < offset && motionX >= -offset) {
-				motionX = 0.0D;
-			} else if (motionX > 0.0D) {
-				motionX -= offset;
-			} else {
-				motionX += offset;
-			}
+        // Check XZ
+        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, -0.1D, offset)).isEmpty()
+                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, 0.5D, offset)).isEmpty()) {
+            if (offset < dist && offset >= -dist) {
+                offset = 0.0D;
+            } else if (offset > 0.0D) {
+                offset -= dist;
+            } else {
+                offset += dist;
+            }
 
-			if (motionZ < offset && motionZ >= -offset) {
-				motionZ = 0.0D;
-			} else if (motionZ > 0.0D) {
-				motionZ -= offset;
-			} else {
-				motionZ += offset;
-			}
-		}
-		return motionX == 0 || motionZ == 0;
-	}
-    
-    // pitch 78
-    // yaw 225
-    // diagonal
-    
-    // pitch 77.2
-    // yaw 45
-    // forward
+            if (offset < dist && offset >= -dist) {
+                offset = 0.0D;
+            } else if (offset > 0.0D) {
+                offset -= dist;
+            } else {
+                offset += dist;
+            }
+        }
+
+        // Check (+X, +Z)
+        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, -0.1D, offset)).isEmpty()
+                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, 0.5D, offset)).isEmpty()) {
+            if (offset < dist && offset >= -dist) {
+                offset = 0.0D;
+            } else if (offset > 0.0D) {
+                offset -= dist;
+            } else {
+                offset += dist;
+            }
+        }
+
+        // Check (+X, -Z)
+        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, -0.1D, -offset)).isEmpty()
+                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, 0.5D, -offset)).isEmpty()) {
+            if (offset < dist && offset >= -dist) {
+                offset = 0.0D;
+            } else if (offset > 0.0D) {
+                offset -= dist;
+            } else {
+                offset += dist;
+            }
+        }
+
+        // Check (-X, +Z)
+        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(-offset, -0.1D, offset)).isEmpty()
+                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(-offset, 0.5D, offset)).isEmpty()) {
+            if (offset < dist && offset >= -dist) {
+                offset = 0.0D;
+            } else if (offset > 0.0D) {
+                offset -= dist;
+            } else {
+                offset += dist;
+            }
+        }
+
+        // Check (-X, -Z)
+        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(-offset, -0.1D, -offset)).isEmpty()
+                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(-offset, 0.5D, -offset)).isEmpty()) {
+            if (offset < dist && offset >= -dist) {
+                offset = 0.0D;
+            } else if (offset > 0.0D) {
+                offset -= dist;
+            } else {
+                offset += dist;
+            }
+        }
+
+        // Check only Y
+        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(0.0D, motionY, 0.0D)).isEmpty()) {
+            if (motionY < dist && motionY >= -dist) {
+                motionY = 0.0D;
+            } else if (motionY > 0.0D) {
+                motionY -= dist;
+            } else {
+                motionY += dist;
+            }
+        }
+
+        return offset == 0.0D || motionY == 0.0D;
+    }
+
 }

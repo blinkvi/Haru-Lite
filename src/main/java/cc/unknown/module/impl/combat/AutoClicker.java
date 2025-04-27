@@ -34,7 +34,7 @@ public class AutoClicker extends Module {
 	private final ModeValue mode = new ModeValue("Mode", this, "Legit", "Legit", "Blatant");
 	private final SliderValue minCPS = new SliderValue("MinCPS", this, 9, 1, 25, 0.5f);
 	private final SliderValue maxCPS = new SliderValue("MaxCPS", this, 13, 1, 25, 0.5f);
-	private final ModeValue randomize = new ModeValue("Randomize", this, "Render", "Render", "Tick"); // events
+	private final ModeValue randomize = new ModeValue("Randomize", this, "ButterFly", "ButterFly", "Jitter");
 
 	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
 			new BoolValue("Inventory", false),
@@ -76,7 +76,7 @@ public class AutoClicker extends Module {
 	public void onRenderTick(TickEvent.RenderTickEvent event) {
 		if (mc.currentScreen != null && !(mc.currentScreen instanceof GuiInventory) && !(mc.currentScreen instanceof GuiChest)) return;
 
-		if (!randomize.is("Render")) return;
+		if (!randomize.is("ButterFly")) return;
 
 		if (mode.is("Legit")) {
 			ravenClick();
@@ -89,7 +89,7 @@ public class AutoClicker extends Module {
 	public void onTick(TickEvent.PlayerTickEvent event) {
 		if (mc.currentScreen != null && !(mc.currentScreen instanceof GuiInventory) && !(mc.currentScreen instanceof GuiChest)) return;
 
-		if (!randomize.is("Tick")) return;
+		if (!randomize.is("Jitter")) return;
 
 		if (mode.is("Legit")) {
 			ravenClick();

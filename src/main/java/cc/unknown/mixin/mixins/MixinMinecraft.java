@@ -24,6 +24,7 @@ import cc.unknown.event.player.PlaceEvent;
 import cc.unknown.mixin.interfaces.IMinecraft;
 import cc.unknown.module.impl.combat.Piercing;
 import cc.unknown.module.impl.combat.Reach;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
@@ -37,6 +38,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.stream.IStream;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
@@ -161,19 +163,56 @@ public abstract class MixinMinecraft implements IMinecraft {
 		}
 	}
 	
-    @Inject(method = "clickMouse", at = @At(value = "FIELD", target = "Lnet/minecraft/client/entity/EntityPlayerSP;leftClickCounter:I", shift = At.Shift.AFTER))
-    private void onClickMouse(CallbackInfo ci) {
-		if (this.objectMouseOver != null
-				&& this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY
-				&& objectMouseOver.entityHit instanceof EntityLivingBase) {
-			final AttackEvent event = new AttackEvent((EntityLivingBase) this.objectMouseOver.entityHit);
-			MinecraftForge.EVENT_BUS.post(event);
+	@Overwrite
+	public void clickMouse() {
+		clickMouse(true, true);
+	}
 
-			if (event.isCanceled())
-				return;
+	@Unique
+	public void clickMouse(boolean swing, boolean events) {
+		if (this.leftClickCounter <= 0) {
+			if (events) {
+				if (this.objectMouseOver != null
+						&& this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY
+						&& objectMouseOver.entityHit instanceof EntityLivingBase) {
+					final AttackEvent event = new AttackEvent((EntityLivingBase) this.objectMouseOver.entityHit);
+					MinecraftForge.EVENT_BUS.post(event);
+
+					if (event.isCanceled())
+						return;
+				}
+			}
+
+			if (swing) {
+				this.thePlayer.swingItem();
+			}
+
+			if (this.objectMouseOver == null) {
+				if (this.playerController.isNotCreative()) {
+					this.leftClickCounter = 10;
+				}
+			} else {
+				switch (this.objectMouseOver.typeOfHit) {
+				case ENTITY:
+					this.playerController.attackEntity(this.thePlayer, this.objectMouseOver.entityHit);
+					break;
+
+				case BLOCK:
+					final BlockPos blockpos = this.objectMouseOver.getBlockPos();
+
+					if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air) {
+						this.playerController.clickBlock(blockpos, this.objectMouseOver.sideHit);
+						break;
+					}
+
+				default:
+					if (this.playerController.isNotCreative()) {
+						this.leftClickCounter = 10;
+					}
+				}
+			}
 		}
-    }
-
+	}
 
 	@Inject(method = "createDisplay", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setTitle(Ljava/lang/String;)V", shift = At.Shift.AFTER))
 	private void createDisplay(CallbackInfo callbackInfo) {
