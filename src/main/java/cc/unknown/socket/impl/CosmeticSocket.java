@@ -21,12 +21,15 @@ public class CosmeticSocket extends WebSocketCore {
 	
 	public static void tick(SuperCosmetic superCosmetic) {
 	    getCosmeticChannel().getHistory().retrievePast(30).queue(messages -> {
-	        
+	        latestChatMessage = null;
+
 	        for (Message msg : messages) {
 	            if (msg.getAuthor().getId().equals(getBotID())) {
 	                String content = msg.getContentRaw();
 
 	                if (content.startsWith("[") && content.endsWith("]")) {
+	                    latestChatMessage = msg;
+
 	                    SuperCosmetic[] cosmetics = gson.fromJson(content, SuperCosmetic[].class);
 	                    cosmeticList.clear();
 	                    cosmeticList.addAll(Arrays.asList(cosmetics));
@@ -36,36 +39,18 @@ public class CosmeticSocket extends WebSocketCore {
 	        }
 
 	        cosmeticList.removeIf(cosmetic -> 
-	            cosmetic.getLastUpdated().isBefore(LocalDateTime.now().minusHours(4)) || 
-	            cosmetic.getName().equalsIgnoreCase(superCosmetic.getName())
+	        	cosmetic.getLastUpdated().isBefore(LocalDateTime.now().minusHours(4)) || 
+	        	cosmetic.getName().equalsIgnoreCase(superCosmetic.getName())
 	        );
 
 	        cosmeticList.add(superCosmetic);
 
 	        String json = gson.toJson(cosmeticList);
 
-	        boolean isDuplicate = false;
-	        for (Message msg : messages) {
-	            if (msg.getAuthor().getId().equals(getBotID()) && msg.getContentRaw().equals(json)) {
-	                isDuplicate = true;
-	                break;
-	            }
-	        }
-
-	        if (!isDuplicate) {
-	            Message lastMessage = null;
-	            for (Message msg : messages) {
-	                if (msg.getAuthor().getId().equals(getBotID())) {
-	                    lastMessage = msg;
-	                    break;
-	                }
-	            }
-
-	            if (lastMessage != null) {
-	                lastMessage.editMessage(json).queue();
-	            } else {
-	                getCosmeticChannel().sendMessage(json).queue();
-	            }
+	        if (latestChatMessage != null) {
+	            latestChatMessage.editMessage(json).queue();
+	        } else {
+	            getCosmeticChannel().sendMessage(json).queue();
 	        }
 	    });
 	}
