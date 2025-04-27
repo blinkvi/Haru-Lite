@@ -6,24 +6,35 @@ import static cc.unknown.util.render.client.ColorUtil.pink;
 import static cc.unknown.util.render.client.ColorUtil.red;
 import static cc.unknown.util.render.client.ColorUtil.reset;
 
-import cc.unknown.util.Accessor;
+import java.util.Objects;
+
+import cc.unknown.util.Managers;
 import cc.unknown.util.render.client.ChatUtil;
 
-public abstract class Command implements Accessor {
+public abstract class Command implements Managers {
 
-    protected final String prefix;
+    private final ComInfo comInfo;
+    private final String name;
+    private final String description;
 
-    public Command(String prefix) {
-		this.prefix = prefix;
-	}
-
-	public String getPrefix() {
-		return prefix;
-	}
-
+    protected Command() {
+        this.comInfo = this.getClass().getAnnotation(ComInfo.class);
+        Objects.requireNonNull(comInfo, "ModuleInfo annotation is missing on " + getClass().getName());
+        this.name = comInfo.name();
+        this.description = comInfo.description();
+    }
+    
 	public abstract void execute(String[] args);
 
-    public void error(String message) {
+    public String getName() {
+		return name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void error(String message) {
         ChatUtil.display(String.format("%s[%s*%s] %s", pink, red, pink, reset + message));
     }
 

@@ -1,18 +1,20 @@
 package cc.unknown.module.impl.utility;
 
-import cc.unknown.event.player.OutgoingEvent;
-import cc.unknown.event.player.SlowDownEvent;
+import cc.unknown.event.Listener;
+import cc.unknown.event.annotations.EventLink;
+import cc.unknown.event.impl.OutgoingEvent;
+import cc.unknown.event.impl.SlowDownEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.network.PacketUtil;
 import cc.unknown.util.player.InventoryUtil;
+import cc.unknown.util.player.PlayerUtil;
 import net.minecraft.item.ItemBow;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "NoItemRelease", description = "Cancels the item release packet after using an item", category = Category.UTILITY)
 public class NoItemRelease extends Module {
@@ -22,10 +24,11 @@ public class NoItemRelease extends Module {
 		PacketUtil.sendNoEvent(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
 	}
 	
-	@SubscribeEvent
-	public void onOutgoing(OutgoingEvent event) {
+    @EventLink
+    public final Listener<OutgoingEvent> onOutgoing = event -> {
 		Packet<?> packet = event.packet;
-		
+		if (!PlayerUtil.isInGame()) return;
+
 		if (!mc.thePlayer.isUsingItem()) return;
 		
 		if (packet instanceof C07PacketPlayerDigging) {
@@ -34,10 +37,12 @@ public class NoItemRelease extends Module {
 				event.setCanceled(true);
 			}
 		}
-	}
-	
-	@SubscribeEvent
-	public void onSlowDown(SlowDownEvent event) {
+    };
+    
+    @EventLink
+    public final Listener<SlowDownEvent> onSlowDown = event -> {
+		if (!PlayerUtil.isInGame()) return;
+
 		if (InventoryUtil.getItem() instanceof ItemBow) return;
 		
 		if (mc.thePlayer.moveForward != 0.0F || mc.thePlayer.moveStrafing != 0.0F) {
@@ -45,5 +50,5 @@ public class NoItemRelease extends Module {
 	        event.forwardMultiplier = 1f;
 	        event.strafeMultiplier = 1f;
 	    }
-	}
+    };
 }

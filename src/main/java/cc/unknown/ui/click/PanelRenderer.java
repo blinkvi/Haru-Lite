@@ -11,6 +11,7 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.impl.visual.ClickGUI;
 import cc.unknown.ui.click.impl.Component;
 import cc.unknown.ui.click.impl.ModuleRenderer;
+import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontRenderer;
 import cc.unknown.util.render.font.FontUtil;
@@ -38,7 +39,7 @@ public class PanelRenderer extends Component {
         this.settingBools.add(new BoolValue("NoUseDelay", null, false));
         this.settingBools.add(new BoolValue("JumpCircle", null, false));
         
-        this.moduleComponents = Haru.instance.getModuleManager()
+        this.moduleComponents = Haru.modMngr
                 .getModulesByCategory(category)
                 .stream()
                 .map(ModuleRenderer::new)
@@ -117,7 +118,7 @@ public class PanelRenderer extends Component {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        boolean isHeaderHovered = isHovered(x, y, width, 14F, mouseX, mouseY);
+        boolean isHeaderHovered = MathUtil.isHovered(x, y, width, 14F, mouseX, mouseY);
 
         if (isHeaderHovered) {
             if (mouseButton == 0) {
@@ -131,7 +132,7 @@ public class PanelRenderer extends Component {
             if (category == Category.SETTINGS) {
                 float offsetY = 15;
                 for (BoolValue boolValue : settingBools) {
-                    if (isHovered(x, y + offsetY, width, 12, mouseX, mouseY)) {
+                    if (MathUtil.isHovered(x, y + offsetY, width, 12, mouseX, mouseY)) {
                         boolValue.set(!boolValue.get());
                     }
                     offsetY += 12;

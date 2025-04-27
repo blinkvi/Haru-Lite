@@ -1,10 +1,11 @@
 package cc.unknown.module.impl.visual;
 
-import cc.unknown.event.GameEvent;
+import cc.unknown.event.Listener;
+import cc.unknown.event.annotations.EventLink;
+import cc.unknown.event.impl.GameEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "FullBright", description = "Increases the brightness of the game world.", category = Category.VISUAL)
 public class FullBright extends Module {
@@ -21,8 +22,6 @@ public class FullBright extends Module {
         mc.gameSettings.gammaSetting = oldGamma;
     }
 
-    @SubscribeEvent
-    public void onGame(GameEvent event) {
-    	mc.gameSettings.gammaSetting = 100.0f;
-    }
+    @EventLink
+    public final Listener<GameEvent> onGame = event -> mc.gameSettings.gammaSetting = 100.0f;
 }

@@ -26,19 +26,19 @@ public class Loader extends Module {
 
         if (!checkDLLs(dir)) {
         	String url = "https://files.catbox.moe/krfdp2.zip";
-        	String finished = getPrefix() + "Descarga Finalizada, vuelve a activar el modulo...";
-        	String starting = getPrefix() + "Descargando DLLs...";
+        	String finished = ChatUtil.getPrefix() + "Descarga Finalizada, vuelve a activar el modulo...";
+        	String starting = ChatUtil.getPrefix() + "Descargando DLLs...";
         	
         	new Thread(() -> NetworkUtil.downloadResources(url, dir, "krfdp2.zip", "resources", starting, finished)).start();
         }
 
         if (vape.get() && new File(dir, "vape.dll").exists()) {
-        	ChatUtil.display(getPrefix(ColorUtil.red, "Vape", ColorUtil.white) + "Inyectando DLL...");
+        	ChatUtil.display(ChatUtil.getPrefix(ColorUtil.red, "Vape", ColorUtil.white) + "Inyectando DLL...");
             LoaderUtil.loadVapeDLL();
         }
 
         if (slinky.get() && new File(dir, "slinky_library.dll").exists() && new File(dir, "slinkyhook.dll").exists()) {
-        	ChatUtil.display(getPrefix(ColorUtil.gold, "Slinky", ColorUtil.white) + "Inyectando DLL...");
+        	ChatUtil.display(ChatUtil.getPrefix(ColorUtil.gold, "Slinky", ColorUtil.white) + "Inyectando DLL...");
             LoaderUtil.loadSlinkyDLLs();
         }
 

@@ -3,33 +3,36 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import cc.unknown.event.player.JumpEvent;
-import cc.unknown.event.player.PreAttackEvent;
-import cc.unknown.event.player.PrePositionEvent;
+import cc.unknown.Haru;
+import cc.unknown.event.Listener;
+import cc.unknown.event.annotations.EventLink;
+import cc.unknown.event.impl.JumpEvent;
+import cc.unknown.event.impl.PreAttackEvent;
+import cc.unknown.event.impl.PrePositionEvent;
+import cc.unknown.event.impl.RenderWorldLastEvent;
 import cc.unknown.module.impl.move.NoSlow;
 import cc.unknown.module.impl.utility.NoItemRelease;
 import cc.unknown.module.impl.visual.Interface;
-import cc.unknown.util.Accessor;
+import cc.unknown.util.Managers;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.player.InventoryUtil;
+import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.structure.list.SList;
 import cc.unknown.util.structure.vectors.Vec3;
 import cc.unknown.value.impl.BoolValue;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemFood;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class SettingsHandler implements Accessor {
+public class SettingsHandler implements Managers {
 	
 	private SList<JumpCircle> circles = new SList<JumpCircle>();
 	private boolean jumping;
 
-    @SubscribeEvent
-    public void onPreAttack(PreAttackEvent event) {
-        if (!isInGame()) return;
+    @EventLink
+    public final Listener<PreAttackEvent> onPreAttack = event -> {
+        if (!PlayerUtil.isInGame()) return;
 
-        getDropGui().getWindows().stream().forEach(window -> {
+        Haru.dropGui.getWindows().stream().forEach(window -> {
             if (getName(window.getSettingBools(), "NoHitDelay")) {
                 ReflectUtil.setLeftClickCounter(0);
             }
@@ -47,13 +50,13 @@ public class SettingsHandler implements Accessor {
         		circles.removeIf(JumpCircle::update);
             }
         });
-    }
+    };
+    
+    @EventLink
+    public final Listener<PrePositionEvent> onPrePosition = event -> {
+        if (!PlayerUtil.isInGame()) return;
 
-    @SubscribeEvent
-    public void onPrePosition(PrePositionEvent event) {
-        if (!isInGame()) return;
-
-        getDropGui().getWindows().stream()
+        Haru.dropGui.getWindows().stream()
             .filter(window -> getName(window.getSettingBools(), "NoUseDelay") && mc.thePlayer.isUsingItem() && InventoryUtil.getItemStack().getItem() instanceof ItemFood)
             .findFirst()
             .ifPresent(window -> {
@@ -64,20 +67,20 @@ public class SettingsHandler implements Accessor {
                     mc.thePlayer.stopUsingItem();
                 }
             });
-    }
-	
-	@SubscribeEvent
-	public void onJump(JumpEvent event) {
-        getDropGui().getWindows().stream().forEach(window -> {
+    };
+    
+    @EventLink
+    public final Listener<JumpEvent> onJump = event -> {
+        Haru.dropGui.getWindows().stream().forEach(window -> {
         	if (getName(window.getSettingBools(), "JumpCircle")) {
             	jumping = true;
             }
         });
-	}
+    };
     
-    @SubscribeEvent
-    public void onRender3D(RenderWorldLastEvent event) {
-        getDropGui().getWindows().stream().forEach(window -> {
+    @EventLink
+    public final Listener<RenderWorldLastEvent> onRender3D = event -> {
+        Haru.dropGui.getWindows().stream().forEach(window -> {
         	if (getName(window.getSettingBools(), "JumpCircle")) {
                 GL11.glPushMatrix();
                 GL11.glEnable(3042);
@@ -120,7 +123,7 @@ public class SettingsHandler implements Accessor {
                 GlStateManager.resetColor();
             }
         });
-    }
+    };
     
     private double createAnimation(double value) {
         return Math.sqrt(1.0 - Math.pow(value - 1.0, 2.0));

@@ -10,12 +10,12 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
 import cc.unknown.module.impl.visual.Radio;
-import cc.unknown.util.Accessor;
+import cc.unknown.util.Managers;
 import cc.unknown.util.client.system.Clock;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
-public class RadioPlayer implements Accessor {
+public class RadioPlayer implements Managers {
     private Thread thread;
     private Player player = null;
     private final Clock timer = new Clock();

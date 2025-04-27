@@ -7,7 +7,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import cc.unknown.event.player.PostVelocityEvent;
+import cc.unknown.Haru;
+import cc.unknown.event.impl.PostVelocityEvent;
 import cc.unknown.ui.click.DropGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -15,7 +16,6 @@ import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.network.play.server.S2EPacketCloseWindow;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(NetHandlerPlayClient.class)
 public class MixinNetHandlerPlayClient {
@@ -34,7 +34,7 @@ public class MixinNetHandlerPlayClient {
 		if (gameController.thePlayer == null && gameController.theWorld == null) return;
 		
 	    if (packetIn.getEntityID() == this.gameController.thePlayer.getEntityId()) {
-	        MinecraftForge.EVENT_BUS.post(new PostVelocityEvent());
+	        Haru.eventBus.handle(new PostVelocityEvent());
 	    }
 	}
 	

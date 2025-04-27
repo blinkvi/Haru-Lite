@@ -3,10 +3,15 @@ package cc.unknown.module.impl.combat;
 import java.util.List;
 
 import cc.unknown.Haru;
+import cc.unknown.event.Listener;
+import cc.unknown.event.Priority;
+import cc.unknown.event.annotations.EventLink;
+import cc.unknown.event.impl.MouseEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.ReflectUtil;
+import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.player.move.RotationUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,38 +19,39 @@ import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.client.event.MouseEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "Piercing", description = "Allows you to hit through entities or blocks.", category = Category.COMBAT)
 public class Piercing extends Module {
 	
-	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onMouse(MouseEvent event) {
-		if (event.button >= 0 && event.buttonstate && isInGame()) {
+	@EventLink(value = Priority.VERY_HIGH)
+	public final Listener<MouseEvent> onMouse = event -> {
+		if (!PlayerUtil.isInGame())
+			return;
+
+		if (event.button >= 0 && event.buttonstate && PlayerUtil.isInGame()) {
 			call();
 		}
-	}
+	};
 
 	public void call() {
-		if (!Haru.instance.getModuleManager().getModule(Piercing.class).isEnabled()) return;
-		if (mc.thePlayer != null && mc.theWorld != null) {
+		if (!Haru.modMngr.getModule(Piercing.class).isEnabled())
+			return;
 
-			Object[] o = getEntity(3.0D, 0.0D, null);
+		Object[] o = getEntity(3.0D, 0.0D, null);
 
-			if (o != null) {
-				if (!RotationUtil.rayCastIgnoreWall(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch,
-						(EntityLivingBase) o[0])) return;
-				if (!Haru.instance.getModuleManager().getModule(Piercing.class).isEnabled()
-						&& RotationUtil.rayCast(3.0D, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch) != null)
-					return;
+		if (o != null) {
+			if (!RotationUtil.rayCastIgnoreWall(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch,
+					(EntityLivingBase) o[0]))
+				return;
+			if (!Haru.modMngr.getModule(Piercing.class).isEnabled()
+					&& RotationUtil.rayCast(3.0D, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch) != null)
+				return;
 
-				Entity en = (Entity) o[0];
-				mc.objectMouseOver = new MovingObjectPosition(en, (Vec3) o[1]);
-				mc.pointedEntity = en;
-			}
+			Entity en = (Entity) o[0];
+			mc.objectMouseOver = new MovingObjectPosition(en, (Vec3) o[1]);
+			mc.pointedEntity = en;
 		}
+
 	}
 
 	public Object[] getEntity(double reach, double expand, float[] rotations) {
@@ -111,5 +117,5 @@ public class Piercing extends Module {
 			}
 		}
 	}
-	
+
 }

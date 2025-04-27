@@ -5,14 +5,15 @@ import java.util.concurrent.TimeUnit;
 import org.lwjgl.input.Keyboard;
 
 import cc.unknown.Haru;
+import cc.unknown.event.Listener;
+import cc.unknown.event.annotations.EventLink;
+import cc.unknown.event.impl.PostTickEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
+import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.value.impl.SliderValue;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "SaveMoveKeys", description = "Automatically retoggles your movekeys after closing the inventory.", category = Category.UTILITY)
 public class SaveMoveKeys extends Module {
@@ -20,9 +21,10 @@ public class SaveMoveKeys extends Module {
 	private final SliderValue delay = new SliderValue("Delay", this, 0, 0, 1000, 10);
 	private boolean lastInGUI = false;
 	
-	@SubscribeEvent
-	public void onPostTick(ClientTickEvent event) {
-    	if (event.phase == Phase.START) return;
+    @EventLink
+    public final Listener<PostTickEvent> onPostTick = event -> {
+		if (!PlayerUtil.isInGame()) return;
+
         if (mc.currentScreen != null) {
             lastInGUI = true;
         } else {
@@ -47,5 +49,5 @@ public class SaveMoveKeys extends Module {
 
             lastInGUI = false;
         }
-	}
+	};
 }

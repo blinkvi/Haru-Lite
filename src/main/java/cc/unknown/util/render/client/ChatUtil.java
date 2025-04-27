@@ -4,6 +4,7 @@ import cc.unknown.util.Accessor;
 import cc.unknown.util.client.network.PacketUtil;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
 public class ChatUtil implements Accessor {
 	
@@ -24,5 +25,13 @@ public class ChatUtil implements Accessor {
         if (mc.thePlayer != null) {
             PacketUtil.send(new C01PacketChatMessage(message.toString()));
         }
+    }
+    
+    public static String getPrefix() {
+    	return "[" + ColorUtil.pink + "H" + ColorUtil.white + "] ";
+    }
+    
+    public static String getPrefix(EnumChatFormatting color, String name, EnumChatFormatting color2) {
+    	return "[" + color + name + color2 + "] ";
     }
 }

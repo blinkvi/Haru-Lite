@@ -8,7 +8,10 @@ import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.Sets;
 
-import cc.unknown.event.player.PrePositionEvent;
+import cc.unknown.event.Listener;
+import cc.unknown.event.annotations.EventLink;
+import cc.unknown.event.impl.PrePositionEvent;
+import cc.unknown.event.impl.RenderWorldLastEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -25,8 +28,6 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "FastPlace", description = "Autoclicker for rightclicking.", category = Category.UTILITY)
 public class FastPlace extends Module {
@@ -58,16 +59,18 @@ public class FastPlace extends Module {
     public void onDisable() {
     	reset();
     }
-    
-    @SubscribeEvent
-    public void onPreAttack(PrePositionEvent event) {
+
+    @EventLink
+    public final Listener<PrePositionEvent> onPrePosition = event -> {
         if (conditionals.isEnabled("Inventory") && mc.currentScreen instanceof GuiContainer) {
         	InventoryUtil.guiClicker(mc.currentScreen, 1, 1000 / getRandomizedCPS());
         }
-    }
+    };
+    
+    @EventLink
+    public final Listener<RenderWorldLastEvent> onRender3D = event -> {
+		if (!PlayerUtil.isInGame()) return;
 
-	@SubscribeEvent
-	public void onRender3D(RenderWorldLastEvent event) {
         if (mc.currentScreen != null || !mc.inGameHasFocus) return;
 		if (BLACKLISTED_ITEMS.contains(InventoryUtil.getItem())) return;
 		
@@ -93,7 +96,7 @@ public class FastPlace extends Module {
         }
 
         startDelay.reset();
-    }
+    };
 
     public int getRandomizedCPS() {
         int baseCPS = Math.round(cps.getValue());

@@ -3,6 +3,7 @@ package cc.unknown.ui.click.impl;
 import java.awt.Color;
 
 import cc.unknown.module.impl.visual.ClickGUI;
+import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.value.impl.BoolValue;
@@ -55,7 +56,7 @@ public class MultiBooleanRenderer extends Component {
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         float offset = 0;
         
-        if (isHovered(x, y, width, 10, mouseX, mouseY)) {
+        if (MathUtil.isHovered(x, y, width, 10, mouseX, mouseY)) {
             if (mouseButton == 0) {
                 expanded = !expanded;
             }
@@ -64,7 +65,7 @@ public class MultiBooleanRenderer extends Component {
         if (expanded) {
             for (BoolValue boolValue : value.getValues()) {
                 offset += 11;
-                if (isHovered(x, y + offset, width, 10, mouseX, mouseY)) {
+                if (MathUtil.isHovered(x, y + offset, width, 10, mouseX, mouseY)) {
                     if (mouseButton == 0) {
                         boolValue.set(!boolValue.get());
                     }

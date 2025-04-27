@@ -7,13 +7,13 @@ import org.lwjgl.input.Mouse;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import cc.unknown.Haru;
 import cc.unknown.module.impl.visual.Interface;
-import cc.unknown.util.Accessor;
+import cc.unknown.util.Managers;
+import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.render.RenderUtil;
 import net.minecraft.client.gui.ScaledResolution;
 
-public abstract class Drag implements Accessor {
+public abstract class Drag implements Managers {
     @Expose
     @SerializedName("name")
     public String name;
@@ -29,7 +29,7 @@ public abstract class Drag implements Accessor {
     public boolean dragging;
     private int dragX, dragY;
     public int align;
-    protected Interface setting = Haru.instance.getModuleManager().getModule(Interface.class);
+    protected Interface setting = getModule(Interface.class);
     
     private int LEFT = 1;
     private int RIGHT = 2;
@@ -79,7 +79,7 @@ public abstract class Drag implements Accessor {
     }
 
     public final void onChatGUI(int mouseX, int mouseY, boolean drag, ScaledResolution sr) {
-        boolean hovering = isHovered(renderX, renderY, width, height, mouseX, mouseY);
+        boolean hovering = MathUtil.isHovered(renderX, renderY, width, height, mouseX, mouseY);
 
         if (dragging) {
         	RenderUtil.drawBorderedRect((float)renderX, (float)renderY, (float)width, (float)height, 2f, new Color(0, 0, 0, 0).getRGB(), Color.WHITE.getRGB());

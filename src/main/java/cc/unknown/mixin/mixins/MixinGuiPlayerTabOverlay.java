@@ -6,6 +6,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import cc.unknown.socket.impl.CosmeticSocket;
+import cc.unknown.util.render.client.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -33,6 +35,15 @@ public class MixinGuiPlayerTabOverlay {
 
 	@Redirect(method = "renderPlayerlist", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiPlayerTabOverlay;getPlayerName(Lnet/minecraft/client/network/NetworkPlayerInfo;)Ljava/lang/String;"))
 	private String renderTags(GuiPlayerTabOverlay instance, NetworkPlayerInfo info) {
-		return "[H] " + instance.getPlayerName(info);
+	    String displayedName = instance.getPlayerName(info);
+	    String realName = info.getGameProfile().getName();
+
+	    boolean isOnCosmeticList = CosmeticSocket.cosmeticList.stream().anyMatch(cosmetic -> cosmetic.getName().equalsIgnoreCase(realName));
+
+	    if (!isOnCosmeticList) {
+	        return displayedName;
+	    }
+
+	    return ColorUtil.pink + " [" + ColorUtil.red + "User" + ColorUtil.pink + "] " + ColorUtil.reset + displayedName;
 	}
 }

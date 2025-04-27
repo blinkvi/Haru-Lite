@@ -47,7 +47,7 @@ public final class ModuleManager extends SList<Module> {
                 Loader.class,
                 AutoGame.class,
                 FastPlace.class,
-                FastMine.class,
+                FastBreak.class,
                 FreeLook.class,
 
                 // Visual
@@ -85,7 +85,7 @@ public final class ModuleManager extends SList<Module> {
                 categoryModules.add(module);
                 categories.put(category, categoryModules);
             } catch (Exception e) {
-                Haru.instance.getLogger().error("Failed to instantiate module: {}", e);
+                Haru.logger.error("Failed to instantiate module: {}", e);
             }
         }
     }

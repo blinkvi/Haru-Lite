@@ -6,13 +6,16 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import cc.unknown.util.render.client.CameraUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 @Mixin(RenderManager.class)
@@ -47,16 +50,18 @@ public class MixinRenderManager {
 		this.pointedEntity = pointedEntityIn;
 		this.textRenderer = textRendererIn;
 
-		if (livingPlayerIn instanceof EntityLivingBase && ((EntityLivingBase) livingPlayerIn).isPlayerSleeping()) {
-			IBlockState iblockstate = worldIn.getBlockState(new BlockPos(livingPlayerIn));
-			Block block = iblockstate.getBlock();
+        if (livingPlayerIn instanceof EntityLivingBase && ((EntityLivingBase)livingPlayerIn).isPlayerSleeping())
+        {
+            IBlockState iblockstate = worldIn.getBlockState(new BlockPos(livingPlayerIn));
+            Block block = iblockstate.getBlock();
 
-			if (block.isBed(worldIn, new BlockPos(livingPlayerIn), (EntityLivingBase) livingPlayerIn)) {
-				int i = block.getBedDirection(worldIn, new BlockPos(livingPlayerIn)).getHorizontalIndex();
-				this.playerViewY = (float) (i * 90 + 180);
-				this.playerViewX = 0.0F;
-			}
-		} else if (CameraUtil.freelooking) {
+            if (block == Blocks.bed)
+            {
+                int i = ((EnumFacing)iblockstate.getValue(BlockBed.FACING)).getHorizontalIndex();
+                this.playerViewY = (float)(i * 90 + 180);
+                this.playerViewX = 0.0F;
+            }
+        } else if (CameraUtil.freelooking) {
 			this.playerViewY = CameraUtil.cameraYaw + 180;
 			this.playerViewX = CameraUtil.cameraPitch;
 		} else {
@@ -72,5 +77,4 @@ public class MixinRenderManager {
 		this.viewerPosY = livingPlayerIn.lastTickPosY + (livingPlayerIn.posY - livingPlayerIn.lastTickPosY) * (double) partialTicks;
 		this.viewerPosZ = livingPlayerIn.lastTickPosZ + (livingPlayerIn.posZ - livingPlayerIn.lastTickPosZ) * (double) partialTicks;
 	}
-
 }

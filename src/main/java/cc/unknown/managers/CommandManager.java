@@ -17,7 +17,8 @@ public final class CommandManager extends SList<Command> {
             new NameCom(),
             new JoinCom(),
             new ToggleCom(),
-            new DebugCom()
+            new DebugCom(),
+            new GameCom()
         );
     }
 

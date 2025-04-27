@@ -1,21 +1,25 @@
 package cc.unknown.module.impl.combat;
 
-import cc.unknown.event.player.PrePositionEvent;
+import cc.unknown.event.Listener;
+import cc.unknown.event.annotations.EventLink;
+import cc.unknown.event.impl.PrePositionEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.math.MathUtil;
+import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.player.move.MoveUtil;
 import cc.unknown.util.render.client.ChatUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "MoreKB", description = "Amplifies knockback effect on opponents during combat.", category = Category.COMBAT)
 public class MoreKB extends Module {
 	
-    @SubscribeEvent
-    public void onPreAttack(PrePositionEvent event) {
+	@EventLink
+	public final Listener<PrePositionEvent> onPrePosition = event -> {
+		if (!PlayerUtil.isInGame()) return;
+
 		if (mc.currentScreen != null || !mc.inGameHasFocus) return;
 		
 		if (mc.objectMouseOver != null 
@@ -32,5 +36,5 @@ public class MoreKB extends Module {
                 }
             }
         }
-    }
+	};
 }

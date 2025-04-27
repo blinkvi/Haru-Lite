@@ -4,12 +4,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import cc.unknown.Haru;
+import cc.unknown.event.Listener;
+import cc.unknown.event.Priority;
+import cc.unknown.event.annotations.EventLink;
+import cc.unknown.event.impl.MouseEvent;
+import cc.unknown.event.impl.PostTickEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.player.InventoryUtil;
+import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.player.move.MoveUtil;
 import cc.unknown.util.player.move.RotationUtil;
 import cc.unknown.value.impl.BoolValue;
@@ -21,11 +27,6 @@ import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.client.event.MouseEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "Reach", description = "Sets the attack range.", category = Category.COMBAT)
 public class Reach extends Module {
@@ -44,23 +45,25 @@ public class Reach extends Module {
 		correctValues(min, max);
 	}
 	
-	@SubscribeEvent
-	public void onPostTick(ClientTickEvent event) {
-		if (event.phase == Phase.START) return;
+	@EventLink
+	public final Listener<PostTickEvent> onPostTick = event -> {
+		if (!PlayerUtil.isInGame()) return;
+
 		correctValues(min, max);
-	}
+	};
 	
-	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onMouse(MouseEvent event) {
-		if (event.button >= 0 && event.buttonstate && isInGame()) {
+	@EventLink(value = Priority.VERY_HIGH)
+	public final Listener<MouseEvent> onMouse = event -> {
+		if (!PlayerUtil.isInGame()) return;
+
+		if (event.button >= 0 && event.buttonstate && PlayerUtil.isInGame()) {
 			call();
 		}
-	}
+	};
 
 	public void call() {
-		if (!Haru.instance.getModuleManager().getModule(Reach.class).isEnabled()) return;
-		if (mc.thePlayer != null && mc.theWorld != null
-				&& (!conditionals.isEnabled("WeaponOnly") || InventoryUtil.isSword())
+		if (!Haru.modMngr.getModule(Reach.class).isEnabled()) return;
+		if ((!conditionals.isEnabled("WeaponOnly") || InventoryUtil.isSword())
 				&& (!conditionals.isEnabled("MoveOnly") || MoveUtil.isMoving())
 				&& (!conditionals.isEnabled("SprintOnly") || mc.thePlayer.isSprinting())
 				&& (!MathUtil.chanceApply(chance.getValue()))) {
@@ -80,7 +83,7 @@ public class Reach extends Module {
 	}
 
 	private Object[] getEntity(double reach) {
-		if (!Haru.instance.getModuleManager().getModule(Reach.class).isEnabled()) {
+		if (!Haru.modMngr.getModule(Reach.class).isEnabled()) {
 			reach = mc.playerController.extendedReach() ? 6.0D : 3.0D;
 		}
 		return getEntity(reach, 0.0, null);

@@ -4,12 +4,11 @@ import static org.lwjgl.opengl.GL11.glColor4ub;
 
 import java.awt.Color;
 
-import javax.vecmath.Vector4f;
-
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.math.MathUtil;
+import cc.unknown.util.structure.vectors.Vector4f;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;

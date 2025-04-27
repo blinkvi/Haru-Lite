@@ -37,7 +37,7 @@ public class SliderRenderer extends Component {
         
         FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawCenteredString(String.format("%.2f", value.getValue()), x + 88F, y + 4F, -1);
         
-        if (isHovered(x, y, width - 4, height - 2, mouseX, mouseY) && Mouse.isButtonDown(0)) {
+        if (MathUtil.isHovered(x, y, width - 4, height - 2, mouseX, mouseY) && Mouse.isButtonDown(0)) {
             float raw = (mouseX - x) / (width - 5);
             float set = Math.max(minValue, raw * (maxValue - minValue) + minValue);
             set = (float) MathUtil.incValue(set, value.getIncrement());

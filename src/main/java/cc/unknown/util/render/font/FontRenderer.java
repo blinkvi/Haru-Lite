@@ -7,10 +7,9 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.Haru;
-import cc.unknown.event.render.RenderTextEvent;
+import cc.unknown.event.impl.RenderTextEvent;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraftforge.common.MinecraftForge;
 
 @SuppressWarnings("unused")
 public class FontRenderer extends CFont {
@@ -119,7 +118,7 @@ public class FontRenderer extends CFont {
 			return 0;
         
         RenderTextEvent event = new RenderTextEvent(text);
-        MinecraftForge.EVENT_BUS.post(event);
+        Haru.eventBus.handle(event);
         text = event.string;
 
         if (color == 0x20FFFFFF)
@@ -261,7 +260,7 @@ public class FontRenderer extends CFont {
 			return 0;
         
         RenderTextEvent event = new RenderTextEvent(text);
-        MinecraftForge.EVENT_BUS.post(event);
+        Haru.eventBus.handle(event);
         text = event.string;
 
         CFont.CharData[] currentData = this.charData;
@@ -392,7 +391,7 @@ public class FontRenderer extends CFont {
 			return 0;
         
         RenderTextEvent event = new RenderTextEvent(text);
-        MinecraftForge.EVENT_BUS.post(event);
+        Haru.eventBus.handle(event);
         text = event.string;
 
         CFont.CharData[] currentData = this.charData;
@@ -519,7 +518,7 @@ public class FontRenderer extends CFont {
 			return 0;
         
         RenderTextEvent event = new RenderTextEvent(text);
-        MinecraftForge.EVENT_BUS.post(event);
+        Haru.eventBus.handle(event);
         text = event.string;
 
         float width = 0;

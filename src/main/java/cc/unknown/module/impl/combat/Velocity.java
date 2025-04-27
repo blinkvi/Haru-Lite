@@ -4,14 +4,17 @@ import java.util.Arrays;
 
 import org.lwjgl.input.Keyboard;
 
-import cc.unknown.event.player.InboundEvent;
-import cc.unknown.event.player.PostVelocityEvent;
+import cc.unknown.event.Listener;
+import cc.unknown.event.annotations.EventLink;
+import cc.unknown.event.impl.InboundEvent;
+import cc.unknown.event.impl.PostVelocityEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.module.impl.move.NoClip;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
+import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.player.move.MoveUtil;
 import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.ModeValue;
@@ -19,7 +22,6 @@ import cc.unknown.value.impl.MultiBoolValue;
 import cc.unknown.value.impl.SliderValue;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "Velocity", description = "Modifies the knockback you get.", category = Category.COMBAT)
 public class Velocity extends Module {
@@ -33,18 +35,18 @@ public class Velocity extends Module {
 			new BoolValue("OnlyTarget", true),
 			new BoolValue("OnlyMove", true),
 			new BoolValue("DisableOnPressS", true)));
-
-    @SubscribeEvent
-    public void onPostVelocity(PostVelocityEvent event) {
+    
+	@EventLink
+	public final Listener<PostVelocityEvent> onPostVelocity = event -> {
     	if (!shouldApplyVelocity()) return;
     	
         if (mode.is("Jump") && !mc.gameSettings.keyBindJump.isKeyDown()) {
         	mc.thePlayer.setJumping(mc.thePlayer.onGround);
         }
-    };
+	};
     
-    @SubscribeEvent
-    public void onInbound(InboundEvent event) {
+	@EventLink
+	public final Listener<InboundEvent> onInbound = event -> {
     	if (!shouldApplyVelocity()) return;
     	
     	if (mode.is("Normal")) {
@@ -80,10 +82,10 @@ public class Velocity extends Module {
 	            event.packet = velocity;
 	        }
     	}
-    }
+	};
 
     private boolean shouldApplyVelocity() {
-    	if (!isInGame()) return false;
+    	if (!PlayerUtil.isInGame()) return false;
         if (!MathUtil.chanceApply(chance.getValue())) return false;
         if (isEnabled(NoClip.class)) return false;
         if (conditionals.isEnabled("OnlyTarget") && (mc.objectMouseOver == null || mc.objectMouseOver.entityHit == null)) return false;

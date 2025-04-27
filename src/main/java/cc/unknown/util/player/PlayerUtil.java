@@ -3,6 +3,8 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.input.Mouse;
 
+import cc.unknown.Haru;
+import cc.unknown.event.impl.MouseEvent;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
@@ -21,8 +23,6 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.client.event.MouseEvent;
-import net.minecraftforge.common.MinecraftForge;
 
 public class PlayerUtil implements Accessor {
 	
@@ -35,6 +35,10 @@ public class PlayerUtil implements Accessor {
     	double y = mc.thePlayer.posY;
     	double z = mc.thePlayer.posZ;
         return mc.theWorld.isAirBlock(new BlockPos(x, y - 0.5, z));
+    }
+    
+    public static boolean isInGame() {
+        return mc.thePlayer != null && mc.theWorld != null;
     }
     
     public static boolean checkJump() {
@@ -134,7 +138,7 @@ public class PlayerUtil implements Accessor {
 
         ReflectUtil.setPrivateField(MouseEvent.class, event, mouseButton, "button");
         ReflectUtil.setPrivateField(MouseEvent.class, event, held, "buttonstate");
-        MinecraftForge.EVENT_BUS.post(event);
+        Haru.eventBus.handle(event);
 
         ByteBuffer buttons = ReflectUtil.getPrivateField(Mouse.class, null, "buttons");
         buttons.put(mouseButton, (byte)(held ? 1 : 0));

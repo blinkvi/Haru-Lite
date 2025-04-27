@@ -4,8 +4,11 @@ import java.util.Arrays;
 
 import org.lwjgl.input.Keyboard;
 
-import cc.unknown.event.player.MoveInputEvent;
-import cc.unknown.event.player.PrePositionEvent;
+import cc.unknown.event.Listener;
+import cc.unknown.event.annotations.EventLink;
+import cc.unknown.event.impl.MoveInputEvent;
+import cc.unknown.event.impl.PrePositionEvent;
+import cc.unknown.event.impl.RenderWorldLastEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -17,8 +20,6 @@ import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.MultiBoolValue;
 import cc.unknown.value.impl.SliderValue;
 import net.minecraft.world.WorldSettings;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "BridgeAssist", description = "Automatically sneaks for you when you are near the edge of a block.", category = Category.MOVE)	
 public class BridgeAssist extends Module {
@@ -47,19 +48,21 @@ public class BridgeAssist extends Module {
         if (conditionals.isEnabled("BlockSwitching")) mc.thePlayer.inventory.currentItem = slot;
     }
     
-    @SubscribeEvent
-    public void onMoveInput(MoveInputEvent event) {
+    @EventLink
+    public final Listener<MoveInputEvent> onMoveInput = event -> {
     	if (isShifting && shouldBridge) {
     		event.sneak = true;
     	}
     	
     	if (!isShifting && shouldBridge) {
     		event.sneak = false;
-    	}  	
-    }
+    	}
+    };
     
-    @SubscribeEvent
-    public void onPreAttack(PrePositionEvent event) {
+    @EventLink
+    public final Listener<PrePositionEvent> onPrePosition = event -> {
+		if (!PlayerUtil.isInGame()) return;
+
     	if (noBridge()) return;
     	         
         if (conditionals.isEnabled("RequireSneak")) {
@@ -123,11 +126,11 @@ public class BridgeAssist extends Module {
 		else {
 			isShifting = false;
 		}
-    }
-
-	@SubscribeEvent
-	public void onRender3D(RenderWorldLastEvent event) {
-        if (!isInGame()) return;
+    };
+    
+    @EventLink
+    public final Listener<RenderWorldLastEvent> onRender3D = event -> {
+        if (!PlayerUtil.isInGame()) return;
         
         if (conditionals.isEnabled("BlockSwitching") && slot == -1) {
             slot = mc.thePlayer.inventory.currentItem;
@@ -142,7 +145,7 @@ public class BridgeAssist extends Module {
         }
         
         if (mc.currentScreen == null || mc.thePlayer.getHeldItem() == null) return;
-    }
+    };
     
     private boolean noBridge() {
         if (mc.playerController.getCurrentGameType() == WorldSettings.GameType.SPECTATOR) return true;

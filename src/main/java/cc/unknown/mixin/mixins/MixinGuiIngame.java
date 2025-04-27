@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import cc.unknown.Haru;
 import cc.unknown.handlers.SpoofHandler;
 import cc.unknown.module.impl.visual.Interface;
+import cc.unknown.util.Managers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiIngame;
@@ -33,7 +34,7 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.EnumChatFormatting;
 
 @Mixin(GuiIngame.class)
-public abstract class MixinGuiIngame extends Gui {
+public abstract class MixinGuiIngame extends Gui implements Managers {
 
 	@Shadow
 	@Final
@@ -52,7 +53,7 @@ public abstract class MixinGuiIngame extends Gui {
 
 	@Inject(method = "renderScoreboard", at = @At("HEAD"), cancellable = true)
 	private void preRenderScoreboard(ScoreObjective objective, ScaledResolution scaledRes, CallbackInfo ci) {
-		Interface inter = Haru.instance.getModuleManager().getModule(Interface.class);
+		Interface inter = Haru.modMngr.getModule(Interface.class);
 
 		if (inter.isEnabled() && inter.elements.isEnabled("Scoreboard")) {
 			drawScoreboard(scaledRes, objective, objective.getScoreboard(), objective.getScoreboard().getSortedScores(objective));
@@ -87,9 +88,9 @@ public abstract class MixinGuiIngame extends Gui {
 	
 	@Unique
 	public void drawScoreboard(ScaledResolution scaledRes, ScoreObjective objective, Scoreboard scoreboard, Collection<Score> scores) {
-		Interface inter = Haru.instance.getModuleManager().getModule(Interface.class);
+		Interface inter = Haru.modMngr.getModule(Interface.class);
 
-		if (inter.noRenderScoreboard.get()) return;
+		if (!inter.noRenderScoreboard.get()) return;
 		
 		List<Score> list = Lists.newArrayList(Iterables.filter(scores, p_apply_1_ -> p_apply_1_.getPlayerName() != null && !p_apply_1_.getPlayerName().startsWith("#")));
 

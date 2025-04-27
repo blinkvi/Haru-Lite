@@ -2,8 +2,7 @@ package cc.unknown.util.alt;
 
 import com.google.gson.JsonObject;
 
-import cc.unknown.mixin.interfaces.IMinecraft;
-import net.minecraft.client.Minecraft;
+import cc.unknown.util.client.ReflectUtil;
 import net.minecraft.util.Session;
 
 public class Account {
@@ -42,7 +41,7 @@ public class Account {
 	}
 
 	public boolean login() {
-        ((IMinecraft) Minecraft.getMinecraft()).setSession(new Session(name, uuid, accessToken, "mojang"));
+		ReflectUtil.setSession(new Session(name, uuid, accessToken, "mojang"));
         return true;
     }
 

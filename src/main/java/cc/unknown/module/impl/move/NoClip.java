@@ -1,9 +1,11 @@
 package cc.unknown.module.impl.move;
 
-import cc.unknown.event.player.BlockAABBEvent;
-import cc.unknown.event.player.PrePositionEvent;
-import cc.unknown.event.player.PushOutOfBlockEvent;
-import cc.unknown.event.render.Render2DEvent;
+import cc.unknown.event.Listener;
+import cc.unknown.event.annotations.EventLink;
+import cc.unknown.event.impl.BlockAABBEvent;
+import cc.unknown.event.impl.PrePositionEvent;
+import cc.unknown.event.impl.PushOutOfBlockEvent;
+import cc.unknown.event.impl.Render2DEvent;
 import cc.unknown.handlers.SpoofHandler;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
@@ -17,7 +19,6 @@ import net.minecraft.block.BlockAir;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "NoClip", description = "", category = Category.MOVE)
 public class NoClip extends Module {
@@ -36,8 +37,8 @@ public class NoClip extends Module {
 		SpoofHandler.stopSpoofing();
 	}
 	
-	@SubscribeEvent
-	public void onBlockAABB(BlockAABBEvent event) {
+	@EventLink
+	public final Listener<BlockAABBEvent> onBlockAABB = event -> {
 		if (!BlockUtil.insideBlock()) return;
 
 		Block block = event.block;
@@ -60,15 +61,13 @@ public class NoClip extends Module {
 				event.boundingBox = expandedBox.offset(x, y, z);
 			}
 		}
-	}
+	};
 	
-	@SubscribeEvent
-	public void onPushOutOfBlock(PushOutOfBlockEvent event) {
-		event.setCanceled(true);
-	}
+    @EventLink
+    public final Listener<PushOutOfBlockEvent> onPushOutOfBlock = event -> event.setCanceled(true);
 
-    @SubscribeEvent
-    public void onPreAttack(PrePositionEvent event) {
+    @EventLink
+    public final Listener<PrePositionEvent> onPrePosition = event -> {
 		if (lastSlot == -1) {
 			lastSlot = mc.thePlayer.inventory.currentItem;
 		}
@@ -89,10 +88,8 @@ public class NoClip extends Module {
 
 			mc.thePlayer.swingItem();
 		}
-	}
-
-	@SubscribeEvent
-	public void onRender2D(Render2DEvent event) {
-		FontUtil.getFontRenderer("comfortaa.ttf", 17).drawCenteredString("presiona shift", event.getScaledWidth() / 2F, event.getScaledHeight() - 90, getModule(Interface.class).color());
-	}
+	};
+	
+    @EventLink
+    public final Listener<Render2DEvent> onRender2D = event -> FontUtil.getFontRenderer("comfortaa.ttf", 17).drawCenteredString("presiona shift", event.getScaledWidth() / 2F, event.getScaledHeight() - 90, getModule(Interface.class).color());
 }

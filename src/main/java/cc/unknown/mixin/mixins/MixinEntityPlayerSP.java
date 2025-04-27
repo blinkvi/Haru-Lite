@@ -12,12 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.mojang.authlib.GameProfile;
 
-import cc.unknown.event.player.PostAttackEvent;
-import cc.unknown.event.player.PreAttackEvent;
-import cc.unknown.event.player.PrePositionEvent;
-import cc.unknown.event.player.PushOutOfBlockEvent;
-import cc.unknown.event.player.SlowDownEvent;
-import cc.unknown.event.player.UpdateEvent;
+import cc.unknown.Haru;
+import cc.unknown.event.impl.PostAttackEvent;
+import cc.unknown.event.impl.PreAttackEvent;
+import cc.unknown.event.impl.PrePositionEvent;
+import cc.unknown.event.impl.PushOutOfBlockEvent;
+import cc.unknown.event.impl.SlowDownEvent;
+import cc.unknown.event.impl.UpdateEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -30,12 +31,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mixin(EntityPlayerSP.class)
-@SideOnly(Side.CLIENT)
 public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
 	public MixinEntityPlayerSP(World worldIn, GameProfile playerProfile) {
@@ -115,7 +112,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 	@Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
 	public void onPreUpdate(CallbackInfo ci) {
 		PreAttackEvent event = new PreAttackEvent();
-		MinecraftForge.EVENT_BUS.post(event);
+		Haru.eventBus.handle(event);
 
 		if (event.isCanceled()) {
 			ci.cancel();
@@ -124,14 +121,14 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
 	@Inject(method = "onUpdate", at = @At("RETURN"))
 	public void onPostUpdate(CallbackInfo ci) {
-		MinecraftForge.EVENT_BUS.post(new PostAttackEvent());
+		Haru.eventBus.handle(new PostAttackEvent());
 	}
 
     @Inject(method = "onUpdateWalkingPlayer", at = @At("HEAD"), cancellable = true)
     private void onUpdateWalkingPlayer(CallbackInfo ci) {
     	PrePositionEvent event = new PrePositionEvent(posX, posY, posZ, rotationYaw, rotationPitch, onGround, isSprinting(), isSneaking());
 
-    	MinecraftForge.EVENT_BUS.post(event);
+    	Haru.eventBus.handle(event);
         if (event.isCanceled()) {
         	return;
         }
@@ -211,7 +208,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 		if (noClip) {
 			event.setCanceled(true);
 		}
-		MinecraftForge.EVENT_BUS.post(event);
+		Haru.eventBus.handle(event);
 
 		if (event.isCanceled()) {
 			callbackInfoReturnable.setReturnValue(false);
@@ -220,7 +217,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
     @Overwrite
     public void onLivingUpdate() {
-    	MinecraftForge.EVENT_BUS.post(new UpdateEvent());
+    	Haru.eventBus.handle(new UpdateEvent());
         if (sprintingTicksLeft > 0) {
             --sprintingTicksLeft;
 
@@ -257,7 +254,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         movementInput.updatePlayerMoveState();
 
         SlowDownEvent event = new SlowDownEvent(0.2F, 0.2F);
-        MinecraftForge.EVENT_BUS.post(event);
+        Haru.eventBus.handle(event);
 
         if (isUsingItem() && !isRiding()) {
             movementInput.moveStrafe *= event.strafeMultiplier;

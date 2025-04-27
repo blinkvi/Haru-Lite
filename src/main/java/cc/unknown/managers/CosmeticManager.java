@@ -26,7 +26,7 @@ public final class CosmeticManager implements Accessor {
 
     public boolean load(Directory dir) {
         if (dir == null) {
-            Haru.instance.getLogger().warn("Attempted to load a null configuration.");
+            Haru.logger.warn("Attempted to load a null configuration.");
             return false;
         }
 
@@ -34,13 +34,13 @@ public final class CosmeticManager implements Accessor {
             JsonParser parser = new JsonParser();
             JsonObject jsonObject = parser.parse(reader).getAsJsonObject();
             dir.load(jsonObject);
-            Haru.instance.getLogger().info("Loaded: " + dir.getName());
+            Haru.logger.info("Loaded: " + dir.getName());
             return true;
         } catch (IOException e) {
-            Haru.instance.getLogger().error("Failed to load: " + dir.getName(), e);
+            Haru.logger.error("Failed to load: " + dir.getName(), e);
             return false;
         } catch (Exception e) {
-            Haru.instance.getLogger().error("Error processing: " + dir.getName(), e);
+            Haru.logger.error("Error processing: " + dir.getName(), e);
             return false;
         }
     }
@@ -53,10 +53,10 @@ public final class CosmeticManager implements Accessor {
 
         try (FileWriter writer = new FileWriter(dir.getFile())) {
             writer.write(jsonString);
-            Haru.instance.getLogger().info("Saved: " + dir.getName());
+            Haru.logger.info("Saved: " + dir.getName());
             return true;
         } catch (IOException e) {
-            Haru.instance.getLogger().error("Failed to save: " + dir.getName(), e);
+            Haru.logger.error("Failed to save: " + dir.getName(), e);
             return false;
         }
     }
@@ -64,7 +64,7 @@ public final class CosmeticManager implements Accessor {
     public void saveFiles() {
         for (Directory dir : configs) {
             if (!save(dir)) {
-                Haru.instance.getLogger().warn("Failed to save: " + dir.getName());
+                Haru.logger.warn("Failed to save: " + dir.getName());
             }
         }
     }
@@ -76,14 +76,14 @@ public final class CosmeticManager implements Accessor {
             if (!configFile.exists()) {
                 try (FileWriter writer = new FileWriter(configFile)) {
                     writer.write("{}");
-                    Haru.instance.getLogger().info("Created empty file: " + configFile.getName());
+                    Haru.logger.info("Created empty file: " + configFile.getName());
                 } catch (IOException e) {
-                    Haru.instance.getLogger().error("Failed to create empty file: " + dir.getName(), e);
+                    Haru.logger.error("Failed to create empty file: " + dir.getName(), e);
                 }
             }
 
             if (!load(dir)) {
-                Haru.instance.getLogger().warn("Failed to load: " + dir.getName());
+                Haru.logger.warn("Failed to load: " + dir.getName());
             }
         }
     }

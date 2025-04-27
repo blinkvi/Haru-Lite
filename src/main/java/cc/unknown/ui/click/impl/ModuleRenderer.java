@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import cc.unknown.module.Module;
 import cc.unknown.module.impl.visual.ClickGUI;
+import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontRenderer;
 import cc.unknown.util.render.font.FontUtil;
@@ -43,7 +44,7 @@ public class ModuleRenderer extends Component {
     	FontRenderer fontRenderer = FontUtil.getFontRenderer("interSemiBold.ttf", 15);
     	
     	if (getModule(ClickGUI.class).pref.isEnabled("ToolTips")) { // tooltips
-	        if (isHovered(x, y, width, 10F, mouseX, mouseY)) {
+	        if (MathUtil.isHovered(x, y, width, 10F, mouseX, mouseY)) {
 	            String description = module.getModuleInfo().description();
 	            if (!description.isEmpty()) {
 		            float tooltipWidth = (float) (fontRenderer.getStringWidth(description) + 10);
@@ -86,7 +87,7 @@ public class ModuleRenderer extends Component {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (isHovered(x, y, width, 10F, mouseX, mouseY)) {
+        if (MathUtil.isHovered(x, y, width, 10F, mouseX, mouseY)) {
             if (mouseButton == 1) {
                 if (!module.getValues().isEmpty()) {
                     module.setExpanded(!module.isExpanded());

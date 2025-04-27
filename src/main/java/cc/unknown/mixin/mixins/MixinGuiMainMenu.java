@@ -27,7 +27,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.GuiModList;
 
 @Mixin(GuiMainMenu.class)
 public abstract class MixinGuiMainMenu extends GuiScreen implements GuiYesNoCallback {
@@ -72,7 +71,6 @@ public abstract class MixinGuiMainMenu extends GuiScreen implements GuiYesNoCall
 
 	    this.buttonList.add(new GuiButton(1, scaledWidth / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer")));
 	    this.buttonList.add(new GuiButton(2, scaledWidth / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer")));
-	    this.buttonList.add(new GuiButton(4, scaledWidth / 2 - 100, p_73969_1_ + p_73969_2_ * 2, 200, 20, I18n.format("fml.menu.mods")));
 	}
 	
 	@Overwrite
@@ -89,9 +87,6 @@ public abstract class MixinGuiMainMenu extends GuiScreen implements GuiYesNoCall
 			break;
 		case 3:
 			this.mc.shutdown();
-			break;
-		case 4:
-			this.mc.displayGuiScreen(new GuiModList((GuiMainMenu) (Object) this));
 			break;
 		}
 	}

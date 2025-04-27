@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import cc.unknown.Haru;
 import cc.unknown.module.impl.visual.AntiDebuff;
+import cc.unknown.util.Managers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.BaseAttributeMap;
@@ -21,7 +22,7 @@ import net.minecraft.util.CombatTracker;
 import net.minecraft.util.Vec3;
 
 @Mixin(EntityLivingBase.class)
-public abstract class MixinEntityLivingBase extends MixinEntity {
+public abstract class MixinEntityLivingBase extends MixinEntity implements Managers {
 
 	@Shadow
 	@Final
@@ -108,7 +109,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity {
 
     @Inject(method = "isPotionActive(Lnet/minecraft/potion/Potion;)Z", at = @At("HEAD"), cancellable = true)
     private void isPotionActive(Potion potion, CallbackInfoReturnable<Boolean> ci) {
-        AntiDebuff antiDebuff = Haru.instance.getModuleManager().getModule(AntiDebuff.class);
+        AntiDebuff antiDebuff = Haru.modMngr.getModule(AntiDebuff.class);
         if (antiDebuff.isEnabled() && potion == Potion.blindness || potion == Potion.confusion) {
         	ci.setReturnValue(false);
         }
