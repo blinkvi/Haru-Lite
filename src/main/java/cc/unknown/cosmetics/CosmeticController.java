@@ -1,7 +1,5 @@
 package cc.unknown.cosmetics;
 
-import java.util.Arrays;
-
 import cc.unknown.cosmetics.impl.accessories.Bandana;
 import cc.unknown.cosmetics.impl.aura.BlazeAura;
 import cc.unknown.cosmetics.impl.aura.CreeperAura;
@@ -21,7 +19,6 @@ import cc.unknown.cosmetics.impl.wings.MechWings;
 import cc.unknown.cosmetics.impl.wings.MetalWings;
 import cc.unknown.cosmetics.impl.wings.ShanaWings;
 import cc.unknown.socket.impl.CosmeticSocket;
-import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.render.enums.CosmeticType;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -89,6 +86,8 @@ public class CosmeticController {
 
     @SafeVarargs
     private static void addLayer(RenderPlayer renderPlayer, LayerRenderer<AbstractClientPlayer>... layers) {
-        Arrays.stream(layers).forEach(layer -> ReflectUtil.getPrivateMethod(RenderPlayer.class, renderPlayer, LayerRenderer.class, layer, "addLayer", "func_177094_a"));
+        for (LayerRenderer<AbstractClientPlayer> layer : layers) {
+            renderPlayer.addLayer(layer);
+        }
     }
 }
