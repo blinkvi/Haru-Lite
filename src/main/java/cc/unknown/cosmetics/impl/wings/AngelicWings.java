@@ -83,8 +83,4 @@ public class AngelicWings extends ModelBase implements LayerRenderer<AbstractCli
 	public boolean shouldCombineTextures() {
 		return false;
 	}
-	
-	public String isWings(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(cosmetic -> name.equalsIgnoreCase(cosmetic.getName())).map(SuperCosmetic::getWings).filter(wings -> !wings.equalsIgnoreCase("None")).findFirst().orElse("None");
-	}
 }

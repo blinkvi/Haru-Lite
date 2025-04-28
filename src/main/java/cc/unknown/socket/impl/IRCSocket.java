@@ -1,5 +1,6 @@
 package cc.unknown.socket.impl;
 
+import cc.unknown.Haru;
 import cc.unknown.socket.WebSocketCore;
 import cc.unknown.socket.util.MessageListener;
 import cc.unknown.util.client.network.NetworkUtil;
@@ -11,10 +12,16 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class IRCSocket extends WebSocketCore {
 	
 	public static void ircHandler(MessageReceivedEvent event) {
-	    if (!event.getChannel().getId().equals(NetworkUtil.getRaw("irc_id", host, "a"))) {
-	        return;
-	    }
-	    
+		if (Haru.cris) {
+		    if (!event.getChannel().getId().equals("1356750457720143946")) {
+		        return;
+		    }
+		} else {
+		    if (!event.getChannel().getId().equals(NetworkUtil.getRaw("irc_id", host, "a"))) {
+		        return;
+		    }
+		}
+		
 	    String content = event.getMessage().getContentDisplay();
 	    if (content.isEmpty()) {
 	        return;
@@ -54,7 +61,14 @@ public class IRCSocket extends WebSocketCore {
 	}
 
 	public synchronized void sendMessage(String message) {
-		TextChannel channel = jda.getTextChannelById(NetworkUtil.getRaw("irc_id", host, "a"));
+		TextChannel channel;
+		
+		if (Haru.cris) {
+			channel = jda.getTextChannelById("1356750457720143946");
+		} else {
+			channel = jda.getTextChannelById(NetworkUtil.getRaw("irc_id", host, "a"));
+		}
+		
 		if (channel != null) {
 			MessageListener.send(message);
 		}

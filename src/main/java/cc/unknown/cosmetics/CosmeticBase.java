@@ -31,30 +31,26 @@ public abstract class CosmeticBase implements LayerRenderer<AbstractClientPlayer
 	}
 
 	public String isAccessories(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(cosmetic -> name.equalsIgnoreCase(cosmetic.getName())).map(SuperCosmetic::getAccesories).filter(accessories -> !accessories.equalsIgnoreCase("None")).findFirst().orElse("None");
+		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getAccesories).filter(accessories -> !accessories.equalsIgnoreCase("None")).findFirst().orElse("None");
 	}
 
 	public String isAura(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(cosmetic -> name.equalsIgnoreCase(cosmetic.getName())).map(SuperCosmetic::getAura).filter(aura -> !aura.equalsIgnoreCase("None")).findFirst().orElse("None");
+		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getAura).filter(aura -> !aura.equalsIgnoreCase("None")).findFirst().orElse("None");
 	}
 
 	public String isCape(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(cosmetic -> name.equalsIgnoreCase(cosmetic.getName())).map(SuperCosmetic::getCape).filter(cape -> !cape.equalsIgnoreCase("None")).findFirst().orElse("None");
+		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getCape).filter(cape -> !cape.equalsIgnoreCase("None")).findFirst().orElse("None");
 	}
 
 	public String isHat(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(cosmetic -> name.equalsIgnoreCase(cosmetic.getName())).map(SuperCosmetic::getHat).filter(hat -> !hat.equalsIgnoreCase("None")).findFirst().orElse("None");
+		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getHat).filter(hat -> !hat.equalsIgnoreCase("None")).findFirst().orElse("None");
 	}
 
 	public String isPet(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(cosmetic -> name.equalsIgnoreCase(cosmetic.getName())).map(SuperCosmetic::getPet).filter(pet -> !pet.equalsIgnoreCase("None")).findFirst().orElse("None");
-	}
-
-	public String isWings(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(cosmetic -> name.equalsIgnoreCase(cosmetic.getName())).map(SuperCosmetic::getWings).filter(wings -> !wings.equalsIgnoreCase("None")).findFirst().orElse("None");
+		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getPet).filter(pet -> !pet.equalsIgnoreCase("None")).findFirst().orElse("None");
 	}
 	
 	public String isHalo(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(cosmetic -> name.equalsIgnoreCase(cosmetic.getName())).map(SuperCosmetic::getHalo).filter(halo -> !halo.equalsIgnoreCase("None")).findFirst().orElse("None");
+		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getHalo).filter(halo -> !halo.equalsIgnoreCase("None")).findFirst().orElse("None");
 	}
 }

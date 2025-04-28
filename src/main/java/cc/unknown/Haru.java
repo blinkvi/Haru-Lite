@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder;
 import cc.unknown.handlers.AutoJoinHandler;
 import cc.unknown.handlers.CPSHandler;
 import cc.unknown.handlers.CommandHandler;
+import cc.unknown.handlers.CosmeticHandler;
 import cc.unknown.handlers.DiscordHandler;
 import cc.unknown.handlers.DragHandler;
 import cc.unknown.handlers.GuiMoveHandler;
@@ -79,9 +80,9 @@ public class Haru {
     public static final File CFG_DIR = new File(MAIN_DIR, "configs");
     public static final File DRAG_DIR = new File(MAIN_DIR, "draggable");
     public static final File CS_DIR = new File(MAIN_DIR, "cosmetics");
-    public static final File SCRIPT_DIR = new File(MAIN_DIR, "scripts");
     
     public static boolean firstStart;
+    public static boolean cris = true;
 
     @EventHandler
     public void startMod(FMLInitializationEvent ignored) { }
@@ -133,6 +134,7 @@ public class Haru {
             new IRCHandler(),
             new SettingsHandler(),
             new CommandHandler(),
+            new CosmeticHandler(),
             new KeyHandler(),
             new GuiMoveHandler(),
             new CPSHandler()
@@ -186,7 +188,7 @@ public class Haru {
     }
     
     public void createDirectories() {
-    	Stream.of(MAIN_DIR, DLL_DIR, CFG_DIR, DRAG_DIR, CS_DIR, SCRIPT_DIR)
+    	Stream.of(MAIN_DIR, DLL_DIR, CFG_DIR, DRAG_DIR, CS_DIR)
         .filter(Objects::nonNull)
         .map(File::toPath)
         .forEach(dir -> {

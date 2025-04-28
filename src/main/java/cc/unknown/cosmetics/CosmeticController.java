@@ -1,13 +1,27 @@
 package cc.unknown.cosmetics;
 
-import cc.unknown.cosmetics.impl.accessories.*;
-import cc.unknown.cosmetics.impl.aura.*;
-import cc.unknown.cosmetics.impl.cape.*;
-import cc.unknown.cosmetics.impl.halo.*;
-import cc.unknown.cosmetics.impl.hat.*;
-import cc.unknown.cosmetics.impl.pet.*;
-import cc.unknown.cosmetics.impl.wings.*;
+import java.util.Arrays;
+
+import cc.unknown.cosmetics.impl.accessories.Bandana;
+import cc.unknown.cosmetics.impl.aura.BlazeAura;
+import cc.unknown.cosmetics.impl.aura.CreeperAura;
+import cc.unknown.cosmetics.impl.aura.EnchantingAura;
+import cc.unknown.cosmetics.impl.aura.OrbitAura;
+import cc.unknown.cosmetics.impl.cape.Cape;
+import cc.unknown.cosmetics.impl.halo.Halo;
+import cc.unknown.cosmetics.impl.hat.DimmadomeHat;
+import cc.unknown.cosmetics.impl.hat.Tophat;
+import cc.unknown.cosmetics.impl.hat.WitchHat;
+import cc.unknown.cosmetics.impl.pet.DogPet;
+import cc.unknown.cosmetics.impl.wings.AngelicWings;
+import cc.unknown.cosmetics.impl.wings.DemonWings;
+import cc.unknown.cosmetics.impl.wings.GalaxyWings;
+import cc.unknown.cosmetics.impl.wings.KuroyukihimeWings;
+import cc.unknown.cosmetics.impl.wings.MechWings;
+import cc.unknown.cosmetics.impl.wings.MetalWings;
+import cc.unknown.cosmetics.impl.wings.ShanaWings;
 import cc.unknown.socket.impl.CosmeticSocket;
+import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.render.enums.CosmeticType;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -75,8 +89,6 @@ public class CosmeticController {
 
     @SafeVarargs
     private static void addLayer(RenderPlayer renderPlayer, LayerRenderer<AbstractClientPlayer>... layers) {
-        for (LayerRenderer<AbstractClientPlayer> layer : layers) {
-            renderPlayer.addLayer(layer);
-        }
+        Arrays.stream(layers).forEach(layer -> ReflectUtil.getPrivateMethod(RenderPlayer.class, renderPlayer, LayerRenderer.class, layer, "addLayer", "func_177094_a"));
     }
 }
