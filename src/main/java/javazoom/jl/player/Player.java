@@ -10,8 +10,6 @@ import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.decoder.SampleBuffer;
 
 public class Player {
-	private int frame = 0;
-
 	private Bitstream bitstream;
 
 	private Decoder decoder;
@@ -118,13 +116,5 @@ public class Player {
 			throw new JavaLayerException("Exception decoding audio frame", ex);
 		}
 		return true;
-	}
-
-	public boolean setVolumen(final float volume) {
-		if (this.audio instanceof JavaSoundAudioDevice) {
-			final JavaSoundAudioDevice jsaudio = (JavaSoundAudioDevice) this.audio;
-			jsaudio.setVolumeControl(volume);
-		}
-		return false;
 	}
 }

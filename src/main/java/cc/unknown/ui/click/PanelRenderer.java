@@ -36,7 +36,6 @@ public class PanelRenderer extends Component {
         this.settingBools.add(new BoolValue("NoHitDelay", null, false));
         this.settingBools.add(new BoolValue("NoJumpDelay", null, false));
         this.settingBools.add(new BoolValue("NoUseDelay", null, false));
-        this.settingBools.add(new BoolValue("JumpCircle", null, false));
         
         this.moduleComponents = Haru.instance.getModuleManager()
                 .getModulesByCategory(category)

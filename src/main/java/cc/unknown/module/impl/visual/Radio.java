@@ -11,10 +11,8 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.music.RadioPlayer;
 import cc.unknown.util.render.client.ChatUtil;
-import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.util.structure.list.SList;
 import cc.unknown.value.impl.ModeValue;
-import cc.unknown.value.impl.SliderValue;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;
@@ -26,10 +24,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @ModuleInfo(name = "MusicPlayer", description = "Time to listen to radio.", category = Category.VISUAL)
 public class Radio extends Module {
 	
-	private final ModeValue mode = new ModeValue("Mode", this, "Local", "Rock", "Phonk", "Trap", "NCS", "Party", "Classic", "NightCore", "Other", "90s", "Local");
-	
-	private final SliderValue volumen = new SliderValue("Volumen", this, 0.5f, 0f, 1f, 0.1f);
-	
+	private final ModeValue mode = new ModeValue("Mode", this, "Local", "Nightcore", "Phonk", "90s", "Depression", "Anime", "Rock", "Hct", "Wifer", "Local");
+		
 	private boolean started = false;
 	   
 	private SList<File> musicFiles;
@@ -64,10 +60,12 @@ public class Radio extends Module {
                 if (musicFiles != null && !musicFiles.isEmpty()) {
                     playSong();
                 } else {
-                	setMessage("No local music files found.");
+                	ChatUtil.display(prefix("No local music files found."));
                 }
             } else {
-            	setMessage("Playing " + mode.getMode() + " playlist.");
+            	String songName = mode.getMode();
+            	songName = songName.toLowerCase();
+                ChatUtil.display(prefix("Playing " + songName + " playlist."));
                 playOtherMusic(mode.getMode());
             }
             started = false;
@@ -102,33 +100,33 @@ public class Radio extends Module {
             }
             
             switch (mode) {
-            case "Trap":
-            	connectToMusic("trap");
-            	break;
-            case "Phonk":
-            	connectToMusic("phonk");
-            	break;
-            case "Rock":
-            	connectToMusic("radio-barbarossa");
-            	break;
-            case "NCS":
-            	connectToMusic("ncsradio");
-            	break;
-            case "NightCore":
-            	connectToMusic("nightcoremusic");
-            	break;
-            case "Party":
-            	connectToMusic("djzubi");
-            	break;
-            case "90s":
-            	connectToMusic("eurobeat");
-            	break;
-            case "Classic":
-            	connectToMusic("classics");
-            	break;
-            case "Other":
-            	connectToMusic("estacionmix");
-            	break;
+    		case "Hct":
+    			connectToMusic("hct");
+    			break;
+    		case "Phonk":
+    			connectToMusic("phonk");
+    			break;
+    		case "Rock":
+    			connectToMusic("ozzy-oscar");
+    			break;
+    		case "NCS":
+    			connectToMusic("ncsradio");
+    			break;
+    		case "Nightcore":
+    			connectToMusic("nightcoremusic");
+    			break;
+    		case "90s":
+    			connectToMusic("eurobeat");
+    			break;
+    		case "Anime":
+    			connectToMusic("anime-radio-switzerland");
+    			break;
+    		case "Depression":
+    			connectToMusic("skyfm");
+    			break;
+    		case "Wifer":
+    			connectToMusic("reggaetonhits");
+    			break;
             }
         };
 
@@ -137,7 +135,6 @@ public class Radio extends Module {
     
     private void connectToMusic(String instruction) {
         radio.start("https://stream.laut.fm/" + instruction);
-        radio.volumen(volumen.getValue() * 100f);
     }
 
     private void loadMusicFiles(String directoryPath) {
@@ -161,12 +158,12 @@ public class Radio extends Module {
             String fileName = currentFile.getName();
             String songName = fileName.replace(".mp3", "");
             
-            songName = songName.substring(0, 1).toUpperCase() + songName.substring(1).toLowerCase();
+            songName = songName.substring(1).toLowerCase();
 
-            setMessage("Playing " + songName);
+            ChatUtil.display(prefix("Playing " + songName));
             playLocal(currentFile);
         } else {
-            setMessage("No more songs to play.");
+            ChatUtil.display(prefix("No more songs to play."));
         }
     }
     
@@ -185,9 +182,5 @@ public class Radio extends Module {
             player.close();
             player = null;
         }
-    }
-    
-    private void setMessage(String message) {
-    	ChatUtil.display(ColorUtil.pink + "[H]" + " " + ColorUtil.red + message);
     }
 }

@@ -6,7 +6,6 @@ import cc.unknown.Haru;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.player.move.RotationUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,7 +31,7 @@ public class Piercing extends Module {
 		if (!Haru.instance.getModuleManager().getModule(Piercing.class).isEnabled()) return;
 		if (mc.thePlayer != null && mc.theWorld != null) {
 
-			Object[] o = getEntity(3.0D, 0.0D, null);
+			Object[] o = getEntity(3.0D, 0.0D);
 
 			if (o != null) {
 				if (!RotationUtil.rayCastIgnoreWall(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch,
@@ -48,7 +47,7 @@ public class Piercing extends Module {
 		}
 	}
 
-	public Object[] getEntity(double reach, double expand, float[] rotations) {
+	public Object[] getEntity(double reach, double expand) {
 		Entity zz2 = mc.getRenderViewEntity();
 		Entity entity = null;
 		if (zz2 == null) {
@@ -56,12 +55,7 @@ public class Piercing extends Module {
 		} else {
 			mc.mcProfiler.startSection("pick");
 			Vec3 zz3 = zz2.getPositionEyes(1.0F);
-			Vec3 zz4;
-			if (rotations != null) {
-				zz4 = ReflectUtil.getVectorForRotation(rotations[1], rotations[0]);
-			} else {
-				zz4 = zz2.getLook(1.0F);
-			}
+			Vec3 zz4 = zz2.getLook(1.0F);
 			Vec3 zz5 = zz3.addVector(zz4.xCoord * reach, zz4.yCoord * reach, zz4.zCoord * reach);
 			Vec3 hitVec = null;
 			List<?> zz8 = mc.theWorld.getEntitiesWithinAABBExcludingEntity(zz2, zz2.getEntityBoundingBox()

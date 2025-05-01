@@ -7,7 +7,6 @@ import cc.unknown.Haru;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.move.MoveUtil;
@@ -83,10 +82,10 @@ public class Reach extends Module {
 		if (!Haru.instance.getModuleManager().getModule(Reach.class).isEnabled()) {
 			reach = mc.playerController.extendedReach() ? 6.0D : 3.0D;
 		}
-		return getEntity(reach, 0.0, null);
+		return getEntity(reach, 0.0);
 	}
 
-	public Object[] getEntity(double reach, double expand, float[] rotations) {
+	public Object[] getEntity(double reach, double expand) {
 		Entity zz2 = mc.getRenderViewEntity();
 		Entity entity = null;
 		if (zz2 == null) {
@@ -94,12 +93,7 @@ public class Reach extends Module {
 		} else {
 			mc.mcProfiler.startSection("pick");
 			Vec3 zz3 = zz2.getPositionEyes(1.0F);
-			Vec3 zz4;
-			if (rotations != null) {
-				zz4 = ReflectUtil.getVectorForRotation(rotations[1], rotations[0]);
-			} else {
-				zz4 = zz2.getLook(1.0F);
-			}
+			Vec3 zz4 = zz2.getLook(1.0F);
 			Vec3 zz5 = zz3.addVector(zz4.xCoord * reach, zz4.yCoord * reach, zz4.zCoord * reach);
 			Vec3 hitVec = null;
 			List<?> zz8 = mc.theWorld.getEntitiesWithinAABBExcludingEntity(zz2, zz2.getEntityBoundingBox()

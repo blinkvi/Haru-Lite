@@ -28,8 +28,6 @@ public class MultiBooleanRenderer extends Component {
         FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawCenteredString(value.getName() + "...", x + 50F, y + 4F, -1);
 
         if (expanded) {
-            RenderUtil.drawRoundedRect(x + 88, y + 1F, 9F, 9F, 8f, new Color(17, 17, 17, 160).getRGB());
-
             for (BoolValue boolValue : value.getValues()) {
                 offset += 11;
 

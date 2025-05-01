@@ -71,7 +71,7 @@ public class Haru {
     
     private final DiscordHandler discordHandler = new DiscordHandler();
     private final List<Object> registeredHandlers = Collections.synchronizedList(new ArrayList<>());
-    public final ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(4);
+    public final static ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(4);
     private final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Minecraft mc = Minecraft.getMinecraft();
 

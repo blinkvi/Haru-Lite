@@ -37,8 +37,8 @@ public final class NameTags extends Module {
 			new BoolValue("StackSize", false)));
 	
 	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-			new BoolValue("ShowHealth", true),
-			new BoolValue("OnlyRenderName", true),
+			new BoolValue("ShowHealth", false),
+			new BoolValue("OnlyRenderName", false),
 			new BoolValue("ShowInvisibles", true)));
 	    
     @SubscribeEvent

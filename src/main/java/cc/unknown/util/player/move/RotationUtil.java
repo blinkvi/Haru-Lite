@@ -1,11 +1,14 @@
 package cc.unknown.util.player.move;
 
-import static java.lang.Math.hypot;
-
-import org.jetbrains.annotations.NotNull;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.math.MathUtil;
+import cc.unknown.util.structure.vectors.Vector2d;
 import cc.unknown.util.structure.vectors.Vector2f;
 import cc.unknown.util.structure.vectors.Vector3d;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -14,7 +17,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -24,77 +26,32 @@ public class RotationUtil implements Accessor {
 		return MathHelper.wrapAngleTo180_float(a - b);
 	}
 
-	public static Vector2f getAngles(Entity entity) {
-		if (entity == null)
-			return null;
-		final EntityPlayerSP player = mc.thePlayer;
+	public static boolean rayCastIgnoreWall(float yaw, float pitch, EntityLivingBase target) {
+	    yaw = toPositive(yaw);
 
-		final double diffX = entity.posX - player.posX,
-				diffY = entity.posY + (entity.getEyeHeight() / 5 * 3) - (player.posY + player.getEyeHeight()),
-				diffZ = entity.posZ - player.posZ, dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
+	    AxisAlignedBB box = target.getEntityBoundingBox();
 
-		final float yaw = (float) (Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F,
-				pitch = (float) -(Math.atan2(diffY, dist) * 180.0D / Math.PI);
+	    List<Vector2d> angles = Stream.of(box.minX, box.maxX).flatMap(x -> Stream.of(box.minY, box.maxY).flatMap(y -> Stream.of(box.minZ, box.maxZ).map(z -> {
+	    	Vec3 hitPos = new Vec3(x, y, z);
+	    	float yawVal = toPositive(getYaw(hitPos));
+	    	float pitchVal = getPitch(hitPos);
+	    	return new Vector2d(yawVal, pitchVal);
+	    }))).collect(Collectors.toList());
 
-		return new Vector2f(player.rotationYaw + MathHelper.wrapAngleTo180_float(yaw - player.rotationYaw),
-				player.rotationPitch + MathHelper.wrapAngleTo180_float(pitch - player.rotationPitch));
+	    double minYaw = angles.stream().mapToDouble(v -> v.x).min().orElse(Double.MAX_VALUE);
+	    double maxYaw = angles.stream().mapToDouble(v -> v.x).max().orElse(Double.MIN_VALUE);
+	    double minPitch = angles.stream().mapToDouble(v -> v.y).min().orElse(Float.MAX_VALUE);
+	    double maxPitch = angles.stream().mapToDouble(v -> v.y).max().orElse(Float.MIN_VALUE);
+
+	    return yaw >= minYaw && yaw <= maxYaw && pitch >= minPitch && pitch <= maxPitch;
 	}
 
-	public static float i(final double n, final double n2) {
-		return (float) (Math.atan2(n - mc.thePlayer.posX, n2 - mc.thePlayer.posZ) * 57.295780181884766 * -1.0);
+	public static float toPositive(float yaw) {
+		if (yaw > 0)
+			return yaw;
+
+		return 360 + (yaw % 360);
 	}
-
-	public static double distanceFromYaw(final Entity entity) {
-		return Math.abs(MathHelper.wrapAngleTo180_double(i(entity.posX, entity.posZ) - mc.thePlayer.rotationYaw));
-	}
-
-	public static float getRotationDifference(final Entity entity) {
-		Vector2f target = getRotations(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
-		return (float) hypot(Math.abs(getAngleDifference(target.x, mc.thePlayer.rotationYaw)),
-				Math.abs(target.y - mc.thePlayer.rotationPitch));
-	}
-
-	public static float getRotationDifference(final Entity entity, final Entity entity2) {
-		Vector2f target = getRotations(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
-		Vector2f target2 = getRotations(entity2.posX, entity2.posY + entity2.getEyeHeight(), entity2.posZ);
-		return (float) hypot(Math.abs(getAngleDifference(target.x, target2.x)), Math.abs(target.y - target2.y));
-	}
-	
-    public static boolean rayCastIgnoreWall(float yaw, float pitch, @NotNull EntityLivingBase target) {
-        yaw = toPositive(yaw);
-
-        AxisAlignedBB targetBox = target.getEntityBoundingBox();
-
-        float minYaw = Float.MAX_VALUE;
-        float maxYaw = Float.MIN_VALUE;
-        float minPitch = Float.MAX_VALUE;
-        float maxPitch = Float.MIN_VALUE;
-
-        for (double x : new double[]{targetBox.minX, targetBox.maxX}) {
-            for (double y : new double[]{targetBox.minY, targetBox.maxY}) {
-                for (double z : new double[]{targetBox.minZ, targetBox.maxZ}) {
-                    final Vec3 hitPos = new Vec3(x, y, z);
-
-                    final float yaw1 = toPositive(getYaw(hitPos));
-                    final float pitch1 = getPitch(hitPos);
-
-                    if (minYaw > yaw1) minYaw = yaw1;
-                    if (maxYaw < yaw1) maxYaw = yaw1;
-                    if (minPitch > pitch1) minPitch = pitch1;
-                    if (maxPitch < pitch1) maxPitch = pitch1;
-                }
-            }
-        }
-
-        return yaw >= minYaw && yaw <= maxYaw && pitch >= minPitch && pitch <= maxPitch;
-    }
-
-    public static float toPositive(float yaw) {
-        if (yaw > 0) return yaw;
-
-        return 360 + (yaw % 360);
-    }
-
 
 	public static float getRotationDifference(final Vector2f a, final Vector2f b) {
 		float yawDiff = Math.abs(getAngleDifference(a.x, b.x));
@@ -102,8 +59,7 @@ public class RotationUtil implements Accessor {
 		return (float) Math.hypot(yawDiff, pitchDiff);
 	}
 
-	public static Vector2f getRotations(double rotX, double rotY, double rotZ, double startX, double startY,
-			double startZ) {
+	public static Vector2f getRotations(double rotX, double rotY, double rotZ, double startX, double startY, double startZ) {
 		double x = rotX - startX;
 		double y = rotY - startY;
 		double z = rotZ - startZ;
@@ -113,22 +69,7 @@ public class RotationUtil implements Accessor {
 		return new Vector2f(yaw, pitch);
 	}
 
-	public static Vector2f getRotations(double posX, double posY, double posZ) {
-		return getRotations(posX, posY, posZ, mc.thePlayer.posX,
-				mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
-	}
-
-	public static Vector2f getRotations(Vec3 vec) {
-		return getRotations(vec.xCoord, vec.yCoord, vec.zCoord);
-	}
-
-	public static Vector2f getRotations(BlockPos blockPos) {
-		return getRotations(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, mc.thePlayer.posX,
-				mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
-	}
-
-	public static float calculateYawFromSrcToDst(final float yaw, final double srcX, final double srcZ,
-			final double dstX, final double dstZ) {
+	public static float calculateYawFromSrcToDst(final float yaw, final double srcX, final double srcZ, final double dstX, final double dstZ) {
 		final double xDist = dstX - srcX;
 		final double zDist = dstZ - srcZ;
 		final float var1 = (float) (StrictMath.atan2(zDist, xDist) * 180.0 / Math.PI) - 90.0F;
@@ -144,175 +85,94 @@ public class RotationUtil implements Accessor {
 		return new Vec3(ex, ey, ez);
 	}
 
-	public static float getYaw(@NotNull BlockPos pos) {
+	public static float getYaw(BlockPos pos) {
 		return getYaw(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
 	}
 
-	public static float getYaw(@NotNull AbstractClientPlayer from, @NotNull Vec3 pos) {
-		return from.rotationYaw + MathHelper
-				.wrapAngleTo180_float((float) Math.toDegrees(Math.atan2(pos.zCoord - from.posZ, pos.xCoord - from.posX))
-						- 90f - from.rotationYaw);
+	public static float getYaw(AbstractClientPlayer from, Vec3 pos) {
+		return from.rotationYaw + MathHelper.wrapAngleTo180_float((float) Math.toDegrees(Math.atan2(pos.zCoord - from.posZ, pos.xCoord - from.posX)) - 90f - from.rotationYaw);
 	}
 
-	public static float getYaw(@NotNull Vec3 pos) {
+	public static float getYaw(Vec3 pos) {
 		return getYaw(mc.thePlayer, pos);
 	}
 
-	public static float getPitch(@NotNull BlockPos pos) {
+	public static float getPitch(BlockPos pos) {
 		return getPitch(new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
 	}
-	
-    public static MovingObjectPosition rayCast(final Vec3 from, final double distance, final float yaw, final float pitch) {
-        final float n4 = -yaw * 0.017453292f;
-        final float n5 = -pitch * 0.017453292f;
-        final float cos = MathHelper.cos(n4 - 3.1415927f);
-        final float sin = MathHelper.sin(n4 - 3.1415927f);
-        final float n6 = -MathHelper.cos(n5);
-        final Vec3 vec3 = new Vec3(sin * n6, MathHelper.sin(n5), cos * n6);
-        return mc.theWorld.rayTraceBlocks(from, from.addVector(vec3.xCoord * distance, vec3.yCoord * distance, vec3.zCoord * distance), false, false, false);
-    }
 
+	public static MovingObjectPosition rayCast(final Vec3 from, final double distance, final float yaw, final float pitch) {
+		final float n4 = -yaw * 0.017453292f;
+		final float n5 = -pitch * 0.017453292f;
+		final float cos = MathHelper.cos((float) (n4 - Math.PI));
+		final float sin = MathHelper.sin((float) (n4 - Math.PI));
+		final float n6 = -MathHelper.cos(n5);
+		final Vec3 vec3 = new Vec3(sin * n6, MathHelper.sin(n5), cos * n6);
+		return mc.theWorld.rayTraceBlocks(from, from.addVector(vec3.xCoord * distance, vec3.yCoord * distance, vec3.zCoord * distance), false, false, false);
+	}
 
-    public static MovingObjectPosition rayCast(final double distance, final float yaw, final float pitch) {
-        final Vec3 getPositionEyes = mc.thePlayer.getPositionEyes(1.0f);
-        return rayCast(getPositionEyes, distance, yaw, pitch);
-    }
+	public static MovingObjectPosition rayCast(final double distance, final float yaw, final float pitch) {
+		final Vec3 getPositionEyes = mc.thePlayer.getPositionEyes(1.0f);
+		return rayCast(getPositionEyes, distance, yaw, pitch);
+	}
 
-	public static float getPitch(@NotNull AbstractClientPlayer from, @NotNull Vec3 pos) {
+	public static float getPitch(AbstractClientPlayer from, Vec3 pos) {
 		double diffX = pos.xCoord - from.posX;
 		double diffY = pos.yCoord - (from.posY + from.getEyeHeight());
 		double diffZ = pos.zCoord - from.posZ;
 
 		double diffXZ = Math.sqrt(diffX * diffX + diffZ * diffZ);
 
-		return from.rotationPitch + MathHelper
-				.wrapAngleTo180_float((float) -Math.toDegrees(Math.atan2(diffY, diffXZ)) - from.rotationPitch);
+		return from.rotationPitch + MathHelper.wrapAngleTo180_float((float) -Math.toDegrees(Math.atan2(diffY, diffXZ)) - from.rotationPitch);
 	}
 
-	public static float getPitch(@NotNull Vec3 pos) {
+	public static float getPitch(Vec3 pos) {
 		return getPitch(mc.thePlayer, pos);
 	}
 
-	public static float[] faceTrajectory(Entity target, boolean predict, float predictSize, float gravity,
-			float velocity) {
+	public static Vector2d faceTrajectory(Entity target, boolean predict, float predictSize, float gravity, float velocity) {
 		EntityPlayerSP player = mc.thePlayer;
 
-		double posX = target.posX + (predict ? (target.posX - target.prevPosX) * predictSize : 0.0)
-				- (player.posX + (predict ? player.posX - player.prevPosX : 0.0));
-		double posY = target.getEntityBoundingBox().minY
-				+ (predict ? (target.getEntityBoundingBox().minY - target.prevPosY) * predictSize : 0.0)
-				+ target.getEyeHeight() - 0.15
-				- (player.getEntityBoundingBox().minY + (predict ? player.posY - player.prevPosY : 0.0))
-				- player.getEyeHeight();
-		double posZ = target.posZ + (predict ? (target.posZ - target.prevPosZ) * predictSize : 0.0)
-				- (player.posZ + (predict ? player.posZ - player.prevPosZ : 0.0));
+		double posX = target.posX + (predict ? (target.posX - target.prevPosX) * predictSize : 0.0) - (player.posX + (predict ? player.posX - player.prevPosX : 0.0));
+		double posY = target.getEntityBoundingBox().minY + (predict ? (target.getEntityBoundingBox().minY - target.prevPosY) * predictSize : 0.0) + target.getEyeHeight() - 0.15 - (player.getEntityBoundingBox().minY + (predict ? player.posY - player.prevPosY : 0.0)) - player.getEyeHeight();
+		double posZ = target.posZ + (predict ? (target.posZ - target.prevPosZ) * predictSize : 0.0) - (player.posZ + (predict ? player.posZ - player.prevPosZ : 0.0));
 		double posSqrt = Math.sqrt(posX * posX + posZ * posZ);
 
 		velocity = Math.min((velocity * velocity + velocity * 2) / 3, 1f);
 
 		float gravityModifier = 0.12f * gravity;
-
-		return new float[] { (float) Math.toDegrees(Math.atan2(posZ, posX)) - 90f, (float) -Math
-				.toDegrees(Math.atan((velocity * velocity - Math.sqrt(velocity * velocity * velocity * velocity
-						- gravityModifier * (gravityModifier * posSqrt * posSqrt + 2 * posY * velocity * velocity)))
-						/ (gravityModifier * posSqrt))) };
+		return new Vector2d(Math.toDegrees(Math.atan2(posZ, posX)) - 90f, -Math.toDegrees(Math.atan((velocity * velocity - Math.sqrt(velocity * velocity * velocity * velocity - gravityModifier * (gravityModifier * posSqrt * posSqrt + 2 * posY * velocity * velocity))) / (gravityModifier * posSqrt))));
 	}
 
-	public static float[] faceTrajectory(Entity target, boolean predict, float predictSize) {
-
+	public static Vector2d faceTrajectory(Entity target, boolean predict, float predictSize) {
 		float gravity = 0.03f;
 		float velocity = 0;
-
 		return faceTrajectory(target, predict, predictSize, gravity, velocity);
 	}
 
 	public static Vec3 heuristics(Entity entity, Vec3 xyz) {
 		double boxSize = 0.2;
 		float f11 = entity.getCollisionBorderSize();
-		double minX = MathHelper.clamp_double(xyz.xCoord - boxSize, entity.getEntityBoundingBox().minX - (double) f11,
-				entity.getEntityBoundingBox().maxX + (double) f11);
-		double minY = MathHelper.clamp_double(xyz.yCoord - boxSize, entity.getEntityBoundingBox().minY - (double) f11,
-				entity.getEntityBoundingBox().maxY + (double) f11);
-		double minZ = MathHelper.clamp_double(xyz.zCoord - boxSize, entity.getEntityBoundingBox().minZ - (double) f11,
-				entity.getEntityBoundingBox().maxZ + (double) f11);
-		double maxX = MathHelper.clamp_double(xyz.xCoord + boxSize, entity.getEntityBoundingBox().minX - (double) f11,
-				entity.getEntityBoundingBox().maxX + (double) f11);
-		double maxY = MathHelper.clamp_double(xyz.yCoord + boxSize, entity.getEntityBoundingBox().minY - (double) f11,
-				entity.getEntityBoundingBox().maxY + (double) f11);
-		double maxZ = MathHelper.clamp_double(xyz.zCoord + boxSize, entity.getEntityBoundingBox().minZ - (double) f11,
-				entity.getEntityBoundingBox().maxZ + (double) f11);
-		return new Vec3(MathHelper.clamp_double(xyz.xCoord + MathUtil.randomSin(), minX, maxX),
-				MathHelper.clamp_double(xyz.yCoord + MathUtil.randomSin(), minY, maxY),
-				MathHelper.clamp_double(xyz.zCoord + MathUtil.randomSin(), minZ, maxZ));
-	}
-
-	public static Vector2f calculate(final Vector3d from, final Vector3d to) {
-		final Vector3d diff = to.subtract(from);
-		final double distance = Math.hypot(diff.getX(), diff.getZ());
-		final float yaw = (float) (MathHelper.atan2(diff.getZ(), diff.getX()) * (float) (180.0F / Math.PI)) - 90.0F;
-		final float pitch = (float) (-(MathHelper.atan2(diff.getY(), distance) * (float) (180.0F / Math.PI)));
-		return new Vector2f(yaw, pitch);
+		double minX = MathHelper.clamp_double(xyz.xCoord - boxSize, entity.getEntityBoundingBox().minX - (double) f11, entity.getEntityBoundingBox().maxX + (double) f11);
+		double minY = MathHelper.clamp_double(xyz.yCoord - boxSize, entity.getEntityBoundingBox().minY - (double) f11, entity.getEntityBoundingBox().maxY + (double) f11);
+		double minZ = MathHelper.clamp_double(xyz.zCoord - boxSize, entity.getEntityBoundingBox().minZ - (double) f11, entity.getEntityBoundingBox().maxZ + (double) f11);
+		double maxX = MathHelper.clamp_double(xyz.xCoord + boxSize, entity.getEntityBoundingBox().minX - (double) f11, entity.getEntityBoundingBox().maxX + (double) f11);
+		double maxY = MathHelper.clamp_double(xyz.yCoord + boxSize, entity.getEntityBoundingBox().minY - (double) f11, entity.getEntityBoundingBox().maxY + (double) f11);
+		double maxZ = MathHelper.clamp_double(xyz.zCoord + boxSize, entity.getEntityBoundingBox().minZ - (double) f11, entity.getEntityBoundingBox().maxZ + (double) f11);
+		return new Vec3(MathHelper.clamp_double(xyz.xCoord + MathUtil.randomSin(), minX, maxX), MathHelper.clamp_double(xyz.yCoord + MathUtil.randomSin(), minY, maxY), MathHelper.clamp_double(xyz.zCoord + MathUtil.randomSin(), minZ, maxZ));
 	}
 
 	public Vec3 getNearestPointOnBox(AxisAlignedBB hitbox, Vec3 playerPos) {
 		double nearestX = MathHelper.clamp_double(playerPos.xCoord, hitbox.minX, hitbox.maxX);
 		double nearestY = MathHelper.clamp_double(playerPos.yCoord, hitbox.minY, hitbox.maxY);
 		double nearestZ = MathHelper.clamp_double(playerPos.zCoord, hitbox.minZ, hitbox.maxZ);
-
 		return new Vec3(nearestX, nearestY, nearestZ);
 	}
 
-	public static float calculate(final double n, final double n2) {
-		return (float) (Math.atan2(n - mc.thePlayer.posX, n2 - mc.thePlayer.posZ) * 57.295780181884766 * -1.0);
-	}
-
-	public static void setPlayerRotation(Vector2f targetRotation) {
-		targetRotation = applySensitivityPatch(new Vector2f(targetRotation),
-				new Vector2f(mc.thePlayer.prevRotationYaw, mc.thePlayer.prevRotationPitch));
-		mc.thePlayer.rotationYaw = targetRotation.x;
-		mc.thePlayer.rotationPitch = targetRotation.y;
-	}
-
-	public static Vector2f applySensitivityPatch(final Vector2f rotation, final Vector2f previousRotation) {
-		final float mouseSensitivity = (float) (mc.gameSettings.mouseSensitivity * (1 + Math.random() / 10000000) * 0.6F
-				+ 0.2F);
-		final double multiplier = mouseSensitivity * mouseSensitivity * mouseSensitivity * 8.0F * 0.15D;
-		final float yaw = previousRotation.x
-				+ (float) (Math.round((rotation.x - previousRotation.x) / multiplier) * multiplier);
-		final float pitch = previousRotation.y
-				+ (float) (Math.round((rotation.y - previousRotation.y) / multiplier) * multiplier);
-		return new Vector2f(yaw, MathHelper.clamp_float(pitch, -90, 90));
-	}
-
-	public static Vector2f resetRotation(final Vector2f rotation) {
-		if (rotation == null) {
-			return null;
-		}
-
-		final float yaw = rotation.x + MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationYaw - rotation.x);
-		final float pitch = mc.thePlayer.rotationPitch;
-		return new Vector2f(yaw, pitch);
-	}
-
 	public static double nearestRotation(final AxisAlignedBB bb) {
-		final Vec3 eyes = mc.thePlayer.getPositionEyes(1F);
-
-		Vec3 vecRotation3d = null;
-
-		for (double xSearch = 0D; xSearch <= 1D; xSearch += 0.05D) {
-			for (double ySearch = 0D; ySearch < 1D; ySearch += 0.05D) {
-				for (double zSearch = 0D; zSearch <= 1D; zSearch += 0.05D) {
-					final Vec3 vec3 = new Vec3(bb.minX + (bb.maxX - bb.minX) * xSearch,
-							bb.minY + (bb.maxY - bb.minY) * ySearch, bb.minZ + (bb.maxZ - bb.minZ) * zSearch);
-					final double vecDist = eyes.squareDistanceTo(vec3);
-
-					if (vecRotation3d == null || eyes.squareDistanceTo(vecRotation3d) > vecDist) {
-						vecRotation3d = vec3;
-					}
-				}
-			}
-		}
-		return vecRotation3d.distanceTo(eyes);
+	    final Vec3 eyes = mc.thePlayer.getPositionEyes(1F);
+	    List<Double> steps = IntStream.rangeClosed(0, 20).mapToDouble(i -> i * 0.05).boxed().collect(Collectors.toList());
+	    return steps.stream().flatMap(x -> steps.stream().flatMap(y -> steps.stream().map(z -> new Vec3(bb.minX + (bb.maxX - bb.minX) * x, bb.minY + (bb.maxY - bb.minY) * y, bb.minZ + (bb.maxZ - bb.minZ) * z)))).min(Comparator.comparingDouble(vec -> eyes.squareDistanceTo(vec))).map(vec -> vec.distanceTo(eyes)).orElse(0D);
 	}
 
 	public static double getDistanceToEntityBoxFromPosition(double posX, double posY, double posZ, Entity entity) {
@@ -332,7 +192,7 @@ public class RotationUtil implements Accessor {
 		return Math.sqrt(Math.pow(xDist, 2.0D) + Math.pow(yDist, 2.0D) + Math.pow(zDist, 2.0D));
 	}
 
-	public static double[] getCenterPointOnBB(final AxisAlignedBB hitBox, final double point) {
+	public static Vector3d getCenterPointOnBB(final AxisAlignedBB hitBox, final double point) {
 		final double xWidth = hitBox.maxX - hitBox.minX;
 		final double zWidth = hitBox.maxZ - hitBox.minZ;
 		final double height = hitBox.maxY - hitBox.minY;
@@ -340,66 +200,28 @@ public class RotationUtil implements Accessor {
 		double centerX = hitBox.minX + xWidth / 2.0;
 		double centerY = hitBox.minY + height * point;
 		double centerZ = hitBox.minZ + zWidth / 2.0;
-
-		return new double[] { centerX, centerY, centerZ };
+		
+		return new Vector3d(centerX, centerY, centerZ);
 	}
 
-	public float[] getRotations(BlockPos blockPos, EnumFacing enumFacing) {
-		return getRotations(blockPos, enumFacing, 0.25, 0.25);
+	public static Vector2f getAngles(Entity entity) {
+		if (entity == null) return null;
+		final EntityPlayerSP player = mc.thePlayer;
+		final double diffX = entity.posX - player.posX, diffY = entity.posY + (entity.getEyeHeight() / 5 * 3) - (player.posY + player.getEyeHeight()), diffZ = entity.posZ - player.posZ, dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
+		final float yaw = (float) (Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F, pitch = (float) -(Math.atan2(diffY, dist) * 180.0D / Math.PI);
+		return new Vector2f(player.rotationYaw + MathHelper.wrapAngleTo180_float(yaw - player.rotationYaw), player.rotationPitch + MathHelper.wrapAngleTo180_float(pitch - player.rotationPitch));
 	}
 
-	public float[] getRotations(BlockPos blockPos, EnumFacing enumFacing, double xz, double y) {
-		double d = blockPos.getX() + 0.5 - mc.thePlayer.posX + enumFacing.getFrontOffsetX() * xz;
-		double d2 = blockPos.getZ() + 0.5 - mc.thePlayer.posZ + enumFacing.getFrontOffsetZ() * xz;
-		double d3 = mc.thePlayer.posY + mc.thePlayer.getEyeHeight() - blockPos.getY()
-				- enumFacing.getFrontOffsetY() * y;
-		double d4 = MathHelper.sqrt_double(d * d + d2 * d2);
-		float f = (float) (Math.atan2(d2, d) * 180.0 / Math.PI) - 90.0f;
-		float f2 = (float) (Math.atan2(d3, d4) * 180.0 / Math.PI);
-		return new float[] { MathHelper.wrapAngleTo180_float(f), f2 };
-	}
-
-	public static float updateRotation(float yaw) {
-		return updateRotation(yaw, -180, 180);
-	}
-
-	public static float updateRotation(float curRot, float destination, float speed) {
-		float f = MathHelper.wrapAngleTo180_float(destination - curRot);
-
-		if (f > speed) {
-			f = speed;
-		}
-
-		if (f < -speed) {
-			f = -speed;
-		}
-
-		return curRot + f;
-	}
-
-	public static Vector2f getEntityRotations(Entity target) {
-		if (target == null) {
-			return null;
-		} else {
-			double diffX = target.posX - mc.thePlayer.posX;
-			double diffY;
-			if (target instanceof EntityLivingBase) {
-				EntityLivingBase x = (EntityLivingBase) target;
-				diffY = x.posY + (double) x.getEyeHeight() * 0.9
-						- (mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight());
-			} else {
-				diffY = (target.getEntityBoundingBox().minY + target.getEntityBoundingBox().maxY) / 2.0
-						- (mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight());
+	public static void getLockRotation(Entity target, boolean vertical) {
+		if (target != null) {
+			Vector2f rotations = getAngles(target);
+			if (rotations != null) {
+				mc.thePlayer.rotationYaw = rotations.x;
+				if (vertical) {
+					mc.thePlayer.rotationPitch = rotations.y + 4.0F;
+				}
 			}
 
-			double diffZ = target.posZ - mc.thePlayer.posZ;
-			float yaw = (float) (Math.atan2(diffZ, diffX) * 180.0 / Math.PI) - 90.0F;
-			float pitch = (float) (-(Math.atan2(diffY, MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ)) * 180.0
-					/ Math.PI));
-
-			return new Vector2f(
-					mc.thePlayer.rotationYaw + MathHelper.wrapAngleTo180_float(yaw - mc.thePlayer.rotationYaw),
-					mc.thePlayer.rotationPitch + MathHelper.wrapAngleTo180_float(pitch - mc.thePlayer.rotationPitch));
 		}
 	}
 }

@@ -2,6 +2,7 @@ package cc.unknown.module.impl.combat;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.lwjgl.input.Mouse;
 
@@ -9,20 +10,19 @@ import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
+import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.ModeValue;
 import cc.unknown.value.impl.MultiBoolValue;
 import cc.unknown.value.impl.SliderValue;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -39,24 +39,23 @@ public class AutoClicker extends Module {
 	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
 			new BoolValue("Inventory", false),
 			new BoolValue("OnlyWeapon", false),
+			new BoolValue("AutoBlock", false),
 			new BoolValue("BreakBlocks", false)));
 	
 	private long lastClick;
 	private long leftHold;
 	private boolean leftDown;
-	private long leftDownTime;
-	private long leftUpTime;
+	private long leftDownTime = 0L;;
+	private long leftUpTime = 0L;
 	private long leftk;
 	private long leftl;
 	private double leftm;
 	private boolean leftn;
-	private boolean breakHeld;
 
-	private Random rand = null;
+	private Random rand = new Random();
 
 	@Override
 	public void onEnable() {
-		rand = new Random();
 		correctValues(minCPS, maxCPS);
 	}
 
@@ -70,6 +69,13 @@ public class AutoClicker extends Module {
 	public void onPostTick(ClientTickEvent event) {
 		if (event.phase == Phase.START) return;
 		correctValues(minCPS, maxCPS);
+	}
+	
+	@SubscribeEvent
+	public void onRender3D(RenderWorldLastEvent event) {
+        if (conditionals.isEnabled("AutoBlock") && mc.thePlayer.swingProgress > 0 && !mc.gameSettings.keyBindUseItem.isKeyDown()) {            
+            ReflectUtil.setPressTime(mc.gameSettings.keyBindUseItem, 0);
+        }
 	}
 	
 	@SubscribeEvent
@@ -101,15 +107,15 @@ public class AutoClicker extends Module {
 	@SubscribeEvent
 	public void onPreAttack(PrePositionEvent event) {
 		if (conditionals.isEnabled("Inventory") && mc.currentScreen instanceof GuiContainer) {
-			InventoryUtil.guiClicker(mc.currentScreen, 1, getRandomizedCPS());
+			InventoryUtil.guiClicker(mc.currentScreen, 0, getRandomizedCPS());
 		}
 	}
 
 	private void skidClick(TickEvent.RenderTickEvent renderTick, TickEvent.PlayerTickEvent playerTick) {
 		if (!isInGame()) return;
 
-		double speedLeft1 = 1.0 / io.netty.util.internal.ThreadLocalRandom.current().nextDouble(minCPS.getValue() - 0.2D, maxCPS.getValue());
-		double leftHoldLength = speedLeft1 / io.netty.util.internal.ThreadLocalRandom.current().nextDouble(minCPS.getValue() - 0.02D, maxCPS.getValue());
+		double speedLeft1 = 1.0 / ThreadLocalRandom.current().nextDouble(minCPS.getValue() - 0.2D, maxCPS.getValue());
+		double leftHoldLength = speedLeft1 / ThreadLocalRandom.current().nextDouble(minCPS.getValue() - 0.02D, maxCPS.getValue());
 		Mouse.poll();
 
 		if (Mouse.isButtonDown(0)) {
@@ -118,7 +124,7 @@ public class AutoClicker extends Module {
 				return;
 			}
 
-			double speedLeft = 1.0 / java.util.concurrent.ThreadLocalRandom.current().nextDouble(minCPS.getValue() - 0.2, maxCPS.getValue());
+			double speedLeft = 1.0 / ThreadLocalRandom.current().nextDouble(minCPS.getValue() - 0.2, maxCPS.getValue());
 			if (System.currentTimeMillis() - lastClick > speedLeft * 1000) {
 				lastClick = System.currentTimeMillis();
 				if (leftHold < lastClick) {
@@ -202,26 +208,15 @@ public class AutoClicker extends Module {
 		leftDownTime = System.currentTimeMillis() + delay / 2L - (long) rand.nextInt(10);
 	}
 
-	private boolean breakBlock() {
-		if (conditionals.isEnabled("BreakBlocks") && mc.objectMouseOver != null) {
-			BlockPos p = mc.objectMouseOver.getBlockPos();
-
-			if (p != null) {
-				Block bl = mc.theWorld.getBlockState(p).getBlock();
-				if (bl != Blocks.air && !(bl instanceof BlockLiquid)) {
-					if (!breakHeld) {
-						int e = mc.gameSettings.keyBindAttack.getKeyCode();
-						KeyBinding.setKeyBindState(e, true);
-						KeyBinding.onTick(e);
-						breakHeld = true;
-					}
-					return true;
-				}
-				if (breakHeld) {
-					breakHeld = false;
-				}
-			}
-		}
+	private boolean breakBlock() {		
+        if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+            if (conditionals.isEnabled("BreakBlocks")) {
+                return true;
+            } else {
+            	ReflectUtil.setCurBlockDamage(0);
+            	return false;
+            }
+        }
 		return false;
 	}
 

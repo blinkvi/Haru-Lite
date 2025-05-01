@@ -17,7 +17,7 @@ public abstract class Command implements Accessor {
 		this.prefix = prefix;
 	}
 
-	public String getPrefix() {
+	public String prefix() {
 		return prefix;
 	}
 

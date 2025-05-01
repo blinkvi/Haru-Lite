@@ -33,7 +33,7 @@ public class ESP extends Module {
 
     @SubscribeEvent
     public void onUpdatePlayerAngles(UpdatePlayerAnglesEvent event) {
-    	RenderUtil.updatePlayerAngles(event.entityPlayer, event.modelBiped);
+    	RenderUtil.updatePlayerAngles(event.player, event.model);
     }
     
 	@SubscribeEvent

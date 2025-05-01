@@ -46,8 +46,7 @@ public class PacketUtil implements Accessor {
             skipReceiveEvent.add(casted);
             casted.processPacket(mc.getNetHandler());
         } catch (ThreadQuickExitException ignored) {
-        } catch (Exception e) {
-            //ExploitFixer.onBadPacket(packet, e);
+        	
         }
     }
 

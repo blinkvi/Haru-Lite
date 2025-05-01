@@ -13,7 +13,7 @@ import cc.unknown.value.impl.ModeValue;
 @ModuleInfo(name = "Cosmetics", description = "Cosmetics like lunar.", category = Category.VISUAL)
 public class Cosmetics extends Module {
 	public final ModeValue haloType = new ModeValue("Halo", this, "None", "Aris", "Shiroko", "Reisa", "Natsu", "Hoshino", "None");
-	public final ModeValue capeType = new ModeValue("Cape", this, "None", "None", "Canada", "France", "Germany", "India", "Indonesia", "Italy", "Japan", "Korean", "UnitedKingdom", "UnitedStates", "Arcade", "Boost", "Dark", "Eyes", "Flame", "Kocho", "ZeroTwo", "Minecon2011", "Minecon2012", "Minecon2013", "Minecon2015", "Minecon2016");
+	public final ModeValue capeType = new ModeValue("Cape", this, "None", "None", "Japan", "Korean", "Eyes");
 	public final ModeValue hatType = new ModeValue("Hat", this, HatType.NONE, HatType.values());
 	public final ModeValue petType = new ModeValue("Pet", this, PetType.NONE, PetType.values());
 	public final ModeValue auraType = new ModeValue("Aura", this, AuraType.NONE, AuraType.values());

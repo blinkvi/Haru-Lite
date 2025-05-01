@@ -1,6 +1,7 @@
 package cc.unknown.module.impl.move;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import org.lwjgl.input.Keyboard;
 
@@ -12,10 +13,14 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.module.impl.utility.AutoTool;
 import cc.unknown.util.player.InventoryUtil;
+import cc.unknown.util.player.PlayerUtil;
+import cc.unknown.util.render.client.ChatUtil;
+import cc.unknown.util.structure.vectors.Vector2d;
 import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.MultiBoolValue;
 import cc.unknown.value.impl.SliderValue;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,13 +28,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "BridgeAssist", description = "Automatically sneaks for you when you are near the edge of a block.", category = Category.MOVE)	
 public class BridgeAssist extends Module {
     
-	private final SliderValue edge = new SliderValue("Edge", this, 0.3f, 0, 0.5f, 0.1f);
-    private final SliderValue pitch = new SliderValue("Angle", this, 45, 0, 90, 5, () -> this.conditionals.isEnabled("AngleCheck"));
+	private final SliderValue edge = new SliderValue("Edge", this, 0.15f, 0.01f, 0.30f, 0.01f);
     
 	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-			new BoolValue("AngleCheck", false),
 			new BoolValue("RequireSneak", false),
 			new BoolValue("BlockSwitching", false),
+			new BoolValue("SneakOnJump", false),
 			new BoolValue("OnlyBlocks", true),
 			new BoolValue("OnlyBackwards", false)));
 
@@ -48,18 +52,15 @@ public class BridgeAssist extends Module {
     
     @SubscribeEvent
     public void onMoveInput(MoveInputEvent event) {
-    	if (isShifting && shouldBridge) {
-    		event.sneak = true;
-    	}
-    	
-    	if (!isShifting && shouldBridge) {
-    		event.sneak = false;
-    	}
+    	if (isShifting && shouldBridge) event.sneak = true;
+    	if (!isShifting && shouldBridge) event.sneak = false;
     }
 
 	@SubscribeEvent
-	public void onPlace(PlaceEvent event) {
-		isShifting = false;
+	public void onPlace(PlaceEvent event) {		
+		if (isShifting) {
+			isShifting = false;
+		}
 	}
     
     @SubscribeEvent
@@ -87,27 +88,25 @@ public class BridgeAssist extends Module {
             isShifting = false;
             return;
         }
-        
-		if (conditionals.isEnabled("CheckAngle") && mc.thePlayer.rotationPitch < pitch.getValue()) {
-			isShifting = false;
-			return;
-		}
 
-		if (mc.thePlayer.onGround) {
-			if (shouldSneak()) {
-				isShifting = true;
-				shouldBridge = true;
-			} else if (!Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()) && conditionals.isEnabled("RequireSneak")) {
-				isShifting = false;
-				shouldBridge = false;
-			} else if ((Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()) && conditionals.isEnabled("RequireSneak"))) {
-				isShifting = false;
-				shouldBridge = true;
-			}
-		} else {
-			isShifting = false;
-			shouldBridge = false;
-		}
+        boolean legit = mc.thePlayer.onGround || (conditionals.isEnabled("SneakOnJump") && !mc.thePlayer.onGround);
+
+        if (legit) {
+        	if (shouldSneak()) {
+        		isShifting = true;
+        		shouldBridge = true;
+        	} else if (conditionals.isEnabled("RequireSneak")) {
+        		boolean sneakKey = Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode());
+        		isShifting = false;
+        		shouldBridge = sneakKey;
+        	} else {
+        		isShifting = false;
+        		shouldBridge = false;
+        	}
+        } else {
+        	isShifting = false;
+        	shouldBridge = false;
+        }
     }
 
 	@SubscribeEvent
@@ -136,117 +135,37 @@ public class BridgeAssist extends Module {
         if (getModule(AutoTool.class).isEnabled() && getModule(AutoTool.class).wasDigging) return true;
     	return false;
     }
-
+    
     private boolean shouldSneak() {
-    	EntityPlayerSP player = mc.thePlayer;
-        double dist = 0.4D;
-        double offset = (double) edge.getValue();
+        EntityPlayerSP player = mc.thePlayer;
+        double dist = 0.6D;
+        double offset = edge.getValue() + 0.01;
+        ChatUtil.display(offset);
         double motionY = player.motionY;
+        AxisAlignedBB box = player.getEntityBoundingBox();
+        
+        boolean airBelow = PlayerUtil.checkAir();
+        boolean airAround = Stream.of(new Vector2d(offset, 0.0D), new Vector2d(-offset, 0.0D), new Vector2d(0.0D, offset), new Vector2d(0.0D, -offset), new Vector2d(offset, offset), new Vector2d(offset, -offset), new Vector2d(-offset, offset), new Vector2d(-offset, -offset)).anyMatch(dir -> {
+        	AxisAlignedBB expandedBox = box.offset(dir.x, -0.01, dir.y);
+            return mc.theWorld.getCollidingBoundingBoxes(player, expandedBox).isEmpty();
+        });
 
-        // Check only X
-        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, -0.1D, -offset)).isEmpty()
-                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, 0.5D, -offset)).isEmpty()) {
+        if (airBelow | airAround) {
             if (offset < dist && offset >= -dist) {
                 offset = 0.0D;
-            } else if (offset > 0.0D) {
-                offset -= dist;
             } else {
-                offset += dist;
+                offset += (offset > 0.0D ? -dist : dist);
             }
         }
 
-        // Check only Z
-        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(-offset, -0.1D, offset)).isEmpty()
-                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(-offset, 0.5D, offset)).isEmpty()) {
-            if (offset < dist && offset >= -dist) {
-                offset = 0.0D;
-            } else if (offset > 0.0D) {
-                offset -= dist;
-            } else {
-                offset += dist;
-            }
-        }
-
-        // Check XZ
-        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, -0.1D, offset)).isEmpty()
-                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, 0.5D, offset)).isEmpty()) {
-            if (offset < dist && offset >= -dist) {
-                offset = 0.0D;
-            } else if (offset > 0.0D) {
-                offset -= dist;
-            } else {
-                offset += dist;
-            }
-
-            if (offset < dist && offset >= -dist) {
-                offset = 0.0D;
-            } else if (offset > 0.0D) {
-                offset -= dist;
-            } else {
-                offset += dist;
-            }
-        }
-
-        // Check (+X, +Z)
-        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, -0.1D, offset)).isEmpty()
-                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, 0.5D, offset)).isEmpty()) {
-            if (offset < dist && offset >= -dist) {
-                offset = 0.0D;
-            } else if (offset > 0.0D) {
-                offset -= dist;
-            } else {
-                offset += dist;
-            }
-        }
-
-        // Check (+X, -Z)
-        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, -0.1D, -offset)).isEmpty()
-                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(offset, 0.5D, -offset)).isEmpty()) {
-            if (offset < dist && offset >= -dist) {
-                offset = 0.0D;
-            } else if (offset > 0.0D) {
-                offset -= dist;
-            } else {
-                offset += dist;
-            }
-        }
-
-        // Check (-X, +Z)
-        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(-offset, -0.1D, offset)).isEmpty()
-                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(-offset, 0.5D, offset)).isEmpty()) {
-            if (offset < dist && offset >= -dist) {
-                offset = 0.0D;
-            } else if (offset > 0.0D) {
-                offset -= dist;
-            } else {
-                offset += dist;
-            }
-        }
-
-        // Check (-X, -Z)
-        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(-offset, -0.1D, -offset)).isEmpty()
-                && mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(-offset, 0.5D, -offset)).isEmpty()) {
-            if (offset < dist && offset >= -dist) {
-                offset = 0.0D;
-            } else if (offset > 0.0D) {
-                offset -= dist;
-            } else {
-                offset += dist;
-            }
-        }
-
-        // Check only Y
-        if (mc.theWorld.getCollidingBoundingBoxes(player, player.getEntityBoundingBox().offset(0.0D, motionY, 0.0D)).isEmpty()) {
+        if (mc.theWorld.getCollidingBoundingBoxes(player, box.offset(0.0D, motionY, 0.0D)).isEmpty()) {
             if (motionY < dist && motionY >= -dist) {
                 motionY = 0.0D;
-            } else if (motionY > 0.0D) {
-                motionY -= dist;
             } else {
-                motionY += dist;
+                motionY += (motionY > 0.0D ? -dist : dist);
             }
         }
 
         return offset == 0.0D || motionY == 0.0D;
     }
-
 }

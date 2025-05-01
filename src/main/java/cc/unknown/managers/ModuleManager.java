@@ -41,9 +41,8 @@ public final class ModuleManager extends SList<Module> {
         		
         		// utility
         		AutoTool.class,
-        		NoItemRelease.class,
         		Blink.class,
-        		SaveMoveKeys.class,
+        		AutoArmor.class,
                 Loader.class,
                 AutoGame.class,
                 FastPlace.class,
@@ -67,7 +66,6 @@ public final class ModuleManager extends SList<Module> {
                 // move
                 BridgeAssist.class,
                 NoClip.class,
-                Clutch.class,
         		NoSlow.class,
         		Sprint.class
         );

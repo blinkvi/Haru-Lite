@@ -43,6 +43,7 @@ public class NoClip extends Module {
 		Block block = event.block;
 		BlockPos pos = event.blockPos;
 		double x = pos.getX(), y = pos.getY(), z = pos.getZ();
+		AxisAlignedBB expandedBox = AxisAlignedBB.fromBounds(-15, -1, -15, 15, 1, 15);
 
 		boolean isSneaking = mc.gameSettings.keyBindSneak.isKeyDown();
 		boolean isAirBlock = block instanceof BlockAir;
@@ -50,7 +51,6 @@ public class NoClip extends Module {
 		event.boundingBox = null;
 
 		if (!isSneaking) {
-			AxisAlignedBB expandedBox = AxisAlignedBB.fromBounds(-15, -1, -15, 15, 1, 15);
 
 			if (y < mc.thePlayer.posY) {
 				event.boundingBox = expandedBox.offset(x, y, z);
@@ -86,13 +86,12 @@ public class NoClip extends Module {
 		
 		if (mc.thePlayer.rotationPitch >= 45 && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && mc.thePlayer.posY == mc.objectMouseOver.getBlockPos().up().getY()) {
 			mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, InventoryUtil.getItemStack(), mc.objectMouseOver.getBlockPos(), mc.objectMouseOver.sideHit, mc.objectMouseOver.hitVec);
-
 			mc.thePlayer.swingItem();
 		}
 	}
 
 	@SubscribeEvent
 	public void onRender2D(Render2DEvent event) {
-		FontUtil.getFontRenderer("comfortaa.ttf", 17).drawCenteredString("presiona shift", event.getScaledWidth() / 2F, event.getScaledHeight() - 90, getModule(Interface.class).color());
+		FontUtil.getFontRenderer("comfortaa.ttf", 17).drawCenteredString("presiona shift", event.width() / 2F, event.height() - 90, getModule(Interface.class).color());
 	}
 }

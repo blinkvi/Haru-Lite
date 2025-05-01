@@ -21,7 +21,6 @@ import cc.unknown.Haru;
 import cc.unknown.event.GameEvent;
 import cc.unknown.event.player.AttackEvent;
 import cc.unknown.event.player.PlaceEvent;
-import cc.unknown.mixin.interfaces.IMinecraft;
 import cc.unknown.module.impl.combat.Piercing;
 import cc.unknown.module.impl.combat.Reach;
 import net.minecraft.block.material.Material;
@@ -46,7 +45,7 @@ import net.minecraft.util.Util;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(Minecraft.class)
-public abstract class MixinMinecraft implements IMinecraft {
+public abstract class MixinMinecraft {
 
 	@Shadow
 	@Mutable
@@ -164,12 +163,12 @@ public abstract class MixinMinecraft implements IMinecraft {
 	}
 	
 	@Overwrite
-	public void clickMouse() {
+	private void clickMouse() {
 		clickMouse(true, true);
 	}
 
 	@Unique
-	public void clickMouse(boolean swing, boolean events) {
+	private void clickMouse(boolean swing, boolean events) {
 		if (this.leftClickCounter <= 0) {
 			if (events) {
 				if (this.objectMouseOver != null
@@ -248,9 +247,6 @@ public abstract class MixinMinecraft implements IMinecraft {
 		MinecraftForge.EVENT_BUS.post(new PlaceEvent());
 	}
     
-    /**
-     * @reason to fix reach and hitBox won't work with autoClicker
-     */
     @Inject(method = "clickMouse", at = @At("HEAD"))
     private void onLeftClickMouse(CallbackInfo ci) {
     	Haru.instance.getModuleManager().getModule(Reach.class).call();
@@ -260,11 +256,6 @@ public abstract class MixinMinecraft implements IMinecraft {
     @Overwrite
     public void startTimerHackThread() { }
     
-	@Override
-	public void setSession(Session session) {
-		this.session = session;
-	}
-
 	@Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/SkinManager;<init>(Lnet/minecraft/client/renderer/texture/TextureManager;Ljava/io/File;Lcom/mojang/authlib/minecraft/MinecraftSessionService;)V"))
 	public void splashSkinManager(CallbackInfo callback) {
 		updateDisplay();

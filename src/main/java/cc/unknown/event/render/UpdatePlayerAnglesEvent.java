@@ -6,11 +6,11 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 @Cancelable
 public final class UpdatePlayerAnglesEvent extends Event {
-    public final EntityPlayer entityPlayer;
-    public final ModelBiped modelBiped;
+    public final EntityPlayer player;
+    public final ModelBiped model;
     
-	public UpdatePlayerAnglesEvent(EntityPlayer entityPlayer, ModelBiped modelBiped) {
-		this.entityPlayer = entityPlayer;
-		this.modelBiped = modelBiped;
+	public UpdatePlayerAnglesEvent(EntityPlayer player, ModelBiped model) {
+		this.player = player;
+		this.model = model;
 	}
 }

@@ -21,7 +21,7 @@ public class CommandHandler {
 	            String[] args = message.substring(1).split(" ");
 	            if (args.length > 0) {
 	                Haru.instance.getCmdManager().getCommands().stream()
-	                    .filter(c -> args[0].equalsIgnoreCase(c.getPrefix()))
+	                    .filter(c -> args[0].equalsIgnoreCase(c.prefix()))
 	                    .findFirst()
 	                    .ifPresent(c -> {
 	                        String[] commandArgs = Arrays.copyOfRange(args, 1, args.length);

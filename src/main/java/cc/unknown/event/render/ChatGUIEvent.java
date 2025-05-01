@@ -4,12 +4,12 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class ChatGUIEvent extends Event {
-	public ScaledResolution scaledResolution;
-    public int mouseX, mouseY;
+	public ScaledResolution sr;
+    public int x, y;
     
-	public ChatGUIEvent(ScaledResolution scaledResolution, int mouseX, int mouseY) {
-		this.scaledResolution = scaledResolution;
-		this.mouseX = mouseX;
-		this.mouseY = mouseY;
+	public ChatGUIEvent(ScaledResolution sr, int x, int y) {
+		this.sr = sr;
+		this.x = x;
+		this.y = y;
 	}
 }

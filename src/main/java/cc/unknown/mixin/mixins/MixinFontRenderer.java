@@ -19,7 +19,7 @@ public class MixinFontRenderer {
         
         RenderTextEvent event = new RenderTextEvent(text);
         MinecraftForge.EVENT_BUS.post(event);
-        text = event.string;
+        text = event.text;
         return text;
     }
 
@@ -31,7 +31,7 @@ public class MixinFontRenderer {
         
         RenderTextEvent event = new RenderTextEvent(text);
         MinecraftForge.EVENT_BUS.post(event);
-        text = event.string;
+        text = event.text;
         return text;
     }
 }

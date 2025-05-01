@@ -3,19 +3,19 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class Render2DEvent extends Event {
-    public final ScaledResolution resolution;
+    public final ScaledResolution sr;
     public final float partialTicks;
     
-    public Render2DEvent(ScaledResolution resolution, float partialTicks) {
-		this.resolution = resolution;
+    public Render2DEvent(ScaledResolution sr, float partialTicks) {
+		this.sr = sr;
 		this.partialTicks = partialTicks;
 	}
 
-	public int getScaledWidth() {
-    	return resolution.getScaledWidth();
+	public int width() {
+    	return sr.getScaledWidth();
     }
     
-    public int getScaledHeight() {
-    	return resolution.getScaledHeight();
+    public int height() {
+    	return sr.getScaledHeight();
     }
 }

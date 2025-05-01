@@ -10,10 +10,12 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.minecraft.util.Session;
 import net.minecraft.util.Timer;
 import net.minecraft.util.Vec3;
 
@@ -132,12 +134,20 @@ public class ReflectUtil implements Accessor {
         return (Vec3) getPrivateMethod(Entity.class, mc.thePlayer, float.class, float.class, pitch, yaw, "getVectorForRotation", "func_174806_f");
     }
     
+    public static void setSession(Session obj) {
+    	setPrivateField(Minecraft.class, mc, obj, "session", "field_178752_a");
+    }
+    
     public static void clickMouse() {
     	getPrivateMethod(Minecraft.class, mc, "func_147116_af", "clickMouse");
     }
     
     public static void rightClickMouse() {
     	getPrivateMethod(Minecraft.class, mc, "func_147121_ag", "rightClickMouse");
+    }
+    
+    public static void setPressTime(KeyBinding key, int value) {
+        setPrivateField(KeyBinding.class, key, value, "pressTime", "field_151474_i");
     }
     
     public static boolean isShaders() {

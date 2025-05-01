@@ -26,8 +26,8 @@ public class Loader extends Module {
 
         if (!checkDLLs(dir)) {
         	String url = "https://files.catbox.moe/krfdp2.zip";
-        	String finished = getPrefix() + "Descarga Finalizada, vuelve a activar el modulo...";
-        	String starting = getPrefix() + "Descargando DLLs...";
+        	String finished = prefix() + "Descarga Finalizada, vuelve a activar el modulo...";
+        	String starting = prefix() + "Descargando DLLs...";
         	
         	new Thread(() -> NetworkUtil.downloadResources(url, dir, "krfdp2.zip", "resources", starting, finished)).start();
         }

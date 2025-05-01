@@ -3,6 +3,7 @@ package cc.unknown.handlers;
 import java.util.UUID;
 
 import cc.unknown.Haru;
+import cc.unknown.module.impl.visual.NameProtect;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.network.ServerUtil;
 import net.arikia.dev.drpc.DiscordEventHandlers;
@@ -20,7 +21,7 @@ public class DiscordHandler implements Accessor {
 
 	public void start() {
 		this.timeElapsed = System.currentTimeMillis();
-
+		NameProtect protect = getModule(NameProtect.class);
 		DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().build();
 
 		DiscordRPC.discordInitialize("1362856733151854854", handlers, true);
@@ -33,8 +34,8 @@ public class DiscordHandler implements Accessor {
 						if (mc.isSingleplayer()) {
 							updateStatus("", "Practicing godlike movement.");
 						} else if (ServerUtil.isConnectedToKnownServer(mc.getCurrentServerData().serverIP)) {
-							updateStatus("User: " + Haru.getUser(),
-									"Cheating on " + ServerUtil.serverName);
+							updateStatus("User: " + (protect.isEnabled() ? protect.checkName() : Haru.getUser()),
+						             "Cheating on " + ServerUtil.serverName);
 						} else if (mc.currentScreen instanceof GuiDownloadTerrain) {
 							updateStatus("Loading world...", "Hope you didn't just crash.");
 						}

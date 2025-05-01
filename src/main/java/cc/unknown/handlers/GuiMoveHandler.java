@@ -13,8 +13,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class GuiMoveHandler implements Accessor {
 	private final List<KeyBinding> moveKeys = Arrays.asList(mc.gameSettings.keyBindForward, mc.gameSettings.keyBindBack,
-			mc.gameSettings.keyBindRight, mc.gameSettings.keyBindLeft, mc.gameSettings.keyBindJump,
-			mc.gameSettings.keyBindSprint, mc.gameSettings.keyBindSneak);
+			mc.gameSettings.keyBindRight, mc.gameSettings.keyBindLeft, mc.gameSettings.keyBindJump, mc.gameSettings.keyBindSneak);
 
 	@SubscribeEvent
 	public void onPreTick(ClientTickEvent event) {

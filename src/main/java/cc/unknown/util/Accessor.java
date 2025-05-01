@@ -47,8 +47,12 @@ public interface Accessor {
     	return getInstance().getCfgManager();
     }
     
-    default String getPrefix() {
-    	return "[" + ColorUtil.pink + "H" + ColorUtil.white + "] ";
+    default String prefix(String msg) {
+    	return "[" + ColorUtil.pink + "H" + ColorUtil.white + "] " + msg;
+    }
+    
+    default String prefix() {
+    	return prefix(null);
     }
     
     default String getPrefix(EnumChatFormatting color, String name, EnumChatFormatting color2) {

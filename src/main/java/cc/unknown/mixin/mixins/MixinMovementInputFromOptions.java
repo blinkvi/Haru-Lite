@@ -18,42 +18,30 @@ public class MixinMovementInputFromOptions extends MovementInput {
     private GameSettings gameSettings;
 
     @Overwrite
-	public void updatePlayerMoveState() {
-		this.moveStrafe = 0.0F;
-		this.moveForward = 0.0F;
+    public void updatePlayerMoveState() {
+        this.moveStrafe = 0.0F;
+        this.moveForward = 0.0F;
 
-		if (this.gameSettings.keyBindForward.isKeyDown()) {
-			this.moveForward++;
-		}
+        if (this.gameSettings.keyBindForward.isKeyDown())  this.moveForward += 1.0F;
+        if (this.gameSettings.keyBindBack.isKeyDown())     this.moveForward -= 1.0F;
+        if (this.gameSettings.keyBindLeft.isKeyDown())     this.moveStrafe  += 1.0F;
+        if (this.gameSettings.keyBindRight.isKeyDown())    this.moveStrafe  -= 1.0F;
 
-		if (this.gameSettings.keyBindBack.isKeyDown()) {
-			this.moveForward--;
-		}
+        this.jump = this.gameSettings.keyBindJump.isKeyDown();
+        this.sneak = this.gameSettings.keyBindSneak.isKeyDown();
 
-		if (this.gameSettings.keyBindLeft.isKeyDown()) {
-			this.moveStrafe++;
-		}
+        MoveInputEvent event = new MoveInputEvent(moveForward, moveStrafe, jump, sneak, 0.3D);
+        MinecraftForge.EVENT_BUS.post(event);
 
-		if (this.gameSettings.keyBindRight.isKeyDown()) {
-			this.moveStrafe--;
-		}
+        this.moveForward = event.forward;
+        this.moveStrafe  = event.strafe;
+        this.jump        = event.jump;
+        this.sneak       = event.sneak;
 
-		this.jump = this.gameSettings.keyBindJump.isKeyDown();
-		this.sneak = this.gameSettings.keyBindSneak.isKeyDown();
-
-		final MoveInputEvent event = new MoveInputEvent(moveForward, moveStrafe, jump, sneak, 0.3D);
-
-		MinecraftForge.EVENT_BUS.post(event);
-
-		final double sneakMultiplier = event.sneakSlowDownMultiplier;
-		this.moveForward = event.forward;
-		this.moveStrafe = event.strafe;
-		this.jump = event.jump;
-		this.sneak = event.sneak;
-
-		if (this.sneak) {
-			this.moveStrafe = (float) ((double) this.moveStrafe * sneakMultiplier);
-			this.moveForward = (float) ((double) this.moveForward * sneakMultiplier);
-		}
-	}
+        if (this.sneak) {
+            double multiplier = event.sneakSlowDownMultiplier;
+            this.moveStrafe  *= multiplier;
+            this.moveForward *= multiplier;
+        }
+    }
 }

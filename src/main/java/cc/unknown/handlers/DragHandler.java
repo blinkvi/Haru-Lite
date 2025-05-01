@@ -18,12 +18,10 @@ public class DragHandler implements Accessor {
 	public void onRender2D(Render2DEvent event) {
 		if (!isDisplay()) return;
 
-		getDragManager().getDragList().stream()
-			.filter(Drag::shouldRender)
-			.forEach(widget -> {
-				widget.updatePos(event.resolution);
-				widget.render(event.resolution);
-			});
+		getDragManager().getDragList().stream().filter(Drag::shouldRender).forEach(widget -> {
+			widget.updatePos(event.sr);
+			widget.render(event.sr);
+		});
 	}
 
 	@SubscribeEvent
@@ -31,21 +29,9 @@ public class DragHandler implements Accessor {
 		if (!isDisplay()) return;
 
 		SList<Drag> widgets = getDragManager().getDragList();
-
-		Optional<Drag> draggingOpt = widgets.stream()
-			.filter(widget -> widget.shouldRender() && widget.dragging)
-			.findFirst();
-
+		Optional<Drag> draggingOpt = widgets.stream().filter(widget -> widget.shouldRender() && widget.dragging).findFirst();
 		Drag draggingWidget = draggingOpt.orElse(null);
-
-		widgets.stream()
-			.filter(Drag::shouldRender)
-			.forEach(widget -> widget.onChatGUI(
-				event.mouseX,
-				event.mouseY,
-				draggingWidget == null || draggingWidget == widget,
-				event.scaledResolution
-			));
+		widgets.stream().filter(Drag::shouldRender).forEach(widget -> widget.onChatGUI(event.x, event.y, draggingWidget == null || draggingWidget == widget, event.sr));
 	}
 	
 	private boolean isDisplay() {

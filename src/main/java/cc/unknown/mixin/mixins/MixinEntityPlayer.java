@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import cc.unknown.event.player.JumpEvent;
-import cc.unknown.mixin.interfaces.IEntityPlayer;
 import cc.unknown.util.client.system.Clock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerCapabilities;
@@ -18,7 +17,7 @@ import net.minecraft.util.FoodStats;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(EntityPlayer.class)
-public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements IEntityPlayer {
+public abstract class MixinEntityPlayer extends MixinEntityLivingBase {
 	@Shadow
 	public abstract ItemStack getHeldItem();
 
@@ -58,10 +57,5 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements
 		}
 
 		return f;
-	}
-	
-	@Override
-	public Clock getHideSneakHeight() {
-		return hideSneakHeight;
 	}
 }

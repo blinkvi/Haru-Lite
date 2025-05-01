@@ -6,7 +6,7 @@ public enum StickersType {
     MAI("Mai", "mai.png", 95, 160),
     UZAKI("UzakiChan", "uzaki.png", 95, 160),
     HIDERI("Hideri", "hideri.png", 95, 160),
-    GWEN("GwenBunny", "bunny.png", 95, 160),
+    LOONA("Loona", "loona.png", 95, 160),
     NONE("None", "", 0, 0),
     TYPH("Typh", "typh.png", 95, 160);
 

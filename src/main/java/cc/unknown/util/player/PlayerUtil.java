@@ -3,6 +3,9 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.input.Mouse;
 
+import cc.unknown.Haru;
+import cc.unknown.handlers.CPSHandler;
+import cc.unknown.module.impl.combat.AutoClicker;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
@@ -14,6 +17,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
@@ -25,34 +29,19 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 public class PlayerUtil implements Accessor {
-	
-    public static boolean checkAir(double x, double y, double z) {
-        return mc.theWorld.isAirBlock(new BlockPos(x, y - 0.5, z));
-    }
-    
+
     public static boolean checkAir() {
-    	double x = mc.thePlayer.posX;
-    	double y = mc.thePlayer.posY;
-    	double z = mc.thePlayer.posZ;
-        return mc.theWorld.isAirBlock(new BlockPos(x, y - 0.5, z));
+        BlockPos belowPlayer = new BlockPos(mc.thePlayer).down();
+        Block blockBelow = mc.theWorld.getBlockState(belowPlayer).getBlock();
+        return mc.thePlayer.onGround && blockBelow == Blocks.air;
     }
     
     public static boolean checkJump() {
         return mc.gameSettings.keyBindJump.isKeyDown();
     }
     
-    private static AxisAlignedBB setMinY(AxisAlignedBB box, double minY) {
-        return new AxisAlignedBB(box.minX, box.minY - minY, box.minZ, box.maxX, box.maxY, box.maxZ);
-    }
-    
     public static Block blockRelativeToPlayer(final double offsetX, final double offsetY, final double offsetZ) {
         return mc.theWorld.getBlockState(new BlockPos(mc.thePlayer).add(offsetX, offsetY, offsetZ)).getBlock();
-    }
-    
-    public static boolean checkEdge(double offset) {
-    	AxisAlignedBB box = mc.thePlayer.getEntityBoundingBox();
-    	AxisAlignedBB adjustedBox = setMinY(box.offset(0, -0.2, 0).expand(0, offset, 0), 0);
-        return mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, adjustedBox).isEmpty();
     }
     
     public static boolean isOnEdgeWithBlockCheck(double negativeOffset, double positiveOffset) {
@@ -239,4 +228,12 @@ public class PlayerUtil implements Accessor {
         }
         return MathUtil.round((double) getCompleteHealth(entityPlayer) / (n * (1.0 - (n2 + 0.04 * Math.min(Math.ceil(Math.min(n3, 25.0) * 0.75), 20.0) * (1.0 - n2)))), 1);
     }
+    
+    public static boolean pressLeftClick() {
+    	AutoClicker clicker = Haru.instance.getModuleManager().getModule(AutoClicker.class);
+        if (clicker.isEnabled()) {
+            return mc.gameSettings.keyBindAttack.isKeyDown();
+        } else return CPSHandler.getLeftClickCounter() > 1 && System.currentTimeMillis() - CPSHandler.leftClickTimer < 300L;
+    }
+
 }

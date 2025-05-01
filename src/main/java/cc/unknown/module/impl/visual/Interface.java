@@ -25,6 +25,19 @@ public class Interface extends Module {
 			new BoolValue("Utility", false),
 			new BoolValue("Visual", true)));
 	
+	public final MultiBoolValue elements = new MultiBoolValue("Elements", this, Arrays.asList(
+			new BoolValue("Watermark", true),
+			new BoolValue("Scoreboard", false),
+			new BoolValue("Stickers", false),
+			new BoolValue("IGN", false),
+			new BoolValue("FPS", false),
+			new BoolValue("Ping", false),
+			new BoolValue("CPS", true),
+			new BoolValue("PlayerPosition", false),
+			new BoolValue("ArrayList", true), 
+			new BoolValue("PotionStatus", false), 
+			new BoolValue("Inventory", false)));
+	
 	public final ModeValue stickersType = new ModeValue("Sticker", this, () -> this.elements.isEnabled("Stickers"), StickersType.UZAKI, StickersType.values());
 	public final ModeValue color = new ModeValue("ArraylistColor", this, () -> this.elements.isEnabled("ArrayList"), "Neon", "Fade", "Slinky", "Magic", "Neon", "Blaze", "Ghoul", "Static");
 	public final ColorValue mainColor = new ColorValue("MainColor", this, new Color(128, 128, 255), () -> color.is("Static") || color.is("Fade"));
@@ -44,19 +57,6 @@ public class Interface extends Module {
     public final BoolValue fixHeight = new BoolValue("FixHeight", this, true, () -> this.elements.isEnabled("Scoreboard"));
     public final BoolValue hideBackground = new BoolValue("HideBackground", this, true, () -> this.elements.isEnabled("Scoreboard"));
     public final BoolValue antiStrike = new BoolValue("AntiStrike", this, true, () -> this.elements.isEnabled("Scoreboard"));
-
-	public final MultiBoolValue elements = new MultiBoolValue("Elements", this, Arrays.asList(
-			new BoolValue("Watermark", true),
-			new BoolValue("Scoreboard", false),
-			new BoolValue("Stickers", false),
-			new BoolValue("IGN", false),
-			new BoolValue("FPS", false),
-			new BoolValue("Ping", false),
-			new BoolValue("CPS", true),
-			new BoolValue("PlayerPosition", false),
-			new BoolValue("ArrayList", true), 
-			new BoolValue("PotionStatus", false), 
-			new BoolValue("Inventory", false)));
     
 	private final Map<String, BiFunction<Integer, Integer, Integer>> COLOR_MODES = new HashMap<>();
 

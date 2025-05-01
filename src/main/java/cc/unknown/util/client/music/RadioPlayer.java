@@ -40,7 +40,7 @@ public class RadioPlayer implements Accessor {
                     //setVolume();
                     this.player.play();
                 } catch (JavaLayerException | NoSuchAlgorithmException | KeyManagementException e2) {
-                	
+                	e2.printStackTrace();
                 }
             })).start();
             this.timer.reset();
@@ -60,9 +60,5 @@ public class RadioPlayer implements Accessor {
         };
 
         new Thread(musicTask).start();
-    }
-
-    public void volumen(float w) {
-    	player.setVolumen(w);
     }
 }

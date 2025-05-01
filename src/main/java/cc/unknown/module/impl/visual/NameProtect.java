@@ -23,9 +23,9 @@ public class NameProtect extends Module {
 	public void onRenderText(RenderTextEvent event) {
 		if (!isInGame()) return;
 
-		String text = event.string;
+		String text = event.text;
 		String ownName = mc.getSession().getUsername();
-		String displayName = name.isEmpty() ? "You" : name;
+		String displayName = checkName();
 
 		if (text.startsWith("/") || text.startsWith(".")) {
 			return;
@@ -44,7 +44,11 @@ public class NameProtect extends Module {
 			}
 
 			text = text.replace(ownName, displayName);
-			event.string = text;
+			event.text = text;
 		}
+	}
+	
+	public String checkName() {
+		return name.isEmpty() ? "You" : name;
 	}
 }

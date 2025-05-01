@@ -1,5 +1,6 @@
 {
     "required": true,
+	"minVersion": "0.7.11",
     "package": "cc.unknown.mixin.mixins",
     "refmap": "mixins.haru.refmap.json",
     "compatibilityLevel": "JAVA_8",
@@ -16,6 +17,7 @@
 		"MixinEntityRenderer",
 		"MixinGuiIngame",
 		"MixinBlockPos",
+		"MixinShaderGroup",
 		"MixinEntity",
 		"MixinMovementInputFromOptions",
 		"MixinEntityLivingBase",
@@ -35,7 +37,6 @@
 		"MixinItemRenderer",
 		"MixinEventBus",
 		"MixinMinecraftServer",
-		"MixinAnvilChunkLoader",
 		"MixinGuiAchievement",
 		"MixinModelPlayer",
 		"MixinRenderPlayer",
