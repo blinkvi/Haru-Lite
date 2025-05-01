@@ -14,7 +14,6 @@ import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.module.impl.utility.AutoTool;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
-import cc.unknown.util.render.client.ChatUtil;
 import cc.unknown.util.structure.vectors.Vector2d;
 import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.MultiBoolValue;
@@ -140,7 +139,6 @@ public class BridgeAssist extends Module {
         EntityPlayerSP player = mc.thePlayer;
         double dist = 0.6D;
         double offset = edge.getValue() + 0.01;
-        ChatUtil.display(offset);
         double motionY = player.motionY;
         AxisAlignedBB box = player.getEntityBoundingBox();
         
