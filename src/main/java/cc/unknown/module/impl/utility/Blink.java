@@ -41,8 +41,8 @@ public class Blink extends Module {
 	}
 
 	@SubscribeEvent
-	public void onPreTick(ClientTickEvent event) {
-    	if (event.phase == Phase.END) return;
+	public void onPostTick(ClientTickEvent event) {
+    	if (event.phase == Phase.START) return;
 		if (mc.thePlayer == null) return;
 		while (!packets.isEmpty()) {
 			Packet<?> packet = packets.get(0);

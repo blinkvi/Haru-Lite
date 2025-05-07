@@ -1,7 +1,6 @@
 package cc.unknown.ui.click;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -16,11 +15,9 @@ import cc.unknown.util.render.font.FontRenderer;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
 import cc.unknown.util.render.shader.impl.GradientBlur;
-import cc.unknown.value.impl.BoolValue;
 
 public class PanelRenderer extends Component {
     private final List<ModuleRenderer> moduleComponents;
-    private final List<BoolValue> settingBools = new ArrayList<>();
 	private final GradientBlur gradientBlur = new GradientBlur();
     
     private final Category category;
@@ -32,11 +29,7 @@ public class PanelRenderer extends Component {
         this.category = category;
         this.x = x;
         this.y = y;
-        
-        this.settingBools.add(new BoolValue("NoHitDelay", null, false));
-        this.settingBools.add(new BoolValue("NoJumpDelay", null, false));
-        this.settingBools.add(new BoolValue("NoUseDelay", null, false));
-        
+
         this.moduleComponents = Haru.instance.getModuleManager()
                 .getModulesByCategory(category)
                 .stream()
@@ -68,22 +61,7 @@ public class PanelRenderer extends Component {
         int componentOffsetY = 15;
         
         if (expand) {
-            if (category == Category.SETTINGS) {
-            	for (BoolValue bool : settingBools) {
-            	    FontUtil.getFontRenderer("interSemiBold.ttf", 12).drawString(bool.getName(), x + 5F, y + componentOffsetY + 4F, -1);
-
-            	    float boxSize = 8F;
-            	    float boxX = x + width - boxSize - 6F;
-            	    float boxY = y + componentOffsetY + 2F;
-
-            	    RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, new Color(36, 36, 36).getRGB());
-
-            	    if (bool.get()) {
-            	        RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, getModule(ClickGUI.class).mainColor.get().getRGB());
-            	    }
-            	    componentOffsetY += 12;
-            	}
-            } else if (moduleComponents != null) {
+            if (moduleComponents != null) {
                 AtomicInteger offsetY = new AtomicInteger(componentOffsetY);
 
                 moduleComponents.forEach(module -> {
@@ -127,15 +105,7 @@ public class PanelRenderer extends Component {
                 expand = !expand;
             }
         } else if (expand) {
-            if (category == Category.SETTINGS) {
-                float offsetY = 15;
-                for (BoolValue boolValue : settingBools) {
-                    if (isHovered(x, y + offsetY, width, 12, mouseX, mouseY)) {
-                        boolValue.set(!boolValue.get());
-                    }
-                    offsetY += 12;
-                }
-            } else if (moduleComponents != null) {
+            if (moduleComponents != null) {
                 moduleComponents.forEach(module -> module.mouseClicked(mouseX, mouseY, mouseButton));
             }
         }
@@ -214,10 +184,6 @@ public class PanelRenderer extends Component {
 
 	public List<ModuleRenderer> getModuleComponents() {
 		return moduleComponents;
-	}
-
-	public List<BoolValue> getSettingBools() {
-		return settingBools;
 	}
 
 	public GradientBlur getGradientBlur() {

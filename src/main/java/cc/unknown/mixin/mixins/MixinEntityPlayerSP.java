@@ -12,12 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.mojang.authlib.GameProfile;
 
-import cc.unknown.event.player.PostAttackEvent;
-import cc.unknown.event.player.PreAttackEvent;
+import cc.unknown.event.player.PostUpdateEvent;
+import cc.unknown.event.player.PreUpdateEvent;
 import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.event.player.PushOutOfBlockEvent;
 import cc.unknown.event.player.SlowDownEvent;
-import cc.unknown.event.player.UpdateEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -114,7 +113,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
 	@Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
 	public void onPreUpdate(CallbackInfo ci) {
-		PreAttackEvent event = new PreAttackEvent();
+		PreUpdateEvent event = new PreUpdateEvent();
 		MinecraftForge.EVENT_BUS.post(event);
 
 		if (event.isCanceled()) {
@@ -124,7 +123,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
 	@Inject(method = "onUpdate", at = @At("RETURN"))
 	public void onPostUpdate(CallbackInfo ci) {
-		MinecraftForge.EVENT_BUS.post(new PostAttackEvent());
+		MinecraftForge.EVENT_BUS.post(new PostUpdateEvent());
 	}
 
     @Inject(method = "onUpdateWalkingPlayer", at = @At("HEAD"), cancellable = true)
@@ -220,7 +219,6 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
     @Overwrite
     public void onLivingUpdate() {
-    	MinecraftForge.EVENT_BUS.post(new UpdateEvent());
         if (sprintingTicksLeft > 0) {
             --sprintingTicksLeft;
 

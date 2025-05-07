@@ -8,7 +8,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import cc.unknown.Haru;
-import cc.unknown.module.api.Category;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.value.impl.BoolValue;
 import cc.unknown.value.impl.ColorValue;
@@ -75,16 +74,6 @@ public class Config extends Directory {
                 }
             }
         });
-
-        if (object.has("settings")) {
-            JsonObject settingsObject = object.getAsJsonObject("settings");
-
-            Haru.instance.getDropGui().getWindows().stream()
-                    .filter(window -> window.getCategory() == Category.SETTINGS)
-                    .flatMap(window -> window.getSettingBools().stream())
-                    .filter(bool -> settingsObject.has(bool.getName()))
-                    .forEach(bool -> bool.set(settingsObject.get(bool.getName()).getAsBoolean()));
-        }
     }
 
     @Override
@@ -121,14 +110,6 @@ public class Config extends Directory {
             moduleObject.add("values", valuesObject);
             object.add(module.getName(), moduleObject);
         });
-
-        JsonObject settingsObject = new JsonObject();
-        Haru.instance.getDropGui().getWindows().stream()
-                .filter(window -> window.getCategory() == Category.SETTINGS)
-                .flatMap(window -> window.getSettingBools().stream())
-                .forEach(bool -> settingsObject.addProperty(bool.getName(), bool.get()));
-
-        object.add("settings", settingsObject);
         return object;
     }
 

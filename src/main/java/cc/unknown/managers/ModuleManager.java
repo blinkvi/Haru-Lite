@@ -38,6 +38,7 @@ public final class ModuleManager extends SList<Module> {
         		Piercing.class,
         		MoreKB.class,
         		Velocity.class,
+        		NoHitDelay.class,
         		
         		// utility
         		AutoTool.class,
@@ -46,6 +47,7 @@ public final class ModuleManager extends SList<Module> {
                 Loader.class,
                 AutoGame.class,
                 FastPlace.class,
+                NoUseDelay.class,
                 FastMine.class,
                 FreeLook.class,
 
@@ -65,6 +67,7 @@ public final class ModuleManager extends SList<Module> {
                 
                 // move
                 BridgeAssist.class,
+                NoJumpDelay.class,
                 NoClip.class,
         		NoSlow.class,
         		Sprint.class

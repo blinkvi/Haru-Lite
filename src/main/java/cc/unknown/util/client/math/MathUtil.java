@@ -1,9 +1,9 @@
 package cc.unknown.util.client.math;
 
 import java.security.SecureRandom;
-import java.util.concurrent.ThreadLocalRandom;
 
 import cc.unknown.util.Accessor;
+import io.netty.util.internal.ThreadLocalRandom;
 
 public class MathUtil implements Accessor {
 

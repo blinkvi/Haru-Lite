@@ -2,7 +2,6 @@ package cc.unknown.ui.click.impl;
 
 import java.awt.Color;
 
-import cc.unknown.module.api.Category;
 import cc.unknown.module.impl.visual.ClickGUI;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
@@ -12,7 +11,6 @@ public class BooleanRenderer extends Component {
 
     private final BoolValue value;
     private boolean expanded = false;
-    private Category category;
 
     public BooleanRenderer(BoolValue value) {
         this.value = value;
@@ -21,7 +19,7 @@ public class BooleanRenderer extends Component {
     
     @Override
     public void drawScreen(int mouseX, int mouseY) {
-    	FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawString(value.getName(), x + 5F, y + 4F, (category == Category.SETTINGS) ? new Color(160, 160, 160).getRGB() : -1);
+    	FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawString(value.getName(), x + 5F, y + 4F, -1);
     	
         float boxSize = 8F;
         float boxX = x + width - boxSize - 6F;

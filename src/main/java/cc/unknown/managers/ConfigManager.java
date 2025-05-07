@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -75,21 +76,22 @@ public final class ConfigManager implements Accessor {
     }
 
     public void loadFiles() {
-        for (Directory config : configs) {
+        configs.forEach(config -> {
             File configFile = config.getFile();
-            
-            if (!configFile.exists()) {
+
+            Runnable createEmptyFile = () -> {
                 try (FileWriter writer = new FileWriter(configFile)) {
                     writer.write("{}");
                     Haru.instance.getLogger().info("Created empty file: " + configFile.getName());
                 } catch (IOException e) {
                     Haru.instance.getLogger().error("Failed to create empty file: " + config.getName(), e);
                 }
-            }
-            
-            if (!load(config)) {
-                Haru.instance.getLogger().warn("Failed to load: " + config.getName());
-            }
-        }
+            };
+
+            Runnable warnLoadFail = () -> Haru.instance.getLogger().warn("Failed to load: " + config.getName());
+
+            Optional.of(configFile).filter(file -> !file.exists()).ifPresent(file -> createEmptyFile.run());
+            Optional.of(config).filter(c -> !load(c)).ifPresent(c -> warnLoadFail.run());
+        });
     }
 }

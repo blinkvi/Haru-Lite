@@ -28,7 +28,7 @@ import cc.unknown.handlers.DragHandler;
 import cc.unknown.handlers.GuiMoveHandler;
 import cc.unknown.handlers.IRCHandler;
 import cc.unknown.handlers.KeyHandler;
-import cc.unknown.handlers.SettingsHandler;
+import cc.unknown.handlers.SecurityHandler;
 import cc.unknown.handlers.ShaderHandler;
 import cc.unknown.handlers.SpoofHandler;
 import cc.unknown.handlers.TransactionHandler;
@@ -82,7 +82,6 @@ public class Haru {
     public static final File CS_DIR = new File(MAIN_DIR, "cosmetics");
     
     public static boolean firstStart;
-    public static boolean cris = true;
 
     @EventHandler
     public void startMod(FMLInitializationEvent ignored) { }
@@ -131,8 +130,8 @@ public class Haru {
             new TransactionHandler(),
             new ShaderHandler(),
             new DragHandler(),
+            new SecurityHandler(),
             new IRCHandler(),
-            new SettingsHandler(),
             new CommandHandler(),
             new CosmeticHandler(),
             new KeyHandler(),

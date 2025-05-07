@@ -75,5 +75,16 @@ public class PacketUtil implements Accessor {
     public static <H extends INetHandler> Packet<H> castPacket(Packet<?> packet) throws ClassCastException {
         return (Packet<H>) packet;
     }
+    
+    public static void windowsClick(int slot, String name) {
+    	switch (name) {
+    	case "Shift":
+    		mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, slot, 0, 1, mc.thePlayer);
+    		break;
+    	case "DropItem":
+    		mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, slot, 1, 4, mc.thePlayer);
+    		break;
+    	}
+    }
 
 }

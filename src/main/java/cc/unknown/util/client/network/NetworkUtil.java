@@ -185,7 +185,7 @@ public class NetworkUtil implements Accessor {
                 while ((line = br.readLine()) != null) {
                     String[] parts = line.split(" \\| ");
                     if (parts.length == 2 && parts[0].equals(instruction)) {
-                        return AESUtil.decrypt(parts[1].trim());
+                        return AESUtil.decryptString(parts[1].trim());
                     }
                 }
             }

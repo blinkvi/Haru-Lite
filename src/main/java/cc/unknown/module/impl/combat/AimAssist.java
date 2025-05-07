@@ -30,19 +30,19 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @ModuleInfo(name = "AimAssist", description = "Assists with aiming at opponents in a legitimate manner.", category = Category.COMBAT)
 public class AimAssist extends Module {
 
-	private final ModeValue mode = new ModeValue("Mode", this, "Linear", "Linear", "Lock");
+	private final ModeValue mode = new ModeValue("Mode", this, "Regular", "Regular", "Lock");
 	
-	private final SliderValue hSpeed = new SliderValue("HorizontalSpeed", this, 3.4f, 0.1f, 20, 0.01f, () -> mode.is("Linear"));
-	private final SliderValue hMult  = new SliderValue("HorizontalMult",  this, 3.5f, 0.1f, 20, 0.01f, () -> mode.is("Linear"));
+	private final SliderValue hSpeed = new SliderValue("HorizontalSpeed", this, 3.4f, 0.1f, 20, 0.01f, () -> mode.is("Regular"));
+	private final SliderValue hMult  = new SliderValue("HorizontalMult",  this, 3.5f, 0.1f, 20, 0.01f, () -> mode.is("Regular"));
 	
 	private BoolValue vertical = new BoolValue("Vertical", this, false);
-	private SliderValue vSpeed = new SliderValue("VerticalSpeed", this, 2.1f, 0.1f, 20, 0.01f, () -> mode.is("Linear") && vertical.get());
-	private SliderValue vMult = new SliderValue("VerticalMult", this, 2.3f, 0.1f, 20, 0.01f, () -> mode.is("Linear") && vertical.get());
+	private SliderValue vSpeed = new SliderValue("VerticalSpeed", this, 2.1f, 0.1f, 20, 0.01f, () -> mode.is("Regular") && vertical.get());
+	private SliderValue vMult = new SliderValue("VerticalMult", this, 2.3f, 0.1f, 20, 0.01f, () -> mode.is("Regular") && vertical.get());
 	
 	private final SliderValue angle = new SliderValue("Angle", this, 180, 0, 180, 1);
 	private final SliderValue distance = new SliderValue("Distance", this, 4f, 1f, 8f, 0.1f);
 
-	private final ModeValue speedMode = new ModeValue("Speed", this, () -> mode.is("Linear"), "Random", "Random", "Secure", "Gaussian");
+	private final ModeValue speedMode = new ModeValue("Speed", this, () -> mode.is("Regular"), "Random", "Random", "Secure", "Gaussian");
 	
 	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
 			new BoolValue("MultiPoint", false),
@@ -112,7 +112,7 @@ public class AimAssist extends Module {
 	    case "Lock":
 	    	RotationUtil.getLockRotation(target, vertical.get());
 	    	break;
-	    case "Linear":
+	    case "Regular":
 		    float yawOffset = MathUtil.randomFloat(Math.min(hSpeed.getValue(), hMult.getValue()) * 10f, Math.max(hSpeed.getValue(), hMult.getValue()) * 10f) / 180f;
 		    float yawFov = (float) PlayerUtil.fovFromTarget(target);
 		    float yawAdjustment = getSpeedRandomize(speedMode.getMode(), yawFov, yawOffset, hSpeed.getValue(), hMult.getValue());

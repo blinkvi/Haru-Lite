@@ -3,7 +3,9 @@ package cc.unknown.util.player;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -14,15 +16,23 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemExpBottle;
+import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemSnowball;
+import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.item.ItemTool;
 import net.minecraft.util.BlockPos;
 
 public class InventoryUtil implements Accessor {
@@ -105,6 +115,86 @@ public class InventoryUtil implements Accessor {
 		}
 	}
 	
+	public static ItemStack bestSword() {
+		ItemStack bestSword = null;
+		float itemDamage = -1.0F;
+
+		for (int i = 9; i < 45; ++i) {
+			if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+				ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
+				if (is.getItem() instanceof ItemSword) {
+					float swordDamage = itemDamage(is);
+					if (swordDamage >= itemDamage) {
+						itemDamage = itemDamage(is);
+						bestSword = is;
+					}
+				}
+			}
+		}
+
+		return bestSword;
+	}
+	
+	public static ItemStack bestBow() {
+		ItemStack bestBow = null;
+		float itemDamage = -1.0F;
+
+		for (int i = 9; i < 45; ++i) {
+			if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+				ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
+				if (is.getItem() instanceof ItemBow) {
+					float bowDamage = bowDamage(is);
+					if (bowDamage >= itemDamage) {
+						itemDamage = bowDamage(is);
+						bestBow = is;
+					}
+				}
+			}
+		}
+
+		return bestBow;
+	}
+	
+	public static ItemStack bestAxe() {
+		ItemStack bestTool = null;
+		float itemSkill = -1.0F;
+
+		for (int i = 9; i < 45; ++i) {
+			if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+				ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
+				if (is.getItem() instanceof ItemAxe) {
+					float toolSkill = toolRating(is);
+					if (toolSkill >= itemSkill) {
+						itemSkill = toolRating(is);
+						bestTool = is;
+					}
+				}
+			}
+		}
+
+		return bestTool;
+	}
+
+	public static ItemStack bestPick() {
+		ItemStack bestTool = null;
+		float itemSkill = -1.0F;
+
+		for (int i = 9; i < 45; ++i) {
+			if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+				ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
+				if (is.getItem() instanceof ItemPickaxe) {
+					float toolSkill = toolRating(is);
+					if (toolSkill >= itemSkill) {
+						itemSkill = toolRating(is);
+						bestTool = is;
+					}
+				}
+			}
+		}
+
+		return bestTool;
+	}
+
     public static Item getItem() {
         ItemStack stack = getItemStack();
         return stack == null ? null : stack.getItem();
@@ -184,5 +274,183 @@ public class InventoryUtil implements Accessor {
             }
         }
         return -1;
+    }
+    
+    public static boolean bestArmor(ItemStack stack, int type) {
+		float prot = armorProtection(stack);
+		String armor = "";
+		
+		switch (type) {
+		case 1:
+			armor = "helmet";
+			break;
+		case 2:
+			armor = "chestplate";
+			break;
+		case 3:
+			armor = "leggings";
+			break;
+		case 4:
+			armor = "boots";
+			break;
+		}
+		
+		if (!stack.getUnlocalizedName().contains(armor)) {
+			return false;
+		} else {
+			for (int i = 5; i < 45; ++i) {
+				if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+					ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
+					if (armorProtection(is) > prot && is.getUnlocalizedName().contains(armor)) {
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+	}
+    
+    public static float armorProtection(ItemStack stack) {
+		float prot = 0.0F;
+		if (stack.getItem() instanceof ItemArmor) {
+			ItemArmor armor = (ItemArmor) stack.getItem();
+			prot = (float) (prot + armor.damageReduceAmount + 100 - armor.damageReduceAmount * EnchantmentHelper.getEnchantmentLevel(Enchantment.protection.effectId, stack) * 0.0075D);
+			prot =  prot + EnchantmentHelper.getEnchantmentLevel(Enchantment.blastProtection.effectId, stack) / 100;
+			prot = prot + EnchantmentHelper.getEnchantmentLevel(Enchantment.fireProtection.effectId, stack) / 100;
+			prot = prot + EnchantmentHelper.getEnchantmentLevel(Enchantment.thorns.effectId, stack) / 100;
+			prot = prot + EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack) / 50;
+			prot = prot + EnchantmentHelper.getEnchantmentLevel(Enchantment.protection.effectId, stack) / 100;
+		}
+
+		return prot;
+	}
+    
+    public static float itemDamage(ItemStack itemStack) {
+		float damage = materialRating(itemStack, true);
+		damage += (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, itemStack) * 1.25F;
+		damage += (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, itemStack) * 0.5F;
+		damage += (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack) * 0.01F;
+		damage += (float) (itemStack.getMaxDamage() - itemStack.getItemDamage()) * 1.0E-12F;
+		if (itemStack.getItem() instanceof ItemSword) {
+			damage = (float) (damage + 0.2D);
+		}
+
+		return damage;
+	}
+    
+	public static float bowDamage(ItemStack itemStack) {
+		float damage = 5.0F;
+		damage += (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, itemStack) * 1.25F;
+		damage += (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, itemStack) * 0.75F;
+		damage += (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, itemStack) * 0.5F;
+		damage += (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack) * 0.1F;
+		damage += (float) itemStack.getMaxDamage() - (float) itemStack.getItemDamage() * 0.001F;
+		return damage;
+	}
+    
+	public static float toolRating(ItemStack itemStack) {
+		float damage = materialRating(itemStack, false);
+		damage += (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.efficiency.effectId, itemStack) * 2.0F;
+		damage += (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, itemStack) * 0.5F;
+		damage += (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, itemStack) * 0.5F;
+		damage += (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack) * 0.1F;
+		damage += (float) (itemStack.getMaxDamage() - itemStack.getItemDamage()) * 1.0E-12F;
+		return damage;
+	}
+    
+    public static float materialRating(ItemStack itemStack, boolean checkForDamage) {
+		if (itemStack == null || itemStack.getItem() == null) {
+			return 0;
+		}
+
+		Item item = itemStack.getItem();
+		String materialName = null;
+
+		if (item instanceof ItemTool) {
+			materialName = ((ItemTool) item).getToolMaterialName();
+		} else if (item instanceof ItemSword) {
+			materialName = ((ItemSword) item).getToolMaterialName();
+		}
+
+		if (materialName == null) {
+			return 0.0F;
+		}
+
+		Map<String, Float> materialRatings = new HashMap<>();
+		materialRatings.put("WOOD", 2.0F);
+		materialRatings.put("STONE", 3.0F);
+		materialRatings.put("IRON", 4.0F);
+		materialRatings.put("GOLD", 2.0F);
+		materialRatings.put("EMERALD", 5.0F);
+
+		float baseRating = materialRatings.getOrDefault(materialName, 0.0F);
+
+		if (item instanceof ItemSword) {
+			baseRating += 2.0F;
+		} else if (item instanceof ItemPickaxe || item instanceof ItemSpade) {
+			baseRating = checkForDamage ? baseRating : baseRating * 10;
+		} else if (item instanceof ItemAxe) {
+			baseRating += 1.0F;
+		}
+
+		return baseRating;
+	}
+
+    public static boolean trash(ItemStack is, boolean preferSword, boolean keepTools) {
+        if (is == null) return false;
+
+        Item item = is.getItem();
+
+        if (item instanceof ItemArmor) {
+            String name = is.getUnlocalizedName();
+
+            for (int type = 1; type <= 4; ++type) {
+            	String armorPart = "";
+            	
+    			switch (type) {
+    			case 1:
+    				armorPart = "helmet";
+    				break;
+    			case 2:
+    				armorPart = "chestplate";
+    				break;
+    			case 3:
+    				armorPart = "leggings";
+    				break;
+    			case 4:
+    				armorPart = "boots";
+    				break;
+    			}
+
+                if (name.contains(armorPart)) {
+                    boolean isBest = bestArmor(is, type);
+                    ItemStack equipped = mc.thePlayer.inventoryContainer.getSlot(4 + type).getStack();
+                    boolean hasEquipped = equipped != null && equipped.getUnlocalizedName().contains(armorPart);
+
+                    if (!isBest || (hasEquipped && bestArmor(equipped, type))) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        if (item instanceof ItemSword && is != bestSword()) {
+            return true;
+        }
+
+        if (item instanceof ItemBow && is != bestBow()) {
+            return true;
+        }
+
+        if (item instanceof ItemAxe && (preferSword || !keepTools || is != bestAxe())) {
+            return true;
+        }
+
+        if (item instanceof ItemPickaxe && (preferSword || !keepTools || is != bestPick())) {
+            return true;
+        }
+
+        return false;
     }
 }

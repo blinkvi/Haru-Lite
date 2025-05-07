@@ -38,7 +38,7 @@ public class Velocity extends Module {
     public void onPostVelocity(PostVelocityEvent event) {
     	if (!shouldApplyVelocity()) return;
     	
-        if (mode.is("Jump") && !mc.gameSettings.keyBindJump.isKeyDown()) {
+        if (mode.is("Jump")) {
         	mc.thePlayer.setJumping(mc.thePlayer.onGround);
         }
     };

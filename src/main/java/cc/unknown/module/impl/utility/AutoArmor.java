@@ -1,84 +1,78 @@
 package cc.unknown.module.impl.utility;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.IntStream;
-
-import cc.unknown.event.player.PrePositionEvent;
+import cc.unknown.event.player.MoveInputEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
+import cc.unknown.util.client.network.PacketUtil;
 import cc.unknown.util.client.system.Clock;
-import cc.unknown.util.player.move.MoveUtil;
-import cc.unknown.value.impl.BoolValue;
+import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.value.impl.SliderValue;
-import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "AutoArmor", description = "", category = Category.UTILITY)
 public class AutoArmor extends Module {
-	private final SliderValue delay = new SliderValue("Delay", this, 150, 0, 300, 25);
-	private final BoolValue openInv = new BoolValue("Open Inventory", true);
-	private final BoolValue noMove = new BoolValue("Disable Movement", true);
+	private final SliderValue startDelay = new SliderValue("Start Delay", this, 1, 0, 10, 1);
+	private final SliderValue speed = new SliderValue("MouseSpeed", this, 1, 0, 10, 1);
 
-	private final Clock clock = new Clock(0L);
-	private boolean movedItem;
-
-	@Override
-	public void onEnable() {
-		clock.reset();
-	}
+	private final Clock startTimer = new Clock();
+	private final Clock clock = new Clock();
 
 	@SubscribeEvent
-	public void onPrePosition(PrePositionEvent event) {
-	    if (!clock.reached(delay.getValue()) || mc.currentScreen instanceof GuiChest || (MoveUtil.isMoving() && noMove.get())) {
-	        mc.thePlayer.closeScreen();
-	        return;
-	    }
+	public void onMoveInput(MoveInputEvent event) {
+		if (mc.currentScreen == null) {
+			startTimer.reset();
+		}
 
-	    if (!(mc.currentScreen instanceof GuiInventory) && openInv.get()) return;
+		if (!startTimer.hasElapsedTicks((int) startDelay.getValue(), false)) {
+			return;
+		}
 
-	    movedItem = false;
-	    clock.reset();
+		if (clock.hasElapsedTicks((int) speed.getValue(), false)) {
+			if (!(mc.currentScreen instanceof GuiInventory)) {
+				return;
+			}
 
-	    Map<Integer, Integer> bestArmor = new HashMap<>();
+			for (int type = 1; type < 5; ++type) {
+				if (clock.hasElapsedTicks((int) speed.getValue(), false)) {
+					if (mc.thePlayer.inventoryContainer.getSlot(4 + type).getHasStack()) {
+						ItemStack is = mc.thePlayer.inventoryContainer.getSlot(4 + type).getStack();
+						if (!InventoryUtil.bestArmor(is, type)) {
+							PacketUtil.windowsClick(4 + type, "DropItem");
 
-	    IntStream.range(0, 40).forEach(i -> {
-	        ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
-	        if (stack != null && stack.getItem() instanceof ItemArmor) {
-	            ItemArmor armor = (ItemArmor) stack.getItem();
-	            int type = armor.armorType;
-	            int reduction = getArmorDamageReduction(stack);
+							clock.reset();
+							if (speed.getValue() != 0) {
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			for (int type = 1; type < 5; ++type) {
+				if (clock.hasElapsedTicks((int) speed.getValue(), false)) {
+					for (int i = 9; i < 45; ++i) {
+						if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
+							ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
+							if (validArmor(is, type)) {
+								PacketUtil.windowsClick(i, "Shift");
 
-	            bestArmor.compute(type, (k, v) -> (v == null || reduction > getArmorDamageReduction(mc.thePlayer.inventory.getStackInSlot(v))) ? i : v);
-	        }
-	    });
+								clock.reset();
+								if (speed.getValue() != 0) {
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
-	    bestArmor.forEach((type, slotIndex) -> equipArmor(getSlotId(slotIndex)));
 	}
 
-	private int getArmorDamageReduction(ItemStack stack) {
-	    if (stack == null || !(stack.getItem() instanceof ItemArmor)) return 0;
-	    ItemArmor armor = (ItemArmor) stack.getItem();
-	    int baseReduction = armor.damageReduceAmount;
-	    int enchantmentReduction = EnchantmentHelper.getEnchantmentModifierDamage(new ItemStack[]{stack}, DamageSource.generic);
-
-	    return baseReduction + enchantmentReduction;
-	}
-	
-	private void equipArmor(int slot) {
-	    if (slot >= 0 && slot < mc.thePlayer.inventoryContainer.inventorySlots.size() && slot > 8 && !movedItem) {
-	        mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, slot, 0, 1, mc.thePlayer);
-	        movedItem = true;
-	    }
-	}
-
-	private int getSlotId(int slot) {
-	    return (slot < 9) ? slot + 36 : slot;
+	private boolean validArmor(ItemStack itemStack, int type) {
+		return InventoryUtil.armorProtection(itemStack) > 0.0F && InventoryUtil.bestArmor(itemStack, type) && !InventoryUtil.trash(itemStack, true, true);
 	}
 }

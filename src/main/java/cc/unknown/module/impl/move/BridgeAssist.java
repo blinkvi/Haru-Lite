@@ -7,7 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 import cc.unknown.event.player.MoveInputEvent;
 import cc.unknown.event.player.PlaceEvent;
-import cc.unknown.event.player.PrePositionEvent;
+import cc.unknown.event.player.PreUpdateEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -63,7 +63,7 @@ public class BridgeAssist extends Module {
 	}
     
     @SubscribeEvent
-    public void onPreMotion(PrePositionEvent event) {
+    public void onPreUpdate(PreUpdateEvent event) {
     	if (noBridge()) return;
     	         
         if (conditionals.isEnabled("RequireSneak")) {
