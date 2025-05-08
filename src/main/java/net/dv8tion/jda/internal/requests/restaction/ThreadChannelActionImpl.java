@@ -159,7 +159,6 @@ public class ThreadChannelActionImpl extends AuditableRestActionImpl<ThreadChann
     @Override
     protected void handleSuccess(Response response, Request<ThreadChannel> request)
     {
-        ThreadChannel channel = api.getEntityBuilder().createThreadChannel(response.getObject(), guild.getIdLong());
-        request.onSuccess(channel);
+
     }
 }

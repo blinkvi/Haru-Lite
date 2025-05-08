@@ -16,22 +16,12 @@
 
 package net.dv8tion.jda.internal.managers.channel;
 
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.List;
-
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-
 import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.set.TLongSet;
 import gnu.trove.set.hash.TLongHashSet;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.Region;
-import net.dv8tion.jda.api.entities.IPermissionHolder;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.PermissionOverride;
-import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.ChannelFlag;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
@@ -39,13 +29,12 @@ import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.entities.channel.attribute.IPostContainer;
 import net.dv8tion.jda.api.entities.channel.attribute.ISlowmodeChannel;
 import net.dv8tion.jda.api.entities.channel.attribute.IThreadContainer;
-import net.dv8tion.jda.api.entities.channel.concrete.Category;
-import net.dv8tion.jda.api.entities.channel.concrete.MediaChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.StageChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.*;
+import net.dv8tion.jda.api.entities.channel.forums.BaseForumTag;
+import net.dv8tion.jda.api.entities.channel.forums.ForumTagSnowflake;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
+import net.dv8tion.jda.api.entities.channel.unions.IThreadContainerUnion;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
@@ -63,6 +52,14 @@ import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
 import okhttp3.RequestBody;
 
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @SuppressWarnings("unchecked") //We do a lot of (M) and (T) casting that we know is correct but the compiler warns about.
 public class ChannelManagerImpl<T extends GuildChannel, M extends ChannelManager<T, M>> extends ManagerBase<M> implements ChannelManager<T, M>
 {
@@ -70,6 +67,7 @@ public class ChannelManagerImpl<T extends GuildChannel, M extends ChannelManager
 
     protected final EnumSet<ChannelFlag> flags;
     protected ThreadChannel.AutoArchiveDuration autoArchiveDuration;
+    protected List<BaseForumTag> availableTags;
     protected List<String> appliedTags;
     protected Emoji defaultReactionEmoji;
     protected int defaultLayout;
@@ -132,6 +130,8 @@ public class ChannelManagerImpl<T extends GuildChannel, M extends ChannelManager
             this.topic = null;
         if ((fields & REGION) == REGION)
             this.region = null;
+        if ((fields & AVAILABLE_TAGS) == AVAILABLE_TAGS)
+            this.availableTags = null;
         if ((fields & APPLIED_TAGS) == APPLIED_TAGS)
             this.appliedTags = null;
         if ((fields & DEFAULT_REACTION) == DEFAULT_REACTION)
@@ -192,6 +192,7 @@ public class ChannelManagerImpl<T extends GuildChannel, M extends ChannelManager
         this.parent = null;
         this.topic = null;
         this.region = null;
+        this.availableTags = null;
         this.appliedTags = null;
         this.defaultReactionEmoji = null;
         this.flags.clear();
@@ -629,13 +630,52 @@ public class ChannelManagerImpl<T extends GuildChannel, M extends ChannelManager
         set |= HIDE_MEDIA_DOWNLOAD_OPTIONS;
         return (M) this;
     }
-    
+
+    public M setAvailableTags(List<? extends BaseForumTag> tags)
+    {
+        if (!(channel instanceof IPostContainer))
+            throw new IllegalStateException("Can only set available tags on forum/media channels.");
+        Checks.noneNull(tags, "Available Tags");
+        this.availableTags = new ArrayList<>(tags);
+        set |= AVAILABLE_TAGS;
+        return (M) this;
+    }
+
+    public M setAppliedTags(Collection<? extends ForumTagSnowflake> tags)
+    {
+        if (type != ChannelType.GUILD_PUBLIC_THREAD)
+            throw new IllegalStateException("Can only set applied tags on forum post thread channels.");
+        Checks.noneNull(tags, "Applied Tags");
+        Checks.check(tags.size() <= IPostContainer.MAX_POST_TAGS, "Cannot apply more than %d tags to a post thread!", ForumChannel.MAX_POST_TAGS);
+        ThreadChannel thread = (ThreadChannel) getChannel();
+        IThreadContainerUnion parentChannel = thread.getParentChannel();
+        if (!(parentChannel instanceof IPostContainer))
+            throw new IllegalStateException("Cannot apply tags to threads outside of forum/media channels.");
+        if (tags.isEmpty() && parentChannel.asForumChannel().isTagRequired())
+            throw new IllegalArgumentException("Cannot remove all tags from a forum post which requires at least one tag! See IPostContainer#isRequireTag()");
+        this.appliedTags = tags.stream().map(ISnowflake::getId).collect(Collectors.toList());
+        set |= APPLIED_TAGS;
+        return (M) this;
+    }
+
     public M setDefaultReaction(Emoji emoji)
     {
         if (!(channel instanceof IPostContainer))
             throw new IllegalStateException("Can only set default reaction on forum/media channels.");
         this.defaultReactionEmoji = emoji;
         set |= DEFAULT_REACTION;
+        return (M) this;
+    }
+
+    public M setDefaultLayout(ForumChannel.Layout layout)
+    {
+        if (type != ChannelType.FORUM)
+            throw new IllegalStateException("Can only set default layout on forum channels.");
+        Checks.notNull(layout, "layout");
+        if (layout == ForumChannel.Layout.UNKNOWN)
+            throw new IllegalStateException("Layout type cannot be UNKNOWN.");
+        this.defaultLayout = layout.getKey();
+        set |= DEFAULT_LAYOUT;
         return (M) this;
     }
 
@@ -685,6 +725,8 @@ public class ChannelManagerImpl<T extends GuildChannel, M extends ChannelManager
             frame.put("locked", locked);
         if (shouldUpdate(INVITEABLE))
             frame.put("invitable", invitable);
+        if (shouldUpdate(AVAILABLE_TAGS))
+            frame.put("available_tags", DataArray.fromCollection(availableTags));
         if (shouldUpdate(APPLIED_TAGS))
             frame.put("applied_tags", DataArray.fromCollection(appliedTags));
         if (shouldUpdate(PINNED | REQUIRE_TAG | HIDE_MEDIA_DOWNLOAD_OPTIONS))

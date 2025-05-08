@@ -29,18 +29,18 @@ import java.util.EnumSet;
 public class ChannelUtil
 {
     public static final EnumSet<ChannelType> SLOWMODE_SUPPORTED = EnumSet.of(
-        ChannelType.TEXT, ChannelType.MEDIA,
+        ChannelType.TEXT, ChannelType.FORUM, ChannelType.MEDIA,
         ChannelType.GUILD_PUBLIC_THREAD, ChannelType.GUILD_NEWS_THREAD, ChannelType.GUILD_PRIVATE_THREAD,
         ChannelType.STAGE, ChannelType.VOICE
     );
 
-    public static final EnumSet<ChannelType> NSFW_SUPPORTED = EnumSet.of(ChannelType.TEXT, ChannelType.VOICE, ChannelType.MEDIA, ChannelType.NEWS, ChannelType.STAGE);
+    public static final EnumSet<ChannelType> NSFW_SUPPORTED = EnumSet.of(ChannelType.TEXT, ChannelType.VOICE, ChannelType.FORUM, ChannelType.MEDIA, ChannelType.NEWS, ChannelType.STAGE);
 
-    public static final EnumSet<ChannelType> TOPIC_SUPPORTED = EnumSet.of(ChannelType.TEXT, ChannelType.MEDIA, ChannelType.NEWS);
+    public static final EnumSet<ChannelType> TOPIC_SUPPORTED = EnumSet.of(ChannelType.TEXT, ChannelType.FORUM, ChannelType.MEDIA, ChannelType.NEWS);
 
-    public static final EnumSet<ChannelType> POST_CONTAINERS = EnumSet.of(ChannelType.MEDIA);
+    public static final EnumSet<ChannelType> POST_CONTAINERS = EnumSet.of(ChannelType.FORUM, ChannelType.MEDIA);
 
-    public static final EnumSet<ChannelType> THREAD_CONTAINERS = EnumSet.of(ChannelType.TEXT, ChannelType.NEWS, ChannelType.MEDIA);
+    public static final EnumSet<ChannelType> THREAD_CONTAINERS = EnumSet.of(ChannelType.TEXT, ChannelType.NEWS, ChannelType.FORUM, ChannelType.MEDIA);
 
     public static <T extends Channel> T safeChannelCast(Object instance, Class<T> toObjectClass)
     {

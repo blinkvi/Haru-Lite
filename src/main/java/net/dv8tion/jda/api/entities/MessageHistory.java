@@ -37,6 +37,7 @@ import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import org.apache.commons.collections4.map.ListOrderedMap;
 import org.jetbrains.annotations.Unmodifiable;
+import org.slf4j.Logger;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
@@ -58,6 +59,7 @@ import java.util.*;
 public class MessageHistory
 {
     protected final MessageChannel channel;
+    protected static final Logger LOG = JDALogger.getLog(MessageHistory.class);
 
     protected final ListOrderedMap<Long, Message> history = new ListOrderedMap<>();
 
@@ -206,6 +208,7 @@ public class MessageHistory
                 }
                 catch (Exception e)
                 {
+                    LOG.warn("Encountered exception when retrieving messages ", e);
                 }
             }
 
@@ -282,6 +285,7 @@ public class MessageHistory
                 }
                 catch (Exception e)
                 {
+                    LOG.warn("Encountered exception when retrieving messages ", e);
                 }
             }
 
@@ -601,6 +605,7 @@ public class MessageHistory
                 }
                 catch (Exception e)
                 {
+                    LOG.warn("Encountered exception in MessagePagination", e);
                 }
             }
             request.onSuccess(result);

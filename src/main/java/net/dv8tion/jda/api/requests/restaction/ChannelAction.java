@@ -16,12 +16,6 @@
 
 package net.dv8tion.jda.api.requests.restaction;
 
-import java.util.Collection;
-
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.Region;
 import net.dv8tion.jda.api.entities.Guild;
@@ -34,8 +28,11 @@ import net.dv8tion.jda.api.entities.channel.attribute.IPostContainer;
 import net.dv8tion.jda.api.entities.channel.attribute.ISlowmodeChannel;
 import net.dv8tion.jda.api.entities.channel.attribute.IThreadContainer;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.concrete.ForumChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.StageChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.forums.BaseForumTag;
+import net.dv8tion.jda.api.entities.channel.forums.ForumTagData;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
@@ -43,6 +40,31 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.utils.MiscUtil;
 import net.dv8tion.jda.internal.utils.Checks;
 
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * Extension of {@link net.dv8tion.jda.api.requests.RestAction RestAction} specifically
+ * designed to create a {@link GuildChannel GuildChannel}.
+ * This extension allows setting properties before executing the action.
+ *
+ * @since  3.0
+ *
+ * @see    net.dv8tion.jda.api.entities.Guild
+ * @see    net.dv8tion.jda.api.entities.Guild#createTextChannel(String)
+ * @see    net.dv8tion.jda.api.entities.Guild#createNewsChannel(String)
+ * @see    net.dv8tion.jda.api.entities.Guild#createVoiceChannel(String)
+ * @see    net.dv8tion.jda.api.entities.Guild#createStageChannel(String)
+ * @see    net.dv8tion.jda.api.entities.Guild#createCategory(String)
+ * @see    net.dv8tion.jda.api.entities.channel.attribute.ICopyableChannel#createCopy()
+ * @see    net.dv8tion.jda.api.entities.channel.attribute.ICopyableChannel#createCopy(Guild)
+ *
+ * @param <T>
+ *        The type of channel to create
+ */
 public interface ChannelAction<T extends GuildChannel> extends FluentAuditableRestAction<T, ChannelAction<T>>
 {
     /**
@@ -217,10 +239,91 @@ public interface ChannelAction<T extends GuildChannel> extends FluentAuditableRe
     @CheckReturnValue
     ChannelAction<T> setDefaultReaction(@Nullable Emoji emoji);
 
+    /**
+     * Sets the <b><u>default layout</u></b> of the new {@link ForumChannel}.
+     *
+     * @param  layout
+     *         The new default layout.
+     *
+     * @throws IllegalArgumentException
+     *         If null or {@link net.dv8tion.jda.api.entities.channel.concrete.ForumChannel.Layout#UNKNOWN UNKNOWN} is provided
+     *
+     * @return The current ChannelAction, for chaining convenience
+     *
+     * @see    ForumChannel#getDefaultLayout()
+     */
+    @Nonnull
+    @CheckReturnValue
+    ChannelAction<T> setDefaultLayout(@Nonnull ForumChannel.Layout layout);
+
+    /**
+     * Sets the <b><u>default sort order</u></b> of the channel.
+     *
+     * @param  sortOrder
+     *         The new default sort order.
+     *
+     * @throws IllegalArgumentException
+     *         If null or {@link net.dv8tion.jda.api.entities.channel.attribute.IPostContainer.SortOrder#UNKNOWN UNKNOWN} is provided
+     *
+     * @return The current ChannelAction, for chaining convenience
+     *
+     * @see    IPostContainer#getDefaultSortOrder()
+     */
     @Nonnull
     @CheckReturnValue
     ChannelAction<T> setDefaultSortOrder(@Nonnull IPostContainer.SortOrder sortOrder);
 
+    /**
+     * Sets the <b><u>available tags</u></b> of the channel.
+     * <br>Tags will be ordered based on the provided list order.
+     *
+     * <p>You can use {@link ForumTagData} to create new tags.
+     *
+     * @param  tags
+     *         The new available tags in the desired order.
+     *
+     * @throws IllegalArgumentException
+     *         If the provided list is null or contains null elements
+     *
+     * @return The current ChannelAction, for chaining convenience
+     *
+     * @see    IPostContainer#getAvailableTags()
+     */
+    @Nonnull
+    @CheckReturnValue
+    ChannelAction<T> setAvailableTags(@Nonnull List<? extends BaseForumTag> tags);
+
+    /**
+     * Adds a new Role or Member {@link net.dv8tion.jda.api.entities.PermissionOverride PermissionOverride}
+     * for the new GuildChannel.
+     *
+     * <p>If setting permission overwrites, only permissions your bot has in the guild can be allowed/denied.
+     *
+     * <p>Example:
+     * <pre>{@code
+     * Role role = guild.getPublicRole();
+     * EnumSet<Permission> allow = EnumSet.of(Permission.VIEW_CHANNEL);
+     * EnumSet<Permission> deny = EnumSet.of(Permission.MESSAGE_SEND);
+     * channelAction.addPermissionOverride(role, allow, deny);
+     * }</pre>
+     *
+     * @param  target
+     *         The not-null {@link net.dv8tion.jda.api.entities.Role Role} or {@link net.dv8tion.jda.api.entities.Member Member} for the override
+     * @param  allow
+     *         The granted {@link net.dv8tion.jda.api.Permission Permissions} for the override or null
+     * @param  deny
+     *         The denied {@link net.dv8tion.jda.api.Permission Permissions} for the override or null
+     *
+     * @throws net.dv8tion.jda.api.exceptions.InsufficientPermissionException
+     *         If any permission is set in allow/deny that the currently logged in account is missing,
+     *         unless {@link Permission#MANAGE_PERMISSIONS} or {@link Permission#MANAGE_ROLES} is granted to it within the context of the parent category.
+     * @throws java.lang.IllegalArgumentException
+     *         If the specified target is null or not within the same guild.
+     *
+     * @return The current ChannelAction, for chaining convenience
+     *
+     * @see    java.util.EnumSet
+     */
     @Nonnull
     @CheckReturnValue
     default ChannelAction<T> addPermissionOverride(@Nonnull IPermissionHolder target, @Nullable Collection<Permission> allow, @Nullable Collection<Permission> deny)

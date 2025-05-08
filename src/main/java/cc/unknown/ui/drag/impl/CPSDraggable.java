@@ -2,7 +2,7 @@ package cc.unknown.ui.drag.impl;
 
 import java.awt.Color;
 
-import cc.unknown.handlers.CPSHandler;
+import cc.unknown.handlers.ClientHandler;
 import cc.unknown.module.impl.visual.Interface;
 import cc.unknown.ui.drag.Drag;
 import cc.unknown.util.render.RenderUtil;
@@ -27,7 +27,7 @@ public class CPSDraggable extends Drag {
         float iconSize = 5.0f;
         float padding = 5.0F;
 
-        String cpsText = CPSHandler.getLeftClickCounter() + " | " + CPSHandler.getRightClickCounter() + " CPS";
+        String cpsText = ClientHandler.getLeftClickCounter() + " | " + ClientHandler.getRightClickCounter() + " CPS";
         float cpsWidth = (float) (FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).getStringWidth(cpsText) + iconSize * 2.5F + 10);
 
         width = iconSize * 2.5F + cpsWidth - 20 + padding * 2;

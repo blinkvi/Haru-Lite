@@ -16,14 +16,9 @@
 
 package net.dv8tion.jda.internal.requests.restaction;
 
-import java.util.List;
-import java.util.function.Function;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message.MessageFlag;
+import net.dv8tion.jda.api.entities.channel.forums.ForumTagSnowflake;
 import net.dv8tion.jda.api.requests.Request;
 import net.dv8tion.jda.api.requests.Response;
 import net.dv8tion.jda.api.requests.Route;
@@ -34,8 +29,14 @@ import net.dv8tion.jda.api.utils.data.DataObject;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.dv8tion.jda.internal.utils.Checks;
+import net.dv8tion.jda.internal.utils.Helpers;
 import net.dv8tion.jda.internal.utils.message.MessageCreateBuilderMixin;
 import okhttp3.RequestBody;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.Function;
 
 public class WebhookMessageCreateActionImpl<T>
     extends AbstractWebhookMessageActionImpl<T, WebhookMessageCreateActionImpl<T>>
@@ -148,6 +149,14 @@ public class WebhookMessageCreateActionImpl<T>
                 json.put("username", username);
             if (avatar != null)
                 json.put("avatar_url", avatar);
+
+            if (threadId == null && threadMetadata != null)
+            {
+                json.put("thread_name", threadMetadata.getName());
+                List<ForumTagSnowflake> tags = threadMetadata.getAppliedTags();
+                if (!tags.isEmpty())
+                    json.put("applied_tags", tags.stream().map(ForumTagSnowflake::getId).collect(Helpers.toDataArray()));
+            }
 
             return getMultipartBody(files, json);
         }

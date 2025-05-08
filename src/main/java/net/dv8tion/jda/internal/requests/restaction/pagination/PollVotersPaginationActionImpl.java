@@ -68,6 +68,7 @@ public class PollVotersPaginationActionImpl extends PaginationActionImpl<User, P
             }
             catch(ParsingException | NullPointerException e)
             {
+                LOG.warn("Encountered an exception in PollVotersPaginationAction", e);
             }
         }
 

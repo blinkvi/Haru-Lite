@@ -16,26 +16,14 @@
 
 package net.dv8tion.jda.api.entities.channel.concrete;
 
-import java.time.OffsetDateTime;
-import java.util.FormattableFlags;
-import java.util.Formatter;
-import java.util.List;
-
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.ThreadMember;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.ChannelField;
 import net.dv8tion.jda.api.entities.channel.ChannelFlag;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.attribute.IMemberContainer;
 import net.dv8tion.jda.api.entities.channel.attribute.ISlowmodeChannel;
 import net.dv8tion.jda.api.entities.channel.attribute.IThreadContainer;
+import net.dv8tion.jda.api.entities.channel.forums.ForumTag;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.entities.channel.unions.IThreadContainerUnion;
@@ -45,7 +33,34 @@ import net.dv8tion.jda.api.requests.restaction.CacheRestAction;
 import net.dv8tion.jda.api.requests.restaction.pagination.ThreadMemberPaginationAction;
 import net.dv8tion.jda.api.utils.MiscUtil;
 import net.dv8tion.jda.internal.utils.Checks;
+import org.jetbrains.annotations.Unmodifiable;
 
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.time.OffsetDateTime;
+import java.util.FormattableFlags;
+import java.util.Formatter;
+import java.util.List;
+
+/**
+ * Represents Discord Message Threads of all kinds.
+ * <br>These are also referred to as "posts" in the context of {@link ForumChannel Forum Channels}.
+ *
+ * <p>This includes all thread channel types, namely:
+ * <ul>
+ *     <li>{@link ChannelType#GUILD_PUBLIC_THREAD}</li>
+ *     <li>{@link ChannelType#GUILD_PRIVATE_THREAD}</li>
+ *     <li>{@link ChannelType#GUILD_NEWS_THREAD}</li>
+ * </ul>
+ *
+ * <p>When a thread channel is {@link #isArchived() archived}, no new members can be added.
+ * You can use the {@link #getManager() manager} to {@link ThreadChannelManager#setArchived(boolean) unarchive} the thread.
+ *
+ * @see Guild#getThreadChannels()
+ * @see Guild#getThreadChannelById(long)
+ * @see Guild#getThreadChannelCache()
+ */
 public interface ThreadChannel extends GuildMessageChannel, IMemberContainer, ISlowmodeChannel
 {
     /**
@@ -163,6 +178,53 @@ public interface ThreadChannel extends GuildMessageChannel, IMemberContainer, IS
         throw new UnsupportedOperationException("Parent of this thread is not a MessageChannel. Parent: " + getParentChannel());
     }
 
+    /**
+     * The {@link net.dv8tion.jda.api.entities.channel.forums.ForumTag forum tags} applied to this thread.
+     * <br>This will be an empty list if the thread was not created in a {@link net.dv8tion.jda.api.entities.channel.concrete.ForumChannel ForumChannel}.
+     *
+     * @return Immutable {@link List} of {@link net.dv8tion.jda.api.entities.channel.forums.ForumTag ForumTags} applied to this post
+     */
+    @Nonnull
+    @Unmodifiable
+    List<ForumTag> getAppliedTags();
+
+    /**
+     * Attempts to get the {@link net.dv8tion.jda.api.entities.Message Message} that this thread was started from.
+     * <br>The parent message was posted in the {@link #getParentChannel() parent channel} and a thread was started on it.
+     *
+     * <p>The {@link Message#getMember() Message.getMember()} method will always return null for the resulting message.
+     * To retrieve the member you can use {@code getGuild().retrieveMember(message.getAuthor())}.
+     *
+     * <p>The following {@link net.dv8tion.jda.api.requests.ErrorResponse ErrorResponses} are possible:
+     * <ul>
+     *     <li>{@link net.dv8tion.jda.api.requests.ErrorResponse#MISSING_ACCESS MISSING_ACCESS}
+     *     <br>The request was attempted after the account lost access to the {@link net.dv8tion.jda.api.entities.Guild Guild}
+     *         typically due to being kicked or removed, or after {@link net.dv8tion.jda.api.Permission#VIEW_CHANNEL Permission.VIEW_CHANNEL}
+     *         was revoked in the {@link GuildMessageChannel GuildMessageChannel}</li>
+     *
+     *     <li>{@link net.dv8tion.jda.api.requests.ErrorResponse#MISSING_PERMISSIONS MISSING_PERMISSIONS}
+     *     <br>The request was attempted after the account lost {@link net.dv8tion.jda.api.Permission#MESSAGE_HISTORY Permission.MESSAGE_HISTORY}
+     *         in the {@link GuildMessageChannel GuildMessageChannel}.</li>
+     *
+     *     <li>{@link net.dv8tion.jda.api.requests.ErrorResponse#UNKNOWN_MESSAGE UNKNOWN_MESSAGE}
+     *     <br>The message has already been deleted.</li>
+     *
+     *     <li>{@link net.dv8tion.jda.api.requests.ErrorResponse#UNKNOWN_CHANNEL UNKNOWN_CHANNEL}
+     *     <br>The request was attempted after the parent channel was deleted.</li>
+     * </ul>
+     *
+     * @throws net.dv8tion.jda.api.exceptions.InsufficientPermissionException
+     *         If this is a {@link GuildMessageChannel GuildMessageChannel} and the logged in account does not have
+     *         <ul>
+     *             <li>{@link net.dv8tion.jda.api.Permission#VIEW_CHANNEL Permission.VIEW_CHANNEL}</li>
+     *             <li>{@link net.dv8tion.jda.api.Permission#MESSAGE_HISTORY Permission.MESSAGE_HISTORY}</li>
+     *         </ul>
+     * @throws UnsupportedOperationException
+     *         If the parent channel is not a {@link GuildMessageChannel GuildMessageChannel}.
+     *
+     * @return {@link net.dv8tion.jda.api.requests.RestAction RestAction} - Type: Message
+     *         <br>The Message that started this thread
+     */
     @Nonnull
     @CheckReturnValue
     RestAction<Message> retrieveParentMessage();

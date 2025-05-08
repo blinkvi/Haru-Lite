@@ -1,59 +1,31 @@
-/*
- * Copyright 2015 Austin Keener, Michael Ritter, Florian Spieß, and the JDA contributors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package net.dv8tion.jda.api.utils.data;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeParseException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.UnaryOperator;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.jetbrains.annotations.Contract;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-
 import net.dv8tion.jda.api.exceptions.ParsingException;
 import net.dv8tion.jda.api.utils.MiscUtil;
 import net.dv8tion.jda.api.utils.data.etf.ExTermDecoder;
 import net.dv8tion.jda.api.utils.data.etf.ExTermEncoder;
 import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.Helpers;
+import org.jetbrains.annotations.Contract;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class DataObject implements SerializableData {
-    private static final Gson gson = new GsonBuilder().serializeNulls().create();
+    private static final Logger log = LoggerFactory.getLogger(DataObject.class);
+    private static final Gson gson = new GsonBuilder().create();
     private static final Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
 
     protected final Map<String, Object> data;
@@ -70,8 +42,7 @@ public class DataObject implements SerializableData {
     @Nonnull
     public static DataObject fromJson(@Nonnull byte[] data) {
         try {
-            String json = new String(data);
-            Map<String, Object> map = gson.fromJson(json, mapType);
+            Map<String, Object> map = gson.fromJson(new String(data), mapType);
             return new DataObject(map);
         } catch (JsonSyntaxException ex) {
             throw new ParsingException(ex);
@@ -105,6 +76,7 @@ public class DataObject implements SerializableData {
             Map<String, Object> map = ExTermDecoder.unpackMap(ByteBuffer.wrap(data));
             return new DataObject(map);
         } catch (Exception ex) {
+            log.error("Failed to parse ETF data {}", Arrays.toString(data), ex);
             throw new ParsingException(ex);
         }
     }
@@ -127,11 +99,13 @@ public class DataObject implements SerializableData {
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
     public Optional<DataObject> optObject(@Nonnull String key) {
         Map<String, Object> child = null;
         try {
             child = (Map<String, Object>) get(Map.class, key);
         } catch (ClassCastException ex) {
+            log.error("Unable to extract child data", ex);
         }
         return child == null ? Optional.empty() : Optional.of(new DataObject(child));
     }
@@ -142,11 +116,13 @@ public class DataObject implements SerializableData {
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
     public Optional<DataArray> optArray(@Nonnull String key) {
         List<Object> child = null;
         try {
             child = (List<Object>) get(List.class, key);
         } catch (ClassCastException ex) {
+            log.error("Unable to extract child data", ex);
         }
         return child == null ? Optional.empty() : Optional.of(new DataArray(child));
     }
@@ -237,7 +213,7 @@ public class DataObject implements SerializableData {
 
     public double getDouble(@Nonnull String key) {
         Double value = get(Double.class, key, Double::parseDouble, Number::doubleValue);
-        if (value == null)
+        if(value == null)
             throw valueError(key, "double");
         return value;
     }
@@ -250,7 +226,7 @@ public class DataObject implements SerializableData {
     @Nonnull
     public OffsetDateTime getOffsetDateTime(@Nonnull String key) {
         OffsetDateTime value = getOffsetDateTime(key, null);
-        if (value == null)
+        if(value == null)
             throw valueError(key, "OffsetDateTime");
         return value;
     }
@@ -274,13 +250,26 @@ public class DataObject implements SerializableData {
     }
 
     @Nonnull
-    public DataObject putNull(@Nonnull String key) {
+
+    public DataObject putNull(@Nonnull String key)
+    {
         data.put(key, null);
         return this;
     }
 
+    /**
+     * Upserts a new value for the provided key.
+     *
+     * @param  key
+     *         The key to upsert
+     * @param  value
+     *         The new value
+     *
+     * @return A DataObject with the updated value
+     */
     @Nonnull
-    public DataObject put(@Nonnull String key, @Nullable Object value) {
+    public DataObject put(@Nonnull String key, @Nullable Object value)
+    {
         if (value instanceof SerializableData)
             data.put(key, ((SerializableData) value).toData().data);
         else if (value instanceof SerializableArray)
@@ -290,68 +279,96 @@ public class DataObject implements SerializableData {
         return this;
     }
 
-    @Nonnull
-    public DataObject rename(@Nonnull String key, @Nonnull String newKey) {
-        Checks.notNull(key, "Key");
-        Checks.notNull(newKey, "Key");
-        if (!this.data.containsKey(key))
-            return this;
-        this.data.put(newKey, this.data.remove(key));
-        return this;
-    }
 
     @Nonnull
-    public Collection<Object> values() {
+    public Collection<Object> values()
+    {
         return data.values();
     }
 
+    /**
+     * {@link java.util.Set} of all keys in this DataObject.
+     *
+     * @return {@link Set} of keys
+     */
     @Nonnull
-    public Set<String> keys() {
+    public Set<String> keys()
+    {
         return data.keySet();
     }
 
+    /**
+     * Serialize this object as JSON.
+     *
+     * @return byte array containing the JSON representation of this object
+     */
     @Nonnull
     public byte[] toJson() {
         try {
-            return gson.toJson(data).getBytes();
+            String json = gson.toJson(data);
+            return json.getBytes(StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new UncheckedIOException(new IOException(e));
         }
     }
 
+    /**
+     * Serializes this object as ETF MAP term.
+     *
+     * @return byte array containing the encoded ETF term
+     *
+     * @since  4.2.1
+     */
     @Nonnull
-    public byte[] toETF() {
+    public byte[] toETF()
+    {
         ByteBuffer buffer = ExTermEncoder.pack(data);
         return Arrays.copyOfRange(buffer.array(), buffer.arrayOffset(), buffer.arrayOffset() + buffer.limit());
     }
 
     @Override
     public String toString() {
-        return gson.toJson(data);
+        try {
+            return gson.toJson(data);
+        } catch (Exception e) {
+            throw new ParsingException(e);
+        }
     }
 
+
+
+    /**
+     * Converts this DataObject to a {@link java.util.Map}
+     *
+     * @return The resulting map
+     */
     @Nonnull
-    public Map<String, Object> toMap() {
+    public Map<String, Object> toMap()
+    {
         return data;
     }
 
     @Nonnull
     @Override
-    public DataObject toData() {
+    public DataObject toData()
+    {
         return this;
     }
 
-    private ParsingException valueError(String key, String expectedType) {
+    private ParsingException valueError(String key, String expectedType)
+    {
         return new ParsingException("Unable to resolve value with key " + key + " to type " + expectedType + ": " + data.get(key));
     }
 
     @Nullable
-    private <T> T get(@Nonnull Class<T> type, @Nonnull String key) {
+    private <T> T get(@Nonnull Class<T> type, @Nonnull String key)
+    {
         return get(type, key, null, null);
     }
 
     @Nullable
-    private <T> T get(@Nonnull Class<T> type, @Nonnull String key, @Nullable Function<String, T> stringParse, @Nullable Function<Number, T> numberParse) {
+    private <T> T get(@Nonnull Class<T> type, @Nonnull String key, @Nullable Function<String, T> stringParse, @Nullable Function<Number, T> numberParse)
+    {
         Object value = data.get(key);
         if (value == null)
             return null;
@@ -370,7 +387,8 @@ public class DataObject implements SerializableData {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (obj == this)
             return true;
         if (!(obj instanceof DataObject))
@@ -379,7 +397,8 @@ public class DataObject implements SerializableData {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return toMap().hashCode();
     }
 }

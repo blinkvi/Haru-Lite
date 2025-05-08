@@ -89,6 +89,28 @@ public interface IWebhookContainerUnion extends IWebhookContainer
     NewsChannel asNewsChannel();
 
     /**
+     * Casts this union to a {@link ForumChannel}.
+     * This method exists for developer discoverability.
+     *
+     * <p>Note: This is effectively equivalent to using the cast operator:
+     * <pre><code>
+     * //These are the same!
+     * ForumChannel channel = union.asForumChannel();
+     * ForumChannel channel2 = (ForumChannel) union;
+     * </code></pre>
+     *
+     * You can use {@link #getType()} to see if the channel is of type {@link ChannelType#FORUM} to validate
+     * whether you can call this method in addition to normal instanceof checks: <code>channel instanceof ForumChannel</code>
+     *
+     * @throws IllegalStateException
+     *         If the channel represented by this union is not actually a {@link ForumChannel}.
+     *
+     * @return The channel as a {@link ForumChannel}
+     */
+    @Nonnull
+    ForumChannel asForumChannel();
+
+    /**
      * Casts this union to a {@link MediaChannel}.
      * This method exists for developer discoverability.
      *

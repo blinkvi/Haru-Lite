@@ -16,101 +16,42 @@
 
 package net.dv8tion.jda.internal.entities;
 
-import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.time.temporal.TemporalAccessor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.set.TLongSet;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.Region;
-import net.dv8tion.jda.api.entities.BulkBanResponse;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildVoiceState;
-import net.dv8tion.jda.api.entities.GuildWelcomeScreen;
-import net.dv8tion.jda.api.entities.ISnowflake;
-import net.dv8tion.jda.api.entities.Icon;
-import net.dv8tion.jda.api.entities.Invite;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.ScheduledEvent;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.UserSnowflake;
-import net.dv8tion.jda.api.entities.VanityInvite;
-import net.dv8tion.jda.api.entities.Webhook;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
 import net.dv8tion.jda.api.entities.channel.attribute.IThreadContainer;
-import net.dv8tion.jda.api.entities.channel.concrete.Category;
-import net.dv8tion.jda.api.entities.channel.concrete.MediaChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.NewsChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.StageChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.*;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.unions.DefaultGuildChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
+import net.dv8tion.jda.api.entities.sticker.GuildSticker;
+import net.dv8tion.jda.api.entities.sticker.StandardSticker;
+import net.dv8tion.jda.api.entities.sticker.StickerSnowflake;
 import net.dv8tion.jda.api.entities.templates.Template;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.exceptions.ParsingException;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.PrivilegeConfig;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.privileges.IntegrationPrivilege;
-import net.dv8tion.jda.api.managers.AudioManager;
-import net.dv8tion.jda.api.managers.GuildManager;
-import net.dv8tion.jda.api.managers.GuildWelcomeScreenManager;
+import net.dv8tion.jda.api.managers.*;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.Route;
-import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
-import net.dv8tion.jda.api.requests.restaction.CacheRestAction;
-import net.dv8tion.jda.api.requests.restaction.ChannelAction;
-import net.dv8tion.jda.api.requests.restaction.CommandCreateAction;
-import net.dv8tion.jda.api.requests.restaction.CommandEditAction;
-import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
-import net.dv8tion.jda.api.requests.restaction.MemberAction;
-import net.dv8tion.jda.api.requests.restaction.RoleAction;
-import net.dv8tion.jda.api.requests.restaction.ScheduledEventAction;
+import net.dv8tion.jda.api.requests.restaction.*;
 import net.dv8tion.jda.api.requests.restaction.order.CategoryOrderAction;
 import net.dv8tion.jda.api.requests.restaction.order.ChannelOrderAction;
 import net.dv8tion.jda.api.requests.restaction.order.RoleOrderAction;
-import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import net.dv8tion.jda.api.utils.cache.CacheView;
-import net.dv8tion.jda.api.utils.cache.MemberCacheView;
-import net.dv8tion.jda.api.utils.cache.SnowflakeCacheView;
-import net.dv8tion.jda.api.utils.cache.SortedSnowflakeCacheView;
+import net.dv8tion.jda.api.utils.FileUpload;
+import net.dv8tion.jda.api.utils.cache.*;
 import net.dv8tion.jda.api.utils.concurrent.Task;
 import net.dv8tion.jda.api.utils.data.DataArray;
 import net.dv8tion.jda.api.utils.data.DataObject;
@@ -118,37 +59,35 @@ import net.dv8tion.jda.internal.JDAImpl;
 import net.dv8tion.jda.internal.handle.EventCache;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import net.dv8tion.jda.internal.interactions.command.CommandImpl;
-import net.dv8tion.jda.internal.managers.AudioManagerImpl;
-import net.dv8tion.jda.internal.managers.GuildManagerImpl;
-import net.dv8tion.jda.internal.managers.GuildWelcomeScreenManagerImpl;
-import net.dv8tion.jda.internal.requests.CompletedRestAction;
-import net.dv8tion.jda.internal.requests.DeferredRestAction;
-import net.dv8tion.jda.internal.requests.MemberChunkManager;
-import net.dv8tion.jda.internal.requests.RestActionImpl;
-import net.dv8tion.jda.internal.requests.restaction.AuditableRestActionImpl;
-import net.dv8tion.jda.internal.requests.restaction.ChannelActionImpl;
-import net.dv8tion.jda.internal.requests.restaction.CommandCreateActionImpl;
-import net.dv8tion.jda.internal.requests.restaction.CommandEditActionImpl;
-import net.dv8tion.jda.internal.requests.restaction.CommandListUpdateActionImpl;
-import net.dv8tion.jda.internal.requests.restaction.MemberActionImpl;
-import net.dv8tion.jda.internal.requests.restaction.RoleActionImpl;
-import net.dv8tion.jda.internal.requests.restaction.ScheduledEventActionImpl;
+import net.dv8tion.jda.internal.managers.*;
+import net.dv8tion.jda.internal.requests.*;
+import net.dv8tion.jda.internal.requests.restaction.*;
 import net.dv8tion.jda.internal.requests.restaction.order.CategoryOrderActionImpl;
 import net.dv8tion.jda.internal.requests.restaction.order.ChannelOrderActionImpl;
 import net.dv8tion.jda.internal.requests.restaction.order.RoleOrderActionImpl;
-import net.dv8tion.jda.internal.requests.restaction.pagination.AuditLogPaginationActionImpl;
 import net.dv8tion.jda.internal.requests.restaction.pagination.BanPaginationActionImpl;
 import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.EntityString;
 import net.dv8tion.jda.internal.utils.Helpers;
 import net.dv8tion.jda.internal.utils.UnlockHook;
-import net.dv8tion.jda.internal.utils.cache.AbstractCacheView;
-import net.dv8tion.jda.internal.utils.cache.ChannelCacheViewImpl;
-import net.dv8tion.jda.internal.utils.cache.MemberCacheViewImpl;
-import net.dv8tion.jda.internal.utils.cache.SnowflakeCacheViewImpl;
-import net.dv8tion.jda.internal.utils.cache.SortedChannelCacheViewImpl;
-import net.dv8tion.jda.internal.utils.cache.SortedSnowflakeCacheViewImpl;
+import net.dv8tion.jda.internal.utils.cache.*;
 import net.dv8tion.jda.internal.utils.concurrent.task.GatewayTask;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.time.Duration;
+import java.time.OffsetDateTime;
+import java.time.temporal.TemporalAccessor;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GuildImpl implements Guild
 {
@@ -159,6 +98,7 @@ public class GuildImpl implements Guild
     private final SortedChannelCacheViewImpl<GuildChannel> channelCache = new SortedChannelCacheViewImpl<>(GuildChannel.class);
     private final SortedSnowflakeCacheViewImpl<Role> roleCache = new SortedSnowflakeCacheViewImpl<>(Role.class, Role::getName, Comparator.reverseOrder());
     private final SnowflakeCacheViewImpl<RichCustomEmoji> emojicache = new SnowflakeCacheViewImpl<>(RichCustomEmoji.class, RichCustomEmoji::getName);
+    private final SnowflakeCacheViewImpl<GuildSticker> stickerCache = new SnowflakeCacheViewImpl<>(GuildSticker.class, GuildSticker::getName);
     private final MemberCacheViewImpl memberCache = new MemberCacheViewImpl();
     private final CacheView.SimpleCacheView<MemberPresenceImpl> memberPresences;
 
@@ -211,10 +151,7 @@ public class GuildImpl implements Guild
             getChannels().forEach(channel -> channelsView.remove(channel.getType(), channel.getIdLong()));
         }
 
-        // Clear audio connection
-        final AbstractCacheView<AudioManager> audioManagerView = getJDA().getAudioManagersView();
-        final AudioManagerImpl manager = (AudioManagerImpl) audioManagerView.get(id); //read-lock access/release //connection-lock access/release
-        audioManagerView.remove(id); //write-lock access/release
+
 
         //cleaning up all users that we do not share a guild with anymore
         // Anything left in memberIds will be removed from the main userMap
@@ -384,6 +321,23 @@ public class GuildImpl implements Guild
             }
             return set;
         });
+    }
+
+
+
+
+
+
+
+
+    @Nonnull
+    @Override
+    public AuditableRestAction<Void> deleteAutoModRuleById(@Nonnull String id)
+    {
+        Checks.isSnowflake(id);
+        checkPermission(Permission.MANAGE_SERVER);
+        Route.CompiledRoute route = Route.AutoModeration.DELETE_RULE.compile(getId(), id);
+        return new AuditableRestActionImpl<>(api, route);
     }
 
     @Nonnull
@@ -639,6 +593,7 @@ public class GuildImpl implements Guild
                 }
                 catch (Exception e)
                 {
+                    JDAImpl.LOG.error("Error creating webhook from json", e);
                 }
             }
 
@@ -732,6 +687,13 @@ public class GuildImpl implements Guild
 
     @Nonnull
     @Override
+    public SortedSnowflakeCacheView<ForumChannel> getForumChannelCache()
+    {
+        return channelCache.ofType(ForumChannel.class);
+    }
+
+    @Nonnull
+    @Override
     public SnowflakeCacheView<MediaChannel> getMediaChannelCache()
     {
         return channelCache.ofType(MediaChannel.class);
@@ -784,7 +746,14 @@ public class GuildImpl implements Guild
     {
         return emojicache;
     }
-    
+
+    @Nonnull
+    @Override
+    public SnowflakeCacheView<GuildSticker> getStickerCache()
+    {
+        return stickerCache;
+    }
+
     @Nonnull
     @Override
     public List<GuildChannel> getChannels(boolean includeHidden)
@@ -875,7 +844,58 @@ public class GuildImpl implements Guild
         });
     }
 
-  
+    @Nonnull
+    @Override
+    public RestAction<List<GuildSticker>> retrieveStickers()
+    {
+        Route.CompiledRoute route = Route.Stickers.GET_GUILD_STICKERS.compile(getId());
+        return new RestActionImpl<>(getJDA(), route, (response, request) -> {
+            DataArray array = response.getArray();
+            List<GuildSticker> stickers = new ArrayList<>(array.length());
+            EntityBuilder builder = api.getEntityBuilder();
+            for (int i = 0; i < array.length(); i++)
+            {
+                DataObject object = null;
+                try
+                {
+                    object = array.getObject(i);
+                    GuildSticker sticker = (GuildSticker) builder.createRichSticker(object);
+                    stickers.add(sticker);
+                }
+                catch (ParsingException | ClassCastException ex)
+                {
+                    EntityBuilder.LOG.error("Failed to parse sticker for JSON: {}", object, ex);
+                }
+            }
+
+            return Collections.unmodifiableList(stickers);
+        });
+    }
+
+    @Nonnull
+    @Override
+    public RestAction<GuildSticker> retrieveSticker(@Nonnull StickerSnowflake sticker)
+    {
+        Checks.notNull(sticker, "Sticker");
+        Route.CompiledRoute route = Route.Stickers.GET_GUILD_STICKER.compile(getId(), sticker.getId());
+        return new RestActionImpl<>(getJDA(), route, (response, request) -> {
+            DataObject object = response.getObject();
+            EntityBuilder builder = api.getEntityBuilder();
+            return (GuildSticker) builder.createRichSticker(object);
+        });
+    }
+
+    @Nonnull
+    @Override
+    public GuildStickerManager editSticker(@Nonnull StickerSnowflake sticker)
+    {
+        Checks.notNull(sticker, "Sticker");
+        if (sticker instanceof GuildSticker)
+            Checks.check(((GuildSticker) sticker).getGuildIdLong() == id, "Cannot edit a sticker from another guild!");
+        Checks.check(!(sticker instanceof StandardSticker), "Cannot edit a standard sticker.");
+        return new GuildStickerManagerImpl(this, id, sticker);
+    }
+
     @Nonnull
     @Override
     public BanPaginationActionImpl retrieveBanList()
@@ -949,12 +969,6 @@ public class GuildImpl implements Guild
         return boostProgressBarEnabled;
     }
 
-    @Nonnull
-    @Override
-    public AuditLogPaginationAction retrieveAuditLogs()
-    {
-        return new AuditLogPaginationActionImpl(this);
-    }
 
     @Nonnull
     @Override
@@ -995,32 +1009,6 @@ public class GuildImpl implements Guild
         return new RestActionImpl<>(getJDA(), route, mfaBody);
     }
 
-    @Nonnull
-    @Override
-    public AudioManager getAudioManager()
-    {
-        if (!getJDA().isIntent(GatewayIntent.GUILD_VOICE_STATES))
-            throw new IllegalStateException("Cannot use audio features with disabled GUILD_VOICE_STATES intent!");
-        final AbstractCacheView<AudioManager> managerMap = getJDA().getAudioManagersView();
-        AudioManager mng = managerMap.get(id);
-        if (mng == null)
-        {
-            // No previous manager found -> create one
-            try (UnlockHook hook = managerMap.writeLock())
-            {
-                GuildImpl cachedGuild = (GuildImpl) getJDA().getGuildById(id);
-                if (cachedGuild == null)
-                    throw new IllegalStateException("Cannot get an AudioManager instance on an uncached Guild");
-                mng = managerMap.get(id);
-                if (mng == null)
-                {
-                    mng = new AudioManagerImpl(cachedGuild);
-                    managerMap.getMap().put(id, mng);
-                }
-            }
-        }
-        return mng;
-    }
 
     @Nonnull
     @Override
@@ -1116,6 +1104,7 @@ public class GuildImpl implements Guild
         boolean includePresences = getJDA().isIntent(GatewayIntent.GUILD_PRESENCES);
         MemberChunkManager.ChunkRequest handler = chunkManager.chunkGuild(this, includePresences, (last, list) -> list.forEach(callback));
         handler.exceptionally(ex -> {
+            WebSocketClient.LOG.error("Encountered exception trying to handle member chunk response", ex);
             return null;
         });
         return new GatewayTask<>(handler, () -> handler.cancel(false)).onSetTimeout(handler::setTimeout);
@@ -1161,6 +1150,7 @@ public class GuildImpl implements Guild
         });
 
         handle.exceptionally(ex -> {
+            WebSocketClient.LOG.error("Encountered exception trying to handle member chunk response", ex);
             result.completeExceptionally(ex);
             return null;
         });
@@ -1187,61 +1177,12 @@ public class GuildImpl implements Guild
         });
 
         handle.exceptionally(ex -> {
+            WebSocketClient.LOG.error("Encountered exception trying to handle member chunk response", ex);
             result.completeExceptionally(ex);
             return null;
         });
 
         return new GatewayTask<>(result, () -> handle.cancel(false)).onSetTimeout(handle::setTimeout);
-    }
-
-    @Nonnull
-    @Override
-    public RestAction<List<ThreadChannel>> retrieveActiveThreads()
-    {
-        Route.CompiledRoute route = Route.Guilds.LIST_ACTIVE_THREADS.compile(getId());
-        return new RestActionImpl<>(api, route, (response, request) ->
-        {
-            DataObject obj = response.getObject();
-            DataArray selfThreadMembers = obj.getArray("members");
-            DataArray threads = obj.getArray("threads");
-
-            List<ThreadChannel> list = new ArrayList<>(threads.length());
-            EntityBuilder builder = api.getEntityBuilder();
-
-            TLongObjectMap<DataObject> selfThreadMemberMap = new TLongObjectHashMap<>();
-            for (int i = 0; i < selfThreadMembers.length(); i++)
-            {
-                DataObject selfThreadMember = selfThreadMembers.getObject(i);
-
-                //Store the thread member based on the "id" which is the _thread's_ id, not the member's id (which would be our id)
-                selfThreadMemberMap.put(selfThreadMember.getLong("id"), selfThreadMember);
-            }
-
-            for (int i = 0; i < threads.length(); i++)
-            {
-                DataObject threadObj = threads.getObject(i);
-                DataObject selfThreadMemberObj = selfThreadMemberMap.get(threadObj.getLong("id", 0));
-
-                if (selfThreadMemberObj != null)
-                {
-                    //Combine the thread and self thread-member into a single object to model what we get from
-                    // thread payloads (like from Gateway, etc)
-                    threadObj.put("member", selfThreadMemberObj);
-                }
-
-                try
-                {
-                    ThreadChannel thread = builder.createThreadChannel(threadObj, this.getIdLong());
-                    list.add(thread);
-                }
-                catch (Exception e)
-                {
-
-                }
-            }
-
-            return Collections.unmodifiableList(list);
-        });
     }
 
     @Override
@@ -1290,6 +1231,7 @@ public class GuildImpl implements Guild
                 }
                 catch (Exception e)
                 {
+                    JDAImpl.LOG.error("Error creating template from json", e);
                 }
             }
             return Collections.unmodifiableList(templates);
@@ -1736,6 +1678,13 @@ public class GuildImpl implements Guild
 
     @Nonnull
     @Override
+    public ChannelAction<ForumChannel> createForumChannel(@Nonnull String name, Category parent)
+    {
+        return createChannel(ChannelType.FORUM, ForumChannel.class, name, parent);
+    }
+
+    @Nonnull
+    @Override
     public ChannelAction<MediaChannel> createMediaChannel(@Nonnull String name, @Nullable Category parent)
     {
         return createChannel(ChannelType.MEDIA, MediaChannel.class, name, parent);
@@ -1789,6 +1738,72 @@ public class GuildImpl implements Guild
             return jda.getEntityBuilder().createEmoji(this, obj);
         });
     }
+
+    @Nonnull
+    @Override
+    public AuditableRestAction<GuildSticker> createSticker(@Nonnull String name, @Nonnull String description, @Nonnull FileUpload file, @Nonnull Collection<String> tags)
+    {
+        checkPermission(Permission.MANAGE_GUILD_EXPRESSIONS);
+        Checks.inRange(name, 2, 30, "Name");
+        Checks.notNull(file, "File");
+        Checks.notNull(description, "Description");
+        Checks.notEmpty(tags, "Tags");
+        if (!description.isEmpty())
+            Checks.inRange(description, 2, 100, "Description");
+        for (String t : tags)
+            Checks.notEmpty(t, "Tags");
+
+        String csv = String.join(",", tags);
+        Checks.notLonger(csv, 200, "Tags");
+
+        // Extract file extension and map to media type
+        int index = file.getName().lastIndexOf('.');
+        Checks.check(index > -1, "Filename for sticker is missing file extension. Provided: '" + file.getName() + "'. Must be PNG, GIF, or JSON.");
+
+        // Convert file extension to media-type
+        String extension = file.getName().substring(index + 1).toLowerCase(Locale.ROOT);
+        MediaType mediaType;
+        switch (extension)
+        {
+            case "apng":
+            case "png":
+                mediaType = Requester.MEDIA_TYPE_PNG;
+                break;
+            case "gif":
+                mediaType = Requester.MEDIA_TYPE_GIF;
+                break;
+            case "json":
+                mediaType = Requester.MEDIA_TYPE_JSON;
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported file extension: '." + extension + "', must be PNG, GIF, or JSON.");
+        }
+
+        // Add sticker metadata as form parts (because payload_json is broken)
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        builder.addFormDataPart("name", name);
+        builder.addFormDataPart("description", description);
+        builder.addFormDataPart("tags", csv);
+
+        // Attach file asset for sticker image/animation
+        builder.addFormDataPart("file", file.getName(), file.getRequestBody(mediaType));
+
+        MultipartBody body = builder.build();
+        Route.CompiledRoute route = Route.Stickers.CREATE_GUILD_STICKER.compile(getId());
+        return new AuditableRestActionImpl<>(api, route, body,
+            (response, request) -> (GuildSticker) api.getEntityBuilder().createRichSticker(response.getObject())
+        );
+    }
+
+    @Nonnull
+    @Override
+    public AuditableRestAction<Void> deleteSticker(@Nonnull StickerSnowflake id)
+    {
+        Checks.notNull(id, "Sticker");
+        Route.CompiledRoute route = Route.Stickers.DELETE_GUILD_STICKER.compile(getId(), id.getId());
+        return new AuditableRestActionImpl<>(api, route);
+    }
+
     @Nonnull
     @Override
     public ChannelOrderAction modifyCategoryPositions()
@@ -2129,6 +2144,10 @@ public class GuildImpl implements Guild
         return emojicache;
     }
 
+    public SnowflakeCacheViewImpl<GuildSticker> getStickersView()
+    {
+        return stickerCache;
+    }
 
     public MemberCacheViewImpl getMembersView()
     {

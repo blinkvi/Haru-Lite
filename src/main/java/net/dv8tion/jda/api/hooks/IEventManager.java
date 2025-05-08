@@ -31,7 +31,7 @@ import java.util.List;
  *         instances as listeners.</li>
  *
  *     <li>{@link net.dv8tion.jda.api.hooks.AnnotatedEventManager AnnotatedEventManager}
- *     <br>An implementation that accepts any object and uses the {@link net.dv8tion.jda.api.hooks.JDAEvent SubscribeEvent}
+ *     <br>An implementation that accepts any object and uses the {@link net.dv8tion.jda.api.hooks.SubscribeEvent SubscribeEvent}
  *         annotation to handle events.</li>
  * </ul>
  *

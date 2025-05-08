@@ -25,7 +25,6 @@ import net.dv8tion.jda.api.requests.restaction.ThreadChannelAction;
 import net.dv8tion.jda.api.requests.restaction.pagination.ThreadChannelPaginationAction;
 import net.dv8tion.jda.internal.entities.channel.mixin.middleman.GuildChannelMixin;
 import net.dv8tion.jda.internal.requests.restaction.ThreadChannelActionImpl;
-import net.dv8tion.jda.internal.requests.restaction.pagination.ThreadChannelPaginationActionImpl;
 import net.dv8tion.jda.internal.utils.Checks;
 
 import javax.annotation.Nonnull;
@@ -75,39 +74,10 @@ public interface IThreadContainerMixin<T extends IThreadContainerMixin<T>> exten
         return new ThreadChannelActionImpl(this, name, Long.toUnsignedString(messageId));
     }
 
-    @Nonnull
-    @Override
-    default ThreadChannelPaginationAction retrieveArchivedPublicThreadChannels()
-    {
-        Checks.checkAccess(getGuild().getSelfMember(), this);
-        checkPermission(Permission.MESSAGE_HISTORY);
 
-        Route.CompiledRoute route = Route.Channels.LIST_PUBLIC_ARCHIVED_THREADS.compile(getId());
-        return new ThreadChannelPaginationActionImpl(getJDA(), route, this, false);
-    }
 
-    @Nonnull
-    @Override
-    default ThreadChannelPaginationAction retrieveArchivedPrivateThreadChannels()
-    {
-        Checks.checkAccess(getGuild().getSelfMember(), this);
-        checkPermission(Permission.MESSAGE_HISTORY);
-        checkPermission(Permission.MANAGE_THREADS);
 
-        Route.CompiledRoute route = Route.Channels.LIST_PRIVATE_ARCHIVED_THREADS.compile(getId());
-        return new ThreadChannelPaginationActionImpl(getJDA(), route, this, false);
-    }
-
-    @Nonnull
-    @Override
-    default ThreadChannelPaginationAction retrieveArchivedPrivateJoinedThreadChannels()
-    {
-        Checks.checkAccess(getGuild().getSelfMember(), this);
-        checkPermission(Permission.MESSAGE_HISTORY);
-
-        Route.CompiledRoute route = Route.Channels.LIST_JOINED_PRIVATE_ARCHIVED_THREADS.compile(getId());
-        return new ThreadChannelPaginationActionImpl(getJDA(), route, this, true);
-    }
+    
 
     T setDefaultThreadSlowmode(int slowmode);
 }

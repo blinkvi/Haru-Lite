@@ -1,54 +1,29 @@
-/*
- * Copyright 2015 Austin Keener, Michael Ritter, Florian Spieß, and the JDA contributors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package net.dv8tion.jda.api.utils.data;
 
-import java.io.Reader;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import net.dv8tion.jda.api.exceptions.ParsingException;
+import net.dv8tion.jda.api.utils.data.etf.ExTermEncoder;
+import net.dv8tion.jda.internal.utils.Helpers;
+import org.jetbrains.annotations.Contract;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.jetbrains.annotations.Contract;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-
-import net.dv8tion.jda.api.exceptions.ParsingException;
-import net.dv8tion.jda.api.utils.data.etf.ExTermEncoder;
-import net.dv8tion.jda.internal.utils.Helpers;
-
 public class DataArray implements Iterable<Object>, SerializableArray {
+    private static final Logger log = LoggerFactory.getLogger(DataObject.class);
     private static final Gson gson = new Gson();
     private static final Type listType = new TypeToken<List<Object>>() {}.getType();
 
@@ -95,11 +70,13 @@ public class DataArray implements Iterable<Object>, SerializableArray {
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
     public DataObject getObject(int index) {
         Map<String, Object> child = null;
         try {
             child = (Map<String, Object>) get(Map.class, index);
         } catch (ClassCastException ex) {
+            log.error("Unable to extract child data", ex);
         }
         if (child == null)
             throw valueError(index, "DataObject");
@@ -107,11 +84,13 @@ public class DataArray implements Iterable<Object>, SerializableArray {
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
     public DataArray getArray(int index) {
         List<Object> child = null;
         try {
             child = (List<Object>) get(List.class, index);
         } catch (ClassCastException ex) {
+            log.error("Unable to extract child data", ex);
         }
         if (child == null)
             throw valueError(index, "DataArray");

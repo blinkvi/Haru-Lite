@@ -37,6 +37,7 @@ public class Velocity extends Module {
     @SubscribeEvent
     public void onPostVelocity(PostVelocityEvent event) {
     	if (!shouldApplyVelocity()) return;
+    	if (!MathUtil.chanceApply(chance.getValue())) return;
     	
         if (mode.is("Jump")) {
         	mc.thePlayer.setJumping(mc.thePlayer.onGround);
@@ -46,6 +47,7 @@ public class Velocity extends Module {
     @SubscribeEvent
     public void onInbound(InboundEvent event) {
     	if (!shouldApplyVelocity()) return;
+    	if (!MathUtil.chanceApply(chance.getValue())) return;
     	
     	if (mode.is("Normal")) {
 	        if (event.isCanceled()) return;
@@ -84,7 +86,6 @@ public class Velocity extends Module {
 
     private boolean shouldApplyVelocity() {
     	if (!isInGame()) return false;
-        if (!MathUtil.chanceApply(chance.getValue())) return false;
         if (isEnabled(NoClip.class)) return false;
         if (conditionals.isEnabled("OnlyTarget") && (mc.objectMouseOver == null || mc.objectMouseOver.entityHit == null)) return false;
         if (conditionals.isEnabled("OnlyMove") && !MoveUtil.isMoving()) return false;

@@ -18,6 +18,7 @@ package net.dv8tion.jda.internal.utils;
 
 import net.dv8tion.jda.api.utils.ClosableIterator;
 import net.dv8tion.jda.api.utils.cache.CacheView;
+import org.slf4j.Logger;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,6 +27,7 @@ import java.util.Set;
 
 public class ChainedClosableIterator<T> implements ClosableIterator<T>
 {
+    private final static Logger log = JDALogger.getLog(ClosableIterator.class);
     private final Set<T> items;
     private final Iterator<? extends CacheView<T>> generator;
     private ClosableIterator<T> currentIterator;
@@ -127,6 +129,7 @@ public class ChainedClosableIterator<T> implements ClosableIterator<T>
     {
         if (currentIterator != null)
         {
+            log.error("Finalizing without closing, performing force close on lock");
             close();
         }
     }

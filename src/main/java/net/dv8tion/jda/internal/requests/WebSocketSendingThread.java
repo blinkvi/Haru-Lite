@@ -16,6 +16,12 @@
 
 package net.dv8tion.jda.internal.requests;
 
+import gnu.trove.map.TLongObjectMap;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.utils.data.DataObject;
+import net.dv8tion.jda.internal.JDAImpl;
+import org.slf4j.Logger;
+
 import java.util.Queue;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
@@ -23,15 +29,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.managers.AudioManager;
-import net.dv8tion.jda.api.utils.data.DataObject;
-import net.dv8tion.jda.internal.JDAImpl;
-
 //Helper class delegated to WebSocketClient
 class WebSocketSendingThread implements Runnable
 {
+    private static final Logger LOG = WebSocketClient.LOG;
 
     private final WebSocketClient client;
     private final JDAImpl api;
@@ -125,11 +126,13 @@ class WebSocketSendingThread implements Runnable
         }
         catch (InterruptedException ignored)
         {
+            LOG.debug("Main WS send thread interrupted. Most likely JDA is disconnecting the websocket.");
             return;
         }
         catch (Throwable ex)
         {
             // Log error
+            LOG.error("Encountered error in gateway worker", ex);
 
             if (!attemptedToSend)
             {
@@ -164,12 +167,16 @@ class WebSocketSendingThread implements Runnable
         }
         catch (RejectedExecutionException ex)
         {
-
+            if (api.getStatus() == JDA.Status.SHUTTING_DOWN || api.getStatus() == JDA.Status.SHUTDOWN)
+                LOG.debug("Rejected task after shutdown", ex);
+            else
+                LOG.error("Was unable to schedule next packet due to rejected execution by threadpool", ex);
         }
     }
 
     private void handleChunkSync(DataObject chunkOrSyncRequest)
     {
+        LOG.debug("Sending chunk/sync request {}", chunkOrSyncRequest);
         boolean success = send(
             DataObject.empty()
                 .put("op", WebSocketCode.MEMBER_CHUNK_REQUEST)
@@ -180,11 +187,13 @@ class WebSocketSendingThread implements Runnable
             chunkQueue.remove();
     }
 
+
     private void handleNormalRequest()
     {
         DataObject message = ratelimitQueue.peek();
         if (message != null)
         {
+            LOG.debug("Sending normal message {}", message);
             if (send(message))
                 ratelimitQueue.remove();
         }
@@ -198,25 +207,5 @@ class WebSocketSendingThread implements Runnable
         return !needRateLimit;
     }
 
-    protected DataObject newVoiceClose(long guildId)
-    {
-        return DataObject.empty()
-            .put("op", WebSocketCode.VOICE_STATE)
-            .put("d", DataObject.empty()
-                .put("guild_id", Long.toUnsignedString(guildId))
-                .putNull("channel_id")
-                .put("self_mute", false)
-                .put("self_deaf", false));
-    }
 
-    protected DataObject newVoiceOpen(AudioManager manager, long channel, long guild)
-    {
-        return DataObject.empty()
-            .put("op", WebSocketCode.VOICE_STATE)
-            .put("d", DataObject.empty()
-                .put("guild_id", guild)
-                .put("channel_id", channel)
-                .put("self_mute", manager.isSelfMuted())
-                .put("self_deaf", manager.isSelfDeafened()));
-    }
 }

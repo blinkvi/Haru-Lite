@@ -16,14 +16,22 @@
 
 package net.dv8tion.jda.api.events.channel.update;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.ChannelField;
 import net.dv8tion.jda.api.entities.channel.attribute.IPostContainer;
+import net.dv8tion.jda.api.entities.channel.concrete.ForumChannel;
 import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * Indicates that the {@link ForumChannel#getDefaultReaction() default reaction emoji} of a {@link IPostContainer} changed.
+ *
+ * <p>Can be used to retrieve the old default reaction and the new one.
+ *
+ * @see ChannelField#DEFAULT_REACTION_EMOJI
+ */
 public class ChannelUpdateDefaultReactionEvent extends GenericChannelUpdateEvent<EmojiUnion>
 {
     public static final ChannelField FIELD = ChannelField.DEFAULT_REACTION_EMOJI;

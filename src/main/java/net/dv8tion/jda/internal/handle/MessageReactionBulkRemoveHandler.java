@@ -49,6 +49,7 @@ public class MessageReactionBulkRemoveHandler extends SocketHandler
             if (guild == null)
             {
                 jda.getEventCache().cache(EventCache.Type.GUILD, guildId, responseNumber, allContent, this::handle);
+                EventCache.LOG.debug("Got MESSAGE_REACTION_REMOVE_ALL for a guild that is not yet cached. GuildId: {}", guildId);
                 return null;
             }
         }
@@ -62,11 +63,13 @@ public class MessageReactionBulkRemoveHandler extends SocketHandler
                 GuildChannel actual = guild.getGuildChannelById(channelId);
                 if (actual != null)
                 {
+                    WebSocketClient.LOG.debug("Dropping MESSAGE_REACTION_REMOVE_ALL for unexpected channel of type {}", actual.getType());
                     return null;
                 }
             }
 
             jda.getEventCache().cache(EventCache.Type.CHANNEL, channelId, responseNumber, allContent, this::handle);
+            EventCache.LOG.debug("Received a reaction for a channel that JDA does not currently have cached channel_id: {} message_id: {}", channelId, messageId);
             return null;
         }
 

@@ -16,14 +16,6 @@
 
 package net.dv8tion.jda.internal.requests.restaction;
 
-import java.util.EnumSet;
-import java.util.concurrent.TimeUnit;
-import java.util.function.BooleanSupplier;
-
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import net.dv8tion.jda.api.Permission;
@@ -35,8 +27,10 @@ import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.attribute.IPostContainer;
 import net.dv8tion.jda.api.entities.channel.attribute.ISlowmodeChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.concrete.ForumChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.StageChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.forums.BaseForumTag;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
@@ -56,6 +50,15 @@ import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
 import okhttp3.RequestBody;
 
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
+
 public class ChannelActionImpl<T extends GuildChannel> extends AuditableRestActionImpl<T> implements ChannelAction<T>
 {
     protected final TLongObjectMap<PermOverrideData> overrides = new TLongObjectHashMap<>();
@@ -69,6 +72,7 @@ public class ChannelActionImpl<T extends GuildChannel> extends AuditableRestActi
     protected Integer position;
 
     // --forum only--
+    protected List<? extends BaseForumTag> availableTags;
     protected Emoji defaultReactionEmoji;
 
     // --text/forum/voice only--
@@ -237,6 +241,17 @@ public class ChannelActionImpl<T extends GuildChannel> extends AuditableRestActi
 
     @Nonnull
     @Override
+    public ChannelAction<T> setDefaultLayout(@Nonnull ForumChannel.Layout layout)
+    {
+        Checks.checkSupportedChannelTypes(EnumSet.of(ChannelType.FORUM), type, "Default Layout");
+        Checks.notNull(layout, "layout");
+        Checks.check(layout != ForumChannel.Layout.UNKNOWN, "Layout type cannot be UNKNOWN.");
+        this.defaultLayout = layout.getKey();
+        return this;
+    }
+
+    @Nonnull
+    @Override
     public ChannelAction<T> setDefaultSortOrder(@Nonnull IPostContainer.SortOrder sortOrder)
     {
         Checks.checkSupportedChannelTypes(ChannelUtil.POST_CONTAINERS, type, "Default Sort Order");
@@ -245,7 +260,17 @@ public class ChannelActionImpl<T extends GuildChannel> extends AuditableRestActi
         this.defaultSortOrder = sortOrder.getKey();
         return this;
     }
-    
+
+    @Nonnull
+    @Override
+    public ChannelAction<T> setAvailableTags(@Nonnull List<? extends BaseForumTag> tags)
+    {
+        Checks.checkSupportedChannelTypes(ChannelUtil.POST_CONTAINERS, type, "Available Tags");
+        Checks.noneNull(tags, "Tags");
+        this.availableTags = new ArrayList<>(tags);
+        return this;
+    }
+
     @Nonnull
     @Override
     @CheckReturnValue
@@ -421,6 +446,8 @@ public class ChannelActionImpl<T extends GuildChannel> extends AuditableRestActi
             object.put("default_reaction_emoji", DataObject.empty().put("emoji_id", ((CustomEmoji) defaultReactionEmoji).getId()));
         else if (defaultReactionEmoji instanceof UnicodeEmoji)
             object.put("default_reaction_emoji", DataObject.empty().put("emoji_name", defaultReactionEmoji.getName()));
+        if (availableTags != null)
+            object.put("available_tags", DataArray.fromCollection(availableTags));
         if (defaultSortOrder != null)
             object.put("default_sort_order", defaultSortOrder);
 

@@ -215,6 +215,7 @@ public class Response implements Closeable
             reader.mark(1024);
             T t = parser.apply(reader);
             this.object = t;
+            RestActionImpl.LOG.trace("Parsed response body for response on url {}\n{}", rawResponse.request().url(), this.object);
             return Optional.ofNullable(t);
         }
         catch (final Exception e)

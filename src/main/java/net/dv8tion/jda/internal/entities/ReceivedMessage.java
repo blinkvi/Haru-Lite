@@ -16,38 +16,9 @@
 
 package net.dv8tion.jda.internal.entities;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.FormattableFlags;
-import java.util.Formatter;
-import java.util.List;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Mentions;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageActivity;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.MessageReaction;
-import net.dv8tion.jda.api.entities.MessageReference;
-import net.dv8tion.jda.api.entities.MessageType;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.SelfUser;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.WebhookClient;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
@@ -63,6 +34,7 @@ import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.entities.messages.MessagePoll;
+import net.dv8tion.jda.api.entities.sticker.StickerItem;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -92,6 +64,15 @@ import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.EncodingUtil;
 import net.dv8tion.jda.internal.utils.EntityString;
 import net.dv8tion.jda.internal.utils.Helpers;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.time.OffsetDateTime;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ReceivedMessage implements Message
 {
@@ -125,6 +106,7 @@ public class ReceivedMessage implements Message
     protected final List<MessageReaction> reactions;
     protected final List<Attachment> attachments;
     protected final List<MessageEmbed> embeds;
+    protected final List<StickerItem> stickers;
     protected final List<LayoutComponent> components;
 
     protected WebhookClient<Message> webhook;
@@ -140,7 +122,7 @@ public class ReceivedMessage implements Message
             boolean fromWebhook, long applicationId, boolean  tts, boolean pinned,
             String content, String nonce, User author, Member member, MessageActivity activity, MessagePoll poll, OffsetDateTime editTime,
             Mentions mentions, List<MessageReaction> reactions, List<Attachment> attachments, List<MessageEmbed> embeds,
-            List<ActionRow> components,
+            List<StickerItem> stickers, List<ActionRow> components,
             int flags, Message.Interaction interaction, ThreadChannel startedThread, int position)
     {
         this.id = id;
@@ -165,6 +147,7 @@ public class ReceivedMessage implements Message
         this.reactions = Collections.unmodifiableList(reactions);
         this.attachments = Collections.unmodifiableList(attachments);
         this.embeds = Collections.unmodifiableList(embeds);
+        this.stickers = Collections.unmodifiableList(stickers);
         this.components = Collections.unmodifiableList(components);
         this.flags = flags;
         this.interaction = interaction;
@@ -194,7 +177,16 @@ public class ReceivedMessage implements Message
             SelfUser selfUser = api.getSelfUser();
             if (!Objects.equals(selfUser, author) && !mentions.getUsers().contains(selfUser) && isFromGuild())
             {
-
+                didContentIntentWarning = true;
+                JDAImpl.LOG.warn(
+                    "Attempting to access message content without GatewayIntent.MESSAGE_CONTENT.\n" +
+                    "Discord now requires to explicitly enable access to this using the MESSAGE_CONTENT intent.\n" +
+                    "Useful resources to learn more:\n" +
+                    "\t- https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ\n" +
+                    "\t- https://jda.wiki/using-jda/gateway-intents-and-member-cache-policy/\n" +
+                    "\t- https://jda.wiki/using-jda/troubleshooting/#cannot-get-message-content-attempting-to-access-message-content-without-gatewayintent\n" +
+                    "Or suppress this warning if this is intentional with Message.suppressContentIntentWarning()"
+                );
             }
         }
     }
@@ -659,6 +651,13 @@ public class ReceivedMessage implements Message
     public List<MessageReaction> getReactions()
     {
         return reactions;
+    }
+
+    @Nonnull
+    @Override
+    public List<StickerItem> getStickers()
+    {
+        return this.stickers;
     }
 
     @Override

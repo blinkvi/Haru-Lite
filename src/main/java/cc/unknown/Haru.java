@@ -20,15 +20,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import cc.unknown.handlers.AutoJoinHandler;
-import cc.unknown.handlers.CPSHandler;
+import cc.unknown.handlers.ClientHandler;
 import cc.unknown.handlers.CommandHandler;
 import cc.unknown.handlers.CosmeticHandler;
 import cc.unknown.handlers.DiscordHandler;
 import cc.unknown.handlers.DragHandler;
-import cc.unknown.handlers.GuiMoveHandler;
 import cc.unknown.handlers.IRCHandler;
-import cc.unknown.handlers.KeyHandler;
-import cc.unknown.handlers.SecurityHandler;
+import cc.unknown.handlers.PacketHandler;
 import cc.unknown.handlers.ShaderHandler;
 import cc.unknown.handlers.SpoofHandler;
 import cc.unknown.handlers.TransactionHandler;
@@ -130,13 +128,11 @@ public class Haru {
             new TransactionHandler(),
             new ShaderHandler(),
             new DragHandler(),
-            new SecurityHandler(),
+            new PacketHandler(),
             new IRCHandler(),
             new CommandHandler(),
             new CosmeticHandler(),
-            new KeyHandler(),
-            new GuiMoveHandler(),
-            new CPSHandler()
+            new ClientHandler()
         );
 
         logger.info("Handlers registered.");

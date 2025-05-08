@@ -73,6 +73,10 @@ public enum CacheFlag
      */
     ROLE_TAGS,
     /**
+     * Enables cache for {@link IPostContainer#getAvailableTagCache()} and {@link ThreadChannel#getAppliedTags()}
+     */
+    FORUM_TAGS,
+    /**
      * Enables cache for {@link Member#getOnlineStatus()}
      * <br>This is enabled implicitly by {@link #ACTIVITY} and {@link #CLIENT_STATUS}.
      *

@@ -16,11 +16,6 @@
 
 package net.dv8tion.jda.internal.entities.channel.concrete;
 
-import java.util.EnumSet;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import gnu.trove.map.TLongObjectMap;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -29,6 +24,7 @@ import net.dv8tion.jda.api.entities.PermissionOverride;
 import net.dv8tion.jda.api.entities.channel.ChannelFlag;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.MediaChannel;
+import net.dv8tion.jda.api.entities.channel.forums.ForumTag;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
@@ -39,16 +35,18 @@ import net.dv8tion.jda.api.utils.MiscUtil;
 import net.dv8tion.jda.api.utils.data.DataObject;
 import net.dv8tion.jda.internal.entities.GuildImpl;
 import net.dv8tion.jda.internal.entities.channel.middleman.AbstractGuildChannelImpl;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.IAgeRestrictedChannelMixin;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.IPostContainerMixin;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.ISlowmodeChannelMixin;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.ITopicChannelMixin;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.IWebhookContainerMixin;
+import net.dv8tion.jda.internal.entities.channel.mixin.attribute.*;
 import net.dv8tion.jda.internal.entities.channel.mixin.middleman.StandardGuildChannelMixin;
 import net.dv8tion.jda.internal.entities.emoji.CustomEmojiImpl;
 import net.dv8tion.jda.internal.managers.channel.concrete.MediaChannelManagerImpl;
 import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.Helpers;
+import net.dv8tion.jda.internal.utils.cache.SortedSnowflakeCacheViewImpl;
+
+import javax.annotation.Nonnull;
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.List;
 
 public class MediaChannelImpl extends AbstractGuildChannelImpl<MediaChannelImpl>
     implements MediaChannel,
@@ -61,6 +59,7 @@ public class MediaChannelImpl extends AbstractGuildChannelImpl<MediaChannelImpl>
         ITopicChannelMixin<MediaChannelImpl>
 {
     private final TLongObjectMap<PermissionOverride> overrides = MiscUtil.newLongMap();
+    private final SortedSnowflakeCacheViewImpl<ForumTag> tagCache = new SortedSnowflakeCacheViewImpl<>(ForumTag.class, ForumTag::getName, Comparator.naturalOrder());
 
     private Emoji defaultReaction;
     private String topic;
@@ -102,7 +101,8 @@ public class MediaChannelImpl extends AbstractGuildChannelImpl<MediaChannelImpl>
         ChannelAction<MediaChannel> action = guild.createMediaChannel(name)
                 .setNSFW(nsfw)
                 .setTopic(topic)
-                .setSlowmode(slowmode);
+                .setSlowmode(slowmode)
+                .setAvailableTags(getAvailableTags());
         if (defaultSortOrder != -1)
             action.setDefaultSortOrder(SortOrder.fromKey(defaultSortOrder));
         if (defaultReaction instanceof UnicodeEmoji)
@@ -129,6 +129,13 @@ public class MediaChannelImpl extends AbstractGuildChannelImpl<MediaChannelImpl>
     public EnumSet<ChannelFlag> getFlags()
     {
         return ChannelFlag.fromRaw(flags);
+    }
+
+    @Nonnull
+    @Override
+    public SortedSnowflakeCacheViewImpl<ForumTag> getAvailableTagCache()
+    {
+        return tagCache;
     }
 
     @Override

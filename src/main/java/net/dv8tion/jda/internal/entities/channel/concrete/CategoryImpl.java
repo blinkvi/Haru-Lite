@@ -16,19 +16,12 @@
 
 package net.dv8tion.jda.internal.entities.channel.concrete;
 
-import javax.annotation.Nonnull;
-
 import gnu.trove.map.TLongObjectMap;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.PermissionOverride;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
-import net.dv8tion.jda.api.entities.channel.concrete.Category;
-import net.dv8tion.jda.api.entities.channel.concrete.MediaChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.NewsChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.StageChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.*;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.managers.channel.concrete.CategoryManager;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
@@ -41,6 +34,8 @@ import net.dv8tion.jda.internal.entities.channel.mixin.attribute.IPositionableCh
 import net.dv8tion.jda.internal.managers.channel.concrete.CategoryManagerImpl;
 import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
+
+import javax.annotation.Nonnull;
 
 public class CategoryImpl extends AbstractGuildChannelImpl<CategoryImpl> implements
         Category,
@@ -98,6 +93,14 @@ public class CategoryImpl extends AbstractGuildChannelImpl<CategoryImpl> impleme
     public ChannelAction<StageChannel> createStageChannel(@Nonnull String name)
     {
         ChannelAction<StageChannel> action = getGuild().createStageChannel(name, this);
+        return trySync(action);
+    }
+
+    @Nonnull
+    @Override
+    public ChannelAction<ForumChannel> createForumChannel(@Nonnull String name)
+    {
+        ChannelAction<ForumChannel> action = getGuild().createForumChannel(name, this);
         return trySync(action);
     }
 

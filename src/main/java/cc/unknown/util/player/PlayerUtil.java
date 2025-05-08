@@ -3,9 +3,6 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.input.Mouse;
 
-import cc.unknown.Haru;
-import cc.unknown.handlers.CPSHandler;
-import cc.unknown.module.impl.combat.AutoClicker;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
@@ -228,12 +225,4 @@ public class PlayerUtil implements Accessor {
         }
         return MathUtil.round((double) getCompleteHealth(entityPlayer) / (n * (1.0 - (n2 + 0.04 * Math.min(Math.ceil(Math.min(n3, 25.0) * 0.75), 20.0) * (1.0 - n2)))), 1);
     }
-    
-    public static boolean pressLeftClick() {
-    	AutoClicker clicker = Haru.instance.getModuleManager().getModule(AutoClicker.class);
-        if (clicker.isEnabled()) {
-            return mc.gameSettings.keyBindAttack.isKeyDown();
-        } else return CPSHandler.getLeftClickCounter() > 1 && System.currentTimeMillis() - CPSHandler.leftClickTimer < 300L;
-    }
-
 }

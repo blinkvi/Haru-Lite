@@ -35,6 +35,7 @@ import net.dv8tion.jda.internal.entities.MemberPresenceImpl;
 import net.dv8tion.jda.internal.utils.Helpers;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import net.dv8tion.jda.internal.utils.UnlockHook;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ import java.util.List;
 
 public class PresenceUpdateHandler extends SocketHandler
 {
+    private static final Logger log = JDALogger.getLog(PresenceUpdateHandler.class);
 
     public PresenceUpdateHandler(JDAImpl api)
     {
@@ -55,6 +57,7 @@ public class PresenceUpdateHandler extends SocketHandler
         // Ignore events for relationships, presences are guild only to us
         if (content.isNull("guild_id"))
         {
+            log.debug("Received PRESENCE_UPDATE without guild_id. Ignoring event.");
             return null;
         }
         if (api.getCacheFlags().stream().noneMatch(CacheFlag::isPresence))
@@ -67,6 +70,9 @@ public class PresenceUpdateHandler extends SocketHandler
         GuildImpl guild = (GuildImpl) getJDA().getGuildById(guildId);
         if (guild == null)
         {
+            getJDA().getEventCache().cache(EventCache.Type.GUILD, guildId, responseNumber, allContent, this::handle);
+            EventCache.LOG.debug("Received a PRESENCE_UPDATE for a guild that is not yet cached! GuildId:{} UserId: {}",
+                                 guildId, content.getObject("user").get("id"));
             return null;
         }
 
@@ -138,6 +144,10 @@ public class PresenceUpdateHandler extends SocketHandler
         }
         catch (Exception ex)
         {
+            if (EntityBuilder.LOG.isDebugEnabled())
+                EntityBuilder.LOG.warn("Encountered exception trying to parse a presence! UserID: {} JSON: {}", userId, activityArray, ex);
+            else
+                EntityBuilder.LOG.warn("Encountered exception trying to parse a presence! UserID: {} Message: {} Enable debug for details", userId, ex.getMessage());
         }
         return parsedActivity;
     }

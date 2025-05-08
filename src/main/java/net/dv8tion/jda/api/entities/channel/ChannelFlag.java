@@ -16,20 +16,26 @@
 
 package net.dv8tion.jda.api.entities.channel;
 
-import java.util.Collection;
-import java.util.EnumSet;
+import net.dv8tion.jda.api.entities.channel.concrete.ForumChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.internal.utils.Checks;
 
 import javax.annotation.Nonnull;
-
-import net.dv8tion.jda.internal.utils.Checks;
+import java.util.Collection;
+import java.util.EnumSet;
 
 /**
  * Flags for specific channel settings.
  */
 public enum ChannelFlag
 {
-
+    /**
+     * This is a forum post {@link ThreadChannel} which is pinned in the {@link ForumChannel}.
+     */
     PINNED(1 << 1),
+    /**
+     * This is a {@link ForumChannel} which requires all new post threads to have at least one applied tag.
+     */
     REQUIRE_TAG(1 << 4),
 
     /**

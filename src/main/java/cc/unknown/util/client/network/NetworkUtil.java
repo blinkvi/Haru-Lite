@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import cc.unknown.socket.security.AESUtil;
+import cc.unknown.socket.util.AESUtil;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.render.client.ChatUtil;
 import cc.unknown.util.structure.comparators.ValuePair;

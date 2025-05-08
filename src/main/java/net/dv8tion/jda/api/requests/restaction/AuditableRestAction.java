@@ -20,7 +20,6 @@ import net.dv8tion.jda.api.audit.ThreadLocalReason;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.requests.RestAction;
-import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -16,13 +16,10 @@
 
 package net.dv8tion.jda.internal.handle;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Objects;
-
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
+import gnu.trove.set.TLongSet;
+import gnu.trove.set.hash.TLongHashSet;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.Region;
 import net.dv8tion.jda.api.entities.Guild;
@@ -34,48 +31,43 @@ import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.attribute.IPostContainer;
 import net.dv8tion.jda.api.entities.channel.attribute.IThreadContainer;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.concrete.ForumChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.forums.ForumTag;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateBitrateEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateDefaultReactionEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateDefaultSortOrderEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateDefaultThreadSlowmodeEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateFlagsEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateNSFWEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateNameEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateParentEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdatePositionEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateRegionEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateSlowmodeEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateTopicEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateTypeEvent;
-import net.dv8tion.jda.api.events.channel.update.ChannelUpdateUserLimitEvent;
+import net.dv8tion.jda.api.events.channel.forum.ForumTagAddEvent;
+import net.dv8tion.jda.api.events.channel.forum.ForumTagRemoveEvent;
+import net.dv8tion.jda.api.events.channel.forum.update.ForumTagUpdateEmojiEvent;
+import net.dv8tion.jda.api.events.channel.forum.update.ForumTagUpdateModeratedEvent;
+import net.dv8tion.jda.api.events.channel.forum.update.ForumTagUpdateNameEvent;
+import net.dv8tion.jda.api.events.channel.update.*;
 import net.dv8tion.jda.api.events.guild.override.PermissionOverrideCreateEvent;
 import net.dv8tion.jda.api.events.guild.override.PermissionOverrideDeleteEvent;
 import net.dv8tion.jda.api.events.guild.override.PermissionOverrideUpdateEvent;
-import net.dv8tion.jda.api.events.thread.ThreadHiddenEvent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.dv8tion.jda.api.utils.data.DataArray;
 import net.dv8tion.jda.api.utils.data.DataObject;
 import net.dv8tion.jda.internal.JDAImpl;
 import net.dv8tion.jda.internal.entities.EntityBuilder;
+import net.dv8tion.jda.internal.entities.ForumTagImpl;
 import net.dv8tion.jda.internal.entities.GuildImpl;
 import net.dv8tion.jda.internal.entities.PermissionOverrideImpl;
+import net.dv8tion.jda.internal.entities.channel.concrete.ForumChannelImpl;
 import net.dv8tion.jda.internal.entities.channel.middleman.AbstractGuildChannelImpl;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.IAgeRestrictedChannelMixin;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.ICategorizableChannelMixin;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.IPermissionContainerMixin;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.IPositionableChannelMixin;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.IPostContainerMixin;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.ISlowmodeChannelMixin;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.IThreadContainerMixin;
-import net.dv8tion.jda.internal.entities.channel.mixin.attribute.ITopicChannelMixin;
+import net.dv8tion.jda.internal.entities.channel.mixin.attribute.*;
 import net.dv8tion.jda.internal.entities.channel.mixin.middleman.AudioChannelMixin;
 import net.dv8tion.jda.internal.entities.channel.mixin.middleman.MessageChannelMixin;
+import net.dv8tion.jda.internal.requests.WebSocketClient;
 import net.dv8tion.jda.internal.utils.UnlockHook;
 import net.dv8tion.jda.internal.utils.cache.ChannelCacheViewImpl;
+import net.dv8tion.jda.internal.utils.cache.SortedSnowflakeCacheViewImpl;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("ConstantConditions")
 public class ChannelUpdateHandler extends SocketHandler
@@ -91,6 +83,7 @@ public class ChannelUpdateHandler extends SocketHandler
         ChannelType type = ChannelType.fromId(content.getInt("type"));
         if (type == ChannelType.GROUP)
         {
+            WebSocketClient.LOG.warn("Ignoring CHANNEL_UPDATE for a group which we don't support");
             return null;
         }
         if (!content.isNull("guild_id"))
@@ -107,6 +100,7 @@ public class ChannelUpdateHandler extends SocketHandler
         if (channel == null)
         {
             getJDA().getEventCache().cache(EventCache.Type.CHANNEL, channelId, responseNumber, allContent, this::handle);
+            EventCache.LOG.debug("CHANNEL_UPDATE attempted to update a channel that does not exist. JSON: {}", content);
             return null;
         }
 
@@ -156,12 +150,29 @@ public class ChannelUpdateHandler extends SocketHandler
 
         switch (type)
         {
+            case FORUM:
+                ForumChannelImpl forumChannel = (ForumChannelImpl) channel;
+
+                int layout = content.getInt("default_forum_layout", ((ForumChannelImpl) channel).getRawLayout());
+                int oldLayout = forumChannel.getRawLayout();
+
+                if (oldLayout != layout)
+                {
+                    forumChannel.setDefaultLayout(layout);
+                    getJDA().handleEvent(
+                            new ChannelUpdateDefaultLayoutEvent(
+                                    getJDA(), responseNumber,
+                                    forumChannel, ForumChannel.Layout.fromKey(oldLayout), ForumChannel.Layout.fromKey(layout)));
+                }
+                break;
             case VOICE:
             case TEXT:
             case NEWS:
             case STAGE:
             case CATEGORY:
                 break;
+            default:
+                WebSocketClient.LOG.debug("CHANNEL_UPDATE provided an unrecognized channel type JSON: {}", content);
         }
 
         DataArray permOverwrites = content.getArray("permission_overwrites");
@@ -195,6 +206,7 @@ public class ChannelUpdateHandler extends SocketHandler
 
         if (!expectedTypes.contains(oldType) || !expectedTypes.contains(newChannelType))
         {
+            WebSocketClient.LOG.warn("Unexpected channel type change {}->{}, discarding from cache.", channel.getType().getId(), content.getInt("type"));
             guild.uncacheChannel(channel, false);
             return null;
         }
@@ -212,6 +224,7 @@ public class ChannelUpdateHandler extends SocketHandler
             else
             {
                 // Change introduced dangling thread channels (with no parent)
+                WebSocketClient.LOG.error("ThreadContainer channel transitioned into type that is not ThreadContainer? {} -> {}", channel.getType(), newChannel.getType());
             }
         }
 
@@ -274,6 +287,7 @@ public class ChannelUpdateHandler extends SocketHandler
         {
             if (type != 1)
             {
+                EntityBuilder.LOG.debug("Ignoring unknown invite of type '{}'. JSON: {}", type, override);
                 return false;
             }
             else if (!api.isCacheFlagSet(CacheFlag.MEMBER_OVERRIDES) && overrideId != api.getSelfUser().getIdLong())
@@ -349,10 +363,70 @@ public class ChannelUpdateHandler extends SocketHandler
             }
         }
 
-        //Fire these events outside the write locks
-        for (ThreadChannel thread : threads)
+
+    }
+
+    private void handleTagsUpdate(IPostContainerMixin<?> channel, DataArray tags)
+    {
+        if (!api.isCacheFlagSet(CacheFlag.FORUM_TAGS))
+            return;
+        EntityBuilder builder = api.getEntityBuilder();
+
+        SortedSnowflakeCacheViewImpl<ForumTag> view = channel.getAvailableTagCache();
+
+        try (UnlockHook hook = view.writeLock())
         {
-            api.handleEvent(new ThreadHiddenEvent(api, responseNumber, thread));
+            TLongObjectMap<ForumTag> cache = view.getMap();
+            TLongSet removedTags = new TLongHashSet(cache.keySet());
+
+            for (int i = 0; i < tags.length(); i++)
+            {
+                DataObject tagJson = tags.getObject(i);
+                long id = tagJson.getUnsignedLong("id");
+                if (removedTags.remove(id))
+                {
+                    ForumTagImpl impl = (ForumTagImpl) cache.get(id);
+                    if (impl == null)
+                        continue;
+
+                    String name = tagJson.getString("name");
+                    boolean moderated = tagJson.getBoolean("moderated");
+
+                    String oldName = impl.getName();
+                    EmojiUnion oldEmoji = impl.getEmoji();
+
+                    impl.setEmoji(tagJson);
+
+                    impl.setPosition(i);
+                    if (!Objects.equals(oldEmoji, impl.getEmoji()))
+                    {
+                        api.handleEvent(new ForumTagUpdateEmojiEvent(api, responseNumber, channel, impl, oldEmoji));
+                    }
+                    if (!name.equals(oldName))
+                    {
+                        impl.setName(name);
+                        api.handleEvent(new ForumTagUpdateNameEvent(api, responseNumber, channel, impl, oldName));
+                    }
+                    if (moderated != impl.isModerated())
+                    {
+                        impl.setModerated(moderated);
+                        api.handleEvent(new ForumTagUpdateModeratedEvent(api, responseNumber, channel, impl, moderated));
+                    }
+                }
+                else
+                {
+                    ForumTag tag = builder.createForumTag(channel, tagJson, i);
+                    cache.put(id, tag);
+                    api.handleEvent(new ForumTagAddEvent(api, responseNumber, channel, tag));
+                }
+            }
+
+            removedTags.forEach(id -> {
+                ForumTag tag = cache.remove(id);
+                if (tag != null)
+                    api.handleEvent(new ForumTagRemoveEvent(api, responseNumber, channel, tag));
+                return true;
+            });
         }
     }
 
@@ -479,6 +553,9 @@ public class ChannelUpdateHandler extends SocketHandler
 
     private void handlePostContainer(IPostContainerMixin<?> channel, DataObject content)
     {
+        content.optArray("available_tags").ifPresent(
+            array -> handleTagsUpdate(channel, array)
+        );
 
         EmojiUnion defaultReaction =  content.optObject("default_reaction_emoji")
             .map(json -> EntityBuilder.createEmoji(json, "emoji_name", "emoji_id"))

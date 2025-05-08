@@ -59,6 +59,11 @@ public enum ChannelType
     GUILD_PRIVATE_THREAD(ThreadChannel.class, 12, -1, true),
 
     /**
+     * A {@link net.dv8tion.jda.api.entities.channel.concrete.ForumChannel ForumChannel}, Guild-Only.
+     */
+    FORUM(ForumChannel.class, 15, 0, true),
+
+    /**
      * A {@link MediaChannel}, Guild-Only.
      */
     MEDIA(MediaChannel.class, 16, 0, true),

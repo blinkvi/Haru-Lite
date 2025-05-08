@@ -16,14 +16,32 @@
 
 package net.dv8tion.jda.internal.entities.channel.mixin.attribute;
 
-import javax.annotation.Nonnull;
-
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.attribute.IPostContainer;
+import net.dv8tion.jda.api.entities.channel.forums.ForumTag;
+import net.dv8tion.jda.api.requests.restaction.ForumPostAction;
 import net.dv8tion.jda.api.requests.restaction.ThreadChannelAction;
 import net.dv8tion.jda.api.utils.data.DataObject;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
+import net.dv8tion.jda.internal.requests.restaction.ForumPostActionImpl;
+import net.dv8tion.jda.internal.utils.cache.SortedSnowflakeCacheViewImpl;
+
+import javax.annotation.Nonnull;
 
 public interface IPostContainerMixin<T extends IPostContainerMixin<T>> extends IPostContainer, IThreadContainerMixin<T>
 {
+    @Nonnull
+    @Override
+    SortedSnowflakeCacheViewImpl<ForumTag> getAvailableTagCache();
+
+    @Nonnull
+    @Override
+    default ForumPostAction createForumPost(@Nonnull String name, @Nonnull MessageCreateData message)
+    {
+        checkPermission(Permission.MESSAGE_SEND);
+        return new ForumPostActionImpl(this, name, new MessageCreateBuilder().applyData(message));
+    }
 
     @Nonnull
     @Override

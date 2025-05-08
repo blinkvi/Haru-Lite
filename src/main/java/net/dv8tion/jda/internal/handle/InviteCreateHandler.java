@@ -44,6 +44,7 @@ public class InviteCreateHandler extends SocketHandler
         Guild realGuild = getJDA().getGuildById(guildId);
         if (realGuild == null)
         {
+            EventCache.LOG.debug("Caching INVITE_CREATE for unknown guild with id {}", guildId);
             getJDA().getEventCache().cache(EventCache.Type.GUILD, guildId, responseNumber, allContent, this::handle);
             return null;
         }
@@ -52,6 +53,7 @@ public class InviteCreateHandler extends SocketHandler
         GuildChannel realChannel = realGuild.getGuildChannelById(channelId);
         if (realChannel == null)
         {
+            EventCache.LOG.debug("Caching INVITE_CREATE for unknown channel with id {} in guild with id {}", channelId, guildId);
             getJDA().getEventCache().cache(EventCache.Type.CHANNEL, channelId, responseNumber, allContent, this::handle);
             return null;
         }

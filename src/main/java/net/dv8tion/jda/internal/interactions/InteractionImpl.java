@@ -75,8 +75,6 @@ public class InteractionImpl implements Interaction
             user = member.getUser();
 
             GuildChannel channel = guild.getGuildChannelById(channelJson.getUnsignedLong("id"));
-            if (channel == null && ChannelType.fromId(channelJson.getInt("type")).isThread())
-                channel = api.getEntityBuilder().createThreadChannel((GuildImpl) guild, channelJson, guild.getIdLong(), false);
             if (channel == null)
                 throw new IllegalStateException("Failed to create channel instance for interaction! Channel Type: " + channelJson.getInt("type"));
             this.channel = channel;

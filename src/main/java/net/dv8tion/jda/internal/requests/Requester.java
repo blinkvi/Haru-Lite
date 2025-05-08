@@ -28,6 +28,8 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.internal.http.HttpMethod;
+import org.slf4j.Logger;
+import org.slf4j.MDC;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -59,6 +61,7 @@ public class Requester
         529, // The service is overloaded
     };
 
+    public static final Logger LOG = JDALogger.getLog(Requester.class);
     @SuppressWarnings("deprecation")
     public static final RequestBody EMPTY_BODY = RequestBody.create(null, new byte[0]);
     public static final MediaType MEDIA_TYPE_JSON  = MediaType.parse("application/json; charset=utf-8");
@@ -106,6 +109,7 @@ public class Requester
             return;
         if (contextMap == null)
             contextMap = api.getContextMap();
+        contextMap.forEach(MDC::put);
     }
 
     public JDAImpl getJDA()
@@ -174,6 +178,7 @@ public class Requester
             }
             catch (Exception e)
             {
+                LOG.error("Custom request builder caused exception", e);
             }
         }
 
@@ -186,6 +191,7 @@ public class Requester
         okhttp3.Response lastResponse = null;
         try
         {
+            LOG.trace("Executing request {} {}", task.getRoute().getMethod(), url);
             int code = 0;
             for (int attempt = 0; attempt < responses.length; attempt++)
             {
@@ -204,6 +210,9 @@ public class Requester
                 if (!shouldRetry(code))
                     break;
 
+                LOG.debug("Requesting {} -> {} returned status {}... retrying (attempt {})",
+                        apiRequest.getRoute().getMethod(),
+                        url, code, attempt + 1);
                 try
                 {
                     Thread.sleep(500 << attempt);
@@ -214,6 +223,7 @@ public class Requester
                 }
             }
 
+            LOG.trace("Finished Request {} {} with code {}", route.getMethod(), lastResponse.request().url(), code);
 
             if (shouldRetry(code))
             {
@@ -223,6 +233,7 @@ public class Requester
             }
 
             if (!rays.isEmpty())
+                LOG.debug("Received response with following cf-rays: {}", rays);
 
             if (handleOnRatelimit && code == 429)
             {
@@ -247,6 +258,7 @@ public class Requester
                 }
                 catch (Exception e)
                 {
+                    LOG.warn("Failed to parse retry-after response body", e);
                 }
             }
 
@@ -254,6 +266,7 @@ public class Requester
         }
         catch (UnknownHostException e)
         {
+            LOG.error("DNS resolution failed: {}", e.getMessage());
             task.handleResponse(e, rays);
             return null;
         }
@@ -261,11 +274,13 @@ public class Requester
         {
             if (retryOnTimeout && !retried && isRetry(e))
                 return execute(task, true, handleOnRatelimit);
+            LOG.error("There was an I/O error while executing a REST request: {}", e.getMessage());
             task.handleResponse(e, rays);
             return null;
         }
         catch (Exception e)
         {
+            LOG.error("There was an unexpected error while executing a REST request", e);
             task.handleResponse(e, rays);
             return null;
         }
@@ -273,7 +288,8 @@ public class Requester
         {
             for (okhttp3.Response r : responses)
             {
-
+                if (r == null)
+                    break;
                 r.close();
             }
         }
@@ -291,7 +307,11 @@ public class Requester
 
         if (apiRequest.getRawBody() != null)
         {
-
+            LOG.trace("Sending request on route {}/{} with body\n{}",
+                method,
+                apiRequest.getRoute().getCompiledRoute(),
+                apiRequest.getRawBody()
+            );
         }
     }
 

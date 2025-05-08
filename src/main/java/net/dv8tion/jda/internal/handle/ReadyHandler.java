@@ -46,6 +46,8 @@ public class ReadyHandler extends SocketHandler
             DataObject guild = guilds.getObject(i);
             long id = guild.getUnsignedLong("id");
             DataObject previous = distinctGuilds.put(id, guild);
+            if (previous != null)
+                WebSocketClient.LOG.warn("Found duplicate guild for id {} in ready payload", id);
         }
 
         DataObject selfJson = content.getObject("user");
@@ -87,6 +89,8 @@ public class ReadyHandler extends SocketHandler
                 case PRIVATE:
                     builder.createPrivateChannel(chan);
                     break;
+                default:
+                    WebSocketClient.LOG.warn("Received a Channel in the private_channels array in READY of an unknown type! Type: {}", type);
             }
         }
     }

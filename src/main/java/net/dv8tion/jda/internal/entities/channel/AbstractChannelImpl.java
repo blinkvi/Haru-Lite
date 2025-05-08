@@ -114,6 +114,13 @@ public abstract class AbstractChannelImpl<T extends AbstractChannelImpl<T>> impl
 
     @Nonnull
     @Override
+    public ForumChannel asForumChannel()
+    {
+        return ChannelUtil.safeChannelCast(this, ForumChannel.class);
+    }
+
+    @Nonnull
+    @Override
     public MediaChannel asMediaChannel()
     {
         return ChannelUtil.safeChannelCast(this, MediaChannel.class);

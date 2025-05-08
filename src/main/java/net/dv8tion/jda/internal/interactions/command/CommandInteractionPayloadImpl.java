@@ -139,8 +139,6 @@ public class CommandInteractionPayloadImpl extends InteractionImpl implements Co
                     DataObject channelJson = channels.getObject(id);
                     if (channelObj != null)
                         resolved.put(channelObj.getIdLong(), channelObj);
-                    else if (ChannelType.fromId(channelJson.getInt("type")).isThread())
-                        resolved.put(Long.parseUnsignedLong(id), api.getEntityBuilder().createThreadChannel(guild, channelJson, guild.getIdLong(), false));
                 })
             );
         }

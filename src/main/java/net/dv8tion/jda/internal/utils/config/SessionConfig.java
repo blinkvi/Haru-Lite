@@ -17,7 +17,6 @@
 package net.dv8tion.jda.internal.utils.config;
 
 import com.neovisionaries.ws.client.WebSocketFactory;
-import net.dv8tion.jda.api.hooks.VoiceDispatchInterceptor;
 import net.dv8tion.jda.api.utils.ConcurrentSessionController;
 import net.dv8tion.jda.api.utils.SessionController;
 import net.dv8tion.jda.internal.utils.config.flags.ConfigFlag;
@@ -32,20 +31,18 @@ public class SessionConfig
     private final SessionController sessionController;
     private final OkHttpClient httpClient;
     private final WebSocketFactory webSocketFactory;
-    private final VoiceDispatchInterceptor interceptor;
     private final int largeThreshold;
     private EnumSet<ConfigFlag> flags;
     private int maxReconnectDelay;
 
     public SessionConfig(
         @Nullable SessionController sessionController, @Nullable OkHttpClient httpClient,
-        @Nullable WebSocketFactory webSocketFactory, @Nullable VoiceDispatchInterceptor interceptor,
+        @Nullable WebSocketFactory webSocketFactory,
         EnumSet<ConfigFlag> flags, int maxReconnectDelay, int largeThreshold)
     {
         this.sessionController = sessionController == null ? new ConcurrentSessionController() : sessionController;
         this.httpClient = httpClient;
         this.webSocketFactory = webSocketFactory == null ? newWebSocketFactory() : webSocketFactory;
-        this.interceptor = interceptor;
         this.flags = flags;
         this.maxReconnectDelay = maxReconnectDelay;
         this.largeThreshold = largeThreshold;
@@ -80,12 +77,6 @@ public class SessionConfig
     public WebSocketFactory getWebSocketFactory()
     {
         return webSocketFactory;
-    }
-
-    @Nullable
-    public VoiceDispatchInterceptor getVoiceDispatchInterceptor()
-    {
-        return interceptor;
     }
 
     public boolean isAutoReconnect()
@@ -136,6 +127,6 @@ public class SessionConfig
     @Nonnull
     public static SessionConfig getDefault()
     {
-        return new SessionConfig(null, new OkHttpClient(), null, null, ConfigFlag.getDefault(), 900, 250);
+        return new SessionConfig(null, new OkHttpClient(), null, ConfigFlag.getDefault(), 900, 250);
     }
 }

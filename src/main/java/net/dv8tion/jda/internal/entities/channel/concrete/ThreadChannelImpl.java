@@ -16,14 +16,8 @@
 
 package net.dv8tion.jda.internal.entities.channel.concrete;
 
-import java.time.OffsetDateTime;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import gnu.trove.set.TLongSet;
+import gnu.trove.set.hash.TLongHashSet;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -32,7 +26,9 @@ import net.dv8tion.jda.api.entities.channel.ChannelFlag;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.entities.channel.attribute.IThreadContainer;
+import net.dv8tion.jda.api.entities.channel.concrete.ForumChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.forums.ForumTag;
 import net.dv8tion.jda.api.entities.channel.unions.IThreadContainerUnion;
 import net.dv8tion.jda.api.managers.channel.concrete.ThreadChannelManager;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -53,6 +49,14 @@ import net.dv8tion.jda.internal.requests.restaction.pagination.ThreadMemberPagin
 import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.Helpers;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.time.OffsetDateTime;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.stream.LongStream;
+
 public class ThreadChannelImpl extends AbstractGuildChannelImpl<ThreadChannelImpl> implements
         ThreadChannel,
         GuildMessageChannelMixin<ThreadChannelImpl>,
@@ -61,6 +65,7 @@ public class ThreadChannelImpl extends AbstractGuildChannelImpl<ThreadChannelImp
     private final ChannelType type;
     private final CacheView.SimpleCacheView<ThreadMember> threadMembers = new CacheView.SimpleCacheView<>(ThreadMember.class, null);
 
+    private TLongSet appliedTags = new TLongHashSet(ForumChannel.MAX_POST_TAGS);
     private AutoArchiveDuration autoArchiveDuration;
     private IThreadContainerUnion parentChannel;
     private boolean locked;
@@ -150,6 +155,20 @@ public class ThreadChannelImpl extends AbstractGuildChannelImpl<ThreadChannelImp
         if (realChannel != null)
             parentChannel = (IThreadContainerUnion) realChannel;
         return parentChannel;
+    }
+
+    @Nonnull
+    @Override
+    public List<ForumTag> getAppliedTags()
+    {
+        IThreadContainerUnion parent = getParentChannel();
+        if (parent.getType() != ChannelType.FORUM)
+            return Collections.emptyList();
+        return parent.asForumChannel()
+                .getAvailableTagCache()
+                .stream()
+                .filter(tag -> this.appliedTags.contains(tag.getIdLong()))
+                .collect(Helpers.toUnmodifiableList());
     }
 
     @Nonnull
@@ -402,6 +421,14 @@ public class ThreadChannelImpl extends AbstractGuildChannelImpl<ThreadChannelImp
         return this;
     }
 
+    public ThreadChannelImpl setAppliedTags(LongStream tags)
+    {
+        TLongSet set = new TLongHashSet(ForumChannel.MAX_POST_TAGS);
+        tags.forEach(set::add);
+        this.appliedTags = set;
+        return this;
+    }
+
     public ThreadChannelImpl setFlags(int flags)
     {
         this.flags = flags;
@@ -412,6 +439,12 @@ public class ThreadChannelImpl extends AbstractGuildChannelImpl<ThreadChannelImp
     {
         return archiveTimestamp;
     }
+
+    public TLongSet getAppliedTagsSet()
+    {
+        return appliedTags;
+    }
+
 
     public int getRawFlags()
     {

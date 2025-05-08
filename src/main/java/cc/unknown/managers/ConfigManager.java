@@ -6,12 +6,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import cc.unknown.Haru;
 import cc.unknown.file.Config;
 import cc.unknown.file.Directory;
 import cc.unknown.util.Accessor;
@@ -30,7 +28,7 @@ public final class ConfigManager implements Accessor {
 
     public boolean load(Directory config) {
         if (config == null) {
-            Haru.instance.getLogger().warn("Attempted to load a null configuration.");
+            getLogger().warn("Attempted to load a null configuration.");
             return false;
         }
 
@@ -38,13 +36,13 @@ public final class ConfigManager implements Accessor {
             JsonParser parser = new JsonParser();
             JsonObject jsonObject = parser.parse(reader).getAsJsonObject();
             config.load(jsonObject);
-            Haru.instance.getLogger().info("Loaded: " + config.getName());
+            getLogger().info("Loaded: " + config.getName());
             return true;
         } catch (IOException e) {
-            Haru.instance.getLogger().error("Failed to load: " + config.getName(), e);
+            getLogger().error("Failed to load: " + config.getName(), e);
             return false;
         } catch (Exception e) {
-            Haru.instance.getLogger().error("Error processing: " + config.getName(), e);
+            getLogger().error("Error processing: " + config.getName(), e);
             return false;
         }
     }
@@ -59,20 +57,22 @@ public final class ConfigManager implements Accessor {
 
         try (FileWriter writer = new FileWriter(config.getFile())) {
             writer.write(jsonString);
-            Haru.instance.getLogger().info("Saved: " + config.getName());
+            getLogger().info("Saved: " + config.getName());
             return true;
         } catch (IOException e) {
-            Haru.instance.getLogger().error("Failed to save: " + config.getName(), e);
+            getLogger().error("Failed to save: " + config.getName(), e);
             return false;
         }
     }
 
     public void saveFiles() {
-        for (Directory config : configs) {
+        configs.forEach(config -> {
             if (!save(config)) {
-                Haru.instance.getLogger().warn("Failed to save: " + config.getName());
+                getLogger().warn("Failed to save: " + config.getName());
+            } else {
+                getLogger().info("Config saved successfully: " + config.getName());
             }
-        }
+        });
     }
 
     public void loadFiles() {
@@ -82,16 +82,22 @@ public final class ConfigManager implements Accessor {
             Runnable createEmptyFile = () -> {
                 try (FileWriter writer = new FileWriter(configFile)) {
                     writer.write("{}");
-                    Haru.instance.getLogger().info("Created empty file: " + configFile.getName());
+                    getLogger().info("Created empty file: " + configFile.getName());
                 } catch (IOException e) {
-                    Haru.instance.getLogger().error("Failed to create empty file: " + config.getName(), e);
+                    getLogger().error("Failed to create empty file: " + config.getName(), e);
                 }
             };
 
-            Runnable warnLoadFail = () -> Haru.instance.getLogger().warn("Failed to load: " + config.getName());
+            if (!configFile.exists()) {
+                createEmptyFile.run();
+            }
 
-            Optional.of(configFile).filter(file -> !file.exists()).ifPresent(file -> createEmptyFile.run());
-            Optional.of(config).filter(c -> !load(c)).ifPresent(c -> warnLoadFail.run());
+            if (!load(config)) {
+                getLogger().warn("Failed to load: " + config.getName());
+            } else {
+                getLogger().info("Config loaded successfully: " + config.getName());
+            }
         });
     }
+
 }

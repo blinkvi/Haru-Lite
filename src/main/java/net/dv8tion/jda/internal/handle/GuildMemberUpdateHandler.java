@@ -48,6 +48,7 @@ public class GuildMemberUpdateHandler extends SocketHandler
         {
             //Do not cache this here, it will be outdated once we receive the GUILD_CREATE and could cause invalid cache
             //getJDA().getEventCache().cache(EventCache.Type.GUILD, userId, responseNumber, allContent, this::handle);
+            EventCache.LOG.debug("Got GuildMember update but JDA currently does not have the Guild cached. Ignoring. {}", content);
             return null;
         }
 
@@ -81,6 +82,7 @@ public class GuildMemberUpdateHandler extends SocketHandler
             else
             {
                 getJDA().getEventCache().cache(EventCache.Type.ROLE, id, responseNumber, allContent, this::handle);
+                EventCache.LOG.debug("Got GuildMember update but one of the Roles for the Member is not yet cached.");
                 return null;
             }
         }

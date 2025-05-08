@@ -22,6 +22,7 @@ import net.dv8tion.jda.api.utils.data.DataObject;
 import net.dv8tion.jda.internal.interactions.command.localization.UnmodifiableLocalizationMap;
 import net.dv8tion.jda.internal.utils.Checks;
 import net.dv8tion.jda.internal.utils.JDALogger;
+import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -30,6 +31,7 @@ import java.util.Map;
 
 public class LocalizationUtils
 {
+    public static final Logger LOG = JDALogger.getLog(LocalizationUtils.class);
 
     @Nonnull
     public static Map<DiscordLocale, String> mapFromData(@Nonnull DataObject data)
@@ -43,6 +45,7 @@ public class LocalizationUtils
             final DiscordLocale locale = DiscordLocale.from(key);
             if (locale == DiscordLocale.UNKNOWN)
             {
+                LOG.debug("Discord provided an unknown locale, locale tag: {}", key);
                 continue;
             }
 
