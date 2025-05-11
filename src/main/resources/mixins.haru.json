@@ -72,7 +72,12 @@
 		"MixinGuiMainMenu",
 		"MixinGuiMultiplayer",
 		"MixinGuiButton",
-		"MixinRender"
+		"MixinRender",
+		"MixinGlStateManager",
+		"MixinFluidRegistry",
+		"MixinScaledResolution",
+		"MixinGuiScreen",
+		"MixinForgeHooksClient"
     	
     ]
 }

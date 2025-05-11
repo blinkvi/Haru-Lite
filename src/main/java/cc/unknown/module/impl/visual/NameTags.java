@@ -33,8 +33,8 @@ public final class NameTags extends Module {
 	
 	public final MultiBoolValue armor = new MultiBoolValue("Armor", this, Arrays.asList(
 			new BoolValue("Enchants", true),
-			new BoolValue("Durability", false),
-			new BoolValue("StackSize", false)));
+			new BoolValue("Durability", true),
+			new BoolValue("StackSize", true)));
 	
 	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
 			new BoolValue("ShowHealth", false),

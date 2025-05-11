@@ -81,7 +81,7 @@ public class ClientHandler implements Accessor {
 		if (event.buttonstate) {
 			if (event.button == 0 && !mc.thePlayer.isBlocking()) {
 				addLeftClick();
-			} else if (event.button == 1 && (InventoryUtil.getAnyBlock() | InventoryUtil.getProjectiles())) {
+			} else if (event.button == 1 || (InventoryUtil.getAnyBlock() || InventoryUtil.getProjectiles())) {
 				addRightClick();
 			}
 		}

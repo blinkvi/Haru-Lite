@@ -12,13 +12,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "NoUseDelay", description = "Remove consume delay.", category = Category.UTILITY)
 public class NoUseDelay extends Module {
+	
     @SubscribeEvent
     public void onPrePosition(PrePositionEvent event) {
         if (!isInGame()) return;
         
         if (mc.thePlayer.isUsingItem() && InventoryUtil.getItem() instanceof ItemFood || InventoryUtil.getItem() instanceof ItemPotion || InventoryUtil.getItem() instanceof ItemBucketMilk) {
             int useDuration = mc.thePlayer.getItemInUseDuration();
-            if (useDuration >= 20) {
+            if (useDuration >= 17) {
                 mc.thePlayer.stopUsingItem();
             }
         }

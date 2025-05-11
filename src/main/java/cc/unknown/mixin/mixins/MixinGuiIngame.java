@@ -66,24 +66,29 @@ public abstract class MixinGuiIngame extends Gui {
 	}
 
 	@Inject(method = "renderBossHealth", at = @At("HEAD"), cancellable = true)
-	private void bossHealth(CallbackInfo ci) {
+	private void cancelBossHealth(CallbackInfo ci) {
 		ci.cancel();
 	}
 
 	@Inject(method = "renderPumpkinOverlay", at = @At("HEAD"), cancellable = true)
-	private void pumpkinOverlay(CallbackInfo ci) {
+	private void cancelPumpkinOverlay(CallbackInfo ci) {
 		ci.cancel();
 	}
 
 	@Inject(method = "renderDemo", at = @At("HEAD"), cancellable = true)
-	private void renderDemo(CallbackInfo ci) {
+	private void cancelDemo(CallbackInfo ci) {
 		ci.cancel();
 	}
 
 	@Inject(method = "renderPortal", at = @At("HEAD"), cancellable = true)
-	private void renderPortal(CallbackInfo ci) {
+	private void cancelPortal(CallbackInfo ci) {
 		ci.cancel();
 	}
+	
+    @Inject(method = "renderVignette", at = @At("HEAD"), cancellable = true)
+    private void cancelVignette(CallbackInfo ci) {
+    	ci.cancel();
+    }
 	
 	@Unique
 	public void drawScoreboard(ScaledResolution scaledRes, ScoreObjective objective, Scoreboard scoreboard, Collection<Score> scores) {

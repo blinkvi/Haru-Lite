@@ -59,6 +59,12 @@ public class AimAssist extends Module {
 	private final Clock clock = new Clock();
 	public EntityPlayer target;
 	
+	@Override
+	public void onDisable() {
+		target = null;
+		lockedTargets.clear();
+	}
+	
 	@SubscribeEvent
 	public void onAttack(AttackEvent event) {        
 		if (event.target instanceof EntityPlayer) {
@@ -131,12 +137,6 @@ public class AimAssist extends Module {
 		    }
 	    	break;
 	    }
-	}
-
-	@Override
-	public void onDisable() {
-		target = null;
-		lockedTargets.clear();
 	}
 
 	private EntityPlayer getEnemy() {

@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "AutoArmor", description = "", category = Category.UTILITY)
 public class AutoArmor extends Module {
-	private final SliderValue startDelay = new SliderValue("Start Delay", this, 1, 0, 10, 1);
+	private final SliderValue startDelay = new SliderValue("StartDelay", this, 1, 0, 10, 1);
 	private final SliderValue speed = new SliderValue("MouseSpeed", this, 1, 0, 10, 1);
 
 	private final Clock startTimer = new Clock();

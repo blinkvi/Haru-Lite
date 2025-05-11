@@ -14,17 +14,18 @@ import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiSelectWorld;
 
 public class DiscordHandler implements Accessor {
-	public boolean running = true;
-	private long timeElapsed = 0;
 	private final String joinSecret = UUID.randomUUID().toString();
 	private final String spectateSecret = UUID.randomUUID().toString();
+	
+	public static boolean running = true;
+	private long timeElapsed = 0;
+	private DiscordEventHandlers handlers = new DiscordEventHandlers();
 
 	public void start() {
-		this.timeElapsed = System.currentTimeMillis();
-		NameProtect protect = getModule(NameProtect.class);
-		DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().build();
+	    this.timeElapsed = System.currentTimeMillis();
+	    NameProtect protect = getModule(NameProtect.class);
 
-		DiscordRPC.discordInitialize("1362856733151854854", handlers, true);
+	    DiscordRPC.discordInitialize("1362856733151854854", handlers, true);
 
 		new Thread("Discord RPC Callback") {
 			@Override
@@ -69,10 +70,7 @@ public class DiscordHandler implements Accessor {
 	}
 
 	public void updateStatus(String line1, String line2) {
-		DiscordRichPresence.Builder rpc = new DiscordRichPresence.Builder(line2).setDetails(line1)
-				.setBigImage("logo", "Haru " + Haru.VERSION).setParty("discord.gg/MuF4YRQFht", 1, 4)
-				.setSecrets(joinSecret, spectateSecret).setStartTimestamps(timeElapsed);
-
+		DiscordRichPresence.Builder rpc = new DiscordRichPresence.Builder(line2).setDetails(line1).setBigImage("logo", "Haru " + Haru.VERSION).setParty("discord.gg/MuF4YRQFht", 1, 4).setSecrets(joinSecret, spectateSecret).setStartTimestamps(timeElapsed);
 		DiscordRPC.discordUpdatePresence(rpc.build());
 	}
 }

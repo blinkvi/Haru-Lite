@@ -15,12 +15,12 @@ public class Chams extends Module {
 	
 	@SubscribeEvent
 	public void onPreRenderLiving(RenderLivingEvent.Pre event) {
-		render(1);
+		render(0);
 	}
     
 	@SubscribeEvent
 	public void onPostRenderLiving(RenderLivingEvent.Post event) {
-		render(2);
+		render(1);
 	}
 	
     private void render(int pre) {
@@ -30,11 +30,11 @@ public class Chams extends Module {
 			}
 			
 			switch (pre) {
-			case 1:
+			case 0:
 	            GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
 	            GL11.glPolygonOffset(1.0F, -1000000F);
 	            break;
-			case 2:
+			case 1:
 	            GL11.glPolygonOffset(1.0F, 1000000F);
 	            GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
 			}

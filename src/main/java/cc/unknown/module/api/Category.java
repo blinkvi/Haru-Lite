@@ -4,9 +4,8 @@ public enum Category {
 	COMBAT("Combat"),
     MOVE("Move"),
     UTILITY("Utility"),
-    VISUAL("Visual"),
-    CONFIG("Config");
-
+    VISUAL("Visual");
+	
     private final String name;
 
 	private Category(String name) {

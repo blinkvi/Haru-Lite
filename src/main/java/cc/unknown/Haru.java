@@ -93,8 +93,7 @@ public class Haru {
         initializeManagers();
         registerHandlers();
         firstStart = SystemUtil.checkFirstStart();
-        startDiscordPresence();
-  
+        startDiscordPresence();  
         logger.info("Initialized successfully.");
     }
     

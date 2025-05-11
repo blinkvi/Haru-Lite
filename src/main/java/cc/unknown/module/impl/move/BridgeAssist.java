@@ -148,7 +148,7 @@ public class BridgeAssist extends Module {
             return mc.theWorld.getCollidingBoundingBoxes(player, expandedBox).isEmpty();
         });
 
-        if (airBelow | airAround) {
+        if (airBelow || airAround) {
             if (offset < dist && offset >= -dist) {
                 offset = 0.0D;
             } else {

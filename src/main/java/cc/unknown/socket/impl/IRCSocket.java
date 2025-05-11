@@ -1,9 +1,6 @@
 package cc.unknown.socket.impl;
-import java.io.IOException;
-
-import cc.unknown.Haru;
 import cc.unknown.socket.WebSocketCore;
-import cc.unknown.socket.util.webhook.DiscordWebhook;
+import cc.unknown.socket.util.DiscordNotifier;
 import cc.unknown.util.client.network.NetworkUtil;
 import cc.unknown.util.render.client.ChatUtil;
 import cc.unknown.util.render.client.ColorUtil;
@@ -59,7 +56,7 @@ public class IRCSocket extends WebSocketCore {
 		TextChannel channel = jda.getTextChannelById(NetworkUtil.getRaw("irc_id", host, "a"));
 		
 		if (channel != null) {
-			send(message);
+			DiscordNotifier.sendChatMessage(message);
 		}
 	}
 	
@@ -68,14 +65,5 @@ public class IRCSocket extends WebSocketCore {
 	        return input;
 	    }
 	    return input.substring(0, 1).toUpperCase() + input.substring(1);
-	}
-	
-	private void send(String message) {
-		DiscordWebhook irc = new DiscordWebhook(NetworkUtil.getRaw("endpoint", host, "b"));
-		irc.username = "IRC";
-		irc.content = "-# [IRC] " + Haru.getUser() + ": " + message;
-		try {
-			irc.execute();
-		} catch (IOException ignored) { }
 	}
 }
