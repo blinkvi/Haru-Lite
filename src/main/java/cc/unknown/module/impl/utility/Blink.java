@@ -3,8 +3,8 @@ package cc.unknown.module.impl.utility;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import cc.unknown.event.player.InboundEvent;
-import cc.unknown.event.player.OutgoingEvent;
+import cc.unknown.event.netty.InboundEvent;
+import cc.unknown.event.netty.OutgoingEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;

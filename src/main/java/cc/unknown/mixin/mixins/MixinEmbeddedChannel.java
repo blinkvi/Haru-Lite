@@ -71,7 +71,6 @@ public abstract class MixinEmbeddedChannel extends AbstractChannel {
 
     @Inject(method = "doBeginRead", at = @At("HEAD"), remap = false)
     private void readTmpInbounds(CallbackInfo ci) {
-        // read from tempInboundMessages and fire channelRead.
         if (isNotEmpty(tempInboundMessages)) {
             for (;;) {
                 AbstractMap.SimpleEntry<Object, ChannelPromise> pair = tempInboundMessages.poll();
@@ -90,7 +89,6 @@ public abstract class MixinEmbeddedChannel extends AbstractChannel {
                 }
             }
 
-            // fire channelReadComplete.
             flush();
         }
     }

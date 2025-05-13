@@ -105,7 +105,6 @@ public abstract class MixinEntityLivingBase extends MixinEntity {
 	@Shadow
 	public float limbSwing;
 
-
     @Inject(method = "isPotionActive(Lnet/minecraft/potion/Potion;)Z", at = @At("HEAD"), cancellable = true)
     private void isPotionActive(Potion potion, CallbackInfoReturnable<Boolean> ci) {
         AntiDebuff antiDebuff = Haru.instance.getModuleManager().getModule(AntiDebuff.class);

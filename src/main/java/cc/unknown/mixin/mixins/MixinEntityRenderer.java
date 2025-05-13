@@ -23,6 +23,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(EntityRenderer.class)
@@ -44,30 +45,24 @@ public abstract class MixinEntityRenderer {
 	public void orientCamera(float partialTicks) {
 		Entity entity = this.mc.getRenderViewEntity();
 		float f = entity.getEyeHeight();
-		double d0 = entity.prevPosX + (entity.posX - entity.prevPosX) * (double) partialTicks;
-		double d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double) partialTicks + (double) f;
-		double d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double) partialTicks;
+		double d0 = entity.prevPosX + (entity.posX - entity.prevPosX) *  partialTicks;
+		double d1 = entity.prevPosY + (entity.posY - entity.prevPosY) *  partialTicks +  f;
+		double d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) *  partialTicks;
 
 		if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).isPlayerSleeping()) {
-			f = (float) ((double) f + 1.0D);
+			f = (float) ( f + 1.0D);
 			GlStateManager.translate(0.0F, 0.3F, 0.0F);
 
 			if (!this.mc.gameSettings.debugCamEnable) {
 				BlockPos blockpos = new BlockPos(entity);
 				IBlockState iblockstate = this.mc.theWorld.getBlockState(blockpos);
-				net.minecraftforge.client.ForgeHooksClient.orientBedCamera(this.mc.theWorld, blockpos, iblockstate,
-						entity);
+				ForgeHooksClient.orientBedCamera(this.mc.theWorld, blockpos, iblockstate, entity);
 
-				GlStateManager.rotate(
-						entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F,
-						0.0F, -1.0F, 0.0F);
-				GlStateManager.rotate(
-						entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks,
-						-1.0F, 0.0F, 0.0F);
+				GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F, 0.0F, -1.0F, 0.0F);
+				GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
 			}
 		} else if (this.mc.gameSettings.thirdPersonView > 0) {
-			double d3 = (double) (this.thirdPersonDistanceTemp
-					+ (this.thirdPersonDistance - this.thirdPersonDistanceTemp) * partialTicks);
+			double d3 =  (this.thirdPersonDistanceTemp + (this.thirdPersonDistance - this.thirdPersonDistanceTemp) * partialTicks);
 
 			if (this.mc.gameSettings.debugCamEnable) {
 				GlStateManager.translate(0.0F, 0.0F, (float) (-d3));
@@ -79,11 +74,9 @@ public abstract class MixinEntityRenderer {
 					f2 += 180.0F;
 				}
 
-				double d4 = (double) (-MathHelper.sin(f1 / 180.0F * (float) Math.PI)
-						* MathHelper.cos(f2 / 180.0F * (float) Math.PI)) * d3;
-				double d5 = (double) (MathHelper.cos(f1 / 180.0F * (float) Math.PI)
-						* MathHelper.cos(f2 / 180.0F * (float) Math.PI)) * d3;
-				double d6 = (double) (-MathHelper.sin(f2 / 180.0F * (float) Math.PI)) * d3;
+				double d4 =  (-MathHelper.sin(f1 / 180.0F * (float) Math.PI) * MathHelper.cos(f2 / 180.0F * (float) Math.PI)) * d3;
+				double d5 =  (MathHelper.cos(f1 / 180.0F * (float) Math.PI) * MathHelper.cos(f2 / 180.0F * (float) Math.PI)) * d3;
+				double d6 =  (-MathHelper.sin(f2 / 180.0F * (float) Math.PI)) * d3;
 
 				for (int i = 0; i < 8; ++i) {
 					float f3 = (float) ((i & 1) * 2 - 1);
@@ -93,8 +86,8 @@ public abstract class MixinEntityRenderer {
 					f4 = f4 * 0.1F;
 					f5 = f5 * 0.1F;
 					MovingObjectPosition movingobjectposition = this.mc.theWorld
-							.rayTraceBlocks(new Vec3(d0 + (double) f3, d1 + (double) f4, d2 + (double) f5), new Vec3(
-									d0 - d4 + (double) f3 + (double) f5, d1 - d6 + (double) f4, d2 - d5 + (double) f5));
+							.rayTraceBlocks(new Vec3(d0 +  f3, d1 +  f4, d2 +  f5), new Vec3(
+									d0 - d4 +  f3 +  f5, d1 - d6 +  f4, d2 - d5 +  f5));
 
 					if (movingobjectposition != null) {
 						double d7 = movingobjectposition.hitVec.distanceTo(new Vec3(d0, d1, d2));
@@ -143,9 +136,9 @@ public abstract class MixinEntityRenderer {
 		}
 
 		GlStateManager.translate(0.0F, -f, 0.0F);
-		d0 = entity.prevPosX + (entity.posX - entity.prevPosX) * (double) partialTicks;
-		d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double) partialTicks + (double) f;
-		d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double) partialTicks;
+		d0 = entity.prevPosX + (entity.posX - entity.prevPosX) *  partialTicks;
+		d1 = entity.prevPosY + (entity.posY - entity.prevPosY) *  partialTicks +  f;
+		d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) *  partialTicks;
 		this.cloudFog = this.mc.renderGlobal.hasCloudFog(d0, d1, d2, partialTicks);
 	}
 

@@ -20,12 +20,14 @@ import com.google.common.collect.Lists;
 
 import cc.unknown.Haru;
 import cc.unknown.handlers.SpoofHandler;
+import cc.unknown.module.impl.visual.AntiDebuff;
 import cc.unknown.module.impl.visual.Interface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.potion.Potion;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -49,6 +51,15 @@ public abstract class MixinGuiIngame extends Gui {
 	private int redirectCurrentItem(InventoryPlayer inventory) {
 		return SpoofHandler.getSpoofedSlot();
 	}
+	
+    @Redirect(method = "renderGameOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/EntityLivingBase;isPotionActive(Lnet/minecraft/potion/Potion;)Z"))
+    private boolean redirectRenderGameOverlay(GuiIngame gui, Potion potion) {
+    	AntiDebuff antiDebuff = Haru.instance.getModuleManager().getModule(AntiDebuff.class);
+        if (antiDebuff != null && potion == Potion.confusion) {
+            return false;
+        }
+        return Minecraft.getMinecraft().thePlayer.isPotionActive(potion);
+    }
 
 	@Inject(method = "renderScoreboard", at = @At("HEAD"), cancellable = true)
 	private void preRenderScoreboard(ScoreObjective objective, ScaledResolution scaledRes, CallbackInfo ci) {

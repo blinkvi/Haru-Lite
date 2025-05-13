@@ -4,8 +4,12 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import cc.unknown.event.player.MoveInputEvent;
+import cc.unknown.event.player.PostMoveInputEvent;
+import cc.unknown.event.player.PreMoveInputEvent;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.MovementInputFromOptions;
@@ -30,7 +34,7 @@ public class MixinMovementInputFromOptions extends MovementInput {
         this.jump = this.gameSettings.keyBindJump.isKeyDown();
         this.sneak = this.gameSettings.keyBindSneak.isKeyDown();
 
-        MoveInputEvent event = new MoveInputEvent(moveForward, moveStrafe, jump, sneak, 0.3D);
+        PreMoveInputEvent event = new PreMoveInputEvent(moveForward, moveStrafe, jump, sneak, 0.3D);
         MinecraftForge.EVENT_BUS.post(event);
 
         this.moveForward = event.forward;
@@ -43,5 +47,10 @@ public class MixinMovementInputFromOptions extends MovementInput {
             this.moveStrafe  *= multiplier;
             this.moveForward *= multiplier;
         }
+    }
+    
+    @Inject(method = "updatePlayerMoveState", at = @At("RETURN"))
+    private void onUpdatePlayerMoveState(CallbackInfo ci) {
+        MinecraftForge.EVENT_BUS.post(new PostMoveInputEvent());
     }
 }

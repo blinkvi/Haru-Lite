@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import cc.unknown.event.player.InboundEvent;
-import cc.unknown.event.player.OutgoingEvent;
+import cc.unknown.event.netty.InboundEvent;
+import cc.unknown.event.netty.OutgoingEvent;
 import cc.unknown.util.client.network.PPSCounter;
 import cc.unknown.util.client.network.PacketUtil;
 import io.netty.channel.ChannelHandlerContext;
@@ -69,8 +69,6 @@ public abstract class MixinNetworkManager extends SimpleChannelInboundHandler<Pa
             instance.processPacket(this.packetListener);
         } catch (ThreadQuickExitException e) {
             throw e;
-        } catch (Exception e) {
-            //ExploitFixer.onBadPacket(instance, e);
-        }
+        } catch (Exception e) { }
     }
 }

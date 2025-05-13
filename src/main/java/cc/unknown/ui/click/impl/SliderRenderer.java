@@ -9,13 +9,13 @@ import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Slider;
 
 public class SliderRenderer extends Component {
 
-    private final SliderValue value;
+    private final Slider value;
 
-    public SliderRenderer(SliderValue value) {
+    public SliderRenderer(Slider value) {
         this.value = value;
         height = 11;
     }

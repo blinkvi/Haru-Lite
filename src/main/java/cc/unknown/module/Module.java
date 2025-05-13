@@ -14,7 +14,7 @@ import cc.unknown.ui.drag.impl.ArrayListDraggable;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.structure.list.SList;
 import cc.unknown.value.Value;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Slider;
 import net.minecraftforge.common.MinecraftForge;
 
 public abstract class Module implements Accessor {
@@ -141,7 +141,7 @@ public abstract class Module implements Accessor {
         return true;
     }
 
-    public void correctValues(SliderValue min, SliderValue max) {
+    public void correctValues(Slider min, Slider max) {
 		float minValue = min.getValue();
 		float maxValue = max.getValue();
 

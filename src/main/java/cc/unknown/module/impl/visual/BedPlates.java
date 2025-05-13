@@ -22,8 +22,8 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.render.RenderUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.IBlockState;
@@ -45,10 +45,10 @@ public class BedPlates extends Module {
     private BlockPos[] bed = null;
     private Clock stopWatch = new Clock();
     
-    private final BoolValue firstBed = new BoolValue("RenderFirstBed", this, true);
-    private final BoolValue showDistance = new BoolValue("ShowDistance", this, true);
-    private final SliderValue range = new SliderValue("Range", this, 10, 2, 30);
-    private final SliderValue layers = new SliderValue("Layers", this, 3, 1, 10);
+    private final Bool firstBed = new Bool("RenderFirstBed", this, true);
+    private final Bool showDistance = new Bool("ShowDistance", this, true);
+    private final Slider range = new Slider("Range", this, 10, 2, 30);
+    private final Slider layers = new Slider("Layers", this, 3, 1, 10);
     
 	@SubscribeEvent
 	public void onPostTick(ClientTickEvent event) {

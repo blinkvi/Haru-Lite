@@ -8,29 +8,29 @@ import java.util.stream.Collectors;
 import cc.unknown.module.Module;
 import cc.unknown.value.Value;
 
-public class ModeValue extends Value {
+public class Mode extends Value {
     private int index;
     private final List<String> modes;
 
-    public ModeValue(String name, Module module, Supplier<Boolean> visible, String current, String... modes) {
+    public Mode(String name, Module module, Supplier<Boolean> visible, String current, String... modes) {
         super(name, module, visible);
         this.modes = Arrays.asList(modes);
         this.index = this.modes.indexOf(current);
     }
 
-    public ModeValue(String name, Module module, String current, String... modes) {
+    public Mode(String name, Module module, String current, String... modes) {
         super(name, module, () -> true);
         this.modes = Arrays.asList(modes);
         this.index = this.modes.indexOf(current);
     }
     
-    public ModeValue(String name, Module module, Enum<?> defaultMode, Enum<?>... enumModes) {
+    public Mode(String name, Module module, Enum<?> defaultMode, Enum<?>... enumModes) {
         super(name, module, () -> true);
         this.modes = Arrays.stream(enumModes).map(Enum::toString).collect(Collectors.toList());
         this.index = this.modes.indexOf(defaultMode.toString());
     }
 
-    public ModeValue(String name, Module module, Supplier<Boolean> visible, Enum<?> current, Enum<?>... enumModes) {
+    public Mode(String name, Module module, Supplier<Boolean> visible, Enum<?> current, Enum<?>... enumModes) {
         super(name, module, visible);
         this.modes = Arrays.stream(enumModes).map(Enum::toString).collect(Collectors.toList());
         this.index = this.modes.indexOf(current.toString());

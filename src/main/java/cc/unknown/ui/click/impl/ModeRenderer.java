@@ -3,13 +3,13 @@ package cc.unknown.ui.click.impl;
 import java.util.List;
 
 import cc.unknown.util.render.font.FontUtil;
-import cc.unknown.value.impl.ModeValue;
+import cc.unknown.value.impl.Mode;
 
 public class ModeRenderer extends Component {
 
-    private final ModeValue value;
+    private final Mode value;
 
-    public ModeRenderer(ModeValue value) {
+    public ModeRenderer(Mode value) {
         this.value = value;
         height = 11;
     }

@@ -11,9 +11,9 @@ import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.move.MoveUtil;
 import cc.unknown.util.player.move.RotationUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
@@ -29,14 +29,14 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @ModuleInfo(name = "Reach", description = "Sets the attack range.", category = Category.COMBAT)
 public class Reach extends Module {
 
-	private final SliderValue min = new SliderValue("Min", this, 3.1f, 2.9f, 6, 0.05f);
-	private final SliderValue max = new SliderValue("Min", this, 3.1f, 2.9f, 6, 0.05f);
-	private final SliderValue chance = new SliderValue("Chance", this, 1, 0, 1, 0.1f);
+	private final Slider min = new Slider("Min", this, 3.1f, 3, 6, 0.05f);
+	private final Slider max = new Slider("Min", this, 3.1f, 3, 6, 0.05f);
+	private final Slider chance = new Slider("Chance", this, 1, 0, 1, 0.1f);
 
-	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-			new BoolValue("WeaponOnly", false), 
-			new BoolValue("SprintOnly", false), 
-			new BoolValue("MoveOnly", false)));
+	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
+			new Bool("WeaponOnly", false), 
+			new Bool("SprintOnly", false), 
+			new Bool("MoveOnly", false)));
 
 	@Override
 	public void onEnable() {

@@ -1,14 +1,14 @@
-package cc.unknown.event.player;
+package cc.unknown.event.netty;
 import net.minecraft.network.Packet;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 @Cancelable
 @SuppressWarnings("rawtypes")
-public class InboundEvent extends Event {
+public class OutgoingEvent extends Event {
 	public Packet packet;
 
-	public InboundEvent(Packet packet) {
+	public OutgoingEvent(Packet packet) {
 		this.packet = packet;
 	}
 }

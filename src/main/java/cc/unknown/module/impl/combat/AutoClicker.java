@@ -14,10 +14,10 @@ import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.ModeValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.Mode;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.MovingObjectPosition;
@@ -30,15 +30,15 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @ModuleInfo(name = "AutoClicker", description = "Automatically clicks for you.", category = Category.COMBAT)
 public class AutoClicker extends Module {
 
-	private final ModeValue mode = new ModeValue("Mode", this, "Legit", "Legit", "Blatant");
-	private final SliderValue minCPS = new SliderValue("Min CPS", this, 9, 1, 25, 1);
-	private final SliderValue maxCPS = new SliderValue("Max CPS", this, 13, 1, 25, 1);
-	private final ModeValue randomize = new ModeValue("Randomize", this, "ButterFly", "ButterFly", "Jitter", "Drag");
+	private final Mode mode = new Mode("Mode", this, "Legit", "Legit", "Blatant");
+	private final Slider minCPS = new Slider("Min CPS", this, 9, 1, 25, 1);
+	private final Slider maxCPS = new Slider("Max CPS", this, 13, 1, 25, 1);
+	private final Mode randomize = new Mode("Randomize", this, "ButterFly", "ButterFly", "Jitter", "Drag");
 
-	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-			new BoolValue("Inventory", false),
-			new BoolValue("OnlyWeapon", false),
-			new BoolValue("BreakBlocks", false)));
+	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
+			new Bool("Inventory", false),
+			new Bool("OnlyWeapon", false),
+			new Bool("BreakBlocks", false)));
 
 	private final Random random = new Random();
 
@@ -190,7 +190,7 @@ public class AutoClicker extends Module {
 		return false;
 	}
 
-	private double ranModuleVal(SliderValue min, SliderValue max, Random r) {
+	private double ranModuleVal(Slider min, Slider max, Random r) {
 		return min.getValue() + r.nextDouble() * (max.getValue() - min.getValue());
 	}
 

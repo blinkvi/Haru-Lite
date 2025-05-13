@@ -6,7 +6,7 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.util.render.enums.RankType;
-import cc.unknown.value.impl.ModeValue;
+import cc.unknown.value.impl.Mode;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -14,8 +14,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "NameProtect", description = "Hide ur minecraft name", category = Category.VISUAL)
 public class NameProtect extends Module {
 
-	private final ModeValue mode = new ModeValue("Mode", this, "Universocraft", "Normal", "Universocraft");
-	private final ModeValue ranks = new ModeValue("Rank", this, () -> mode.is("Universocraft"), RankType.JUP, RankType.values());
+	private final Mode mode = new Mode("Mode", this, "Normal", "Normal", "Universocraft");
+	private final Mode ranks = new Mode("Rank", this, () -> mode.is("Universocraft"), RankType.JUP, RankType.values());
 
 	public String name = "";
 

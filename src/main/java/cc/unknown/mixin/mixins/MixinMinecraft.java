@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import cc.unknown.Haru;
-import cc.unknown.event.GameEvent;
+import cc.unknown.event.GameLoopEvent;
 import cc.unknown.event.player.AttackEvent;
 import cc.unknown.event.player.PlaceEvent;
 import cc.unknown.module.impl.combat.Piercing;
@@ -92,7 +92,6 @@ public abstract class MixinMinecraft {
 	@Shadow
 	public abstract ByteBuffer readImageToBuffer(InputStream imageStream) throws IOException;
 	
-
 	@Inject(method = "startGame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;ingameGUI:Lnet/minecraft/client/gui/GuiIngame;", shift = At.Shift.AFTER))
 	private void injectStartGame(CallbackInfo ci) {
 		Haru.instance.init();
@@ -105,7 +104,7 @@ public abstract class MixinMinecraft {
 
 	@Inject(method = "runGameLoop", at = @At(value = "INVOKE", target = "Lnet/minecraft/profiler/Profiler;startSection(Ljava/lang/String;)V", ordinal = 1))
 	private void loopEvent(CallbackInfo ci) {
-		MinecraftForge.EVENT_BUS.post(new GameEvent());
+		MinecraftForge.EVENT_BUS.post(new GameLoopEvent());
 	}
 
 	@Redirect(method = "runTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/EffectRenderer;updateEffects()V"))

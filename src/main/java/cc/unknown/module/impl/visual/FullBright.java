@@ -1,6 +1,6 @@
 package cc.unknown.module.impl.visual;
 
-import cc.unknown.event.GameEvent;
+import cc.unknown.event.GameLoopEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -22,7 +22,7 @@ public class FullBright extends Module {
     }
 
     @SubscribeEvent
-    public void onGame(GameEvent event) {
+    public void onGame(GameLoopEvent event) {
     	mc.gameSettings.gammaSetting = 100.0f;
     }
 }

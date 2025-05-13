@@ -11,52 +11,52 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.util.render.enums.StickersType;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.ColorValue;
-import cc.unknown.value.impl.ModeValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.Palette;
+import cc.unknown.value.impl.Mode;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 
 @ModuleInfo(name = "Interface", description = "Renders the client interface.", category = Category.VISUAL)
 public class Interface extends Module {
-	public final MultiBoolValue hideCategory = new MultiBoolValue("HideCategory", this, () -> this.elements.isEnabled("ArrayList"), Arrays.asList(
-			new BoolValue("Combat", false),
-			new BoolValue("Move", false),
-			new BoolValue("Utility", false),
-			new BoolValue("Visual", true)));
+	public final MultiBool hideCategory = new MultiBool("HideCategory", this, () -> this.elements.isEnabled("ArrayList"), Arrays.asList(
+			new Bool("Combat", false),
+			new Bool("Move", false),
+			new Bool("Utility", false),
+			new Bool("Visual", true)));
 	
-	public final MultiBoolValue elements = new MultiBoolValue("Elements", this, Arrays.asList(
-			new BoolValue("Watermark", true),
-			new BoolValue("Scoreboard", false),
-			new BoolValue("Stickers", false),
-			new BoolValue("IGN", false),
-			new BoolValue("FPS", false),
-			new BoolValue("Ping", false),
-			new BoolValue("CPS", true),
-			new BoolValue("PlayerPosition", false),
-			new BoolValue("ArrayList", true), 
-			new BoolValue("PotionStatus", false), 
-			new BoolValue("Inventory", false)));
+	public final MultiBool elements = new MultiBool("Elements", this, Arrays.asList(
+			new Bool("Watermark", true),
+			new Bool("Scoreboard", false),
+			new Bool("Stickers", false),
+			new Bool("IGN", false),
+			new Bool("FPS", false),
+			new Bool("Ping", false),
+			new Bool("CPS", true),
+			new Bool("PlayerPosition", false),
+			new Bool("ArrayList", true), 
+			new Bool("PotionStatus", false), 
+			new Bool("Inventory", false)));
 	
-	public final ModeValue stickersType = new ModeValue("Sticker", this, () -> this.elements.isEnabled("Stickers"), StickersType.UZAKI, StickersType.values());
-	public final ModeValue color = new ModeValue("ArraylistColor", this, () -> this.elements.isEnabled("ArrayList"), "Neon", "Fade", "Slinky", "Magic", "Neon", "Blaze", "Ghoul", "Static");
-	public final ColorValue mainColor = new ColorValue("MainColor", this, new Color(128, 128, 255), () -> color.is("Static") || color.is("Fade"));
-	public final ColorValue secondColor = new ColorValue("SecondColor", this, new Color(128, 255, 255), () -> color.is("Fade"));
-	public final SliderValue fadeSpeed = new SliderValue("FadeSpeed", this, 1, 1, 10, 1, () -> color.is("Fade"));
-	public final BoolValue shaders = new BoolValue("Shaders", this, true);
+	public final Mode stickersType = new Mode("Sticker", this, () -> this.elements.isEnabled("Stickers"), StickersType.UZAKI, StickersType.values());
+	public final Mode color = new Mode("ArraylistColor", this, () -> this.elements.isEnabled("ArrayList"), "Neon", "Fade", "Slinky", "Magic", "Neon", "Blaze", "Ghoul", "Static");
+	public final Palette mainColor = new Palette("MainColor", this, new Color(128, 128, 255), () -> color.is("Static") || color.is("Fade"));
+	public final Palette secondColor = new Palette("SecondColor", this, new Color(128, 255, 255), () -> color.is("Fade"));
+	public final Slider fadeSpeed = new Slider("FadeSpeed", this, 1, 1, 10, 1, () -> color.is("Fade"));
+	public final Bool shaders = new Bool("Shaders", this, false);
 	
-	public final SliderValue fontSize = new SliderValue("FontSize", this, 16, 6, 20, () -> this.elements.isEnabled("ArrayList"));
-	public final SliderValue textHeight = new SliderValue("FontHeight", this, 3, 0, 15, () -> this.elements.isEnabled("ArrayList"));
+	public final Slider fontSize = new Slider("FontSize", this, 17, 6, 20, () -> this.elements.isEnabled("ArrayList"));
+	public final Slider textHeight = new Slider("FontHeight", this, 3, 0, 15, () -> this.elements.isEnabled("ArrayList"));
 	
-	public final BoolValue background = new BoolValue("Background", this, true, () -> this.elements.isEnabled("ArrayList"));
-	private final ColorValue backgroundColor = new ColorValue("Color", this, new Color(0, 0, 0), background::get);
-	private final SliderValue backgroundAlpha = new SliderValue("BackgroundAlpha", this, 100, 1, 255, background::get);
+	public final Bool background = new Bool("Background", this, true, () -> this.elements.isEnabled("ArrayList"));
+	private final Palette backgroundColor = new Palette("Color", this, new Color(0, 0, 0), background::get);
+	private final Slider backgroundAlpha = new Slider("BackgroundAlpha", this, 100, 1, 255, background::get);
 		
-	public final BoolValue noRenderScoreboard = new BoolValue("NoRenderScoreboard", this, false, () -> this.elements.isEnabled("Scoreboard"));
-    public final BoolValue hideScoreRed = new BoolValue("HideRedPoints", this, true, () -> this.elements.isEnabled("Scoreboard"));
-    public final BoolValue fixHeight = new BoolValue("FixHeight", this, true, () -> this.elements.isEnabled("Scoreboard"));
-    public final BoolValue hideBackground = new BoolValue("HideBackground", this, true, () -> this.elements.isEnabled("Scoreboard"));
-    public final BoolValue antiStrike = new BoolValue("AntiStrike", this, true, () -> this.elements.isEnabled("Scoreboard"));
+	public final Bool noRenderScoreboard = new Bool("NoRenderScoreboard", this, false, () -> this.elements.isEnabled("Scoreboard"));
+    public final Bool hideScoreRed = new Bool("HideRedPoints", this, true, () -> this.elements.isEnabled("Scoreboard"));
+    public final Bool fixHeight = new Bool("FixHeight", this, true, () -> this.elements.isEnabled("Scoreboard"));
+    public final Bool hideBackground = new Bool("HideBackground", this, true, () -> this.elements.isEnabled("Scoreboard"));
+    public final Bool antiStrike = new Bool("AntiStrike", this, true, () -> this.elements.isEnabled("Scoreboard"));
     
 	private final Map<String, BiFunction<Integer, Integer, Integer>> COLOR_MODES = new HashMap<>();
 

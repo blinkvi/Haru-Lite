@@ -34,7 +34,6 @@ public final class ModuleManager extends SList<Module> {
         		AutoClicker.class,
         		Teams.class,
         		Reach.class,
-        		//HitBox.class,
         		Piercing.class,
         		MoreKB.class,
         		Velocity.class,
@@ -68,6 +67,7 @@ public final class ModuleManager extends SList<Module> {
                 // move
                 BridgeAssist.class,
                 NoJumpDelay.class,
+                NoFall.class,
                 NoClip.class,
         		NoSlow.class,
         		Sprint.class

@@ -9,11 +9,11 @@ import com.google.gson.JsonObject;
 
 import cc.unknown.Haru;
 import cc.unknown.util.render.client.ColorUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.ColorValue;
-import cc.unknown.value.impl.ModeValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.Palette;
+import cc.unknown.value.impl.Mode;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 
 public class Config extends Directory {
     public Config(String name) {
@@ -45,14 +45,14 @@ public class Config extends Directory {
                         if (valuesObject.has(value.getName())) {
                             JsonElement theValue = valuesObject.get(value.getName());
 
-                            if (value instanceof SliderValue) {
-                                ((SliderValue) value).setValue(theValue.getAsNumber().floatValue());
-                            } else if (value instanceof BoolValue) {
-                                ((BoolValue) value).set(theValue.getAsBoolean());
-                            } else if (value instanceof ModeValue) {
-                                ((ModeValue) value).set(theValue.getAsString());
-                            } else if (value instanceof MultiBoolValue) {
-                                MultiBoolValue multi = (MultiBoolValue) value;
+                            if (value instanceof Slider) {
+                                ((Slider) value).setValue(theValue.getAsNumber().floatValue());
+                            } else if (value instanceof Bool) {
+                                ((Bool) value).set(theValue.getAsBoolean());
+                            } else if (value instanceof Mode) {
+                                ((Mode) value).set(theValue.getAsString());
+                            } else if (value instanceof MultiBool) {
+                                MultiBool multi = (MultiBool) value;
                                 multi.getToggled().forEach(opt -> opt.set(false));
 
                                 if (!theValue.getAsString().isEmpty()) {
@@ -63,9 +63,9 @@ public class Config extends Directory {
                                                             .forEach(b -> b.set(true))
                                             );
                                 }
-                            } else if (value instanceof ColorValue) {
+                            } else if (value instanceof Palette) {
                                 JsonObject colorValues = theValue.getAsJsonObject();
-                                ((ColorValue) value).set(ColorUtil.applyOpacity(
+                                ((Palette) value).set(ColorUtil.applyOpacity(
                                         new Color(colorValues.get("rgb").getAsInt()),
                                         colorValues.get("alpha").getAsFloat()));
                             }
@@ -90,16 +90,16 @@ public class Config extends Directory {
             JsonObject valuesObject = new JsonObject();
 
             module.getValues().forEach(value -> {
-                if (value instanceof SliderValue) {
-                    valuesObject.addProperty(value.getName(), ((SliderValue) value).get());
-                } else if (value instanceof BoolValue) {
-                    valuesObject.addProperty(value.getName(), ((BoolValue) value).get());
-                } else if (value instanceof ModeValue) {
-                    valuesObject.addProperty(value.getName(), ((ModeValue) value).get());
-                } else if (value instanceof MultiBoolValue) {
-                    valuesObject.addProperty(value.getName(), ((MultiBoolValue) value).isEnabled());
-                } else if (value instanceof ColorValue) {
-                    ColorValue colorValue = (ColorValue) value;
+                if (value instanceof Slider) {
+                    valuesObject.addProperty(value.getName(), ((Slider) value).get());
+                } else if (value instanceof Bool) {
+                    valuesObject.addProperty(value.getName(), ((Bool) value).get());
+                } else if (value instanceof Mode) {
+                    valuesObject.addProperty(value.getName(), ((Mode) value).get());
+                } else if (value instanceof MultiBool) {
+                    valuesObject.addProperty(value.getName(), ((MultiBool) value).isEnabled());
+                } else if (value instanceof Palette) {
+                    Palette colorValue = (Palette) value;
                     JsonObject colorValues = new JsonObject();
                     colorValues.addProperty("rgb", Color.HSBtoRGB(colorValue.getHue(), colorValue.getSaturation(), colorValue.getBrightness()));
                     colorValues.addProperty("alpha", colorValue.getAlpha());

@@ -14,9 +14,9 @@ import cc.unknown.util.player.FriendUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.client.ColorUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -24,12 +24,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "ESP", description = "Renders an in-game ESP (Extra Sensory Perception) overlay.", category = Category.VISUAL)
 public class ESP extends Module {    
 
-    public final SliderValue skeletalWidth = new SliderValue("Width", this, 0.5f, 0.1f, 5f, 0.1f);
+    public final Slider skeletalWidth = new Slider("Width", this, 0.5f, 0.1f, 5f, 0.1f);
     
-	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-			new BoolValue("ColorTeams", true),
-			new BoolValue("ShowInvisibles", true),
-			new BoolValue("RedOnDamage", true)));
+	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
+			new Bool("ColorTeams", true),
+			new Bool("ShowInvisibles", true),
+			new Bool("RedOnDamage", true)));
 
     @SubscribeEvent
     public void onUpdatePlayerAngles(UpdatePlayerAnglesEvent event) {

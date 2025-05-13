@@ -1,27 +1,27 @@
 package cc.unknown.module.impl.utility;
 
-import cc.unknown.event.player.MoveInputEvent;
+import cc.unknown.event.player.PreMoveInputEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.network.PacketUtil;
 import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.player.InventoryUtil;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "AutoArmor", description = "", category = Category.UTILITY)
 public class AutoArmor extends Module {
-	private final SliderValue startDelay = new SliderValue("StartDelay", this, 1, 0, 10, 1);
-	private final SliderValue speed = new SliderValue("MouseSpeed", this, 1, 0, 10, 1);
+	private final Slider startDelay = new Slider("StartDelay", this, 1, 0, 10, 1);
+	private final Slider speed = new Slider("Speed", this, 1, 0, 10, 1);
 
 	private final Clock startTimer = new Clock();
 	private final Clock clock = new Clock();
 
 	@SubscribeEvent
-	public void onMoveInput(MoveInputEvent event) {
+	public void onMoveInput(PreMoveInputEvent event) {
 		if (mc.currentScreen == null) {
 			startTimer.reset();
 		}

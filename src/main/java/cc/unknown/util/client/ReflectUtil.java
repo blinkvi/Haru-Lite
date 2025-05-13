@@ -130,6 +130,11 @@ public class ReflectUtil implements Accessor {
     	setPrivateField(EntityPlayerSP.class, mc.thePlayer, block, "itemInUseCount", "field_71072_f");
     }
     
+    public static boolean setItemInUse(boolean blocking) {
+        setPrivateField(EntityPlayerSP.class, mc.thePlayer, blocking ? 1 : 0, "itemInUseCount", "field_71072_f");
+        return blocking;
+    }
+    
     public static Vec3 getVectorForRotation(float pitch, float yaw) {
         return (Vec3) getPrivateMethod(Entity.class, mc.thePlayer, float.class, float.class, pitch, yaw, "getVectorForRotation", "func_174806_f");
     }

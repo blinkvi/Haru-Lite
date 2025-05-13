@@ -3,6 +3,7 @@ package cc.unknown.mixin.mixins;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import cc.unknown.util.render.client.CameraUtil;
 import net.minecraft.block.Block;
@@ -38,6 +39,10 @@ public class MixinRenderManager {
 	public Entity livingPlayer;
 	@Shadow
 	public Entity pointedEntity;
+    @Unique
+    private float cachedPrevRotationPitch;
+    @Unique
+    private float cachedRotationPitch;
 
 	@Overwrite
 	public void cacheActiveRenderInfo(World worldIn, FontRenderer textRendererIn, Entity livingPlayerIn, Entity pointedEntityIn, GameSettings optionsIn, float partialTicks) {
@@ -72,5 +77,4 @@ public class MixinRenderManager {
 		this.viewerPosY = livingPlayerIn.lastTickPosY + (livingPlayerIn.posY - livingPlayerIn.lastTickPosY) * (double) partialTicks;
 		this.viewerPosZ = livingPlayerIn.lastTickPosZ + (livingPlayerIn.posZ - livingPlayerIn.lastTickPosZ) * (double) partialTicks;
 	}
-
 }

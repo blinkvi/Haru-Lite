@@ -5,14 +5,14 @@ import java.awt.Color;
 import cc.unknown.module.impl.visual.ClickGUI;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
-import cc.unknown.value.impl.BoolValue;
+import cc.unknown.value.impl.Bool;
 
 public class BooleanRenderer extends Component {
 
-    private final BoolValue value;
+    private final Bool value;
     private boolean expanded = false;
 
-    public BooleanRenderer(BoolValue value) {
+    public BooleanRenderer(Bool value) {
         this.value = value;
         height = 11;
     }

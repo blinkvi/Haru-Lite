@@ -11,6 +11,7 @@ import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.module.impl.visual.Interface;
 import cc.unknown.util.player.BlockUtil;
 import cc.unknown.util.player.InventoryUtil;
+import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.render.font.FontUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
@@ -85,8 +86,7 @@ public class NoClip extends Module {
 		SpoofHandler.startSpoofing(lastSlot);
 		
 		if (mc.thePlayer.rotationPitch >= 45 && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && mc.thePlayer.posY == mc.objectMouseOver.getBlockPos().up().getY()) {
-			mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, InventoryUtil.getItemStack(), mc.objectMouseOver.getBlockPos(), mc.objectMouseOver.sideHit, mc.objectMouseOver.hitVec);
-			mc.thePlayer.swingItem();
+			PlayerUtil.rightClick(true);
 		}
 	}
 

@@ -138,9 +138,9 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         boolean flag = event.isSprinting;
         if (flag != serverSprintState) {
             if (flag) {
-                sendQueue.addToSendQueue(new C0BPacketEntityAction((EntityPlayerSP) (Object) this, C0BPacketEntityAction.Action.START_SPRINTING));
+                sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.START_SPRINTING));
             } else {
-                sendQueue.addToSendQueue(new C0BPacketEntityAction((EntityPlayerSP) (Object) this, C0BPacketEntityAction.Action.STOP_SPRINTING));
+                sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.STOP_SPRINTING));
             }
 
             serverSprintState = flag;
@@ -149,9 +149,9 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
         boolean flag1 = event.isSneaking;
         if (flag1 != serverSneakState) {
             if (flag1) {
-                sendQueue.addToSendQueue(new C0BPacketEntityAction((EntityPlayerSP) (Object) this, C0BPacketEntityAction.Action.START_SNEAKING));
+                sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.START_SNEAKING));
             } else {
-                sendQueue.addToSendQueue(new C0BPacketEntityAction((EntityPlayerSP) (Object) this, C0BPacketEntityAction.Action.STOP_SNEAKING));
+                sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.STOP_SNEAKING));
             }
 
             serverSneakState = flag1;

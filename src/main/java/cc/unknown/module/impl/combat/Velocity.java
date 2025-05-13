@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import org.lwjgl.input.Keyboard;
 
-import cc.unknown.event.player.InboundEvent;
+import cc.unknown.event.netty.InboundEvent;
 import cc.unknown.event.player.PostVelocityEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
@@ -13,26 +13,26 @@ import cc.unknown.module.impl.move.NoClip;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.player.move.MoveUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.ModeValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.Mode;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "Velocity", description = "Modifies the knockback you get.", category = Category.COMBAT)
 public class Velocity extends Module {
-    private final ModeValue mode = new ModeValue("Mode", this, "Normal", "Jump", "Normal");
-    private final SliderValue horizontal = new SliderValue("Horizontal", this, 0.9f, 0, 1, 0.1f, () -> mode.is("Normal"));
-    private final SliderValue vertical = new SliderValue("Vertical", this, 1, 0, 1, 0.1f, () -> mode.is("Normal"));
-    private final SliderValue chance = new SliderValue("Chance", this, 1, 0, 1, 0.1f);
+    private final Mode mode = new Mode("Mode", this, "Normal", "Jump", "Normal");
+    private final Slider horizontal = new Slider("Horizontal", this, 0.9f, 0, 1, 0.1f, () -> mode.is("Normal"));
+    private final Slider vertical = new Slider("Vertical", this, 1, 0, 1, 0.1f, () -> mode.is("Normal"));
+    private final Slider chance = new Slider("Chance", this, 1, 0, 1, 0.1f);
     
-	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-			new BoolValue("LiquidCheck", true),
-			new BoolValue("OnlyTarget", true),
-			new BoolValue("OnlyMove", true),
-			new BoolValue("DisableOnPressS", true)));
+	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
+			new Bool("LiquidCheck", true),
+			new Bool("OnlyTarget", true),
+			new Bool("OnlyMove", true),
+			new Bool("DisableOnPressS", true)));
 
     @SubscribeEvent
     public void onPostVelocity(PostVelocityEvent event) {

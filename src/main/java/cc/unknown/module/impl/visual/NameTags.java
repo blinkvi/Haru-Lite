@@ -7,10 +7,10 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.render.font.FontUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.ModeValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.Mode;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,20 +26,20 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "NameTags", description = "Displays customizable nametags above players.", category = Category.VISUAL)
 public final class NameTags extends Module {
 	
-	private final ModeValue mode = new ModeValue("Font", this, "Default", "Smooth", "Normal", "Default");
-	private final SliderValue distance = new SliderValue("Distance", this, 2.4f, 1, 7, 0.1f);
-	private final SliderValue scale = new SliderValue("Scale", this, 2.4f, 0.1f, 10, 0.1f);
-	private final BoolValue shadow = new BoolValue("Shadow", this, true, () -> mode.is("Default"));
+	private final Mode mode = new Mode("Font", this, "Default", "Smooth", "Normal", "Default");
+	private final Slider distance = new Slider("Distance", this, 2.4f, 1, 7, 0.1f);
+	private final Slider scale = new Slider("Scale", this, 2.4f, 0.1f, 10, 0.1f);
+	private final Bool shadow = new Bool("Shadow", this, true, () -> mode.is("Default"));
 	
-	public final MultiBoolValue armor = new MultiBoolValue("Armor", this, Arrays.asList(
-			new BoolValue("Enchants", true),
-			new BoolValue("Durability", true),
-			new BoolValue("StackSize", true)));
+	public final MultiBool armor = new MultiBool("Armor", this, Arrays.asList(
+			new Bool("Enchants", true),
+			new Bool("Durability", true),
+			new Bool("StackSize", true)));
 	
-	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-			new BoolValue("ShowHealth", false),
-			new BoolValue("OnlyRenderName", false),
-			new BoolValue("ShowInvisibles", true)));
+	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
+			new Bool("ShowHealth", false),
+			new Bool("OnlyRenderName", false),
+			new Bool("ShowInvisibles", true)));
 	    
     @SubscribeEvent
     public void onRenderLiving(Pre<? extends EntityLivingBase> event) {

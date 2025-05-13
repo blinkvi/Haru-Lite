@@ -6,14 +6,14 @@ import org.lwjgl.input.Mouse;
 
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
-import cc.unknown.value.impl.ColorValue;
+import cc.unknown.value.impl.Palette;
 
 public class ColorRenderer extends Component {
 
-    private final ColorValue value;
+    private final Palette value;
     private boolean expanded;
 
-    public ColorRenderer(ColorValue value) {
+    public ColorRenderer(Palette value) {
         this.value = value;
         height = 11;
     }

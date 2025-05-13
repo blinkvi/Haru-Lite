@@ -12,27 +12,28 @@ import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemEnderPearl;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "FastPlace", description = "Autoclicker for rightclicking.", category = Category.UTILITY)
 public class FastPlace extends Module {
-    private final SliderValue cps = new SliderValue("CPS", this, 10, 1, 25);
-    private final SliderValue deltaCPS = new SliderValue("DeltaCPS", this, 2, 0, 20);
+    private final Slider cps = new Slider("CPS", this, 10, 1, 25);
+    private final Slider deltaCPS = new Slider("DeltaCPS", this, 2, 0, 20);
 
-    public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-            new BoolValue("OnlyBlocks", true),
-            new BoolValue("NoObsidian", true),
-            new BoolValue("Projectiles", false), 
-            new BoolValue("OnlyClick", true)));
+    public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
+            new Bool("OnlyBlocks", true),
+            new Bool("NoObsidian", true),
+            new Bool("Projectiles", false), 
+            new Bool("OnlyClick", true)));
 
     private final Clock stopWatch = new Clock();
     
@@ -57,6 +58,7 @@ public class FastPlace extends Module {
         if (conditionals.isEnabled("Projectiles") && InventoryUtil.getProjectiles()) return;
         if (conditionals.isEnabled("OnlyBlocks") && !InventoryUtil.getAnyBlock()) return;
         if (conditionals.isEnabled("NoObsidian") && BLACKLISTED_BLOCKS.contains(InventoryUtil.getBlock())) return;
+        if (InventoryUtil.getItem() instanceof ItemEnderPearl) return;
 
         boolean onlyClick = conditionals.isEnabled("OnlyClick");
         boolean rightClickHeld = mc.gameSettings.keyBindUseItem.isKeyDown();

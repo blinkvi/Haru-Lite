@@ -2,7 +2,7 @@ package cc.unknown.handlers;
 
 import java.util.List;
 
-import cc.unknown.event.player.InboundEvent;
+import cc.unknown.event.netty.InboundEvent;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.network.PacketUtil;
 import cc.unknown.util.player.move.MoveUtil;

@@ -5,7 +5,7 @@ import static cc.unknown.util.render.client.ColorUtil.reset;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import cc.unknown.event.player.InboundEvent;
+import cc.unknown.event.netty.InboundEvent;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.render.client.ChatUtil;
 import net.minecraft.network.Packet;

@@ -12,7 +12,7 @@ import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.music.RadioPlayer;
 import cc.unknown.util.render.client.ChatUtil;
 import cc.unknown.util.structure.list.SList;
-import cc.unknown.value.impl.ModeValue;
+import cc.unknown.value.impl.Mode;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;
@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @ModuleInfo(name = "MusicPlayer", description = "Time to listen to radio.", category = Category.VISUAL)
 public class Radio extends Module {
 	
-	private final ModeValue mode = new ModeValue("Mode", this, "Local", "Nightcore", "Phonk", "90s", "Depression", "Anime", "Rock", "Hct", "Wifer", "Local");
+	private final Mode mode = new Mode("Mode", this, "Local", "Nightcore", "Phonk", "90s", "Depression", "Anime", "Rock", "Hct", "Wifer", "Local");
 		
 	private boolean started = false;
 	   

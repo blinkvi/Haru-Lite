@@ -8,17 +8,17 @@ import java.util.stream.Collectors;
 import cc.unknown.module.Module;
 import cc.unknown.value.Value;
 
-public class MultiBoolValue extends Value {
-    private final List<BoolValue> options;
+public class MultiBool extends Value {
+    private final List<Bool> options;
     private int index;
 
-    public MultiBoolValue(String name, Module module, Supplier<Boolean> visible, List<BoolValue> options) {
+    public MultiBool(String name, Module module, Supplier<Boolean> visible, List<Bool> options) {
         super(name, module, visible);
         this.options = new ArrayList<>(options);
         this.index = options.size();
     }
 
-    public MultiBoolValue(String name, Module module, List<BoolValue> options) {
+    public MultiBool(String name, Module module, List<Bool> options) {
         super(name, module, () -> true);
         this.options = new ArrayList<>(options);
         this.index = options.size();
@@ -28,7 +28,7 @@ public class MultiBoolValue extends Value {
         return this.options.stream()
             .filter(option -> option.getName().equalsIgnoreCase(name))
             .findFirst()
-            .map(BoolValue::get)
+            .map(Bool::get)
             .orElse(false);
     }
 
@@ -39,16 +39,16 @@ public class MultiBoolValue extends Value {
             .ifPresent(option -> option.set(value));
     }
 
-    public List<BoolValue> getToggled() {
+    public List<Bool> getToggled() {
         return this.options.stream()
-            .filter(BoolValue::get)
+            .filter(Bool::get)
             .collect(Collectors.toList());
     }
 
     public String isEnabled() {
         return this.options.stream()
-            .filter(BoolValue::get)
-            .map(BoolValue::getName)
+            .filter(Bool::get)
+            .map(Bool::getName)
             .collect(Collectors.joining(", "));
     }
 
@@ -62,7 +62,7 @@ public class MultiBoolValue extends Value {
         return index >= 0 && index < options.size() && this.options.get(index).get();
     }
 
-    public List<BoolValue> getValues() {
+    public List<Bool> getValues() {
         return this.options;
     }
 
@@ -74,7 +74,7 @@ public class MultiBoolValue extends Value {
 		this.index = index;
 	}
 
-	public List<BoolValue> getOptions() {
+	public List<Bool> getOptions() {
 		return options;
 	}
 }

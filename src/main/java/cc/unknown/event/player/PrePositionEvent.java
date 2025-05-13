@@ -19,4 +19,5 @@ public class PrePositionEvent extends Event {
 		this.isSprinting = isSprinting;
 		this.isSneaking = isSneaking;
 	}
+
 }

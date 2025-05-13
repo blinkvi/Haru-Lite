@@ -14,10 +14,10 @@ import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.player.move.RotationUtil;
 import cc.unknown.util.structure.vectors.Vec3;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.ModeValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.Mode;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -30,30 +30,30 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @ModuleInfo(name = "AimAssist", description = "Assists with aiming at opponents in a legitimate manner.", category = Category.COMBAT)
 public class AimAssist extends Module {
 
-	private final ModeValue mode = new ModeValue("Mode", this, "Regular", "Regular", "Lock");
+	private final Mode mode = new Mode("Mode", this, "Regular", "Regular", "Lock");
 	
-	private final SliderValue hSpeed = new SliderValue("HorizontalSpeed", this, 3.4f, 0.1f, 20, 0.01f, () -> mode.is("Regular"));
-	private final SliderValue hMult  = new SliderValue("HorizontalMult",  this, 3.5f, 0.1f, 20, 0.01f, () -> mode.is("Regular"));
+	private final Slider hSpeed = new Slider("HorizontalSpeed", this, 3.4f, 0.1f, 20, 0.01f, () -> mode.is("Regular"));
+	private final Slider hMult  = new Slider("HorizontalMult",  this, 3.5f, 0.1f, 20, 0.01f, () -> mode.is("Regular"));
 	
-	private BoolValue vertical = new BoolValue("Vertical", this, false);
-	private SliderValue vSpeed = new SliderValue("VerticalSpeed", this, 2.1f, 0.1f, 20, 0.01f, () -> mode.is("Regular") && vertical.get());
-	private SliderValue vMult = new SliderValue("VerticalMult", this, 2.3f, 0.1f, 20, 0.01f, () -> mode.is("Regular") && vertical.get());
+	private Bool vertical = new Bool("Vertical", this, false);
+	private Slider vSpeed = new Slider("VerticalSpeed", this, 2.1f, 0.1f, 20, 0.01f, () -> mode.is("Regular") && vertical.get());
+	private Slider vMult = new Slider("VerticalMult", this, 2.3f, 0.1f, 20, 0.01f, () -> mode.is("Regular") && vertical.get());
 	
-	private final SliderValue angle = new SliderValue("Angle", this, 180, 0, 180, 1);
-	private final SliderValue distance = new SliderValue("Distance", this, 4f, 1f, 8f, 0.1f);
+	private final Slider angle = new Slider("Angle", this, 180, 0, 180, 1);
+	private final Slider distance = new Slider("Distance", this, 4f, 1f, 8f, 0.1f);
 
-	private final ModeValue speedMode = new ModeValue("Speed", this, () -> mode.is("Regular"), "Random", "Random", "Secure", "Gaussian");
+	private final Mode speedMode = new Mode("Speed", this, () -> mode.is("Regular"), "Random", "Random", "Secure", "Gaussian");
 	
-	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-			new BoolValue("MultiPoint", false),
-			new BoolValue("RequireClicking", true),
-			new BoolValue("LockTarget", false),
-			new BoolValue("IgnoreFriends", false),
-			new BoolValue("IgnoreInvisibles", false),
-			new BoolValue("VisibilityCheck", true),
-			new BoolValue("MouseOverEntity", false),
-			new BoolValue("CheckBlockBreak", false),
-			new BoolValue("WeaponsOnly", false)));
+	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
+			new Bool("MultiPoint", false),
+			new Bool("RequireClicking", true),
+			new Bool("LockTarget", false),
+			new Bool("IgnoreFriends", false),
+			new Bool("IgnoreInvisibles", false),
+			new Bool("VisibilityCheck", true),
+			new Bool("MouseOverEntity", false),
+			new Bool("CheckBlockBreak", false),
+			new Bool("WeaponsOnly", false)));
 	
 	private final Set<EntityPlayer> lockedTargets = new HashSet<>();
 	private final Clock clock = new Clock();

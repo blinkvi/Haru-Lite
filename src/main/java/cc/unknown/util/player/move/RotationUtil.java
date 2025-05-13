@@ -22,6 +22,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 public class RotationUtil implements Accessor {
+
 	public static float getAngleDifference(float a, float b) {
 		return MathHelper.wrapAngleTo180_float(a - b);
 	}

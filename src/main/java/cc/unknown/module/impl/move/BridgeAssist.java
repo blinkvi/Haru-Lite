@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 import org.lwjgl.input.Keyboard;
 
-import cc.unknown.event.player.MoveInputEvent;
+import cc.unknown.event.player.PreMoveInputEvent;
 import cc.unknown.event.player.PlaceEvent;
 import cc.unknown.event.player.PreUpdateEvent;
 import cc.unknown.module.Module;
@@ -15,9 +15,9 @@ import cc.unknown.module.impl.utility.AutoTool;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.structure.vectors.Vector2d;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.WorldSettings;
@@ -27,14 +27,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "BridgeAssist", description = "Automatically sneaks for you when you are near the edge of a block.", category = Category.MOVE)	
 public class BridgeAssist extends Module {
     
-	private final SliderValue edge = new SliderValue("Edge", this, 0.15f, 0.01f, 0.30f, 0.01f);
+	private final Slider edge = new Slider("Edge", this, 0.15f, 0.01f, 0.30f, 0.01f);
     
-	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-			new BoolValue("RequireSneak", false),
-			new BoolValue("BlockSwitching", false),
-			new BoolValue("SneakOnJump", false),
-			new BoolValue("OnlyBlocks", true),
-			new BoolValue("OnlyBackwards", false)));
+	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
+			new Bool("RequireSneak", false),
+			new Bool("BlockSwitching", false),
+			new Bool("SneakOnJump", false),
+			new Bool("OnlyBlocks", true),
+			new Bool("OnlyBackwards", false)));
 
     private boolean shouldBridge = false, isShifting = false;
     private int slot;
@@ -50,7 +50,7 @@ public class BridgeAssist extends Module {
     }
     
     @SubscribeEvent
-    public void onMoveInput(MoveInputEvent event) {
+    public void onMoveInput(PreMoveInputEvent event) {
     	if (isShifting && shouldBridge) event.sneak = true;
     	if (!isShifting && shouldBridge) event.sneak = false;
     }

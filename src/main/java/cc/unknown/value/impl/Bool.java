@@ -5,20 +5,20 @@ import java.util.function.Supplier;
 import cc.unknown.module.Module;
 import cc.unknown.value.Value;
 
-public class BoolValue extends Value {
+public class Bool extends Value {
     private boolean value;
 
-    public BoolValue(String name, Module module, boolean value, Supplier<Boolean> visible) {
+    public Bool(String name, Module module, boolean value, Supplier<Boolean> visible) {
         super(name, module, visible);
         this.value = value;
     }
 
-    public BoolValue(String name, Module module, boolean value) {
+    public Bool(String name, Module module, boolean value) {
         super(name, module, () -> true);
         this.value = value;
     }
 
-    public BoolValue(String name, boolean value) {
+    public Bool(String name, boolean value) {
         super(name, null, () -> true);
         this.value = value;
     }

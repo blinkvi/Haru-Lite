@@ -9,11 +9,11 @@ import cc.unknown.module.impl.visual.ClickGUI;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontRenderer;
 import cc.unknown.util.render.font.FontUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.ColorValue;
-import cc.unknown.value.impl.ModeValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.Palette;
+import cc.unknown.value.impl.Mode;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 
 public class ModuleRenderer extends Component {
     public float x, y, width, height;
@@ -24,16 +24,16 @@ public class ModuleRenderer extends Component {
         this.module = module;
         module.getValues().stream()
         .forEach(value -> {
-            if (value instanceof BoolValue) {
-                values.add(new BooleanRenderer((BoolValue) value));
-            } else if (value instanceof ColorValue) {
-                values.add(new ColorRenderer((ColorValue) value));
-            } else if (value instanceof SliderValue) {
-                values.add(new SliderRenderer((SliderValue) value));
-            } else if (value instanceof ModeValue) {
-                values.add(new ModeRenderer((ModeValue) value));
-            } else if (value instanceof MultiBoolValue) {
-                values.add(new MultiBooleanRenderer((MultiBoolValue) value));
+            if (value instanceof Bool) {
+                values.add(new BooleanRenderer((Bool) value));
+            } else if (value instanceof Palette) {
+                values.add(new ColorRenderer((Palette) value));
+            } else if (value instanceof Slider) {
+                values.add(new SliderRenderer((Slider) value));
+            } else if (value instanceof Mode) {
+                values.add(new ModeRenderer((Mode) value));
+            } else if (value instanceof MultiBool) {
+                values.add(new MultiBooleanRenderer((MultiBool) value));
             }
         });
     }

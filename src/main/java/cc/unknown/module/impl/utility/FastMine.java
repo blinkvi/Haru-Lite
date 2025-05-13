@@ -7,9 +7,9 @@ import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.ReflectUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.item.ItemStack;
@@ -23,14 +23,14 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @ModuleInfo(name = "FastMine", description = "Increases the speed at which blocks can be broken.", category = Category.UTILITY)
 public class FastMine extends Module {
 	
-	private final SliderValue ticks = new SliderValue("Ticks", this, 1, 1, 50);
+	private final Slider ticks = new Slider("Ticks", this, 1, 1, 50);
 
-	public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-			new BoolValue("BlockHitDelay", true),
-			new BoolValue("Instant", false),
-			new BoolValue("IgnoreUnbreakable", false),
-			new BoolValue("IgnoreBeds", false),
-			new BoolValue("OnlyTools", false)
+	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
+			new Bool("BlockHitDelay", true),
+			new Bool("Instant", false),
+			new Bool("IgnoreUnbreakable", false),
+			new Bool("IgnoreBeds", false),
+			new Bool("OnlyTools", false)
 	));
 
 	@SubscribeEvent

@@ -6,13 +6,13 @@ import cc.unknown.module.Module;
 import cc.unknown.value.Value;
 import net.minecraft.util.MathHelper;
 
-public class SliderValue extends Value {
+public class Slider extends Value {
     private float value;
     private float min;
     private float max;
     private float increment;
 
-    public SliderValue(String name, Module module, float value, float min, float max, float increment, Supplier<Boolean> visible) {
+    public Slider(String name, Module module, float value, float min, float max, float increment, Supplier<Boolean> visible) {
         super(name, module, visible);
         this.value = value;
         this.min = min;
@@ -20,7 +20,7 @@ public class SliderValue extends Value {
         this.increment = increment;
     }
 
-    public SliderValue(String name, Module module, float value, float min, float max, Supplier<Boolean> visible) {
+    public Slider(String name, Module module, float value, float min, float max, Supplier<Boolean> visible) {
         super(name, module, visible);
         this.value = value;
         this.min = min;
@@ -28,7 +28,7 @@ public class SliderValue extends Value {
         this.increment = 1;
     }
 
-    public SliderValue(String name, Module module, float value, float min, float max, float increment) {
+    public Slider(String name, Module module, float value, float min, float max, float increment) {
         super(name, module, () -> true);
         this.value = value;
         this.min = min;
@@ -36,7 +36,7 @@ public class SliderValue extends Value {
         this.increment = increment;
     }
 
-    public SliderValue(String name, Module module, float value, float min, float max) {
+    public Slider(String name, Module module, float value, float min, float max) {
         super(name, module, () -> true);
         this.value = value;
         this.min = min;

@@ -9,9 +9,9 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.player.InventoryUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.MultiBoolValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -20,13 +20,13 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @ModuleInfo(name = "AutoTool", description = "Automatically selects the best tool or weapon from the player's inventory breaking blocks or attacking.", category = Category.UTILITY)
 public class AutoTool extends Module {
 
-    private final SliderValue delay = new SliderValue("Ticks", this, 0, 0, 10, 1);
+    private final Slider delay = new Slider("Ticks", this, 0, 0, 10, 1);
     
-    public final MultiBoolValue conditionals = new MultiBoolValue("Conditionals", this, Arrays.asList(
-            new BoolValue("SpoofSlot", true),
-            new BoolValue("SwitchBack", true),
-            new BoolValue("AutoSword", true),
-            new BoolValue("RequireSneak", false)
+    public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
+            new Bool("SpoofSlot", true),
+            new Bool("SwitchBack", true),
+            new Bool("AutoSword", true),
+            new Bool("RequireSneak", false)
     ));
 
     private int oldSlot;

@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-import cc.unknown.event.player.InboundEvent;
+import cc.unknown.event.netty.InboundEvent;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.network.PacketUtil;
 import net.minecraft.network.Packet;

@@ -3,7 +3,7 @@ package cc.unknown.handlers;
 import java.util.Arrays;
 
 import cc.unknown.Haru;
-import cc.unknown.event.player.OutgoingEvent;
+import cc.unknown.event.netty.OutgoingEvent;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 

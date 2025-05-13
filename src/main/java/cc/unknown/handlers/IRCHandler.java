@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import org.apache.commons.lang3.StringUtils;
 
 import cc.unknown.Haru;
-import cc.unknown.event.player.OutgoingEvent;
+import cc.unknown.event.netty.OutgoingEvent;
 import cc.unknown.socket.impl.IRCSocket;
 import cc.unknown.util.Accessor;
 import net.minecraft.network.play.client.C01PacketChatMessage;

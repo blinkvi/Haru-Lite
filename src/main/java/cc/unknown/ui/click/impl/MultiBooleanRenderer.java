@@ -5,15 +5,15 @@ import java.awt.Color;
 import cc.unknown.module.impl.visual.ClickGUI;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.MultiBoolValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.MultiBool;
 
 public class MultiBooleanRenderer extends Component {
 
-    private final MultiBoolValue value;
+    private final MultiBool value;
     private boolean expanded;
 
-    public MultiBooleanRenderer(MultiBoolValue value) {
+    public MultiBooleanRenderer(MultiBool value) {
         this.value = value;
     }
 
@@ -28,7 +28,7 @@ public class MultiBooleanRenderer extends Component {
         FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawCenteredString(value.getName() + "...", x + 50F, y + 4F, -1);
 
         if (expanded) {
-            for (BoolValue boolValue : value.getValues()) {
+            for (Bool boolValue : value.getValues()) {
                 offset += 11;
 
                 FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawString(boolValue.getName(), x + 5F, y + 4F + offset, -1);
@@ -60,7 +60,7 @@ public class MultiBooleanRenderer extends Component {
         }
 
         if (expanded) {
-            for (BoolValue boolValue : value.getValues()) {
+            for (Bool boolValue : value.getValues()) {
                 offset += 11;
                 if (isHovered(x, y + offset, width, 10, mouseX, mouseY)) {
                     if (mouseButton == 0) {

@@ -29,17 +29,16 @@ public class ClientHandler implements Accessor {
 	public static long rightClickTimer = 0L;
 	
 	@SubscribeEvent
-	public void onPreTick(ClientTickEvent event) {
+	public void onClientTick(ClientTickEvent event) {
 		if (!isInGame()) return;
 
 		if (event.phase == Phase.START && mc.currentScreen instanceof DropGui) {
-			moveKeys.stream()
-				.forEach(bind -> {
-					int keyCode = bind.getKeyCode();
-					boolean isPressed = GameSettings.isKeyDown(bind);
-					KeyBinding.setKeyBindState(keyCode, isPressed);
-				});
-		}
+			moveKeys.stream().forEach(bind -> {
+				int keyCode = bind.getKeyCode();
+				boolean isPressed = GameSettings.isKeyDown(bind);
+				KeyBinding.setKeyBindState(keyCode, isPressed);
+			});
+		}	
 	}
 	
 	@SubscribeEvent
@@ -47,25 +46,19 @@ public class ClientHandler implements Accessor {
 		int key = Keyboard.getEventKey();
 
 		if (key != Keyboard.CHAR_NONE && Keyboard.getEventKeyState()) {
-			Haru.instance.getModuleManager().getModules().stream()
-				.filter(module -> module.getKeyBind() == key)
-				.findFirst()
-				.ifPresent(module -> {
-					if (module instanceof FreeLook) {
-						if (!module.isEnabled()) {
-							module.toggle();
-						}
-					} else {
-						if (!Keyboard.isRepeatEvent()) {
-							module.toggle();
-						}
+			Haru.instance.getModuleManager().getModules().stream().filter(module -> module.getKeyBind() == key).findFirst().ifPresent(module -> {
+				if (module instanceof FreeLook) {
+					if (!module.isEnabled()) {
+						module.toggle();
 					}
-				});
+				} else {
+					if (!Keyboard.isRepeatEvent()) {
+						module.toggle();
+					}
+				}
+			});
 		} else if (key != Keyboard.CHAR_NONE && !Keyboard.getEventKeyState()) {
-			Haru.instance.getModuleManager().getModules().stream()
-				.filter(module -> module instanceof FreeLook && module.getKeyBind() == key && module.isEnabled())
-				.findFirst()
-				.ifPresent(Module::toggle);
+			Haru.instance.getModuleManager().getModules().stream().filter(module -> module instanceof FreeLook && module.getKeyBind() == key && module.isEnabled()).findFirst().ifPresent(Module::toggle);
 		}
 	}
 	

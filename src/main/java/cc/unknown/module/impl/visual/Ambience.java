@@ -1,11 +1,11 @@
 package cc.unknown.module.impl.visual;
 
-import cc.unknown.event.player.InboundEvent;
+import cc.unknown.event.netty.InboundEvent;
 import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S03PacketTimeUpdate;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 @ModuleInfo(name = "Ambience", description = "Change the time.", category = Category.VISUAL)
 public class Ambience extends Module {
 
-	private final SliderValue time = new SliderValue("Time", this, 0, 0, 1, 0.01f);
+	private final Slider time = new Slider("Time", this, 0, 0, 1, 0.01f);
 	
 	@Override
 	public void onDisable() {

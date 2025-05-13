@@ -1,5 +1,5 @@
 package cc.unknown.module.impl.move;
-import cc.unknown.event.player.OutgoingEvent;
+import cc.unknown.event.netty.OutgoingEvent;
 import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.event.player.SlowDownEvent;
 import cc.unknown.module.Module;
@@ -8,9 +8,9 @@ import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.network.NetworkUtil;
 import cc.unknown.util.client.network.PacketUtil;
 import cc.unknown.util.player.InventoryUtil;
-import cc.unknown.value.impl.BoolValue;
-import cc.unknown.value.impl.ModeValue;
-import cc.unknown.value.impl.SliderValue;
+import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.Mode;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.item.ItemBow;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
@@ -20,9 +20,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "NoSlow", description = "Prevents or reduces the slowdown effect caused by certain actions.", category = Category.MOVE)
 public class NoSlow extends Module {
 	
-	private final ModeValue mode = new ModeValue("Mode", this, "Regular", "Regular", "NoItemRelease");
-	private final SliderValue speed = new SliderValue("Speed", this, 1f, 0.2f, 1f, 0.1f, () -> mode.is("Regular"));
-	private final BoolValue easterEgg = new BoolValue("Intrusive", this, false, () -> mode.is("Regular") && NetworkUtil.isServer("universocraft.com"));
+	private final Mode mode = new Mode("Mode", this, "Regular", "Regular", "NoItemRelease");
+	private final Slider speed = new Slider("Speed", this, 1f, 0.2f, 1f, 0.1f, () -> mode.is("Regular"));
+	private final Bool easterEgg = new Bool("Intrusive", this, false, () -> mode.is("Regular") && NetworkUtil.isServer("universocraft.com"));
 	
 	@Override
 	public void onEnable() {

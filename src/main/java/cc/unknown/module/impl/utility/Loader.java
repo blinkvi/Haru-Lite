@@ -10,15 +10,15 @@ import cc.unknown.util.client.dll.LoaderUtil;
 import cc.unknown.util.client.network.NetworkUtil;
 import cc.unknown.util.render.client.ChatUtil;
 import cc.unknown.util.render.client.ColorUtil;
-import cc.unknown.value.impl.BoolValue;
+import cc.unknown.value.impl.Bool;
 
 @ModuleInfo(name = "Loader", description = "Inject sliky or vape (debug enabled)", category = Category.UTILITY)
 public class Loader extends Module {
     
     private static final String[] REQUIRED_DLLS = {"slinky_library.dll", "slinkyhook.dll", "vape.dll"};
 
-    private BoolValue vape = new BoolValue("Vape DLL", this, false);
-    private BoolValue slinky = new BoolValue("Slinky DLL", this, false);
+    private Bool vape = new Bool("Vape DLL", this, false);
+    private Bool slinky = new Bool("Slinky DLL", this, false);
 
     @Override
     public void onEnable() {

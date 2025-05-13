@@ -7,7 +7,7 @@ import cc.unknown.module.Module;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.value.Value;
 
-public class ColorValue extends Value {
+public class Palette extends Value {
     private float hue = 0;
     private float saturation = 1;
     private float brightness = 1;
@@ -45,12 +45,12 @@ public class ColorValue extends Value {
 		this.alpha = alpha;
 	}
 
-	public ColorValue(String name, Module module, Color color, Supplier<Boolean> visible) {
+	public Palette(String name, Module module, Color color, Supplier<Boolean> visible) {
         super(name, module, visible);
         set(color);
     }
 
-    public ColorValue(String name, Module module, Color color) {
+    public Palette(String name, Module module, Color color) {
         super(name, module, () -> true);
         set(color);
     }
