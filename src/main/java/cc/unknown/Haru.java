@@ -69,6 +69,7 @@ public class Haru {
     
     private final DiscordHandler discordHandler = new DiscordHandler();
     private final List<Object> registeredHandlers = Collections.synchronizedList(new ArrayList<>());
+    private final List<Object> registeredManagers = Collections.synchronizedList(new ArrayList<>());
     public final static ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(4);
     private final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Minecraft mc = Minecraft.getMinecraft();
@@ -89,6 +90,7 @@ public class Haru {
         createDirectories();
         
         FontUtil.initializeFonts();
+        
         optimizeMinecraft();
         initializeManagers();
         registerHandlers();
@@ -107,21 +109,9 @@ public class Haru {
         logger.info("Client Terminated.");
     }
 
-    private void register(Object... handlers) {
-        Arrays.stream(handlers).forEach(handler -> {
-            try {
-                registeredHandlers.add(handler);
-                MinecraftForge.EVENT_BUS.register(handler);
-                logger.info(handler.getClass().getSimpleName() + " registered.");
-            } catch (Exception e) {
-                logger.error("Failed to register handler: " + handler.getClass().getSimpleName(), e);
-            }
-        });
-    }
-
     private void registerHandlers() {
         logger.info("Initializing handlers...");
-        register(
+        objects(
             new SpoofHandler(),
             new AutoJoinHandler(),
             new TransactionHandler(),
@@ -133,8 +123,6 @@ public class Haru {
             new CosmeticHandler(),
             new ClientHandler()
         );
-
-        logger.info("Handlers registered.");
     }
 
     private void initializeManagers() {
@@ -147,13 +135,15 @@ public class Haru {
         dragManager = new DragManager();
         cosmeticManager = new CosmeticManager();
         dropGui = new DropGui();
+        
+        objects(moduleManager, cmdManager, cfgManager, positionManager, dragManager, cosmeticManager);
 
+        logger.info("Managers registered.");
+        
         cosmeticManager.init();
         positionManager.init();
         cfgManager.init();
         cmdManager.init();
-
-        logger.info("Managers registered.");
     }
 
     private void optimizeMinecraft() {
@@ -182,18 +172,36 @@ public class Haru {
     }
     
     public void createDirectories() {
-    	Stream.of(MAIN_DIR, DLL_DIR, CFG_DIR, DRAG_DIR, CS_DIR)
-        .filter(Objects::nonNull)
-        .map(File::toPath)
-        .forEach(dir -> {
+        Stream.of(MAIN_DIR, DLL_DIR, CFG_DIR, DRAG_DIR, CS_DIR).filter(Objects::nonNull).map(File::toPath).forEach(dir -> {
+        	boolean existedBefore = Files.exists(dir);
+        	try {
+        		Files.createDirectories(dir);
+        		if (existedBefore) {
+        			logger.info("Already created: " + dir.toFile().getName());
+        		} else {
+        			logger.info("Creating: " + dir.toFile().getName());
+        		}
+        	} catch (IOException e) {
+        		logger.error("Failed to create directory " + dir + ": " + e.getMessage(), e);
+        	}
+        });
+    }
+    
+    private void objects(Object... objects) {
+        Arrays.stream(objects).forEach(obj -> {
             try {
-                Files.createDirectories(dir);
-            } catch (IOException e) {
-                logger.error("Failed to create directory " + dir + ": " + e.getMessage(), e);
+                if (obj.getClass().getSimpleName().contains("Handler")) {
+                    registeredHandlers.add(obj);
+                    MinecraftForge.EVENT_BUS.register(obj);
+                    logger.info(obj.getClass().getSimpleName() + " registered.");
+                } else {
+                    registeredManagers.add(obj);
+                    logger.info(obj.getClass().getSimpleName() + " registered.");
+                }
+            } catch (Exception e) {
+                logger.error("Failed to register: " + obj.getClass().getSimpleName(), e);
             }
         });
-
-        logger.info("All directories were created successfully (or already existed).");
     }
 
 	public ModuleManager getModuleManager() {

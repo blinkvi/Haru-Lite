@@ -7,12 +7,14 @@ import java.util.Arrays;
 import cc.unknown.util.Accessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.util.Session;
@@ -112,6 +114,10 @@ public class ReflectUtil implements Accessor {
     
     public static boolean isServerSprintState() {
     	return getPrivateField(EntityPlayerSP.class, mc.thePlayer, "serverSprintState", "field_175171_bO");
+    }
+    
+    public static IInventory isLowerChestInventory() {
+    	return getPrivateField(GuiChest.class, ((GuiChest) mc.currentScreen), "lowerChestInventory", "field_147015_w");
     }
     
     public static void setYawC03(C03PacketPlayer packet, float flot) {

@@ -32,7 +32,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Implementation for {@link net.dv8tion.jda.api.hooks.IEventManager IEventManager}
- * which checks for {@link net.dv8tion.jda.api.hooks.SubscribeEvent SubscribeEvent} annotations on both
+ * which checks for {@link net.dv8tion.jda.api.hooks.JDAEvent SubscribeEvent} annotations on both
  * <b>static</b> and <b>member</b> methods.
  *
  * <p>Listeners for this manager do <u>not</u> need to implement {@link net.dv8tion.jda.api.hooks.EventListener EventListener}
@@ -50,7 +50,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @see net.dv8tion.jda.api.hooks.InterfacedEventManager
  * @see net.dv8tion.jda.api.hooks.IEventManager
- * @see net.dv8tion.jda.api.hooks.SubscribeEvent
+ * @see net.dv8tion.jda.api.hooks.JDAEvent
  */
 public class AnnotatedEventManager implements IEventManager
 {
@@ -144,7 +144,7 @@ public class AnnotatedEventManager implements IEventManager
         Method[] allMethods = c.getDeclaredMethods();
         for (Method m : allMethods)
         {
-            if (!m.isAnnotationPresent(SubscribeEvent.class))
+            if (!m.isAnnotationPresent(JDAEvent.class))
                 continue;
             //Skip member methods if listener is a Class
             if (isClass && !Modifier.isStatic(m.getModifiers()))
@@ -153,7 +153,7 @@ public class AnnotatedEventManager implements IEventManager
             final Class<?>[] parameterTypes = m.getParameterTypes();
             if (parameterTypes.length != 1 || !GenericEvent.class.isAssignableFrom(parameterTypes[0]))
             {
-                LOGGER.warn("Method '{}' annotated with @{} must have at most 1 parameter, which implements GenericEvent", m, SubscribeEvent.class.getSimpleName());
+                LOGGER.warn("Method '{}' annotated with @{} must have at most 1 parameter, which implements GenericEvent", m, JDAEvent.class.getSimpleName());
                 continue;
             }
 

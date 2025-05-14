@@ -29,7 +29,7 @@ public class IRCHandler implements Accessor {
     
     public IRCHandler() {
     	irc.init();
-    	Haru.instance.getLogger().info("IRC initialized.");
+    	Haru.instance.getLogger().info("IRCHandler registered.");
     }
     
     @SubscribeEvent(priority = EventPriority.LOW)
