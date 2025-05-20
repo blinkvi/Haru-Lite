@@ -44,6 +44,7 @@ public final class ModuleManager extends SList<Module> {
         		Blink.class,
         		AutoArmor.class,
                 Loader.class,
+                PingSpoof.class,
                 AutoGame.class,
                 FastPlace.class,
                 ChestStealer.class,

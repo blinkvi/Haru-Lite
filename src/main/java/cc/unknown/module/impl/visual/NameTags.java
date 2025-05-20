@@ -207,7 +207,7 @@ public final class NameTags extends Module {
 	}
 	
 	private float getSize(EntityPlayer player) {
-		return Math.max(mc.thePlayer.getDistanceToEntity(player) / 4.0F, distance.getValue());
+		return (float) Math.max(mc.thePlayer.getDistanceToEntity(player) / 4.0F, distance.getValue());
 	}
 
 	private String getEnchantmentAbbreviated(int id) {

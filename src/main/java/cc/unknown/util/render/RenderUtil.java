@@ -98,6 +98,10 @@ public final class RenderUtil implements Accessor {
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
 	}
+	
+	public static void drawRect(double left, double top, double width, double height, Color color) {
+		drawRect(left, top, width, height, color.getRGB());
+	}
 
 	public static void drawRect(float left, float top, float width, float height, Color color) {
 		drawRect(left, top, width, height, color.getRGB());

@@ -1,14 +1,16 @@
 package cc.unknown.cosmetics.impl.wings;
 
+import static cc.unknown.util.render.WingsUtil.SCALE;
+import static cc.unknown.util.render.WingsUtil.centreOffset;
+import static cc.unknown.util.render.WingsUtil.getWingAngle;
+import static cc.unknown.util.render.WingsUtil.setRotation;
+import static cc.unknown.util.render.WingsUtil.wingScale;
+
 import org.lwjgl.opengl.GL11;
-import static cc.unknown.util.render.WingsUtil.*;
 
 import cc.unknown.cosmetics.CosmeticController;
-import cc.unknown.file.cosmetics.SuperCosmetic;
-import cc.unknown.socket.impl.CosmeticSocket;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.render.enums.CosmeticType;
-import cc.unknown.util.render.enums.WingsType;
 import cc.unknown.util.structure.vectors.Vector3d;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
@@ -17,7 +19,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.WorldSettings;
 
 @SuppressWarnings("unused")
 public class MechWings extends ModelBase implements LayerRenderer<AbstractClientPlayer>, Accessor {
@@ -49,67 +50,64 @@ public class MechWings extends ModelBase implements LayerRenderer<AbstractClient
 	@Override
 	public void doRenderLayer(AbstractClientPlayer entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks,float p_177141_5_, float p_177141_6_, float p_177141_7_, float scalee) {
 	    if (!entitylivingbaseIn.isInvisible() &&
-	        CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.WINGS)) {
+	        CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.WINGS, "Mech")) {
+            float angle = getWingAngle(entitylivingbaseIn, 40, 8000, 500);
 
-	        if (isWings(entitylivingbaseIn.getName()).equalsIgnoreCase("Mech")) {
-	            float angle = getWingAngle(entitylivingbaseIn, 40, 8000, 500);
+            setRotation(leftWing, new Vector3d(Math.toRadians(angle + 20), Math.toRadians(-4), Math.toRadians(6)));
+            setRotation(rightWing, new Vector3d(Math.toRadians(-angle - 20), Math.toRadians(4), Math.toRadians(6)));
 
-	            setRotation(leftWing, new Vector3d(Math.toRadians(angle + 20), Math.toRadians(-4), Math.toRadians(6)));
-	            setRotation(rightWing, new Vector3d(Math.toRadians(-angle - 20), Math.toRadians(4), Math.toRadians(6)));
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0, 4 * SCALE, 1.5F * SCALE);
+            GL11.glRotatef(90, 0, 1, 0);
+            GL11.glRotatef(90, 0, 0, 1);
 
-	            GL11.glPushMatrix();
-	            GL11.glTranslatef(0, 4 * SCALE, 1.5F * SCALE);
-	            GL11.glRotatef(90, 0, 1, 0);
-	            GL11.glRotatef(90, 0, 0, 1);
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0, 0, centreOffset * 3 * SCALE);
+            GL11.glScalef(wingScale, wingScale, wingScale);
 
-	            GL11.glPushMatrix();
-	            GL11.glTranslatef(0, 0, centreOffset * 3 * SCALE);
-	            GL11.glScalef(wingScale, wingScale, wingScale);
+            for (int i = 0; i < wingsImage.length; i++) {
+                mc.getTextureManager().bindTexture(wingsImage[i]);
 
-	            for (int i = 0; i < wingsImage.length; i++) {
-	                mc.getTextureManager().bindTexture(wingsImage[i]);
+                if (i == 1) {
+                    GlStateManager.enableBlend();
+                    GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+                    GlStateManager.color(1F, 1F, 1F, 0.75F);
+                }
 
-	                if (i == 1) {
-	                    GlStateManager.enableBlend();
-	                    GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-	                    GlStateManager.color(1F, 1F, 1F, 0.75F);
-	                }
+                leftWing.render(SCALE);
 
-	                leftWing.render(SCALE);
+                if (i == 1) {
+                    GlStateManager.disableBlend();
+                    GlStateManager.color(1F, 1F, 1F, 1F);
+                }
+            }
 
-	                if (i == 1) {
-	                    GlStateManager.disableBlend();
-	                    GlStateManager.color(1F, 1F, 1F, 1F);
-	                }
-	            }
+            GL11.glPopMatrix();
 
-	            GL11.glPopMatrix();
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0, 0, -centreOffset * 3 * SCALE);
+            GL11.glScalef(wingScale, wingScale, wingScale);
 
-	            GL11.glPushMatrix();
-	            GL11.glTranslatef(0, 0, -centreOffset * 3 * SCALE);
-	            GL11.glScalef(wingScale, wingScale, wingScale);
+            for (int i = 0; i < wingsImage.length; i++) {
+                mc.getTextureManager().bindTexture(wingsImage[i]);
 
-	            for (int i = 0; i < wingsImage.length; i++) {
-	                mc.getTextureManager().bindTexture(wingsImage[i]);
+                if (i == 1) { // glow layer
+                    GlStateManager.enableBlend();
+                    GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+                    GlStateManager.color(1F, 1F, 1F, 0.75F);
+                }
 
-	                if (i == 1) { // glow layer
-	                    GlStateManager.enableBlend();
-	                    GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-	                    GlStateManager.color(1F, 1F, 1F, 0.75F);
-	                }
+                rightWing.render(SCALE);
 
-	                rightWing.render(SCALE);
+                if (i == 1) {
+                    GlStateManager.disableBlend();
+                    GlStateManager.color(1F, 1F, 1F, 1F);
+                }
+            }
 
-	                if (i == 1) {
-	                    GlStateManager.disableBlend();
-	                    GlStateManager.color(1F, 1F, 1F, 1F);
-	                }
-	            }
+            GL11.glPopMatrix();
 
-	            GL11.glPopMatrix();
-
-	            GL11.glPopMatrix();
-	        }
+            GL11.glPopMatrix();
 	    }
 	}
 

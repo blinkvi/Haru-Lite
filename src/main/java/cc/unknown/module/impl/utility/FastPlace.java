@@ -75,8 +75,8 @@ public class FastPlace extends Module {
 
 
     public int getRandomizedCPS() {
-        int baseCPS = Math.round(cps.getValue());
-        int delta = Math.min(Math.round(deltaCPS.getValue()), 20);
+        int baseCPS = (int) Math.round(cps.getValue());
+        int delta = (int) Math.min(Math.round(deltaCPS.getValue()), 20);
         int minCPS = Math.max(1, baseCPS - delta);
         int maxCPS = baseCPS + delta;
         return ThreadLocalRandom.current().nextInt(minCPS, maxCPS + 1);

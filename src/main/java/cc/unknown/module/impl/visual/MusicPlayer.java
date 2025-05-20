@@ -7,7 +7,7 @@ import javax.management.Notification;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.music.radio.RadioUtil;
+import cc.unknown.util.client.music.RadioUtil;
 import cc.unknown.util.render.client.ChatUtil;
 import cc.unknown.value.impl.Mode;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;

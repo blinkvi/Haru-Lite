@@ -16,57 +16,70 @@ import net.minecraft.client.gui.GuiSelectWorld;
 public class DiscordHandler implements Accessor {
 	private final String joinSecret = UUID.randomUUID().toString();
 	private final String spectateSecret = UUID.randomUUID().toString();
+	private static boolean initialized = false;
 	
 	public static boolean running = true;
 	private long timeElapsed = 0;
 	private DiscordEventHandlers handlers = new DiscordEventHandlers();
 
 	public void start() {
-	    this.timeElapsed = System.currentTimeMillis();
-	    NameProtect protect = getModule(NameProtect.class);
+	    if (initialized) return;
 
-	    DiscordRPC.discordInitialize("1362856733151854854", handlers, true);
+	    try {
+	        this.timeElapsed = System.currentTimeMillis();
+	        NameProtect protect = getModule(NameProtect.class);
 
-		new Thread("Discord RPC Callback") {
-			@Override
-			public void run() {
-				while (running) {
-					if (mc.thePlayer != null) {
-						if (mc.isSingleplayer()) {
-							updateStatus("", "Practicing godlike movement.");
-						} else if (ServerUtil.isConnectedToKnownServer(mc.getCurrentServerData().serverIP)) {
-							updateStatus("User: " + (protect.isEnabled() ? protect.checkName() : Haru.getUser()),
-						             "Cheating on " + ServerUtil.serverName);
-						} else if (mc.currentScreen instanceof GuiDownloadTerrain) {
-							updateStatus("Loading world...", "Hope you didn't just crash.");
-						}
-					} else {
-						if (mc.currentScreen instanceof GuiSelectWorld) {
-							updateStatus("Browsing worlds...", "");
-						} else if (mc.currentScreen instanceof GuiMultiplayer) {
-							updateStatus("Looking for a server...", "");
-						} else if (mc.currentScreen instanceof GuiDownloadTerrain) {
-							updateStatus("Loading world...", "Hopefully not stuck in limbo.");
-						} else {
-							updateStatus("In MainMenu...", "Touching grass...");
-						}
-					}
+	        DiscordRPC.discordInitialize("1362856733151854854", handlers, true);
+	        initialized = true;
 
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
-						break;
-					}
-					DiscordRPC.discordRunCallbacks();
-				}
-			}
-		}.start();
+	        new Thread("Discord RPC Callback") {
+	            @Override
+	            public void run() {
+	                while (running) {
+	                    if (mc.thePlayer != null) {
+	                        if (mc.isSingleplayer()) {
+	                            updateStatus("", "Practicing godlike movement.");
+	                        } else if (ServerUtil.isConnectedToKnownServer(mc.getCurrentServerData().serverIP)) {
+	                            updateStatus("User: " + (protect.isEnabled() ? protect.checkName() : Haru.getUser()),
+	                                         "Cheating on " + ServerUtil.serverName);
+	                        } else if (mc.currentScreen instanceof GuiDownloadTerrain) {
+	                            updateStatus("Loading world...", "Hope you didn't just crash.");
+	                        }
+	                    } else {
+	                        if (mc.currentScreen instanceof GuiSelectWorld) {
+	                            updateStatus("Browsing worlds...", "");
+	                        } else if (mc.currentScreen instanceof GuiMultiplayer) {
+	                            updateStatus("Looking for a server...", "");
+	                        } else if (mc.currentScreen instanceof GuiDownloadTerrain) {
+	                            updateStatus("Loading world...", "Hopefully not stuck in limbo.");
+	                        } else {
+	                            updateStatus("In MainMenu...", "Touching grass...");
+	                        }
+	                    }
+
+	                    try {
+	                        Thread.sleep(1000);
+	                    } catch (InterruptedException e) {
+	                        Thread.currentThread().interrupt();
+	                        break;
+	                    }
+	                    DiscordRPC.discordRunCallbacks();
+	                }
+	            }
+	        }.start();
+
+	    } catch (UnsatisfiedLinkError e) {
+	        System.err.println("Discord RPC already loaded in another classloader. Skipping initialization.");
+	        e.printStackTrace();
+	    }
 	}
 
 	public void stop() {
-		running = false;
-		DiscordRPC.discordShutdown();
+	    if (!initialized) return;
+
+	    running = false;
+	    DiscordRPC.discordShutdown();
+	    initialized = false;
 	}
 
 	public void updateStatus(String line1, String line2) {

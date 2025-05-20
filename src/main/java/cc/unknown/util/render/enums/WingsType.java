@@ -8,7 +8,6 @@ public enum WingsType {
 	METAL("Metal", "metal.png"),
 	KUROYUKIHIME("Kuroyukihime", "kuroyukihime.png"),
 	MECH("Mech", ""),
-	SMALLMECH("SmallMech", ""),
 	NONE("None", "");
 	
     private final String name;

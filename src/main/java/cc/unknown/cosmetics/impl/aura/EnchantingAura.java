@@ -25,10 +25,8 @@ public class EnchantingAura extends CosmeticBase {
 
 	@Override
 	public void render(AbstractClientPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		if (CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.AURA) && entitylivingbaseIn == mc.thePlayer && !entitylivingbaseIn.isInvisible()) {
-		    if (isAura(entitylivingbaseIn.getName()).equalsIgnoreCase("Enchanting")) {
-		    	this.createEnchantGlint(entitylivingbaseIn, renderPlayer.getMainModel(), limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-		    }
+		if (CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.AURA, "Enchanting") && entitylivingbaseIn == mc.thePlayer && !entitylivingbaseIn.isInvisible()) {
+			this.createEnchantGlint(entitylivingbaseIn, renderPlayer.getMainModel(), limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		}
 	}
 

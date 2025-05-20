@@ -77,8 +77,8 @@ public class DropGui extends GuiScreen {
         if (sticker != StickersType.NONE) {
         	RenderUtil.image(new ResourceLocation(
         			sticker.getImagePath()),
-        			(int) 2 / sr.getScaledWidth() + gui.width.getValue(), 
-        			(int) 2 / sr.getScaledHeight() + gui.height.getValue(), (int) sticker.getWidth(), (int) sticker.getHeight());
+        			(int) 2 / sr.getScaledWidth() + (float) gui.width.getValue(), 
+        			(int) 2 / sr.getScaledHeight() + (float) gui.height.getValue(), (int) sticker.getWidth(), (int) sticker.getHeight());
         }
 
         windows.forEach(window -> window.drawScreen(mouseX, mouseY));

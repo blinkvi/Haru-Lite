@@ -22,10 +22,8 @@ import com.google.gson.GsonBuilder;
 import cc.unknown.handlers.AutoJoinHandler;
 import cc.unknown.handlers.ClientHandler;
 import cc.unknown.handlers.CommandHandler;
-import cc.unknown.handlers.CosmeticHandler;
 import cc.unknown.handlers.DiscordHandler;
 import cc.unknown.handlers.DragHandler;
-import cc.unknown.handlers.IRCHandler;
 import cc.unknown.handlers.PacketHandler;
 import cc.unknown.handlers.ShaderHandler;
 import cc.unknown.handlers.SpoofHandler;
@@ -36,7 +34,6 @@ import cc.unknown.managers.CosmeticManager;
 import cc.unknown.managers.DragManager;
 import cc.unknown.managers.ModuleManager;
 import cc.unknown.managers.PositionManager;
-import cc.unknown.socket.WebSocketCore;
 import cc.unknown.ui.click.DropGui;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.system.CustomLogger;
@@ -63,7 +60,6 @@ public class Haru {
     private DragManager dragManager;
     
     private DropGui dropGui;
-    private WebSocketCore webSocket;
     
     private final CustomLogger logger = new CustomLogger();
     
@@ -118,9 +114,7 @@ public class Haru {
             new ShaderHandler(),
             new DragHandler(),
             new PacketHandler(),
-            new IRCHandler(),
             new CommandHandler(),
-            new CosmeticHandler(),
             new ClientHandler()
         );
     }
@@ -167,8 +161,15 @@ public class Haru {
     }
 
     private void startDiscordPresence() {
-        discordHandler.start();
-        logger.info("Rich Presence initialized.");
+        try {
+            discordHandler.start();
+            logger.info("Rich Presence initialized.");
+        } catch (UnsatisfiedLinkError e) {
+            logger.warn("Skipping Rich Presence initialization.");
+            e.printStackTrace();
+        } catch (Throwable t) {
+            logger.error("Unexpected error.", t);
+        }
     }
     
     public void createDirectories() {
@@ -230,10 +231,6 @@ public class Haru {
 
 	public DropGui getDropGui() {
 		return dropGui;
-	}
-
-	public WebSocketCore getWebSocket() {
-		return webSocket;
 	}
 
 	public CustomLogger getLogger() {

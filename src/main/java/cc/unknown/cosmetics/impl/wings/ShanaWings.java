@@ -9,8 +9,6 @@ import static cc.unknown.util.render.WingsUtil.wingScale;
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.cosmetics.CosmeticController;
-import cc.unknown.file.cosmetics.SuperCosmetic;
-import cc.unknown.socket.impl.CosmeticSocket;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.render.enums.CosmeticType;
 import cc.unknown.util.render.enums.WingsType;
@@ -47,36 +45,33 @@ public class ShanaWings extends ModelBase implements LayerRenderer<AbstractClien
 	@Override
 	public void doRenderLayer(AbstractClientPlayer entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scalee) {
 	    if (!entitylivingbaseIn.isInvisible() &&
-	        CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.WINGS)) {
+	        CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.WINGS, "Shana")) {
+            float angle = getWingAngle(entitylivingbaseIn, 30, 5000, 400);
 
-	        if (isWings(entitylivingbaseIn.getName()).equalsIgnoreCase("Shana")) {
-	            float angle = getWingAngle(entitylivingbaseIn, 30, 5000, 400);
+            setRotation(leftWing, new Vector3d(Math.toRadians(angle + 20), Math.toRadians(-4), Math.toRadians(6)));
+            setRotation(rightWing, new Vector3d(Math.toRadians(-angle - 20), Math.toRadians(4), Math.toRadians(6)));
 
-	            setRotation(leftWing, new Vector3d(Math.toRadians(angle + 20), Math.toRadians(-4), Math.toRadians(6)));
-	            setRotation(rightWing, new Vector3d(Math.toRadians(-angle - 20), Math.toRadians(4), Math.toRadians(6)));
-
-	            GL11.glPushMatrix();
-	            GL11.glTranslatef(0, 4 * SCALE, 1.5F * SCALE);
-	            GL11.glRotatef(90, 0, 1, 0);
-	            GL11.glRotatef(90, 0, 0, 1);
-	            String imagePath = WingsType.SHANA.getImagePath();					
-	            mc.getTextureManager().bindTexture(new ResourceLocation(imagePath));
-	            GL11.glColor3f(1.0f, 1.0f, 1.0f);
-	            
-	            GL11.glPushMatrix();
-	            GL11.glTranslatef(0, 0, centreOffset * 3 * SCALE);
-	            GL11.glScalef(wingScale, wingScale, wingScale);
-	            leftWing.render(SCALE);
-	            GL11.glPopMatrix();
-	            
-	            GL11.glPushMatrix();
-	            GL11.glTranslatef(0, 0, -centreOffset * 3 * SCALE);
-	            GL11.glScalef(wingScale, wingScale, wingScale);
-	            rightWing.render(SCALE);
-	            GL11.glPopMatrix();
-	            
-	            GL11.glPopMatrix();
-	        }
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0, 4 * SCALE, 1.5F * SCALE);
+            GL11.glRotatef(90, 0, 1, 0);
+            GL11.glRotatef(90, 0, 0, 1);
+            String imagePath = WingsType.SHANA.getImagePath();					
+            mc.getTextureManager().bindTexture(new ResourceLocation(imagePath));
+            GL11.glColor3f(1.0f, 1.0f, 1.0f);
+            
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0, 0, centreOffset * 3 * SCALE);
+            GL11.glScalef(wingScale, wingScale, wingScale);
+            leftWing.render(SCALE);
+            GL11.glPopMatrix();
+            
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0, 0, -centreOffset * 3 * SCALE);
+            GL11.glScalef(wingScale, wingScale, wingScale);
+            rightWing.render(SCALE);
+            GL11.glPopMatrix();
+            
+            GL11.glPopMatrix();
 	    }
 	}
 

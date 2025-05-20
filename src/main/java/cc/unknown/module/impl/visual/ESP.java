@@ -47,7 +47,7 @@ public class ESP extends Module {
             int color = getPlayerColor(player);
             
             glPushMatrix();
-            RenderUtil.setupRenderState(new Color(color), skeletalWidth.getValue());
+            RenderUtil.setupRenderState(new Color(color), (float) skeletalWidth.getValue());
             RenderUtil.drawSkeleton(player, partialTicks);
             RenderUtil.restoreRenderState();
             glPopMatrix();

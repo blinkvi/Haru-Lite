@@ -26,10 +26,10 @@ public final class ClickGUI extends Module {
 	
 	public final MultiBool pref = new MultiBool("Preferences", this, Arrays.asList(
 			new Bool("HideElementsInGui", true),
-			new Bool("RoundedOutline", false),
-			new Bool("RoundedButtons", false),
-			new Bool("Shaders", false),
-			new Bool("ToolTips", true)));
+			new Bool("RoundedOutline", true),
+			new Bool("RoundedButtons", true),
+			new Bool("Shaders", true),
+			new Bool("ToolTips", false)));
 	
 	public final Slider alpha = new Slider("AlphaBackground", this, 120, 20, 190, 10);
 	

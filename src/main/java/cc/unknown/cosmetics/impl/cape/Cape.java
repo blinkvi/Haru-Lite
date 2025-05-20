@@ -1,7 +1,9 @@
 package cc.unknown.cosmetics.impl.cape;
 
+import cc.unknown.Haru;
 import cc.unknown.cosmetics.CosmeticBase;
 import cc.unknown.cosmetics.CosmeticController;
+import cc.unknown.module.impl.visual.Cosmetics;
 import cc.unknown.util.render.enums.CosmeticType;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,12 +21,15 @@ public class Cape extends CosmeticBase {
     }
 
 	@Override
-	public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {		
-		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.CAPE) && !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE)) {
+	public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+	    Cosmetics cosmetics = Haru.instance.getModuleManager().getModule(Cosmetics.class);
+	    String activeCape = cosmetics.capeType.getMode();
+
+	    if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.CAPE, activeCape) &&
+	        !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE) && player == mc.thePlayer) {
+	        
 	        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-	        
-	        String activeCape = isCape(player.getName());
-	        
+
 	        switch (activeCape) {
 	            case "Japan":
 	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/japan.png"));
@@ -36,7 +41,8 @@ public class Cape extends CosmeticBase {
 	                renderPlayer.bindTexture(new ResourceLocation("haru/cape/eyes.png"));
 	                break;
 	            case "None":
-	            default: break;
+	            default:
+	                return;
 	        }
 
 	        GlStateManager.pushMatrix();
@@ -52,18 +58,13 @@ public class Cape extends CosmeticBase {
 	        float f2 = (float) (d0 * d3 + d2 * d4) * 100.0F;
 	        float f3 = (float) (d0 * d4 - d2 * d3) * 100.0F;
 
-	        if (f2 < 0.0F) {
-	            f2 = 0.0F;
-	        }
+	        if (f2 < 0.0F) f2 = 0.0F;
 
 	        float f4 = player.prevCameraYaw + (player.cameraYaw - player.prevCameraYaw) * partialTicks;
 	        f1 = f1 + MathHelper.sin((player.prevDistanceWalkedModified + (player.distanceWalkedModified - player.prevDistanceWalkedModified) * partialTicks) * 6.0F) * 32.0F * f4;
 
 	        if (player.isSneaking()) {
 	            f1 += 25.0F;
-	        }
-
-	        if (player.isSneaking()) {
 	            GlStateManager.translate(0.0F, 0.142F, -0.0178F);
 	        }
 

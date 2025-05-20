@@ -92,7 +92,7 @@ public class MathUtil implements Accessor {
         return num == Math.floor(num);
     }
 
-    public static boolean chanceApply(float value) {
+    public static boolean chanceApply(double value) {
         return randomInt(0, 100) < (value * 100);
     }
 

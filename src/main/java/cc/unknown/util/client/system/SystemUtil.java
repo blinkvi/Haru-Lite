@@ -57,7 +57,7 @@ public class SystemUtil implements Accessor {
     }
     
     public static boolean checkFirstStart() {
-        String content = "[Haru] Init Sound";
+        String content = "[Haru] Sound";
         
         File soundDir = new File(Haru.MAIN_DIR, "sound");
         File soundFile = new File(soundDir, "sound.txt");

@@ -22,30 +22,28 @@ public class OrbitAura extends CosmeticBase {
 
     @Override
     public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.AURA) && !player.isInvisible()) {
-        	if (isAura(player.getName()).equalsIgnoreCase("Orbit")) {
-	        	GlStateManager.pushMatrix();
-	            String imagePath = AuraType.ORBIT.getImagePath();
-	            playerRenderer.bindTexture(new ResourceLocation(imagePath));
-	            float time = player.ticksExisted + partialTicks;
-	            int skullCount = 3;
-	            for (int i = 0; i < skullCount; i++) {
-	                GlStateManager.pushMatrix();
-	                
-	                double angle = ((double) i / skullCount) * 2.0 * Math.PI;
-	                double xOffset = Math.cos(time * 0.05 + angle) * 0.8;
-	                double zOffset = Math.sin(time * 0.05 + angle) * 0.8;
-	                double yOffset = Math.sin(time * 0.1) * 0.2;
-	                
-	                GlStateManager.translate(xOffset, 0.5 + yOffset, zOffset);
-	                GlStateManager.rotate((float) Math.toDegrees(time * 0.3 + angle), 0, 1, 0);
-	                
-	                this.skullModel.render(player, limbSwing, limbSwingAmount, ageInTicks, headPitch, headPitch, scale);
-	                
-	                GlStateManager.popMatrix();
-	            }
-	            GlStateManager.popMatrix();
-        	}
+        if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.AURA, "Orbit") && !player.isInvisible() && player == mc.thePlayer) {
+        	GlStateManager.pushMatrix();
+            String imagePath = AuraType.ORBIT.getImagePath();
+            playerRenderer.bindTexture(new ResourceLocation(imagePath));
+            float time = player.ticksExisted + partialTicks;
+            int skullCount = 3;
+            for (int i = 0; i < skullCount; i++) {
+                GlStateManager.pushMatrix();
+                
+                double angle = ((double) i / skullCount) * 2.0 * Math.PI;
+                double xOffset = Math.cos(time * 0.05 + angle) * 0.8;
+                double zOffset = Math.sin(time * 0.05 + angle) * 0.8;
+                double yOffset = Math.sin(time * 0.1) * 0.2;
+                
+                GlStateManager.translate(xOffset, 0.5 + yOffset, zOffset);
+                GlStateManager.rotate((float) Math.toDegrees(time * 0.3 + angle), 0, 1, 0);
+                
+                this.skullModel.render(player, limbSwing, limbSwingAmount, ageInTicks, headPitch, headPitch, scale);
+                
+                GlStateManager.popMatrix();
+            }
+            GlStateManager.popMatrix();
         }
     }
 

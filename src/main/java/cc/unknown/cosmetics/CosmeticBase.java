@@ -1,7 +1,5 @@
 package cc.unknown.cosmetics;
 
-import cc.unknown.file.cosmetics.SuperCosmetic;
-import cc.unknown.socket.impl.CosmeticSocket;
 import cc.unknown.util.Accessor;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -28,29 +26,5 @@ public abstract class CosmeticBase implements LayerRenderer<AbstractClientPlayer
 	@Override
 	public boolean shouldCombineTextures() {
 		return false;
-	}
-
-	public String isAccessories(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getAccesories).filter(accessories -> !accessories.equalsIgnoreCase("None")).findFirst().orElse("None");
-	}
-
-	public String isAura(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getAura).filter(aura -> !aura.equalsIgnoreCase("None")).findFirst().orElse("None");
-	}
-
-	public String isCape(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getCape).filter(cape -> !cape.equalsIgnoreCase("None")).findFirst().orElse("None");
-	}
-
-	public String isHat(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getHat).filter(hat -> !hat.equalsIgnoreCase("None")).findFirst().orElse("None");
-	}
-
-	public String isPet(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getPet).filter(pet -> !pet.equalsIgnoreCase("None")).findFirst().orElse("None");
-	}
-	
-	public String isHalo(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getHalo).filter(halo -> !halo.equalsIgnoreCase("None")).findFirst().orElse("None");
 	}
 }

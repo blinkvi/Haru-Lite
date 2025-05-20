@@ -49,8 +49,8 @@ public class NoSlow extends Module {
 	public void onSlowDown(SlowDownEvent event) {
 	    if (mc.thePlayer.moveForward != 0.0F || mc.thePlayer.moveStrafing != 0.0F) {
 	        event.sprint = true;
-	        event.forwardMultiplier = mode.is("Regular") ? speed.getValue() : 1.0f;
-	        event.strafeMultiplier = mode.is("Regular") ? speed.getValue() : 1.0f;
+	        event.forwardMultiplier = (float) (mode.is("Regular") ? speed.getValue() : 1.0f);
+	        event.strafeMultiplier = (float) (mode.is("Regular") ? speed.getValue() : 1.0f);
 	    }
 	}
 	

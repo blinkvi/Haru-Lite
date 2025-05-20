@@ -26,23 +26,21 @@ public class WitchHat extends CosmeticBase {
 
 	@Override
 	public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.HAT) && !player.isInvisible()) {
-			if (isHat(player.getName()).equalsIgnoreCase("Witch")) {
-				GL11.glPushMatrix();
-				if (player.isSneaking()) GlStateManager.translate(0, 0.262, 0);
-				GlStateManager.rotate(netHeadYaw, 0.0F, 1.0F, 0.0F);
-				GlStateManager.rotate(headPitch, 1.0F, 0.0F, 0.0F);
-				GlStateManager.translate(-0.3125, -0.55, -0.3125);
-	            String imagePath = HatType.WITCH.getImagePath();
-				playerRenderer.bindTexture(new ResourceLocation(imagePath));
-				this.hatModel.render((Entity) player, limbSwing, limbSwingAmount, ageInTicks, headPitch, headPitch, scale);
-				GL11.glColor3d(1, 1, 1);
-				float[] color = CosmeticController.getTophatColor(player);
-				GL11.glColor3f(color[0], color[1], color[2]);
-				hatModel.render(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-				GL11.glColor3f(1, 1, 1);
-				GlStateManager.popMatrix();
-			}
+		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.HAT, "Witch") && !player.isInvisible() && player == mc.thePlayer) {
+			GL11.glPushMatrix();
+			if (player.isSneaking()) GlStateManager.translate(0, 0.262, 0);
+			GlStateManager.rotate(netHeadYaw, 0.0F, 1.0F, 0.0F);
+			GlStateManager.rotate(headPitch, 1.0F, 0.0F, 0.0F);
+			GlStateManager.translate(-0.3125, -0.55, -0.3125);
+            String imagePath = HatType.WITCH.getImagePath();
+			playerRenderer.bindTexture(new ResourceLocation(imagePath));
+			this.hatModel.render((Entity) player, limbSwing, limbSwingAmount, ageInTicks, headPitch, headPitch, scale);
+			GL11.glColor3d(1, 1, 1);
+			float[] color = CosmeticController.getTophatColor(player);
+			GL11.glColor3f(color[0], color[1], color[2]);
+			hatModel.render(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+			GL11.glColor3f(1, 1, 1);
+			GlStateManager.popMatrix();
 		}
 
 	}

@@ -7,12 +7,12 @@ import cc.unknown.value.Value;
 import net.minecraft.util.MathHelper;
 
 public class Slider extends Value {
-    private float value;
-    private float min;
-    private float max;
-    private float increment;
+    private double value;
+    private double min;
+    private double max;
+    private double increment;
 
-    public Slider(String name, Module module, float value, float min, float max, float increment, Supplier<Boolean> visible) {
+    public Slider(String name, Module module, double value, double min, double max, double increment, Supplier<Boolean> visible) {
         super(name, module, visible);
         this.value = value;
         this.min = min;
@@ -20,7 +20,7 @@ public class Slider extends Value {
         this.increment = increment;
     }
 
-    public Slider(String name, Module module, float value, float min, float max, Supplier<Boolean> visible) {
+    public Slider(String name, Module module, double value, double min, double max, Supplier<Boolean> visible) {
         super(name, module, visible);
         this.value = value;
         this.min = min;
@@ -28,7 +28,7 @@ public class Slider extends Value {
         this.increment = 1;
     }
 
-    public Slider(String name, Module module, float value, float min, float max, float increment) {
+    public Slider(String name, Module module, double value, double min, double max, double increment) {
         super(name, module, () -> true);
         this.value = value;
         this.min = min;
@@ -36,7 +36,7 @@ public class Slider extends Value {
         this.increment = increment;
     }
 
-    public Slider(String name, Module module, float value, float min, float max) {
+    public Slider(String name, Module module, double value, double min, double max) {
         super(name, module, () -> true);
         this.value = value;
         this.min = min;
@@ -44,27 +44,27 @@ public class Slider extends Value {
         this.increment = 1;
     }
 
-    public float get() {	    
-        return MathHelper.clamp_float(value, getMin(), getMax());
+    public double get() {	    
+        return MathHelper.clamp_double(value, getMin(), getMax());
     }
 
-    public void setValue(float value) {
-        this.value = MathHelper.clamp_float(value, getMin(), getMax());
+    public void setValue(double value) {
+        this.value = MathHelper.clamp_double(value, getMin(), getMax());
     }
 
-	public float getValue() {
+	public double getValue() {
 		return value;
 	}
 
-	public float getMin() {
+	public double getMin() {
 	    return min;
 	}
 
-	public float getMax() {
+	public double getMax() {
 	    return max;
 	}
 
-	public float getIncrement() {
+	public double getIncrement() {
 		return increment;
 	}
 

@@ -119,14 +119,14 @@ public class AimAssist extends Module {
 	    	RotationUtil.getLockRotation(target, vertical.get());
 	    	break;
 	    case "Regular":
-		    float yawOffset = MathUtil.randomFloat(Math.min(hSpeed.getValue(), hMult.getValue()) * 10f, Math.max(hSpeed.getValue(), hMult.getValue()) * 10f) / 180f;
-		    float yawFov = (float) PlayerUtil.fovFromTarget(target);
-		    float yawAdjustment = getSpeedRandomize(speedMode.getMode(), yawFov, yawOffset, hSpeed.getValue(), hMult.getValue());
+		    double yawOffset = MathUtil.randomDouble(Math.min(hSpeed.getValue(), hMult.getValue()) * 10f, Math.max(hSpeed.getValue(), hMult.getValue()) * 10f) / 180f;
+		    double yawFov = (float) PlayerUtil.fovFromTarget(target);
+		    double yawAdjustment = getSpeedRandomize(speedMode.getMode(), yawFov, yawOffset, hSpeed.getValue(), hMult.getValue());
 	
-		    float pitchOffset = MathUtil.randomFloat(Math.min(vSpeed.getValue(), vMult.getValue()) * 10f, Math.max(vSpeed.getValue(), vMult.getValue()) * 10f) / 90f;
-		    float pitchEntity = (float) PlayerUtil.pitchFromTarget(target);
+		    double pitchOffset = MathUtil.randomDouble(Math.min(vSpeed.getValue(), vMult.getValue()) * 10f, Math.max(vSpeed.getValue(), vMult.getValue()) * 10f) / 90f;
+		    double pitchEntity = (float) PlayerUtil.pitchFromTarget(target);
 		    
-		    float resultVertical = getSpeedRandomize(speedMode.getMode(), pitchEntity, pitchOffset, vSpeed.getValue(), vMult.getValue());
+		    double resultVertical = getSpeedRandomize(speedMode.getMode(), pitchEntity, pitchOffset, vSpeed.getValue(), vMult.getValue());
 	
 		    if (onTarget()) {
 		        applyYaw(yawFov, yawAdjustment);
@@ -180,41 +180,41 @@ public class AimAssist extends Module {
         return mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && mc.objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK && mc.objectMouseOver.entityHit == target;
     }
     
-    private void applyYaw(float yawFov, float yawAdjustment) {
+    private void applyYaw(double yawFov, double yawAdjustment) {
         if (isYawFov(yawFov)) {
             mc.thePlayer.rotationYaw += yawAdjustment;
         }
     }
 
-	private void applyPitch(float resultVertical) {
+	private void applyPitch(double resultVertical) {
 	    if (vertical.get()) {
-	        float pitchAdjustment = resultVertical;
-	        float newPitch = mc.thePlayer.rotationPitch + pitchAdjustment;
+	    	double pitchAdjustment = resultVertical;
+	    	double newPitch = mc.thePlayer.rotationPitch + pitchAdjustment;
 
 	        mc.thePlayer.rotationPitch += pitchAdjustment;
-	        mc.thePlayer.rotationPitch = normalizePitch(newPitch);
+	        mc.thePlayer.rotationPitch = (float) normalizePitch(newPitch);
 	    }
 	}
 
-	private float getSpeedRandomize(String mode, float fov, float offset, float speed, float complement) {
-	    float randomComplement = 0, result = 0;
+	private double getSpeedRandomize(String mode, double fov, double offset, double speed, double complement) {
+		double randomComplement = 0, result = 0;
 
 	    switch (mode) {
 	        case "Random":
-	            randomComplement = MathUtil.randomFloat(complement / 100f, (complement + 0.5f) / 100f);
-	            result = calculateResult(fov, offset, speed, MathUtil.randomFloat(speed, speed + 0.3f));
+	            randomComplement = MathUtil.randomDouble(complement / 100f, (complement + 0.5f) / 100f);
+	            result = calculateResult(fov, offset, speed, MathUtil.randomDouble(speed, speed + 0.3f));
 	            break;
 
 	        case "Secure":
-	            randomComplement = MathUtil.nextSecureFloat(complement / 100f, (complement + 0.5f) / 180f);
-	            result = calculateResult(fov, offset, speed, MathUtil.nextSecureFloat(speed, speed + 0.3f));
+	            randomComplement = MathUtil.nextSecureDouble(complement / 100f, (complement + 0.5f) / 180f);
+	            result = calculateResult(fov, offset, speed, MathUtil.nextSecureDouble(speed, speed + 0.3f));
 	            break;
 
 	        case "Gaussian":
-	            float gaussianFactor = (float) MathUtil.randomGaussian(0.15f);
+	        	double gaussianFactor = (float) MathUtil.randomGaussian(0.15f);
 	            randomComplement = (complement + gaussianFactor) / 200f;
-	            float gaussianSpeed = speed + (float) MathUtil.randomGaussian(0.15f);
-	            gaussianSpeed = MathUtil.lerpFloat(speed, gaussianSpeed, 0.5f);
+	            double gaussianSpeed = speed + (float) MathUtil.randomGaussian(0.15f);
+	            gaussianSpeed = MathUtil.lerpDouble(speed, gaussianSpeed, 0.5f);
 	            result = calculateResult(fov, offset, speed, gaussianSpeed);
 	            break;
 	    }
@@ -222,15 +222,15 @@ public class AimAssist extends Module {
 	    return randomComplement + result;
 	}
 	
-	private float normalizePitch(float pitch) {
+	private double normalizePitch(double pitch) {
 	    return pitch >= 90f ? pitch - 360f : pitch <= -90f ? pitch + 360f : pitch;
 	}
 
-	private float calculateResult(float fov, float offset, float speed, float randomizedSpeed) {
+	private double calculateResult(double fov, double offset, double speed, double randomizedSpeed) {
 	    return -fov * offset + fov / (100f - randomizedSpeed);
 	}
 	
-	private boolean isYawFov(float fov) {
+	private boolean isYawFov(double fov) {
 		return fov > 1.0f || fov < -1.0f;
 	}
 }

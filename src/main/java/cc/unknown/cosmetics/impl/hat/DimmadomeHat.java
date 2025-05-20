@@ -25,19 +25,17 @@ public class DimmadomeHat extends CosmeticBase {
 	
 	@Override
 	public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float headYaw, float headPitch, float scale) {
-		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.HAT) && !player.isInvisible()) {		    
-		    if (isHat(player.getName()).equalsIgnoreCase("Dimmadome")) {
-				GlStateManager.pushMatrix();
-	            String imagePath = HatType.DOUG.getImagePath();
-				playerRenderer.bindTexture(new ResourceLocation(imagePath));
+		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.HAT, "Dimmadome") && !player.isInvisible() && player == mc.thePlayer) {		    
+			GlStateManager.pushMatrix();
+            String imagePath = HatType.DOUG.getImagePath();
+			playerRenderer.bindTexture(new ResourceLocation(imagePath));
 
-				if (player.isSneaking()) {
-					GL11.glTranslated(0D, 0.225D, 0D);
-				}
-				
-				modelDougDimmadomeHat.render(player, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, scale);
-				GlStateManager.popMatrix();
-		    }
+			if (player.isSneaking()) {
+				GL11.glTranslated(0D, 0.225D, 0D);
+			}
+			
+			modelDougDimmadomeHat.render(player, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, scale);
+			GlStateManager.popMatrix();
 		}
 	}
 	

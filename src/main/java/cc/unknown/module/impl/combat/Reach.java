@@ -31,7 +31,7 @@ public class Reach extends Module {
 
 	private final Slider min = new Slider("Min", this, 3.1f, 3, 6, 0.05f);
 	private final Slider max = new Slider("Min", this, 3.1f, 3, 6, 0.05f);
-	private final Slider chance = new Slider("Chance", this, 1, 0, 1, 0.1f);
+	private final Slider chance = new Slider("Chance", this, 1, 0, 1, 0.1);
 
 	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
 			new Bool("WeaponOnly", false), 

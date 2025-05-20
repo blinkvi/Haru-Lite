@@ -77,13 +77,13 @@ public class ArrayListDraggable extends Drag {
         if (localX < middle) {
         	if (setting.shaders.get()) {
         		new GradientBlur().set(localX - PADDING, localY + offset, width + 3, (int) (height + PADDING + setting.textHeight.get()), 0);
-        		RenderUtil.drawBloomShadow(localX - PADDING, localY + offset, width + 3, height + PADDING + setting.textHeight.get(), 14, 18, setting.color(index * 200));
+        		RenderUtil.drawBloomShadow(localX - PADDING, localY + offset, width + 3, height + PADDING + (float) setting.textHeight.get(), 14, 18, setting.color(index * 200));
         	}
             RenderUtil.drawRoundedRect(localX - PADDING, localY + offset, width + 3, height + PADDING + setting.textHeight.get(), 8, setting.backgroundColor(index));
         } else {
         	if (setting.shaders.get()) {
         		new GradientBlur().set(localX + this.width - 4 - width, localY + offset + 2, width + 3, (int) (height + PADDING + setting.textHeight.get()), 0);
-        		RenderUtil.drawBloomShadow(localX + this.width - 4 - width, localY + offset + 2, width + 3, height + PADDING + setting.textHeight.get(), 14, 18, setting.color(index * 200));
+        		RenderUtil.drawBloomShadow(localX + this.width - 4 - width, localY + offset + 2, width + 3, height + PADDING + (float) setting.textHeight.get(), 14, 18, setting.color(index * 200));
         	}
             RenderUtil.drawRoundedRect(localX + this.width - 4 - width, localY + offset + 2, width + 3, height + PADDING + setting.textHeight.get(), 8, setting.backgroundColor(index));
         }

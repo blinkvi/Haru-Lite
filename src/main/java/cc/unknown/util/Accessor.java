@@ -3,15 +3,13 @@ package cc.unknown.util;
 import com.google.gson.Gson;
 
 import cc.unknown.Haru;
-import cc.unknown.file.cosmetics.SuperCosmetic;
 import cc.unknown.managers.ConfigManager;
 import cc.unknown.managers.DragManager;
 import cc.unknown.managers.ModuleManager;
 import cc.unknown.module.Module;
-import cc.unknown.socket.impl.CosmeticSocket;
 import cc.unknown.ui.click.DropGui;
-import cc.unknown.util.client.system.CustomLogger;
 import cc.unknown.util.client.system.Clock;
+import cc.unknown.util.client.system.CustomLogger;
 import cc.unknown.util.render.client.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
@@ -58,10 +56,6 @@ public interface Accessor {
     default String getPrefix(EnumChatFormatting color, String name, EnumChatFormatting color2) {
     	return "[" + color + name + color2 + "] ";
     }
-    
-    default String isWings(String name) {
-		return CosmeticSocket.cosmeticList.stream().filter(c -> name.equalsIgnoreCase(c.getName())).map(SuperCosmetic::getWings).filter(wings -> !wings.equalsIgnoreCase("None")).findFirst().orElse("None");
-	}
 
     default CustomLogger getLogger() {
     	return getInstance().getLogger();

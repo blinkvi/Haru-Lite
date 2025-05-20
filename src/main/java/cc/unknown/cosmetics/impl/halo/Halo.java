@@ -13,8 +13,10 @@ import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
 
+import cc.unknown.Haru;
 import cc.unknown.cosmetics.CosmeticBase;
 import cc.unknown.cosmetics.CosmeticController;
+import cc.unknown.module.impl.visual.Cosmetics;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.util.render.enums.CosmeticType;
@@ -31,15 +33,17 @@ public class Halo extends CosmeticBase {
 
 	@Override
 	public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float headYaw, float headPitch, float scale) {
-		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.HALO) && !player.isInvisible()) {
+	    Cosmetics cosmetics = Haru.instance.getModuleManager().getModule(Cosmetics.class);
+
+		String activeHalo = cosmetics.haloType.getMode();
+
+		if (CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.HALO, activeHalo) && !player.isInvisible() && player == mc.thePlayer) {
 			float height = player.height - 2.50f;
 			float yaw = player.rotationYaw;
 	        float extraHeight = 0.035f;
 	        float extensionLength = 0.18f;
 	        float smallExtensionLength = 0.08f;
-	        
-			String activeHalo = isHalo(player.getName());
-			
+	        			
 			if (player.isSneaking()) {
 				GL11.glTranslated(0D, 0.2D, 0D);
 			}

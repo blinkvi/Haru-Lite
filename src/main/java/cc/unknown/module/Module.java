@@ -142,8 +142,8 @@ public abstract class Module implements Accessor {
     }
 
     public void correctValues(Slider min, Slider max) {
-		float minValue = min.getValue();
-		float maxValue = max.getValue();
+    	double minValue = min.getValue();
+    	double maxValue = max.getValue();
 
 	    if (minValue >= maxValue) {
 	        minValue = maxValue;

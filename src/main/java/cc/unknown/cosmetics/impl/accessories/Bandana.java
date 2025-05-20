@@ -23,16 +23,14 @@ public class Bandana extends CosmeticBase {
 
     @Override
     public void render(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float headYaw, float headPitch, float scale) {
-        if(CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.ACCESORIES) && !player.isInvisible()) {
-        	if (isAccessories(player.getName()).equalsIgnoreCase("Bandana")) {
-	        	GL11.glPushMatrix();
-	            String imagePath = AccesoriesType.BANDANA.getImagePath();
-	            playerRenderer.bindTexture(new ResourceLocation(imagePath));
-	            float[] color = {255, 255, 255};
-	            GL11.glColor3f(color[0], color[1], color[2]);
-	            modelBandana.render(player, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, scale);
-	            GL11.glPopMatrix();
-        	}
+        if(CosmeticController.shouldRenderCosmeticForPlayer(player, CosmeticType.ACCESORIES, "Bandana") && !player.isInvisible() && mc.thePlayer == player) {
+        	GL11.glPushMatrix();
+            String imagePath = AccesoriesType.BANDANA.getImagePath();
+            playerRenderer.bindTexture(new ResourceLocation(imagePath));
+            float[] color = {255, 255, 255};
+            GL11.glColor3f(color[0], color[1], color[2]);
+            modelBandana.render(player, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch, scale);
+            GL11.glPopMatrix();
         }
     }
 
