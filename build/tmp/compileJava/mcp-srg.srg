@@ -1,0 +1,283 @@
+FD: cc/unknown/mixin/mixins/MixinC17PacketCustomPayload/data cc/unknown/mixin/mixins/MixinC17PacketCustomPayload/field_149561_c
+FD: cc/unknown/mixin/mixins/MixinEntity/onGround cc/unknown/mixin/mixins/MixinEntity/field_70122_E
+FD: cc/unknown/mixin/mixins/MixinEntity/rotationYaw cc/unknown/mixin/mixins/MixinEntity/field_70177_z
+FD: cc/unknown/mixin/mixins/MixinEntity/noClip cc/unknown/mixin/mixins/MixinEntity/field_70145_X
+FD: cc/unknown/mixin/mixins/MixinEntity/nextStepDistance cc/unknown/mixin/mixins/MixinEntity/field_70150_b
+FD: cc/unknown/mixin/mixins/MixinEntity/rotationPitch cc/unknown/mixin/mixins/MixinEntity/field_70125_A
+FD: cc/unknown/mixin/mixins/MixinEntity/isInWeb cc/unknown/mixin/mixins/MixinEntity/field_70134_J
+FD: cc/unknown/mixin/mixins/MixinEntity/prevDistanceWalkedModified cc/unknown/mixin/mixins/MixinEntity/field_70141_P
+FD: cc/unknown/mixin/mixins/MixinEntity/distanceWalkedModified cc/unknown/mixin/mixins/MixinEntity/field_70140_Q
+FD: cc/unknown/mixin/mixins/MixinEntity/distanceWalkedOnStepModified cc/unknown/mixin/mixins/MixinEntity/field_82151_R
+FD: cc/unknown/mixin/mixins/MixinEntity/ticksExisted cc/unknown/mixin/mixins/MixinEntity/field_70173_aa
+FD: cc/unknown/mixin/mixins/MixinEntity/fallDistance cc/unknown/mixin/mixins/MixinEntity/field_70143_R
+FD: cc/unknown/mixin/mixins/MixinEntity/motionX cc/unknown/mixin/mixins/MixinEntity/field_70159_w
+FD: cc/unknown/mixin/mixins/MixinEntity/isCollided cc/unknown/mixin/mixins/MixinEntity/field_70132_H
+FD: cc/unknown/mixin/mixins/MixinEntity/motionZ cc/unknown/mixin/mixins/MixinEntity/field_70179_y
+FD: cc/unknown/mixin/mixins/MixinEntity/motionY cc/unknown/mixin/mixins/MixinEntity/field_70181_x
+FD: cc/unknown/mixin/mixins/MixinEntity/isAirBorne cc/unknown/mixin/mixins/MixinEntity/field_70160_al
+FD: cc/unknown/mixin/mixins/MixinEntity/prevRotationYaw cc/unknown/mixin/mixins/MixinEntity/field_70126_B
+FD: cc/unknown/mixin/mixins/MixinEntity/prevRotationPitch cc/unknown/mixin/mixins/MixinEntity/field_70127_C
+FD: cc/unknown/mixin/mixins/MixinEntity/worldObj cc/unknown/mixin/mixins/MixinEntity/field_70170_p
+FD: cc/unknown/mixin/mixins/MixinEntity/ridingEntity cc/unknown/mixin/mixins/MixinEntity/field_70154_o
+FD: cc/unknown/mixin/mixins/MixinEntity/prevPosX cc/unknown/mixin/mixins/MixinEntity/field_70169_q
+FD: cc/unknown/mixin/mixins/MixinEntity/prevPosY cc/unknown/mixin/mixins/MixinEntity/field_70167_r
+FD: cc/unknown/mixin/mixins/MixinEntity/prevPosZ cc/unknown/mixin/mixins/MixinEntity/field_70166_s
+FD: cc/unknown/mixin/mixins/MixinEntity/posX cc/unknown/mixin/mixins/MixinEntity/field_70165_t
+FD: cc/unknown/mixin/mixins/MixinEntity/posY cc/unknown/mixin/mixins/MixinEntity/field_70163_u
+FD: cc/unknown/mixin/mixins/MixinEntity/posZ cc/unknown/mixin/mixins/MixinEntity/field_70161_v
+FD: cc/unknown/mixin/mixins/MixinEntity/fire cc/unknown/mixin/mixins/MixinEntity/field_70151_c
+FD: cc/unknown/mixin/mixins/MixinEntity/fireResistance cc/unknown/mixin/mixins/MixinEntity/field_70174_ab
+FD: cc/unknown/mixin/mixins/MixinEntity/isCollidedVertically cc/unknown/mixin/mixins/MixinEntity/field_70124_G
+FD: cc/unknown/mixin/mixins/MixinEntity/rand cc/unknown/mixin/mixins/MixinEntity/field_70146_Z
+FD: cc/unknown/mixin/mixins/MixinEntity/stepHeight cc/unknown/mixin/mixins/MixinEntity/field_70138_W
+FD: cc/unknown/mixin/mixins/MixinEntity/inPortal cc/unknown/mixin/mixins/MixinEntity/field_71087_bX
+FD: cc/unknown/mixin/mixins/MixinEntity/isCollidedHorizontally cc/unknown/mixin/mixins/MixinEntity/field_70123_F
+FD: cc/unknown/mixin/mixins/MixinEntity/timeUntilPortal cc/unknown/mixin/mixins/MixinEntity/field_71088_bW
+FD: cc/unknown/mixin/mixins/MixinEntity/width cc/unknown/mixin/mixins/MixinEntity/field_70130_N
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/previousEquipment cc/unknown/mixin/mixins/MixinEntityLivingBase/field_82180_bT
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/attributeMap cc/unknown/mixin/mixins/MixinEntityLivingBase/field_110155_d
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/prevOnGroundSpeedFactor cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70768_au
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/renderYawOffset cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70761_aq
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/arrowHitTimer cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70720_be
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/movedDistance cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70764_aw
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/onGroundSpeedFactor cc/unknown/mixin/mixins/MixinEntityLivingBase/field_110154_aX
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/prevRenderYawOffset cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70760_ar
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/rotationYawHead cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70759_as
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/prevRotationYawHead cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70758_at
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/swingProgress cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70733_aJ
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/moveStrafing cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70702_br
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/moveForward cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70701_bs
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/prevLimbSwingAmount cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70722_aY
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/limbSwingAmount cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70721_aZ
+FD: cc/unknown/mixin/mixins/MixinEntityLivingBase/limbSwing cc/unknown/mixin/mixins/MixinEntityLivingBase/field_70754_ba
+FD: cc/unknown/mixin/mixins/MixinEntityPlayer/flyToggleTimer cc/unknown/mixin/mixins/MixinEntityPlayer/field_71101_bC
+FD: cc/unknown/mixin/mixins/MixinEntityPlayer/capabilities cc/unknown/mixin/mixins/MixinEntityPlayer/field_71075_bZ
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/movementInput cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_71158_b
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/sendQueue cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_71174_a
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/serverSneakState cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_175170_bN
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/lastReportedPosX cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_175172_bI
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/lastReportedPosY cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_175166_bJ
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/lastReportedPosZ cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_175167_bK
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/lastReportedPitch cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_175165_bM
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/positionUpdateTicks cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_175168_bP
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/serverSprintState cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_175171_bO
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/lastReportedYaw cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_175164_bL
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/sprintingTicksLeft cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_71157_e
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/timeInPortal cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_71086_bY
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/prevTimeInPortal cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_71080_cy
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/horseJumpPower cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_110321_bQ
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/horseJumpPowerCounter cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_110320_a
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/sprintToggleTimer cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_71156_d
+FD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/mc cc/unknown/mixin/mixins/MixinEntityPlayerSP/field_71159_c
+FD: cc/unknown/mixin/mixins/MixinEntityRenderer/mc cc/unknown/mixin/mixins/MixinEntityRenderer/field_78531_r
+FD: cc/unknown/mixin/mixins/MixinEntityRenderer/thirdPersonDistance cc/unknown/mixin/mixins/MixinEntityRenderer/field_78490_B
+FD: cc/unknown/mixin/mixins/MixinEntityRenderer/thirdPersonDistanceTemp cc/unknown/mixin/mixins/MixinEntityRenderer/field_78491_C
+FD: cc/unknown/mixin/mixins/MixinEntityRenderer/cloudFog cc/unknown/mixin/mixins/MixinEntityRenderer/field_78500_U
+FD: cc/unknown/mixin/mixins/MixinEnumFacing/VALUES cc/unknown/mixin/mixins/MixinEnumFacing/field_82609_l
+FD: cc/unknown/mixin/mixins/MixinEnumFacing/opposite cc/unknown/mixin/mixins/MixinEnumFacing/field_176759_h
+FD: cc/unknown/mixin/mixins/MixinGuiButton/width cc/unknown/mixin/mixins/MixinGuiButton/field_146120_f
+FD: cc/unknown/mixin/mixins/MixinGuiButton/height cc/unknown/mixin/mixins/MixinGuiButton/field_146121_g
+FD: cc/unknown/mixin/mixins/MixinGuiButton/xPosition cc/unknown/mixin/mixins/MixinGuiButton/field_146128_h
+FD: cc/unknown/mixin/mixins/MixinGuiButton/yPosition cc/unknown/mixin/mixins/MixinGuiButton/field_146129_i
+FD: cc/unknown/mixin/mixins/MixinGuiButton/displayString cc/unknown/mixin/mixins/MixinGuiButton/field_146126_j
+FD: cc/unknown/mixin/mixins/MixinGuiButton/hovered cc/unknown/mixin/mixins/MixinGuiButton/field_146123_n
+FD: cc/unknown/mixin/mixins/MixinGuiButton/visible cc/unknown/mixin/mixins/MixinGuiButton/field_146125_m
+FD: cc/unknown/mixin/mixins/MixinGuiContainer/dragSplittingButton cc/unknown/mixin/mixins/MixinGuiContainer/field_146988_G
+FD: cc/unknown/mixin/mixins/MixinGuiContainer/dragSplittingRemnant cc/unknown/mixin/mixins/MixinGuiContainer/field_146996_I
+FD: cc/unknown/mixin/mixins/MixinGuiIngame/mc cc/unknown/mixin/mixins/MixinGuiIngame/field_73839_d
+FD: cc/unknown/mixin/mixins/MixinGuiMainMenu/viewportTexture cc/unknown/mixin/mixins/MixinGuiMainMenu/field_73977_n
+FD: cc/unknown/mixin/mixins/MixinGuiMainMenu/backgroundTexture cc/unknown/mixin/mixins/MixinGuiMainMenu/field_110351_G
+FD: cc/unknown/mixin/mixins/MixinGuiMainMenu/panoramaTimer cc/unknown/mixin/mixins/MixinGuiMainMenu/field_73979_m
+FD: cc/unknown/mixin/mixins/MixinGuiNewChat/mc cc/unknown/mixin/mixins/MixinGuiNewChat/field_146247_f
+FD: cc/unknown/mixin/mixins/MixinGuiNewChat/isScrolled cc/unknown/mixin/mixins/MixinGuiNewChat/field_146251_k
+FD: cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/availableResourcePacks cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/field_146966_g
+FD: cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/selectedResourcePacks cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/field_146969_h
+FD: cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/availableResourcePacksList cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/field_146970_i
+FD: cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/selectedResourcePacksList cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/field_146967_r
+FD: cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/changed cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/field_175289_s
+FD: cc/unknown/mixin/mixins/MixinItemRenderer/equippedProgress cc/unknown/mixin/mixins/MixinItemRenderer/field_78454_c
+FD: cc/unknown/mixin/mixins/MixinItemRenderer/prevEquippedProgress cc/unknown/mixin/mixins/MixinItemRenderer/field_78451_d
+FD: cc/unknown/mixin/mixins/MixinItemRenderer/itemToRender cc/unknown/mixin/mixins/MixinItemRenderer/field_78453_b
+FD: cc/unknown/mixin/mixins/MixinItemRenderer/equippedItemSlot cc/unknown/mixin/mixins/MixinItemRenderer/field_78450_g
+FD: cc/unknown/mixin/mixins/MixinItemRenderer/mc cc/unknown/mixin/mixins/MixinItemRenderer/field_78455_a
+FD: cc/unknown/mixin/mixins/MixinLazyLoadBase/isLoaded cc/unknown/mixin/mixins/MixinLazyLoadBase/field_179282_b
+FD: cc/unknown/mixin/mixins/MixinLazyLoadBase/value cc/unknown/mixin/mixins/MixinLazyLoadBase/field_179283_a
+FD: cc/unknown/mixin/mixins/MixinMinecraft/session cc/unknown/mixin/mixins/MixinMinecraft/field_71449_j
+FD: cc/unknown/mixin/mixins/MixinMinecraft/fullscreen cc/unknown/mixin/mixins/MixinMinecraft/field_71431_Q
+FD: cc/unknown/mixin/mixins/MixinMinecraft/leftClickCounter cc/unknown/mixin/mixins/MixinMinecraft/field_71429_W
+FD: cc/unknown/mixin/mixins/MixinMinecraft/playerController cc/unknown/mixin/mixins/MixinMinecraft/field_71442_b
+FD: cc/unknown/mixin/mixins/MixinMinecraft/theWorld cc/unknown/mixin/mixins/MixinMinecraft/field_71441_e
+FD: cc/unknown/mixin/mixins/MixinMinecraft/thePlayer cc/unknown/mixin/mixins/MixinMinecraft/field_71439_g
+FD: cc/unknown/mixin/mixins/MixinMinecraft/objectMouseOver cc/unknown/mixin/mixins/MixinMinecraft/field_71476_x
+FD: cc/unknown/mixin/mixins/MixinMinecraft/entityRenderer cc/unknown/mixin/mixins/MixinMinecraft/field_71460_t
+FD: cc/unknown/mixin/mixins/MixinMinecraft/currentScreen cc/unknown/mixin/mixins/MixinMinecraft/field_71462_r
+FD: cc/unknown/mixin/mixins/MixinMinecraft/mcDefaultResourcePack cc/unknown/mixin/mixins/MixinMinecraft/field_110450_ap
+FD: cc/unknown/mixin/mixins/MixinMinecraft/enableGLErrorChecking cc/unknown/mixin/mixins/MixinMinecraft/field_175619_R
+FD: cc/unknown/mixin/mixins/MixinMinecraft/gameSettings cc/unknown/mixin/mixins/MixinMinecraft/field_71474_y
+FD: cc/unknown/mixin/mixins/MixinModelBox/quadList cc/unknown/mixin/mixins/MixinModelBox/field_78254_i
+FD: cc/unknown/mixin/mixins/MixinModelRenderer/compiled cc/unknown/mixin/mixins/MixinModelRenderer/field_78812_q
+FD: cc/unknown/mixin/mixins/MixinMovementInputFromOptions/gameSettings cc/unknown/mixin/mixins/MixinMovementInputFromOptions/field_78903_e
+FD: cc/unknown/mixin/mixins/MixinNBTTagString/data cc/unknown/mixin/mixins/MixinNBTTagString/field_74751_a
+FD: cc/unknown/mixin/mixins/MixinNetHandlerPlayClient/gameController cc/unknown/mixin/mixins/MixinNetHandlerPlayClient/field_147299_f
+FD: cc/unknown/mixin/mixins/MixinNetworkManager/packetListener cc/unknown/mixin/mixins/MixinNetworkManager/field_150744_m
+FD: cc/unknown/mixin/mixins/MixinNodeProcessor/blockaccess cc/unknown/mixin/mixins/MixinNodeProcessor/field_176169_a
+FD: cc/unknown/mixin/mixins/MixinPlayerControllerMP/mc cc/unknown/mixin/mixins/MixinPlayerControllerMP/field_78776_a
+FD: cc/unknown/mixin/mixins/MixinPlayerControllerMP/netClientHandler cc/unknown/mixin/mixins/MixinPlayerControllerMP/field_78774_b
+FD: cc/unknown/mixin/mixins/MixinPlayerControllerMP/currentBlock cc/unknown/mixin/mixins/MixinPlayerControllerMP/field_178895_c
+FD: cc/unknown/mixin/mixins/MixinPlayerControllerMP/isHittingBlock cc/unknown/mixin/mixins/MixinPlayerControllerMP/field_78778_j
+FD: cc/unknown/mixin/mixins/MixinPlayerControllerMP/curBlockDamageMP cc/unknown/mixin/mixins/MixinPlayerControllerMP/field_78770_f
+FD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/mainModel cc/unknown/mixin/mixins/MixinRendererLivingEntity/field_77045_g
+FD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/renderOutlines cc/unknown/mixin/mixins/MixinRendererLivingEntity/field_177098_i
+FD: cc/unknown/mixin/mixins/MixinRenderManager/playerViewY cc/unknown/mixin/mixins/MixinRenderManager/field_78735_i
+FD: cc/unknown/mixin/mixins/MixinRenderManager/playerViewX cc/unknown/mixin/mixins/MixinRenderManager/field_78732_j
+FD: cc/unknown/mixin/mixins/MixinRenderManager/options cc/unknown/mixin/mixins/MixinRenderManager/field_78733_k
+FD: cc/unknown/mixin/mixins/MixinRenderManager/viewerPosX cc/unknown/mixin/mixins/MixinRenderManager/field_78730_l
+FD: cc/unknown/mixin/mixins/MixinRenderManager/viewerPosY cc/unknown/mixin/mixins/MixinRenderManager/field_78731_m
+FD: cc/unknown/mixin/mixins/MixinRenderManager/viewerPosZ cc/unknown/mixin/mixins/MixinRenderManager/field_78728_n
+FD: cc/unknown/mixin/mixins/MixinRenderManager/worldObj cc/unknown/mixin/mixins/MixinRenderManager/field_78722_g
+FD: cc/unknown/mixin/mixins/MixinRenderManager/textRenderer cc/unknown/mixin/mixins/MixinRenderManager/field_78736_p
+FD: cc/unknown/mixin/mixins/MixinRenderManager/livingPlayer cc/unknown/mixin/mixins/MixinRenderManager/field_78734_h
+FD: cc/unknown/mixin/mixins/MixinRenderManager/pointedEntity cc/unknown/mixin/mixins/MixinRenderManager/field_147941_i
+FD: cc/unknown/mixin/mixins/MixinS3FPacketCustomPayload/data cc/unknown/mixin/mixins/MixinS3FPacketCustomPayload/field_149171_b
+FD: cc/unknown/mixin/mixins/MixinScoreBoard/teams cc/unknown/mixin/mixins/MixinScoreBoard/field_96542_e
+FD: cc/unknown/mixin/mixins/MixinScoreBoard/teamMemberships cc/unknown/mixin/mixins/MixinScoreBoard/field_96540_f
+FD: cc/unknown/mixin/mixins/MixinScoreBoard/scoreObjectives cc/unknown/mixin/mixins/MixinScoreBoard/field_96545_a
+FD: cc/unknown/mixin/mixins/MixinScoreBoard/entitiesScoreObjectives cc/unknown/mixin/mixins/MixinScoreBoard/field_96544_c
+FD: cc/unknown/mixin/mixins/MixinScoreBoard/scoreObjectiveCriterias cc/unknown/mixin/mixins/MixinScoreBoard/field_96543_b
+FD: cc/unknown/mixin/mixins/MixinServerList/servers cc/unknown/mixin/mixins/MixinServerList/field_78858_b
+FD: cc/unknown/mixin/mixins/MixinSoundManager/playingSounds cc/unknown/mixin/mixins/MixinSoundManager/field_148629_h
+FD: cc/unknown/mixin/mixins/MixinSoundManager/loaded cc/unknown/mixin/mixins/MixinSoundManager/field_148617_f
+FD: cc/unknown/mixin/mixins/MixinVertexBuffer/glBufferId cc/unknown/mixin/mixins/MixinVertexBuffer/field_177365_a
+FD: cc/unknown/mixin/mixins/MixinVertexFormat/elements cc/unknown/mixin/mixins/MixinVertexFormat/field_177355_b
+FD: cc/unknown/mixin/mixins/MixinVertexFormat/offsets cc/unknown/mixin/mixins/MixinVertexFormat/field_177356_c
+FD: cc/unknown/mixin/mixins/MixinVertexFormat/nextOffset cc/unknown/mixin/mixins/MixinVertexFormat/field_177353_d
+FD: cc/unknown/mixin/mixins/MixinWorldRenderer/isDrawing cc/unknown/mixin/mixins/MixinWorldRenderer/field_179010_r
+MD: cc/unknown/mixin/mixins/MixinAbstractResourcePack/getInputStreamByName (Ljava/lang/String;)Ljava/io/InputStream; cc/unknown/mixin/mixins/MixinAbstractResourcePack/func_110591_a (Ljava/lang/String;)Ljava/io/InputStream;
+MD: cc/unknown/mixin/mixins/MixinBaseAttribute/hashCode ()I cc/unknown/mixin/mixins/MixinBaseAttribute/hashCode ()I
+MD: cc/unknown/mixin/mixins/MixinBlock/getCollisionBoundingBox (Lnet/minecraft/world/World;Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/state/IBlockState;)Lnet/minecraft/util/AxisAlignedBB; cc/unknown/mixin/mixins/MixinBlock/func_180640_a (Lnet/minecraft/world/World;Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/state/IBlockState;)Lnet/minecraft/util/AxisAlignedBB;
+MD: cc/unknown/mixin/mixins/MixinBlock/addCollisionBoxesToList (Lnet/minecraft/world/World;Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/AxisAlignedBB;Ljava/util/List;Lnet/minecraft/entity/Entity;)V cc/unknown/mixin/mixins/MixinBlock/func_180638_a (Lnet/minecraft/world/World;Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/AxisAlignedBB;Ljava/util/List;Lnet/minecraft/entity/Entity;)V
+MD: cc/unknown/mixin/mixins/MixinEntity/updateFallState (DZLnet/minecraft/block/Block;Lnet/minecraft/util/BlockPos;)V cc/unknown/mixin/mixins/MixinEntity/func_180433_a (DZLnet/minecraft/block/Block;Lnet/minecraft/util/BlockPos;)V
+MD: cc/unknown/mixin/mixins/MixinEntity/getSwimSound ()Ljava/lang/String; cc/unknown/mixin/mixins/MixinEntity/func_145776_H ()Ljava/lang/String;
+MD: cc/unknown/mixin/mixins/MixinEntity/resetPositionToBB ()V cc/unknown/mixin/mixins/MixinEntity/func_174829_m ()V
+MD: cc/unknown/mixin/mixins/MixinEntity/isSneaking ()Z cc/unknown/mixin/mixins/MixinEntity/func_70093_af ()Z
+MD: cc/unknown/mixin/mixins/MixinEntity/doBlockCollisions ()V cc/unknown/mixin/mixins/MixinEntity/func_145775_I ()V
+MD: cc/unknown/mixin/mixins/MixinEntity/playSound (Ljava/lang/String;FF)V cc/unknown/mixin/mixins/MixinEntity/func_85030_a (Ljava/lang/String;FF)V
+MD: cc/unknown/mixin/mixins/MixinEntity/playStepSound (Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/Block;)V cc/unknown/mixin/mixins/MixinEntity/func_180429_a (Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/Block;)V
+MD: cc/unknown/mixin/mixins/MixinEntity/setFire (I)V cc/unknown/mixin/mixins/MixinEntity/func_70015_d (I)V
+MD: cc/unknown/mixin/mixins/MixinEntity/getEntityId ()I cc/unknown/mixin/mixins/MixinEntity/func_145782_y ()I
+MD: cc/unknown/mixin/mixins/MixinEntity/isSprinting ()Z cc/unknown/mixin/mixins/MixinEntity/func_70051_ag ()Z
+MD: cc/unknown/mixin/mixins/MixinEntity/onEntityUpdate ()V cc/unknown/mixin/mixins/MixinEntity/func_70030_z ()V
+MD: cc/unknown/mixin/mixins/MixinEntity/isRiding ()Z cc/unknown/mixin/mixins/MixinEntity/func_70115_ae ()Z
+MD: cc/unknown/mixin/mixins/MixinEntity/setEntityBoundingBox (Lnet/minecraft/util/AxisAlignedBB;)V cc/unknown/mixin/mixins/MixinEntity/func_174826_a (Lnet/minecraft/util/AxisAlignedBB;)V
+MD: cc/unknown/mixin/mixins/MixinEntity/getPositionEyes (F)Lnet/minecraft/util/Vec3; cc/unknown/mixin/mixins/MixinEntity/func_174824_e (F)Lnet/minecraft/util/Vec3;
+MD: cc/unknown/mixin/mixins/MixinEntity/canTriggerWalking ()Z cc/unknown/mixin/mixins/MixinEntity/func_70041_e_ ()Z
+MD: cc/unknown/mixin/mixins/MixinEntity/getEntityBoundingBox ()Lnet/minecraft/util/AxisAlignedBB; cc/unknown/mixin/mixins/MixinEntity/func_174813_aQ ()Lnet/minecraft/util/AxisAlignedBB;
+MD: cc/unknown/mixin/mixins/MixinEntity/isInWater ()Z cc/unknown/mixin/mixins/MixinEntity/func_70090_H ()Z
+MD: cc/unknown/mixin/mixins/MixinEntity/dealFireDamage (I)V cc/unknown/mixin/mixins/MixinEntity/func_70081_e (I)V
+MD: cc/unknown/mixin/mixins/MixinEntity/isWet ()Z cc/unknown/mixin/mixins/MixinEntity/func_70026_G ()Z
+MD: cc/unknown/mixin/mixins/MixinEntity/addEntityCrashInfo (Lnet/minecraft/crash/CrashReportCategory;)V cc/unknown/mixin/mixins/MixinEntity/func_85029_a (Lnet/minecraft/crash/CrashReportCategory;)V
+MD: cc/unknown/mixin/mixins/MixinEntity/onUpdate ()V cc/unknown/mixin/mixins/MixinEntity/func_70071_h_ ()V
+MD: cc/unknown/mixin/mixins/MixinEntity/moveFlying (FFF)V cc/unknown/mixin/mixins/MixinEntity/func_70060_a (FFF)V
+MD: cc/unknown/mixin/mixins/MixinEntity/moveEntity (DDD)V cc/unknown/mixin/mixins/MixinEntity/func_70091_d (DDD)V
+MD: cc/unknown/mixin/mixins/MixinEntityItem/getEntityItem ()Lnet/minecraft/item/ItemStack; cc/unknown/mixin/mixins/MixinEntityItem/func_92059_d ()Lnet/minecraft/item/ItemStack;
+MD: cc/unknown/mixin/mixins/MixinEntityLivingBase/getLook (F)Lnet/minecraft/util/Vec3; cc/unknown/mixin/mixins/MixinEntityLivingBase/func_70676_i (F)Lnet/minecraft/util/Vec3;
+MD: cc/unknown/mixin/mixins/MixinEntityLivingBase/getCombatTracker ()Lnet/minecraft/util/CombatTracker; cc/unknown/mixin/mixins/MixinEntityLivingBase/func_110142_aN ()Lnet/minecraft/util/CombatTracker;
+MD: cc/unknown/mixin/mixins/MixinEntityLivingBase/getJumpUpwardsMotion ()F cc/unknown/mixin/mixins/MixinEntityLivingBase/func_175134_bD ()F
+MD: cc/unknown/mixin/mixins/MixinEntityLivingBase/isPotionActive (Lnet/minecraft/potion/Potion;)Z cc/unknown/mixin/mixins/MixinEntityLivingBase/func_70644_a (Lnet/minecraft/potion/Potion;)Z
+MD: cc/unknown/mixin/mixins/MixinEntityLivingBase/getActivePotionEffect (Lnet/minecraft/potion/Potion;)Lnet/minecraft/potion/PotionEffect; cc/unknown/mixin/mixins/MixinEntityLivingBase/func_70660_b (Lnet/minecraft/potion/Potion;)Lnet/minecraft/potion/PotionEffect;
+MD: cc/unknown/mixin/mixins/MixinEntityLivingBase/onLivingUpdate ()V cc/unknown/mixin/mixins/MixinEntityLivingBase/func_70636_d ()V
+MD: cc/unknown/mixin/mixins/MixinEntityLivingBase/setLastAttacker (Lnet/minecraft/entity/Entity;)V cc/unknown/mixin/mixins/MixinEntityLivingBase/func_130011_c (Lnet/minecraft/entity/Entity;)V
+MD: cc/unknown/mixin/mixins/MixinEntityLivingBase/getEntityAttribute (Lnet/minecraft/entity/ai/attributes/IAttribute;)Lnet/minecraft/entity/ai/attributes/IAttributeInstance; cc/unknown/mixin/mixins/MixinEntityLivingBase/func_110148_a (Lnet/minecraft/entity/ai/attributes/IAttribute;)Lnet/minecraft/entity/ai/attributes/IAttributeInstance;
+MD: cc/unknown/mixin/mixins/MixinEntityLivingBase/setSprinting (Z)V cc/unknown/mixin/mixins/MixinEntityLivingBase/func_70031_b (Z)V
+MD: cc/unknown/mixin/mixins/MixinEntityLivingBase/isOnLadder ()Z cc/unknown/mixin/mixins/MixinEntityLivingBase/func_70617_f_ ()Z
+MD: cc/unknown/mixin/mixins/MixinEntityLivingBase/isChild ()Z cc/unknown/mixin/mixins/MixinEntityLivingBase/func_70631_g_ ()Z
+MD: cc/unknown/mixin/mixins/MixinEntityPlayer/getHeldItem ()Lnet/minecraft/item/ItemStack; cc/unknown/mixin/mixins/MixinEntityPlayer/func_70694_bm ()Lnet/minecraft/item/ItemStack;
+MD: cc/unknown/mixin/mixins/MixinEntityPlayer/isUsingItem ()Z cc/unknown/mixin/mixins/MixinEntityPlayer/func_71039_bw ()Z
+MD: cc/unknown/mixin/mixins/MixinEntityPlayer/getFoodStats ()Lnet/minecraft/util/FoodStats; cc/unknown/mixin/mixins/MixinEntityPlayer/func_71024_bL ()Lnet/minecraft/util/FoodStats;
+MD: cc/unknown/mixin/mixins/MixinEntityPlayer/isPlayerSleeping ()Z cc/unknown/mixin/mixins/MixinEntityPlayer/func_70608_bn ()Z
+MD: cc/unknown/mixin/mixins/MixinEntityPlayer/getEyeHeight ()F cc/unknown/mixin/mixins/MixinEntityPlayer/func_70047_e ()F
+MD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/isCurrentViewEntity ()Z cc/unknown/mixin/mixins/MixinEntityPlayerSP/func_175160_A ()Z
+MD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/isSneaking ()Z cc/unknown/mixin/mixins/MixinEntityPlayerSP/func_70093_af ()Z
+MD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/playSound (Ljava/lang/String;FF)V cc/unknown/mixin/mixins/MixinEntityPlayerSP/func_85030_a (Ljava/lang/String;FF)V
+MD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/setSprinting (Z)V cc/unknown/mixin/mixins/MixinEntityPlayerSP/func_70031_b (Z)V
+MD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/pushOutOfBlocks (DDD)Z cc/unknown/mixin/mixins/MixinEntityPlayerSP/func_145771_j (DDD)Z
+MD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/sendPlayerAbilities ()V cc/unknown/mixin/mixins/MixinEntityPlayerSP/func_71016_p ()V
+MD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/sendHorseJump ()V cc/unknown/mixin/mixins/MixinEntityPlayerSP/func_110318_g ()V
+MD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/isRidingHorse ()Z cc/unknown/mixin/mixins/MixinEntityPlayerSP/func_110317_t ()Z
+MD: cc/unknown/mixin/mixins/MixinEntityPlayerSP/onLivingUpdate ()V cc/unknown/mixin/mixins/MixinEntityPlayerSP/func_70636_d ()V
+MD: cc/unknown/mixin/mixins/MixinEntityRenderer/orientCamera (F)V cc/unknown/mixin/mixins/MixinEntityRenderer/func_78467_g (F)V
+MD: cc/unknown/mixin/mixins/MixinEnumFacing/getOpposite ()Lnet/minecraft/util/EnumFacing; cc/unknown/mixin/mixins/MixinEnumFacing/func_176734_d ()Lnet/minecraft/util/EnumFacing;
+MD: cc/unknown/mixin/mixins/MixinGuiButton/drawButton (Lnet/minecraft/client/Minecraft;II)V cc/unknown/mixin/mixins/MixinGuiButton/func_146112_a (Lnet/minecraft/client/Minecraft;II)V
+MD: cc/unknown/mixin/mixins/MixinGuiButton/mouseDragged (Lnet/minecraft/client/Minecraft;II)V cc/unknown/mixin/mixins/MixinGuiButton/func_146119_b (Lnet/minecraft/client/Minecraft;II)V
+MD: cc/unknown/mixin/mixins/MixinGuiContainer/checkHotbarKeys (I)Z cc/unknown/mixin/mixins/MixinGuiContainer/func_146983_a (I)Z
+MD: cc/unknown/mixin/mixins/MixinGuiMainMenu/initGui ()V cc/unknown/mixin/mixins/MixinGuiMainMenu/func_73866_w_ ()V
+MD: cc/unknown/mixin/mixins/MixinGuiMainMenu/addSingleplayerMultiplayerButtons (II)V cc/unknown/mixin/mixins/MixinGuiMainMenu/func_73969_a (II)V
+MD: cc/unknown/mixin/mixins/MixinGuiMainMenu/actionPerformed (Lnet/minecraft/client/gui/GuiButton;)V cc/unknown/mixin/mixins/MixinGuiMainMenu/func_146284_a (Lnet/minecraft/client/gui/GuiButton;)V
+MD: cc/unknown/mixin/mixins/MixinGuiMainMenu/drawScreen (IIF)V cc/unknown/mixin/mixins/MixinGuiMainMenu/func_73863_a (IIF)V
+MD: cc/unknown/mixin/mixins/MixinGuiMainMenu/drawPanorama (IIF)V cc/unknown/mixin/mixins/MixinGuiMainMenu/func_73970_b (IIF)V
+MD: cc/unknown/mixin/mixins/MixinGuiMainMenu/renderSkybox (IIF)V cc/unknown/mixin/mixins/MixinGuiMainMenu/func_73971_c (IIF)V
+MD: cc/unknown/mixin/mixins/MixinGuiMainMenu/rotateAndBlurSkybox (F)V cc/unknown/mixin/mixins/MixinGuiMainMenu/func_73968_a (F)V
+MD: cc/unknown/mixin/mixins/MixinGuiNewChat/getLineCount ()I cc/unknown/mixin/mixins/MixinGuiNewChat/func_146232_i ()I
+MD: cc/unknown/mixin/mixins/MixinGuiNewChat/getChatScale ()F cc/unknown/mixin/mixins/MixinGuiNewChat/func_146244_h ()F
+MD: cc/unknown/mixin/mixins/MixinGuiNewChat/printChatMessageWithOptionalDeletion (Lnet/minecraft/util/IChatComponent;I)V cc/unknown/mixin/mixins/MixinGuiNewChat/func_146234_a (Lnet/minecraft/util/IChatComponent;I)V
+MD: cc/unknown/mixin/mixins/MixinGuiNewChat/printChatMessage (Lnet/minecraft/util/IChatComponent;)V cc/unknown/mixin/mixins/MixinGuiNewChat/func_146227_a (Lnet/minecraft/util/IChatComponent;)V
+MD: cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/initGui ()V cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/func_73866_w_ ()V
+MD: cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/mouseClicked (III)V cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/func_73864_a (III)V
+MD: cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/drawScreen (IIF)V cc/unknown/mixin/mixins/MixinGuiScreenResourcePacks/func_73863_a (IIF)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/setLightMapFromPlayer (Lnet/minecraft/client/entity/AbstractClientPlayer;)V cc/unknown/mixin/mixins/MixinItemRenderer/func_178109_a (Lnet/minecraft/client/entity/AbstractClientPlayer;)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/doItemUsedTransformations (F)V cc/unknown/mixin/mixins/MixinItemRenderer/func_178105_d (F)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/doBowTransformations (FLnet/minecraft/client/entity/AbstractClientPlayer;)V cc/unknown/mixin/mixins/MixinItemRenderer/func_178098_a (FLnet/minecraft/client/entity/AbstractClientPlayer;)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/rotateWithPlayerRotations (Lnet/minecraft/client/entity/EntityPlayerSP;F)V cc/unknown/mixin/mixins/MixinItemRenderer/func_178110_a (Lnet/minecraft/client/entity/EntityPlayerSP;F)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/performDrinking (Lnet/minecraft/client/entity/AbstractClientPlayer;F)V cc/unknown/mixin/mixins/MixinItemRenderer/func_178104_a (Lnet/minecraft/client/entity/AbstractClientPlayer;F)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/transformFirstPersonItem (FF)V cc/unknown/mixin/mixins/MixinItemRenderer/func_178096_b (FF)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/renderPlayerArm (Lnet/minecraft/client/entity/AbstractClientPlayer;FF)V cc/unknown/mixin/mixins/MixinItemRenderer/func_178095_a (Lnet/minecraft/client/entity/AbstractClientPlayer;FF)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/renderItem (Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;)V cc/unknown/mixin/mixins/MixinItemRenderer/func_178099_a (Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/rotateArroundXAndY (FF)V cc/unknown/mixin/mixins/MixinItemRenderer/func_178101_a (FF)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/renderItemMap (Lnet/minecraft/client/entity/AbstractClientPlayer;FFF)V cc/unknown/mixin/mixins/MixinItemRenderer/func_178097_a (Lnet/minecraft/client/entity/AbstractClientPlayer;FFF)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/doBlockTransformations ()V cc/unknown/mixin/mixins/MixinItemRenderer/func_178103_d ()V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/renderItemInFirstPerson (F)V cc/unknown/mixin/mixins/MixinItemRenderer/func_78440_a (F)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/renderOverlays (F)V cc/unknown/mixin/mixins/MixinItemRenderer/func_78447_b (F)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/renderWaterOverlayTexture (F)V cc/unknown/mixin/mixins/MixinItemRenderer/func_78448_c (F)V
+MD: cc/unknown/mixin/mixins/MixinItemRenderer/updateEquippedItem ()V cc/unknown/mixin/mixins/MixinItemRenderer/func_78441_a ()V
+MD: cc/unknown/mixin/mixins/MixinLazyLoadBase/load ()Ljava/lang/Object; cc/unknown/mixin/mixins/MixinLazyLoadBase/func_179280_b ()Ljava/lang/Object;
+MD: cc/unknown/mixin/mixins/MixinLazyLoadBase/getValue ()Ljava/lang/Object; cc/unknown/mixin/mixins/MixinLazyLoadBase/func_179281_c ()Ljava/lang/Object;
+MD: cc/unknown/mixin/mixins/MixinMinecraft/updateDisplay ()V cc/unknown/mixin/mixins/MixinMinecraft/func_175601_h ()V
+MD: cc/unknown/mixin/mixins/MixinMinecraft/readImageToBuffer (Ljava/io/InputStream;)Ljava/nio/ByteBuffer; cc/unknown/mixin/mixins/MixinMinecraft/func_152340_a (Ljava/io/InputStream;)Ljava/nio/ByteBuffer;
+MD: cc/unknown/mixin/mixins/MixinMinecraft/setWindowIcon ()V cc/unknown/mixin/mixins/MixinMinecraft/func_175594_ao ()V
+MD: cc/unknown/mixin/mixins/MixinMinecraft/clickMouse ()V cc/unknown/mixin/mixins/MixinMinecraft/func_147116_af ()V
+MD: cc/unknown/mixin/mixins/MixinMinecraft/startTimerHackThread ()V cc/unknown/mixin/mixins/MixinMinecraft/func_71389_H ()V
+MD: cc/unknown/mixin/mixins/MixinModelBox/render (Lnet/minecraft/client/renderer/WorldRenderer;F)V cc/unknown/mixin/mixins/MixinModelBox/func_178780_a (Lnet/minecraft/client/renderer/WorldRenderer;F)V
+MD: cc/unknown/mixin/mixins/MixinMovementInputFromOptions/updatePlayerMoveState ()V cc/unknown/mixin/mixins/MixinMovementInputFromOptions/func_78898_a ()V
+MD: cc/unknown/mixin/mixins/MixinNBTTagString/toString ()Ljava/lang/String; cc/unknown/mixin/mixins/MixinNBTTagString/toString ()Ljava/lang/String;
+MD: cc/unknown/mixin/mixins/MixinPlayerControllerMP/resetBlockRemoving ()V cc/unknown/mixin/mixins/MixinPlayerControllerMP/func_78767_c ()V
+MD: cc/unknown/mixin/mixins/MixinRender/bindEntityTexture (Lnet/minecraft/entity/Entity;)Z cc/unknown/mixin/mixins/MixinRender/func_180548_c (Lnet/minecraft/entity/Entity;)Z
+MD: cc/unknown/mixin/mixins/MixinRender/doRender (Lnet/minecraft/entity/Entity;DDDFF)V cc/unknown/mixin/mixins/MixinRender/func_76986_a (Lnet/minecraft/entity/Entity;DDDFF)V
+MD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/getSwingProgress (Lnet/minecraft/entity/EntityLivingBase;F)F cc/unknown/mixin/mixins/MixinRendererLivingEntity/func_77040_d (Lnet/minecraft/entity/EntityLivingBase;F)F
+MD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/interpolateRotation (FFF)F cc/unknown/mixin/mixins/MixinRendererLivingEntity/func_77034_a (FFF)F
+MD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/renderLivingAt (Lnet/minecraft/entity/EntityLivingBase;DDD)V cc/unknown/mixin/mixins/MixinRendererLivingEntity/func_77039_a (Lnet/minecraft/entity/EntityLivingBase;DDD)V
+MD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/handleRotationFloat (Lnet/minecraft/entity/EntityLivingBase;F)F cc/unknown/mixin/mixins/MixinRendererLivingEntity/func_77044_a (Lnet/minecraft/entity/EntityLivingBase;F)F
+MD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/rotateCorpse (Lnet/minecraft/entity/EntityLivingBase;FFF)V cc/unknown/mixin/mixins/MixinRendererLivingEntity/func_77043_a (Lnet/minecraft/entity/EntityLivingBase;FFF)V
+MD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/preRenderCallback (Lnet/minecraft/entity/EntityLivingBase;F)V cc/unknown/mixin/mixins/MixinRendererLivingEntity/func_77041_b (Lnet/minecraft/entity/EntityLivingBase;F)V
+MD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/setScoreTeamColor (Lnet/minecraft/entity/EntityLivingBase;)Z cc/unknown/mixin/mixins/MixinRendererLivingEntity/func_177088_c (Lnet/minecraft/entity/EntityLivingBase;)Z
+MD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/renderModel (Lnet/minecraft/entity/EntityLivingBase;FFFFFF)V cc/unknown/mixin/mixins/MixinRendererLivingEntity/func_77036_a (Lnet/minecraft/entity/EntityLivingBase;FFFFFF)V
+MD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/unsetScoreTeamColor ()V cc/unknown/mixin/mixins/MixinRendererLivingEntity/func_180565_e ()V
+MD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/setDoRenderBrightness (Lnet/minecraft/entity/EntityLivingBase;F)Z cc/unknown/mixin/mixins/MixinRendererLivingEntity/func_177090_c (Lnet/minecraft/entity/EntityLivingBase;F)Z
+MD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/unsetBrightness ()V cc/unknown/mixin/mixins/MixinRendererLivingEntity/func_177091_f ()V
+MD: cc/unknown/mixin/mixins/MixinRendererLivingEntity/renderLayers (Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V cc/unknown/mixin/mixins/MixinRendererLivingEntity/func_177093_a (Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V
+MD: cc/unknown/mixin/mixins/MixinRenderManager/cacheActiveRenderInfo (Lnet/minecraft/world/World;Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/Entity;Lnet/minecraft/client/settings/GameSettings;F)V cc/unknown/mixin/mixins/MixinRenderManager/func_180597_a (Lnet/minecraft/world/World;Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/Entity;Lnet/minecraft/client/settings/GameSettings;F)V
+MD: cc/unknown/mixin/mixins/MixinScoreBoard/func_96513_c (Lnet/minecraft/scoreboard/ScorePlayerTeam;)V cc/unknown/mixin/mixins/MixinScoreBoard/func_96513_c (Lnet/minecraft/scoreboard/ScorePlayerTeam;)V
+MD: cc/unknown/mixin/mixins/MixinScoreBoard/getObjectiveInDisplaySlot (I)Lnet/minecraft/scoreboard/ScoreObjective; cc/unknown/mixin/mixins/MixinScoreBoard/func_96539_a (I)Lnet/minecraft/scoreboard/ScoreObjective;
+MD: cc/unknown/mixin/mixins/MixinScoreBoard/setObjectiveInDisplaySlot (ILnet/minecraft/scoreboard/ScoreObjective;)V cc/unknown/mixin/mixins/MixinScoreBoard/func_96530_a (ILnet/minecraft/scoreboard/ScoreObjective;)V
+MD: cc/unknown/mixin/mixins/MixinScoreBoard/onScoreObjectiveRemoved (Lnet/minecraft/scoreboard/ScoreObjective;)V cc/unknown/mixin/mixins/MixinScoreBoard/func_96533_c (Lnet/minecraft/scoreboard/ScoreObjective;)V
+MD: cc/unknown/mixin/mixins/MixinScoreBoard/removeTeam (Lnet/minecraft/scoreboard/ScorePlayerTeam;)V cc/unknown/mixin/mixins/MixinScoreBoard/func_96511_d (Lnet/minecraft/scoreboard/ScorePlayerTeam;)V
+MD: cc/unknown/mixin/mixins/MixinScoreBoard/removeObjective (Lnet/minecraft/scoreboard/ScoreObjective;)V cc/unknown/mixin/mixins/MixinScoreBoard/func_96519_k (Lnet/minecraft/scoreboard/ScoreObjective;)V
+MD: cc/unknown/mixin/mixins/MixinServerList/saveServerList ()V cc/unknown/mixin/mixins/MixinServerList/func_78855_b ()V
+MD: cc/unknown/mixin/mixins/MixinServerList/getServerData (I)Lnet/minecraft/client/multiplayer/ServerData; cc/unknown/mixin/mixins/MixinServerList/func_78850_a (I)Lnet/minecraft/client/multiplayer/ServerData;
+MD: cc/unknown/mixin/mixins/MixinServerList/removeServerData (I)V cc/unknown/mixin/mixins/MixinServerList/func_78851_b (I)V
+MD: cc/unknown/mixin/mixins/MixinServerList/addServerData (Lnet/minecraft/client/multiplayer/ServerData;)V cc/unknown/mixin/mixins/MixinServerList/func_78849_a (Lnet/minecraft/client/multiplayer/ServerData;)V
+MD: cc/unknown/mixin/mixins/MixinServerList/swapServers (II)V cc/unknown/mixin/mixins/MixinServerList/func_78857_a (II)V
+MD: cc/unknown/mixin/mixins/MixinServerList/func_147413_a (ILnet/minecraft/client/multiplayer/ServerData;)V cc/unknown/mixin/mixins/MixinServerList/func_147413_a (ILnet/minecraft/client/multiplayer/ServerData;)V
+MD: cc/unknown/mixin/mixins/MixinSoundManager/isSoundPlaying (Lnet/minecraft/client/audio/ISound;)Z cc/unknown/mixin/mixins/MixinSoundManager/func_148597_a (Lnet/minecraft/client/audio/ISound;)Z
+MD: cc/unknown/mixin/mixins/MixinWorld/getBlockState (Lnet/minecraft/util/BlockPos;)Lnet/minecraft/block/state/IBlockState; cc/unknown/mixin/mixins/MixinWorld/func_180495_p (Lnet/minecraft/util/BlockPos;)Lnet/minecraft/block/state/IBlockState;
+MD: cc/unknown/mixin/mixins/MixinWorld/checkNoEntityCollision (Lnet/minecraft/util/AxisAlignedBB;Lnet/minecraft/entity/Entity;)Z cc/unknown/mixin/mixins/MixinWorld/func_72917_a (Lnet/minecraft/util/AxisAlignedBB;Lnet/minecraft/entity/Entity;)Z
+MD: cc/unknown/mixin/mixins/MixinWorld/canBlockBePlaced (Lnet/minecraft/block/Block;Lnet/minecraft/util/BlockPos;ZLnet/minecraft/util/EnumFacing;Lnet/minecraft/entity/Entity;Lnet/minecraft/item/ItemStack;)Z cc/unknown/mixin/mixins/MixinWorld/func_175716_a (Lnet/minecraft/block/Block;Lnet/minecraft/util/BlockPos;ZLnet/minecraft/util/EnumFacing;Lnet/minecraft/entity/Entity;Lnet/minecraft/item/ItemStack;)Z

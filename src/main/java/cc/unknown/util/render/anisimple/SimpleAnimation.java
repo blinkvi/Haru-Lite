@@ -21,7 +21,7 @@ public final class SimpleAnimation {
 			speed = 28.0D;
 		if (speed != 0.0D)
 			deltaValue = (Math.abs(value - this.value) * 0.35F) / 10.0D / speed;
-		this.value = AnimationUtils.calculateCompensationA(value, this.value, deltaValue, delta);
+		this.value = calculateCompensation(value, this.value, deltaValue, delta);
 	}
 
 	public void setAnimation(float from, float to, double speed) {
@@ -66,5 +66,26 @@ public final class SimpleAnimation {
 	public void reset(float value) {
 		this.value = value;
 		this.lastMS = System.currentTimeMillis();
+	}
+	
+	private float calculateCompensation(float target, float current, double speed, long delta) {
+		float diff = current - target;
+		double add = delta * speed / 50.0D;
+		if (diff > speed) {
+			if (current - add > target) {
+				current = (float) (current - add);
+			} else {
+				current = target;
+			}
+		} else if (diff < -speed) {
+			if (current + add < target) {
+				current = (float) (current + add);
+			} else {
+				current = target;
+			}
+		} else {
+			current = target;
+		}
+		return current;
 	}
 }

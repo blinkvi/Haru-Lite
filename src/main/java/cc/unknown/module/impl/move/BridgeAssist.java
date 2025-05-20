@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "BridgeAssist", description = "Automatically sneaks for you when you are near the edge of a block.", category = Category.MOVE)	
 public class BridgeAssist extends Module {
     
-	private final Slider edge = new Slider("Edge", this, 0.15f, 0.01f, 0.30f, 0.01f);
+	private final Slider edge = new Slider("Edge", this, 0.15, 0, 0.30f, 0.01);
     
 	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
 			new Bool("RequireSneak", false),

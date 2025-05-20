@@ -6,19 +6,26 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.player.move.MoveUtil;
+import cc.unknown.value.impl.Mode;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "MoreKB", description = "Amplifies knockback effect on opponents during combat.", category = Category.COMBAT)
 public class MoreKB extends Module {
 	
+	private final Mode mode = new Mode("Mode", this, "Silent", "Silent");
+	
 	@SubscribeEvent
 	public void onAttack(AttackEvent event) {
-		if (mc.thePlayer.onGround && MoveUtil.isMoving()) {
-            if (mc.thePlayer.hurtTime != 9) {
-                mc.thePlayer.sprintingTicksLeft = (int) MathUtil.randomizeSafeInt(0, 10);
-            } else {
-                mc.thePlayer.sprintingTicksLeft = 0;
-            }
-        }
+		switch (mode.getMode()) {
+		case "Silent":
+			if (mc.thePlayer.onGround && MoveUtil.isMoving()) {
+	            if (mc.thePlayer.hurtTime != 9) {
+	                mc.thePlayer.sprintingTicksLeft = MathUtil.randomizeSafeInt(0, 10);
+	            } else {
+	                mc.thePlayer.sprintingTicksLeft = 0;
+	            }
+	        }
+			break;
+		}
 	}
 }
