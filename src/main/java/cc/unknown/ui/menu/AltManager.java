@@ -46,6 +46,8 @@ public class AltManager extends GuiScreen {
         this.buttonList.add(new GuiButton(1, button1X - 10, (int) (position.y + boxHeight + padding), 50, boxHeight, "Random"));
 
         this.buttonList.add(new GuiButton(2, button1X + 60 + buttonSpacing - 12, (int) (position.y + (boxHeight + padding)), 50, boxHeight, "Browser"));
+
+        this.buttonList.add(new GuiButton(3, button1X + 5 + buttonSpacing - 12, (int) (position.y + 2 * (boxHeight + padding)), 100, boxHeight, "Login"));
     }
 
     @Override
@@ -128,6 +130,20 @@ public class AltManager extends GuiScreen {
         	status = gray + "Abriendo navegador...";
             MicrosoftAccount.create();
         	break;
+        case 3:
+            String inputText = usernameBox.getText().trim();
+            if (inputText.length() > 16) {
+                inputText = inputText.substring(0, 16);
+                usernameBox.setText(inputText);
+            }
+
+            if (AltGen.validate(inputText)) {
+                status = gray + "Logeado como > " + green + inputText;
+                ((ISession) mc).setSession(new Session(inputText, "none", "none", "mojang"));
+            } else {
+                status = red + "El nombre ingresado no es válido.";
+            }
+            break;
         }
     }
     
