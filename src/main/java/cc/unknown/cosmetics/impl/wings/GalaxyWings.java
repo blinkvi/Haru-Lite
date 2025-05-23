@@ -49,7 +49,7 @@ public class GalaxyWings extends ModelBase implements LayerRenderer<AbstractClie
 
 	@Override
 	public void doRenderLayer(AbstractClientPlayer entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scalee) {
-		if (!entitylivingbaseIn.isInvisible() && CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.WINGS, "Galaxy")) {
+		if (!entitylivingbaseIn.isInvisible() && CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.WINGS, "Galaxy") && entitylivingbaseIn == mc.thePlayer) {
 			double rotate = interpolate(entitylivingbaseIn.prevRenderYawOffset, entitylivingbaseIn.renderYawOffset, partialTicks);
 			GL11.glPushMatrix();
 			GL11.glScaled(-0.6, -0.6, 0.6);

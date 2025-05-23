@@ -11,11 +11,11 @@ import java.io.IOException;
 import org.lwjgl.opengl.GL11;
 
 import cc.unknown.Haru;
+import cc.unknown.mixin.interfaces.ISession;
 import cc.unknown.module.impl.visual.Interface;
 import cc.unknown.ui.menu.impl.TextField;
 import cc.unknown.util.alt.AltGen;
 import cc.unknown.util.alt.MicrosoftAccount;
-import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.structure.vectors.Vector2d;
 import net.minecraft.client.gui.GuiButton;
@@ -101,7 +101,7 @@ public class AltManager extends GuiScreen {
             if (AltGen.validate(inputText)) {
                 usernameBox.setText(inputText);
                 status = gray + "Logeado como > " + green + inputText;
-                ReflectUtil.setSession(new Session(inputText, "none", "none", "mojang"));
+                ((ISession) mc).setSession(new Session(inputText, "none", "none", "mojang"));
             } else {
                 status = red + "El nombre ingresado no es válido.";
             }
@@ -121,7 +121,8 @@ public class AltManager extends GuiScreen {
         		usernameBox.setText(name);
         	}
         	status = gray + "Logeado como > " + green + name;
-        	ReflectUtil.setSession(new Session(name, "none", "none", "mojang"));
+        	
+        	((ISession) mc).setSession(new Session(name, "none", "none", "mojang"));        	
         	break;
         case 2:
         	status = gray + "Abriendo navegador...";

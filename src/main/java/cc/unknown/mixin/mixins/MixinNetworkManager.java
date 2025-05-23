@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import cc.unknown.Haru;
 import cc.unknown.event.netty.InboundEvent;
 import cc.unknown.event.netty.OutgoingEvent;
 import cc.unknown.util.client.network.PPSCounter;
@@ -17,14 +18,18 @@ import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.ThreadQuickExitException;
+import net.minecraft.network.play.INetHandlerPlayClient;
+import net.minecraft.network.play.INetHandlerPlayServer;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
 
 @SuppressWarnings("all")
-@Mixin(value = NetworkManager.class, priority = 1001)
+@Mixin(NetworkManager.class)
 public abstract class MixinNetworkManager extends SimpleChannelInboundHandler<Packet<?>> {
-	
-	@Shadow private INetHandler packetListener;
-	
+
+	@Shadow
+	private INetHandler packetListener;
+
     @Inject(method = "sendPacket(Lnet/minecraft/network/Packet;)V", at = @At("HEAD"), cancellable = true)
     public void sendPacket(Packet<?> packet, CallbackInfo ci) {
         if (packet != null) {
@@ -63,12 +68,12 @@ public abstract class MixinNetworkManager extends SimpleChannelInboundHandler<Pa
         PPSCounter.registerType(PPSCounter.PacketType.RECEIVED);
     }
 
-    @Redirect(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Packet;processPacket(Lnet/minecraft/network/INetHandler;)V"))
-    public void onProcessPacket(Packet instance, INetHandler handler) {
-        try {
-            instance.processPacket(this.packetListener);
-        } catch (ThreadQuickExitException e) {
-            throw e;
-        } catch (Exception e) { }
-    }
+	@Redirect(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Packet;processPacket(Lnet/minecraft/network/INetHandler;)V"))
+	public void processPacket(Packet instance, INetHandler handler) {
+		try {
+			instance.processPacket(this.packetListener);
+		} catch (ThreadQuickExitException e) {
+			throw e;
+		}
+	}
 }

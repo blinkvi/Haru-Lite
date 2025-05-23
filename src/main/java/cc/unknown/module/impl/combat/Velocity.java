@@ -24,8 +24,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "Velocity", description = "Modifies the knockback you get.", category = Category.COMBAT)
 public class Velocity extends Module {
     private final Mode mode = new Mode("Mode", this, "Normal", "Jump", "Normal");
-    private final Slider horizontal = new Slider("Horizontal", this, 0.9f, 0, 1, 0.1f, () -> mode.is("Normal"));
-    private final Slider vertical = new Slider("Vertical", this, 1, 0, 1, 0.1f, () -> mode.is("Normal"));
+    private final Slider horizontal = new Slider("Horizontal", this, 0.9f, -1, 1, 0.1f, () -> mode.is("Normal"));
+    private final Slider vertical = new Slider("Vertical", this, 1, -1, 1, 0.1f, () -> mode.is("Normal"));
     private final Slider chance = new Slider("Chance", this, 100, 0, 100, 1);
     
 	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(

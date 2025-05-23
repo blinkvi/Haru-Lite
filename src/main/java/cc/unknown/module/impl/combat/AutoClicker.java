@@ -31,9 +31,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 public class AutoClicker extends Module {
 
 	private final Mode mode = new Mode("Mode", this, "Legit", "Legit", "Blatant");
-	private final Slider minCPS = new Slider("Min CPS", this, 9, 1, 25, 1);
-	private final Slider maxCPS = new Slider("Max CPS", this, 13, 1, 25, 1);
-	private final Mode randomize = new Mode("Randomize", this, "ButterFly", "ButterFly", "Jitter", "Drag");
+	private final Slider minCPS = new Slider("Min CPS", this, 9, 1, 25);
+	private final Slider maxCPS = new Slider("Max CPS", this, 13, 1, 25);
+	private final Mode randomize = new Mode("Randomize", this, "RenderLast", "RenderLast", "RenderTick", "Tick");
 
 	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
 			new Bool("Inventory", false),
@@ -67,38 +67,40 @@ public class AutoClicker extends Module {
 
 	@SubscribeEvent
 	public void onRender3D(RenderWorldLastEvent event) {
-		if (mc.currentScreen != null || !randomize.is("ButterFly")) return;
+		if (mc.currentScreen != null || !randomize.is("RenderLast")) return;
 		handleClick(event, null, null);
 	}
 
 	@SubscribeEvent
 	public void onRenderTick(TickEvent.RenderTickEvent event) {
-		if (mc.currentScreen != null || !randomize.is("Drag")) return;
+		if (mc.currentScreen != null || !randomize.is("RenderTick")) return;
 		handleClick(null, null, event);
 	}
 
 	@SubscribeEvent
-	public void onTick(TickEvent.PlayerTickEvent event) {
-		if (mc.currentScreen != null || !randomize.is("Jitter")) return;
-		handleClick(null, event, null);
+	public void onTick(TickEvent.ClientTickEvent event) {
+		if (mc.currentScreen != null || !randomize.is("Tick")) return;
+		if (event.phase == Phase.START) {
+			handleClick(null, event, null);
+		}
 	}
 
-	private void handleClick(RenderWorldLastEvent worldEvent, TickEvent.PlayerTickEvent playerTick, TickEvent.RenderTickEvent renderTick) {
+	private void handleClick(RenderWorldLastEvent worldEvent, TickEvent.ClientTickEvent clientTick, TickEvent.RenderTickEvent renderTick) {
 		if (mode.is("Legit")) {
 			ravenClick();
 		} else {
-			skidClick(worldEvent, playerTick, renderTick);
+			skidClick(worldEvent, clientTick, renderTick);
 		}
 	}
 
 	@SubscribeEvent
-	public void onPreAttack(PrePositionEvent event) {
+	public void onPrePosition(PrePositionEvent event) {
 		if (conditionals.isEnabled("Inventory") && mc.currentScreen instanceof GuiContainer) {
 			InventoryUtil.guiClicker(mc.currentScreen, 0, getRandomizedCPS());
 		}
 	}
 
-	private void skidClick(RenderWorldLastEvent world, TickEvent.PlayerTickEvent player, TickEvent.RenderTickEvent render) {
+	private void skidClick(RenderWorldLastEvent world, TickEvent.ClientTickEvent client, TickEvent.RenderTickEvent render) {
 		if (!isInGame() || !Mouse.isButtonDown(0) || breakBlock()) return;
 
 		if (conditionals.isEnabled("OnlyWeapon") && !InventoryUtil.isSword()) return;

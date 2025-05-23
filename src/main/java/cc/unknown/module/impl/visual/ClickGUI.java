@@ -19,6 +19,7 @@ import cc.unknown.value.impl.Slider;
 @ModuleInfo(name = "ClickGUI", description = "Provides a graphical user interface (GUI).", category = Category.VISUAL, key = Keyboard.KEY_RSHIFT)
 public final class ClickGUI extends Module {
 	
+	
 	public final Mode waifuType = new Mode("Waifu", this, StickersType.NONE, StickersType.values());
 	
 	public final Slider width = new Slider("Width", this, 100, 10, 1000, 10, () -> !waifuType.is("None"));

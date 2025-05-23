@@ -3,6 +3,8 @@ package cc.unknown.mixin.mixins;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -21,9 +23,10 @@ import cc.unknown.Haru;
 import cc.unknown.event.GameLoopEvent;
 import cc.unknown.event.player.AttackEvent;
 import cc.unknown.event.player.PlaceEvent;
+import cc.unknown.mixin.interfaces.ISession;
+import cc.unknown.module.impl.combat.AimAssist;
 import cc.unknown.module.impl.combat.Piercing;
 import cc.unknown.module.impl.combat.Reach;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
@@ -37,7 +40,6 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.stream.IStream;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
@@ -45,7 +47,7 @@ import net.minecraft.util.Util;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mixin(Minecraft.class)
-public abstract class MixinMinecraft {
+public abstract class MixinMinecraft implements ISession {
 
 	@Shadow
 	@Mutable
@@ -91,6 +93,17 @@ public abstract class MixinMinecraft {
 
 	@Shadow
 	public abstract ByteBuffer readImageToBuffer(InputStream imageStream) throws IOException;
+	
+	@Unique
+    private Set<EntityLivingBase> lockedTargets = new HashSet<>();
+    
+	@Unique
+	private EntityLivingBase target;
+	
+	@Override
+	public void setSession(Session session) {
+		this.session = session;
+	}
 	
 	@Inject(method = "startGame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;ingameGUI:Lnet/minecraft/client/gui/GuiIngame;", shift = At.Shift.AFTER))
 	private void injectStartGame(CallbackInfo ci) {
@@ -161,56 +174,22 @@ public abstract class MixinMinecraft {
 		}
 	}
 	
-	@Overwrite
-	private void clickMouse() {
-		clickMouse(true, true);
-	}
+    @Inject(method = "clickMouse", at = @At("HEAD"))
+    private void clickMouse(CallbackInfo ci) {
+        if (this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && objectMouseOver.entityHit instanceof EntityLivingBase) {
 
-	@Unique
-	private void clickMouse(boolean swing, boolean events) {
-		if (this.leftClickCounter <= 0) {
-			if (events) {
-				if (this.objectMouseOver != null
-						&& this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY
-						&& objectMouseOver.entityHit instanceof EntityLivingBase) {
-					final AttackEvent event = new AttackEvent((EntityLivingBase) this.objectMouseOver.entityHit);
-					MinecraftForge.EVENT_BUS.post(event);
+            EntityLivingBase attackedEntity = (EntityLivingBase) this.objectMouseOver.entityHit;
+            AttackEvent event = new AttackEvent(attackedEntity);
+            MinecraftForge.EVENT_BUS.post(event);
 
-					if (event.isCanceled())
-						return;
-				}
-			}
-
-			if (swing) {
-				this.thePlayer.swingItem();
-			}
-
-			if (this.objectMouseOver == null) {
-				if (this.playerController.isNotCreative()) {
-					this.leftClickCounter = 10;
-				}
-			} else {
-				switch (this.objectMouseOver.typeOfHit) {
-				case ENTITY:
-					this.playerController.attackEntity(this.thePlayer, this.objectMouseOver.entityHit);
-					break;
-
-				case BLOCK:
-					final BlockPos blockpos = this.objectMouseOver.getBlockPos();
-
-					if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air) {
-						this.playerController.clickBlock(blockpos, this.objectMouseOver.sideHit);
-						break;
-					}
-
-				default:
-					if (this.playerController.isNotCreative()) {
-						this.leftClickCounter = 10;
-					}
-				}
-			}
+            AimAssist aim = Haru.instance.getModuleManager().getModule(AimAssist.class);
+            
+            if (aim.conditionals.isEnabled("LockTarget") && this.currentScreen == null) {
+                lockedTargets.add(attackedEntity);
+                target = attackedEntity;
+            }
 		}
-	}
+    }
 
 	@Inject(method = "createDisplay", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setTitle(Ljava/lang/String;)V", shift = At.Shift.AFTER))
 	private void createDisplay(CallbackInfo callbackInfo) {

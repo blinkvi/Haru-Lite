@@ -5,8 +5,8 @@ import java.util.stream.Stream;
 
 import org.lwjgl.input.Keyboard;
 
-import cc.unknown.event.player.PreMoveInputEvent;
 import cc.unknown.event.player.PlaceEvent;
+import cc.unknown.event.player.PreMoveInputEvent;
 import cc.unknown.event.player.PreUpdateEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "BridgeAssist", description = "Automatically sneaks for you when you are near the edge of a block.", category = Category.MOVE)	
 public class BridgeAssist extends Module {
     
-	private final Slider edge = new Slider("Edge", this, 0.15, 0, 0.30f, 0.01);
+	private final Slider edge = new Slider("Edge", this, 0.15, -0.2, 0.30, 0.01);
     
 	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
 			new Bool("RequireSneak", false),
@@ -57,7 +57,7 @@ public class BridgeAssist extends Module {
 
 	@SubscribeEvent
 	public void onPlace(PlaceEvent event) {		
-		if (isShifting) {
+		if (isShifting || shouldBridge) {
 			isShifting = false;
 		}
 	}
@@ -148,7 +148,7 @@ public class BridgeAssist extends Module {
             return mc.theWorld.getCollidingBoundingBoxes(player, expandedBox).isEmpty();
         });
 
-        if (airBelow || airAround) {
+        if (airAround) {
             if (offset < dist && offset >= -dist) {
                 offset = 0.0D;
             } else {
@@ -156,14 +156,13 @@ public class BridgeAssist extends Module {
             }
         }
 
-        if (mc.theWorld.getCollidingBoundingBoxes(player, box.offset(0.0D, motionY, 0.0D)).isEmpty()) {
+        if (airBelow) {
             if (motionY < dist && motionY >= -dist) {
                 motionY = 0.0D;
             } else {
                 motionY += (motionY > 0.0D ? -dist : dist);
             }
         }
-
         return offset == 0.0D || motionY == 0.0D;
     }
 }

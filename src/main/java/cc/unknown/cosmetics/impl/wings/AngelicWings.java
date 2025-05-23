@@ -45,7 +45,7 @@ public class AngelicWings extends ModelBase implements LayerRenderer<AbstractCli
 	@Override
 	public void doRenderLayer(AbstractClientPlayer entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scalee) {
 	    if (!entitylivingbaseIn.isInvisible() &&
-	        CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.WINGS, "Angelic")) {
+	        CosmeticController.shouldRenderCosmeticForPlayer(entitylivingbaseIn, CosmeticType.WINGS, "Angelic") && entitylivingbaseIn == mc.thePlayer) {
             float angle = getWingAngle(entitylivingbaseIn, 30, 5000, 400);
 
             setRotation(leftWing, new Vector3d(Math.toRadians(angle + 20), Math.toRadians(-4), Math.toRadians(6)));

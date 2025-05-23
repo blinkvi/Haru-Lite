@@ -5,10 +5,8 @@ import java.awt.Color;
 import cc.unknown.Haru;
 import cc.unknown.module.impl.visual.Interface;
 import cc.unknown.ui.drag.Drag;
-import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
-import cc.unknown.util.render.shader.impl.GradientBlur;
 import net.minecraft.client.gui.ScaledResolution;
 
 public class WatermarkDraggable extends Drag {
@@ -37,10 +35,6 @@ public class WatermarkDraggable extends Drag {
         height = Math.min(height, sr.getScaledHeight() - renderY);
 
         RoundedUtil.drawRound(x, y, width, height - 2, 6.0F, new Color(getModule(Interface.class).backgroundColor(), true));
-    	if (setting.shaders.get()) {
-    		new GradientBlur().set((int) x, (int) y, (int) width, (int) height, 0);
-    		RenderUtil.drawBloomShadow(x, y, width, height, 20, 6, setting.color(0));
-    	}
         FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).drawString(title, x + padding + 2.0f, y + (height / 2) - 3, setting.color());
     }
 

@@ -9,7 +9,6 @@ import cc.unknown.ui.drag.Drag;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.util.render.shader.RoundedUtil;
-import cc.unknown.util.render.shader.impl.GradientBlur;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.item.ItemStack;
 
@@ -38,11 +37,6 @@ public class InventoryDraggable extends Drag {
         float adjustedY = Math.min(y, sr.getScaledHeight() - height);
 
         RoundedUtil.drawRound(adjustedX, adjustedY, width, height, 6F, new Color(setting.backgroundColor(), true));
-        if (setting.shaders.get()) {
-            new GradientBlur().set((int) adjustedX, (int) adjustedY, (int) width, (int) height, 0);
-            RenderUtil.drawBloomShadow(adjustedX, adjustedY, width, height, 20, 6, setting.color(0));
-        }
-
         FontUtil.getFontRenderer("interSemiBold.ttf", 15).drawString("Inventory", adjustedX + 19.0F, adjustedY + 5.5F, new Color(255, 255, 255, 255).getRGB());
         FontUtil.getFontRenderer("nursultan.ttf", 16).drawString("A", adjustedX + 5.0F, adjustedY + 6.0F, -1);
 

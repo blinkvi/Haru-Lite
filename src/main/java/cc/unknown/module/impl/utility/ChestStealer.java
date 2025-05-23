@@ -8,7 +8,6 @@ import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.client.system.Clock;
 import cc.unknown.value.impl.Bool;
@@ -30,19 +29,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "ChestStealer", description = "", category = Category.UTILITY)
 public class ChestStealer extends Module {
 
-	private final Slider startDelay = new Slider("StartDelay", this, 2, 0, 10);
-	private final Slider minDelay = new Slider("MinDelay", this, 1, 0, 10);
-	private final Slider maxDelay = new Slider("MinDelay", this, 1, 0, 10);
+	private final Slider startDelay = new Slider("StartDelay", this, 2, 0, 20);
+	private final Slider minDelay = new Slider("MinDelay", this, 1, 0, 20);
+	private final Slider maxDelay = new Slider("MaxDelay", this, 1, 0, 20);
 	private final Bool ignoreJunk = new Bool("IgnoreJunk", this, true);
 	private final Bool autoClose = new Bool("AutoClose", this, true);
-	private final Bool checkName = new Bool("ChestName", this, true);
 
 	private final Clock clock = new Clock();
 	private final Clock startTimer = new Clock();
@@ -68,7 +65,7 @@ public class ChestStealer extends Module {
 	}
 
 	@SubscribeEvent
-	public void onRenderTick(TickEvent.RenderTickEvent event) {
+	public void onRenderTick(PrePositionEvent event) {
 		if (!lastInChest) {
 			startTimer.reset();
 		}
@@ -76,14 +73,6 @@ public class ChestStealer extends Module {
 		lastInChest = mc.currentScreen instanceof GuiChest;
 
 		if (mc.currentScreen instanceof GuiChest) {
-			if (checkName.get()) {
-				final String name = ReflectUtil.isLowerChestInventory().getDisplayName().getUnformattedText();
-
-				if (!name.toLowerCase().contains("chest")) {
-					return;
-				}
-			}
-
 			if (!startTimer.hasPassedTicks((int) startDelay.getValue()))
 				return;
 
@@ -155,7 +144,7 @@ public class ChestStealer extends Module {
 
 	@SubscribeEvent
 	public void onPrePosition(PrePositionEvent event) {
-		if (mc.currentScreen instanceof GuiChest && Display.isVisible() && (!checkName.get() || (ReflectUtil.isLowerChestInventory().getDisplayName().getUnformattedText().contains("chest")))) {
+		if (mc.currentScreen instanceof GuiChest && Display.isVisible()) {
 			mc.mouseHelper.mouseXYChange();
 			mc.mouseHelper.ungrabMouseCursor();
 			mc.mouseHelper.grabMouseCursor();

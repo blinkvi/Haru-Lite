@@ -1,7 +1,11 @@
 package cc.unknown.module.impl.combat;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import cc.unknown.event.player.AttackEvent;
 import cc.unknown.module.Module;
@@ -13,7 +17,6 @@ import cc.unknown.util.player.FriendUtil;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.player.move.RotationUtil;
-import cc.unknown.util.structure.vectors.Vec3;
 import cc.unknown.value.impl.Bool;
 import cc.unknown.value.impl.Mode;
 import cc.unknown.value.impl.MultiBool;
@@ -21,6 +24,7 @@ import cc.unknown.value.impl.Slider;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -36,8 +40,8 @@ public class AimAssist extends Module {
 	private final Slider hMult  = new Slider("HorizontalMult",  this, 3.5f, 0.1f, 20, 0.01f, () -> mode.is("Regular"));
 	
 	private Bool vertical = new Bool("Vertical", this, false);
-	private Slider vSpeed = new Slider("VerticalSpeed", this, 2.1f, 0.1f, 20, 0.01f, () -> mode.is("Regular") && vertical.get());
-	private Slider vMult = new Slider("VerticalMult", this, 2.3f, 0.1f, 20, 0.01f, () -> mode.is("Regular") && vertical.get());
+	private Slider vSpeed = new Slider("VerticalSpeed", this, 2.1f, 0.1f, 10, 0.01f, () -> mode.is("Regular") && vertical.get());
+	private Slider vMult = new Slider("VerticalMult", this, 2.3f, 0.1f, 10, 0.01f, () -> mode.is("Regular") && vertical.get());
 	
 	private final Slider angle = new Slider("Angle", this, 180, 0, 180, 1);
 	private final Slider distance = new Slider("Distance", this, 4f, 1f, 8f, 0.1f);
@@ -49,6 +53,7 @@ public class AimAssist extends Module {
 			new Bool("RequireClicking", true),
 			new Bool("LockTarget", false),
 			new Bool("IgnoreFriends", false),
+			new Bool("IgnoreTeams", false),
 			new Bool("IgnoreInvisibles", false),
 			new Bool("VisibilityCheck", true),
 			new Bool("MouseOverEntity", false),
@@ -66,21 +71,18 @@ public class AimAssist extends Module {
 	}
 	
 	@SubscribeEvent
-	public void onAttack(AttackEvent event) {        
-		if (event.target instanceof EntityPlayer) {
-            EntityPlayer newTarget = (EntityPlayer) event.target;            
-			if (conditionals.isEnabled("LockTarget")) {
-	            lockedTargets.add(newTarget);
-	            if (target == null) {
-	                target = newTarget;
-	            }
-			}
-		}
+	public void onAttack(AttackEvent event) {
+	    Optional.ofNullable(event.target).filter(EntityPlayer.class::isInstance).map(EntityPlayer.class::cast).filter(p -> conditionals.isEnabled("LockTarget")).ifPresent(newTarget -> {
+	    	lockedTargets.add(newTarget);
+	    	if (target == null) {
+	    		target = newTarget;
+	    	}
+	    });
 	}
 	
 	@SubscribeEvent
 	public void onPostTick(ClientTickEvent event) {
-	    if (event.phase == Phase.START || mc.currentScreen != null || !mc.inGameHasFocus) return;
+	    if (event.phase == Phase.START || !isInGame() || mc.currentScreen != null || !mc.inGameHasFocus || target == null) return;
 
 	    if (conditionals.isEnabled("WeaponsOnly") && !InventoryUtil.isSword()) return;
 
@@ -108,11 +110,18 @@ public class AimAssist extends Module {
 	        return;
 	    }
 
-	    if (!conditionals.isEnabled("LockTarget") || target == null || !onTarget()) {
-	        target = getEnemy();
+	    lockedTargets.removeIf(t -> !t.isEntityAlive() || mc.thePlayer.getDistanceToEntity(t) > distance.getValue());
+
+	    if (conditionals.isEnabled("LockTarget")) {
+	        if (target == null || !isValidTarget(target, (int) angle.getValue()) || !onTarget()) {
+	            lockedTargets.clear();
+	            target = null;
+	        }
 	    }
 
-	    if (target == null) return;
+	    if (!conditionals.isEnabled("LockTarget") || target == null) {
+	        target = getEnemy();
+	    }
 	    
 	    switch (mode.getMode()) {
 	    case "Lock":
@@ -120,49 +129,40 @@ public class AimAssist extends Module {
 	    	break;
 	    case "Regular":
 		    double yawOffset = MathUtil.randomDouble(Math.min(hSpeed.getValue(), hMult.getValue()) * 10f, Math.max(hSpeed.getValue(), hMult.getValue()) * 10f) / 180f;
-		    double yawFov = (float) PlayerUtil.fovFromTarget(target);
+		    double yawFov = PlayerUtil.fovFromTarget(target);
 		    double yawAdjustment = getSpeedRandomize(speedMode.getMode(), yawFov, yawOffset, hSpeed.getValue(), hMult.getValue());
 	
-		    double pitchOffset = MathUtil.randomDouble(Math.min(vSpeed.getValue(), vMult.getValue()) * 10f, Math.max(vSpeed.getValue(), vMult.getValue()) * 10f) / 90f;
-		    double pitchEntity = (float) PlayerUtil.pitchFromTarget(target);
+		    float pitchOffset = (float) (MathUtil.randomDouble(Math.min(vSpeed.getValue(), vMult.getValue()) * 10f, Math.max(vSpeed.getValue(), vMult.getValue()) * 10f) / 90f);
+		    float pitchEntity = (float) PlayerUtil.pitchFromTarget(target);
 		    
-		    double resultVertical = getSpeedRandomize(speedMode.getMode(), pitchEntity, pitchOffset, vSpeed.getValue(), vMult.getValue());
+		    float resultVertical = (float) getSpeedRandomize(speedMode.getMode(), pitchEntity, pitchOffset, vSpeed.getValue(), vMult.getValue());
 	
-		    if (onTarget()) {
-		        applyYaw(yawFov, yawAdjustment);
-		        applyPitch(resultVertical);
-		    } else {
-		        applyYaw(yawFov, yawAdjustment);
-		        applyPitch(resultVertical);
-		    }
+	        applyYaw(yawFov, yawAdjustment);
+	        applyPitch(resultVertical);
 	    	break;
 	    }
 	}
 
 	private EntityPlayer getEnemy() {
-        int fov = (int) angle.getValue();
-        Vec3 playerPos = new Vec3(mc.thePlayer);
-        EntityPlayer bestTarget = null;
-        double bestScore = Double.MAX_VALUE;
-        
-        for (EntityPlayer player : mc.theWorld.playerEntities) {
-            if (lockedTargets.contains(player) && !isValidTarget(player, fov)) {
-                continue;
-            }
-            if (!isValidTarget(player, fov)) {
-                continue;
-            }
-            
-            double score = playerPos.distanceTo(player.getPositionVector());
-            if (score < bestScore) {
-                bestTarget = player;
-                bestScore = score;
-            }
-        }
-        
-        return bestTarget;
-        
+	    int fov = (int) angle.getValue();
+	    EntityPlayer bestTarget = null;
+	    double bestScore = Double.MAX_VALUE;
+
+	    for (EntityPlayer player : mc.theWorld.playerEntities) {
+	        if (!isValidTarget(player, fov)) continue;
+
+	        AxisAlignedBB bb = player.getEntityBoundingBox();
+	        double score = RotationUtil.nearestRotation(bb);
+
+	        if (score < bestScore) {
+	            bestScore = score;
+	            bestTarget = player;
+	        }
+	    }
+
+	    return bestTarget;
 	}
+
 	
 	private boolean isValidTarget(EntityPlayer player, int fov) {
 		if (player == mc.thePlayer || !player.isEntityAlive()) return false;
@@ -170,15 +170,16 @@ public class AimAssist extends Module {
 	    if (conditionals.isEnabled("MultiPoint") && mc.pointedEntity != null && mc.pointedEntity == target) return false;
 	    if (!conditionals.isEnabled("IgnoreInvisibles") && player.isInvisible()) return false;
 	    if (FriendUtil.isFriend(player) && conditionals.isEnabled("IgnoreFriends")) return false;
-	    if (PlayerUtil.isTeam(player) && isEnabled(Teams.class)) return false;
+	    if (conditionals.isEnabled("IgnoreTeams") && !mc.thePlayer.isOnSameTeam(player)) return false;
 	    if (mc.thePlayer.getDistanceToEntity(player) > distance.getValue()) return false;
 	    if (conditionals.isEnabled("VisibilityCheck") && !mc.thePlayer.canEntityBeSeen(player)) return false;
 	    return fov == 180 || PlayerUtil.fov(fov, player);
 	}
 	
-    private boolean onTarget() {
-        return mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && mc.objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK && mc.objectMouseOver.entityHit == target;
-    }
+	private boolean onTarget() {
+	    if (target == null) return false;
+	    return target.isEntityAlive() && mc.thePlayer.getDistanceToEntity(target) <= distance.getValue() && mc.thePlayer.canEntityBeSeen(target);
+	}
     
     private void applyYaw(double yawFov, double yawAdjustment) {
         if (isYawFov(yawFov)) {
@@ -186,43 +187,41 @@ public class AimAssist extends Module {
         }
     }
 
-	private void applyPitch(double resultVertical) {
+	private void applyPitch(float resultVertical) {
 	    if (vertical.get()) {
-	    	double pitchAdjustment = resultVertical;
-	    	double newPitch = mc.thePlayer.rotationPitch + pitchAdjustment;
+	    	float pitchAdjustment = resultVertical;
+	    	float newPitch = mc.thePlayer.rotationPitch + pitchAdjustment;
 
 	        mc.thePlayer.rotationPitch += pitchAdjustment;
-	        mc.thePlayer.rotationPitch = (float) normalizePitch(newPitch);
+	        mc.thePlayer.rotationPitch = normalizePitch(newPitch);
 	    }
 	}
 
 	private double getSpeedRandomize(String mode, double fov, double offset, double speed, double complement) {
-		double randomComplement = 0, result = 0;
-
-	    switch (mode) {
-	        case "Random":
-	            randomComplement = MathUtil.randomDouble(complement / 100f, (complement + 0.5f) / 100f);
-	            result = calculateResult(fov, offset, speed, MathUtil.randomDouble(speed, speed + 0.3f));
-	            break;
-
-	        case "Secure":
-	            randomComplement = MathUtil.nextSecureDouble(complement / 100f, (complement + 0.5f) / 180f);
-	            result = calculateResult(fov, offset, speed, MathUtil.nextSecureDouble(speed, speed + 0.3f));
-	            break;
-
-	        case "Gaussian":
-	        	double gaussianFactor = (float) MathUtil.randomGaussian(0.15f);
-	            randomComplement = (complement + gaussianFactor) / 200f;
-	            double gaussianSpeed = speed + (float) MathUtil.randomGaussian(0.15f);
-	            gaussianSpeed = MathUtil.lerpDouble(speed, gaussianSpeed, 0.5f);
-	            result = calculateResult(fov, offset, speed, gaussianSpeed);
-	            break;
-	    }
-
-	    return randomComplement + result;
+	    return Stream.of(
+	        new AbstractMap.SimpleEntry<>("Random", (Supplier<Double>) () -> {
+	            double randComp = MathUtil.randomDouble(complement / 100, (complement + 0.2) / 100);
+	            double randSpeed = MathUtil.randomDouble(speed, speed + 0.3);
+	            return randComp + calculateResult(fov, offset, speed, randSpeed);
+	        }),
+	        new AbstractMap.SimpleEntry<>("Secure", (Supplier<Double>) () -> {
+	            double randComp = MathUtil.nextSecureDouble(complement / 100, (complement + 0.5) / 180);
+	            double randSpeed = MathUtil.nextSecureDouble(speed, speed + 0.3);
+	            return randComp + calculateResult(fov, offset, speed, randSpeed);
+	        }),
+	        new AbstractMap.SimpleEntry<>("Gaussian", (Supplier<Double>) () -> {
+	            double randComp = (complement + MathUtil.randomGaussian(0.15)) / 100;
+	            double randSpeed = MathUtil.lerpDouble(speed, speed + MathUtil.randomGaussian(0.15), 0.5);
+	            double result = randComp + calculateResult(fov, offset, speed, randSpeed);
+	            return result;
+	        })
+	    ).filter(entry -> entry.getKey().equalsIgnoreCase(mode))
+	     .map(entry -> entry.getValue().get())
+	     .findFirst()
+	     .orElse(speed);
 	}
 	
-	private double normalizePitch(double pitch) {
+	private float normalizePitch(float pitch) {
 	    return pitch >= 90f ? pitch - 360f : pitch <= -90f ? pitch + 360f : pitch;
 	}
 

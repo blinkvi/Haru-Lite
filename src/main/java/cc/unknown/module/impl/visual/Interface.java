@@ -43,7 +43,6 @@ public class Interface extends Module {
 	public final Palette mainColor = new Palette("MainColor", this, new Color(128, 128, 255), () -> color.is("Static") || color.is("Fade"));
 	public final Palette secondColor = new Palette("SecondColor", this, new Color(128, 255, 255), () -> color.is("Fade"));
 	public final Slider fadeSpeed = new Slider("FadeSpeed", this, 1, 1, 10, 1, () -> color.is("Fade"));
-	public final Bool shaders = new Bool("Shaders", this, false);
 	
 	public final Slider fontSize = new Slider("FontSize", this, 17, 6, 20, () -> this.elements.isEnabled("ArrayList"));
 	public final Slider textHeight = new Slider("FontHeight", this, 3, 0, 15, () -> this.elements.isEnabled("ArrayList"));

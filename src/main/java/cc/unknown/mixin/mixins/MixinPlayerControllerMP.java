@@ -42,7 +42,6 @@ public class MixinPlayerControllerMP {
 
     @Overwrite
     public void resetBlockRemoving() {
-    	
         if (isHittingBlock) {
             mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, currentBlock, EnumFacing.DOWN));
         }

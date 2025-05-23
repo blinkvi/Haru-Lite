@@ -158,20 +158,24 @@ public class PlayerUtil implements Accessor {
 	}
 	
 	public static double fovFromTarget(Entity entity) {
+	    if (mc.thePlayer == null || entity == null) return 0.0;
 	    return ((mc.thePlayer.rotationYaw - fovToTarget(entity)) % 360.0 + 540.0) % 360.0 - 180.0;
 	}
 
-	private static float fovToTarget(Entity entity) {
-		double diffX = entity.posX - mc.thePlayer.posX;
-		double diffZ = entity.posZ - mc.thePlayer.posZ;
-		return (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0F;
+	private static double fovToTarget(Entity entity) {
+	    if (mc.thePlayer == null || entity == null) return 0.0;
+	    double diffX = entity.posX - mc.thePlayer.posX;
+	    double diffZ = entity.posZ - mc.thePlayer.posZ;
+	    return Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0F;
 	}
 	
     public static double pitchFromTarget(Entity en) {
+    	if (mc.thePlayer == null || en == null) return 0.0;
         return (double) (mc.thePlayer.rotationPitch - pitchToEntity(en, 0));
     }
 
     public static float pitchToEntity(Entity ent, float offset) {
+    	if (mc.thePlayer == null || ent == null) return 0.0f;
         double x = mc.thePlayer.getDistanceToEntity(ent);
         double y = mc.thePlayer.posY - (ent.posY + offset);
         double pitch = (((Math.atan2(x, y) * 180.0D) / Math.PI));

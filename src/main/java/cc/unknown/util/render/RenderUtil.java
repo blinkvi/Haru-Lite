@@ -1,26 +1,7 @@
 package cc.unknown.util.render;
 
 import static java.lang.Math.PI;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_GREATER;
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.GL_LINE_SMOOTH;
-import static org.lwjgl.opengl.GL11.GL_LINE_STRIP;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLineWidth;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glTranslated;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex2d;
-import static org.lwjgl.opengl.GL11.glVertex3f;
-import static org.lwjgl.opengl.GL11.glVertex3i;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -64,6 +45,117 @@ public final class RenderUtil implements Accessor {
 	private static final Map<Integer, Integer> shadowCache = new HashMap<>();
 	private static final Map<EntityPlayer, float[][]> rotationMap = new HashMap<>();
 	private static final float DEGREES_IN_RADIAN = 57.295776f;
+	
+	public static void drawFastRoundedRect(double left, double top, double right, double bottom, double radius, int color) {
+        GlStateManager.disableCull();
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        glColor4f((color >> 16 & 0xFF) / 255.0f, (color >> 8 & 0xFF) / 255.0f, (color & 0xFF) / 255.0f, (color >> 24 & 0xFF) / 255.0f);
+        glBegin(5);
+        glVertex2d(left + radius, top);
+        glVertex2d(left + radius, bottom);
+        glVertex2d(right - radius, top);
+        glVertex2d(right - radius, bottom);
+        glEnd();
+        glBegin(5);
+        glVertex2d(left, top + radius);
+        glVertex2d(left + radius, top + radius);
+        glVertex2d(left, bottom - radius);
+        glVertex2d(left + radius, bottom - radius);
+        glEnd();
+        glBegin(5);
+        glVertex2d(right, top + radius);
+        glVertex2d(right - radius, top + radius);
+        glVertex2d(right, bottom - radius);
+        glVertex2d(right - radius, bottom - radius);
+        glEnd();
+        glBegin(6);
+        double d1 = right - radius;
+        double d2 = top + radius;
+        glVertex2d(d1, d2);
+        int j;
+        for (j = 0; j <= 18; ++j)
+            glVertex2d(d1 + radius * Math.cos(Math.toRadians(j * 5.0f)), d2 - radius * Math.sin(Math.toRadians(j * 5.0f)));
+        glEnd();
+        glBegin(6);
+        d1 = left + radius;
+        d2 = top + radius;
+        glVertex2d(d1, d2);
+        for (j = 0; j <= 18; ++j)
+            glVertex2d(d1 - radius * Math.cos(Math.toRadians(j * 5.0f)), d2 - radius * Math.sin(Math.toRadians(j * 5.0f)));
+        glEnd();
+        glBegin(6);
+        d1 = left + radius;
+        d2 = bottom - radius;
+        glVertex2d(d1, d2);
+        for (j = 0; j <= 18; ++j)
+            glVertex2d(d1 - radius * Math.cos(Math.toRadians(j * 5.0f)), d2 + radius * Math.sin(Math.toRadians(j * 5.0f)));
+        glEnd();
+        glBegin(6);
+        d1 = right - radius;
+        d2 = bottom - radius;
+        glVertex2d(d1, d2);
+        for (j = 0; j <= 18; ++j)
+            glVertex2d(d1 + radius * Math.cos(Math.toRadians(j * 5.0f)), d2 + radius * Math.sin(Math.toRadians(j * 5.0f)));
+        glEnd();
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableCull();
+        GlStateManager.disableBlend();
+    }
+	
+    public static void circle(final float x, final float y, final float radius, final int fill) {
+        arc(x, y, 0.0f, 360.0f, radius, fill);
+    }
+
+    public static void arc(final float x, final float y, final float start, final float end, final float radius,
+                           final int color) {
+        arcEllipse(x, y, start, end, radius, radius, color);
+    }
+    
+    public static void arcEllipse(final float x, final float y, float start, float end, final float w, final float h, final int color) {
+        GlStateManager.color(0.0f, 0.0f, 0.0f);
+        GL11.glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
+        float temp;
+        if (start > end) {
+            temp = end;
+            end = start;
+            start = temp;
+        }
+        final float var11 = (color >> 24 & 0xFF) / 255.0f;
+        final float var12 = (color >> 16 & 0xFF) / 255.0f;
+        final float var13 = (color >> 8 & 0xFF) / 255.0f;
+        final float var14 = (color & 0xFF) / 255.0f;
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.color(var12, var13, var14, var11);
+        if (var11 > 0.5f) {
+            GL11.glEnable(GL_LINE_SMOOTH);
+            GL11.glLineWidth(2.0f);
+            GL11.glBegin(3);
+            for (float i = end; i >= start; i -= 4.0f) {
+                final float ldx = (float) Math.cos(i * PI / 180.0) * w * 1.001f;
+                final float ldy = (float) Math.sin(i * PI / 180.0) * h * 1.001f;
+                GL11.glVertex2f(x + ldx, y + ldy);
+            }
+            GL11.glEnd();
+            GL11.glDisable(GL_LINE_SMOOTH);
+        }
+        GL11.glBegin(6);
+        for (float i = end; i >= start; i -= 4.0f) {
+            final float ldx = (float) Math.cos(i * PI / 180.0) * w;
+            final float ldy = (float) Math.sin(i * PI / 180.0) * h;
+            GL11.glVertex2f(x + ldx, y + ldy);
+        }
+        GL11.glEnd();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+    }
+	
+    public static void drawRect2(double x, double y, double width, double height, int color) {
+        drawRect(x, y, x + width, y + height, color);
+    }
 
 	public static void drawRect(double left, double top, double right, double bottom, int color) {
 		double j;

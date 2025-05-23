@@ -11,7 +11,6 @@ import cc.unknown.ui.drag.Drag;
 import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.client.ColorUtil;
 import cc.unknown.util.render.font.FontUtil;
-import cc.unknown.util.render.shader.impl.GradientBlur;
 import net.minecraft.client.gui.ScaledResolution;
 
 public class ArrayListDraggable extends Drag {
@@ -75,16 +74,8 @@ public class ArrayListDraggable extends Drag {
 
     private void renderBackground(float localX, float localY, float offset, int width, int height, int middle, int index) {
         if (localX < middle) {
-        	if (setting.shaders.get()) {
-        		new GradientBlur().set(localX - PADDING, localY + offset, width + 3, (int) (height + PADDING + setting.textHeight.get()), 0);
-        		RenderUtil.drawBloomShadow(localX - PADDING, localY + offset, width + 3, height + PADDING + (float) setting.textHeight.get(), 14, 18, setting.color(index * 200));
-        	}
             RenderUtil.drawRoundedRect(localX - PADDING, localY + offset, width + 3, height + PADDING + setting.textHeight.get(), 8, setting.backgroundColor(index));
         } else {
-        	if (setting.shaders.get()) {
-        		new GradientBlur().set(localX + this.width - 4 - width, localY + offset + 2, width + 3, (int) (height + PADDING + setting.textHeight.get()), 0);
-        		RenderUtil.drawBloomShadow(localX + this.width - 4 - width, localY + offset + 2, width + 3, height + PADDING + (float) setting.textHeight.get(), 14, 18, setting.color(index * 200));
-        	}
             RenderUtil.drawRoundedRect(localX + this.width - 4 - width, localY + offset + 2, width + 3, height + PADDING + setting.textHeight.get(), 8, setting.backgroundColor(index));
         }
     }

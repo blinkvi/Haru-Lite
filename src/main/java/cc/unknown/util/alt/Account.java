@@ -2,10 +2,11 @@ package cc.unknown.util.alt;
 
 import com.google.gson.JsonObject;
 
-import cc.unknown.util.client.ReflectUtil;
+import cc.unknown.mixin.interfaces.ISession;
+import cc.unknown.util.Accessor;
 import net.minecraft.util.Session;
 
-public class Account {
+public class Account implements Accessor {
     private String name;
     private String uuid;
     private String accessToken;
@@ -41,7 +42,7 @@ public class Account {
 	}
 
 	public boolean login() {
-		ReflectUtil.setSession(new Session(name, uuid, accessToken, "mojang"));
+		((ISession) mc).setSession(new Session(name, uuid, accessToken, "mojang"));
         return true;
     }
 

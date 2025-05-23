@@ -16,7 +16,6 @@
 		"MixinEntityPlayerSP",
 		"MixinEntityRenderer",
 		"MixinGuiIngame",
-		"MixinBlockPos",
 		"MixinShaderGroup",
 		"MixinEntity",
 		"MixinMovementInputFromOptions",
@@ -74,10 +73,7 @@
 		"MixinGuiButton",
 		"MixinRender",
 		"MixinGlStateManager",
-		"MixinFluidRegistry",
-		"MixinScaledResolution",
-		"MixinGuiScreen",
-		"MixinForgeHooksClient"
+		"MixinFluidRegistry"
     	
     ]
 }

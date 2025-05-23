@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
-@ModuleInfo(name = "NoFall", description = "", category = Category.MOVE)
+@ModuleInfo(name = "NoFall", description = "Use water bucket.", category = Category.MOVE)
 public class NoFall extends Module {
 
 	private boolean handling;

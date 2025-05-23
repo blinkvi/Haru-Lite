@@ -513,6 +513,10 @@ public class FontRenderer extends CFont {
         GL11.glColor4f(1, 1, 1, 1);
         return (float) x / 2f;
     }
+    
+    public double getStringHeight(String text) {
+    	return this.getHeight();
+    }
 
     public double getStringWidth(String text) {
         if (text == null)

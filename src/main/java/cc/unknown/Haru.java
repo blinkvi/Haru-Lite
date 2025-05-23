@@ -232,7 +232,7 @@ public class Haru {
 	public DropGui getDropGui() {
 		return dropGui;
 	}
-
+	
 	public CustomLogger getLogger() {
 		return logger;
 	}

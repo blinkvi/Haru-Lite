@@ -108,9 +108,6 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 	@Unique
 	public boolean omniSprint;
 
-	@Unique
-	private PrePositionEvent prePositionEvent;
-
 	@Inject(method = "onUpdate", at = @At("HEAD"), cancellable = true)
 	public void onPreUpdate(CallbackInfo ci) {
 		PreUpdateEvent event = new PreUpdateEvent();

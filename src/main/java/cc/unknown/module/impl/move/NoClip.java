@@ -35,6 +35,7 @@ public class NoClip extends Module {
 		mc.thePlayer.noClip = false;
 		mc.thePlayer.inventory.currentItem = lastSlot;
 		SpoofHandler.stopSpoofing();
+		PlayerUtil.rightClick(false);
 	}
 	
 	@SubscribeEvent
@@ -79,6 +80,7 @@ public class NoClip extends Module {
 		final int slot = InventoryUtil.findBlock();
 
 		if (slot == -1 || BlockUtil.insideBlock()) {
+			PlayerUtil.rightClick(false);
 			return;
 		}
 
