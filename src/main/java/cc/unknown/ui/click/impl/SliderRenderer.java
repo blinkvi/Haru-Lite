@@ -29,7 +29,7 @@ public class SliderRenderer extends Component {
         double progress = (currentValue - minValue) / (maxValue - minValue);
         progress = Math.min(1, Math.max(0, progress));
 
-        if (gui.roundedButtons.get()) {
+        if (gui.roundedButtons.get() && gui.shaders.get()) {
             RoundedUtil.drawRound(x + 3F, y + 2, (width - 5) * (float) progress, height - 4, 2, new Color(gui.red2.getAsInt(), gui.green2.getAsInt(), gui.blue2.getAsInt()));
         } else {
             RenderUtil.drawRect(x + 3F, y + 2, (width - 5) * (float) progress, height - 4, new Color(gui.red2.getAsInt(), gui.green2.getAsInt(), gui.blue2.getAsInt()).getRGB());

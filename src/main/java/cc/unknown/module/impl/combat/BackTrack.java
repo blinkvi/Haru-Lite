@@ -44,11 +44,11 @@ public class BackTrack extends Module {
 	private Slider delay = new Slider("Delay", this, 90, 1, 200, 1);
 	private Slider distance = new Slider("Distance", this, 6, 3.1, 6, 0.01);
 	private Bool onlyCombat = new Bool("OnlyCombat", true);
-	private Bool esp = new Bool("RenderPosition", true);
+	private Bool renderPosition = new Bool("RenderPosition", true);
 
-	private Slider red = new Slider("Red", this, 255, 0, 255, 1, esp::get);
-	private Slider green = new Slider("Green", this, 0, 0, 255, 1, esp::get);
-	private Slider blue = new Slider("Blue", this, 0, 0, 255, 1, esp::get);
+	private Slider red = new Slider("Red", this, 255, 0, 255, 1, renderPosition::get);
+	private Slider green = new Slider("Green", this, 0, 0, 255, 1, renderPosition::get);
+	private Slider blue = new Slider("Blue", this, 0, 0, 255, 1, renderPosition::get);
 	
 	public final MultiBool disableOn = new MultiBool("DisableOn", this, Arrays.asList(
 			new Bool("WorldChange", false),
@@ -116,7 +116,7 @@ public class BackTrack extends Module {
 	public void onRenderWorldLast(RenderWorldLastEvent event) {
 		if (target == null) return;
 		
-		if (esp.get())
+		if (renderPosition.get())
 			RenderUtil.drawBox(target, vec3, lastVec3, new Color(red.getAsInt(), green.getAsInt(), blue.getAsInt()));
 	}
 	
