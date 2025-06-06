@@ -10,10 +10,10 @@ public enum StickersType {
     NONE("None", "", 0, 0),
     TYPH("Typh", "typh.png", 95, 160);
 
-    private final String name;
-    private final String imagePath;
-    private final float width;
-    private final float height;
+	public final String name;
+	public final String imagePath;
+	public final float width;
+	public final float height;
 
     StickersType(String name, String fileName, int width, int height) {
         this.name = name;
@@ -26,20 +26,4 @@ public enum StickersType {
     public String toString() {
         return name;
     }
-
-	public String getDisplayName() {
-		return name;
-	}
-
-	public String getImagePath() {
-		return imagePath;
-	}
-
-	public float getWidth() {
-		return width;
-	}
-
-	public float getHeight() {
-		return height;
-	}
 }

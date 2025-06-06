@@ -40,22 +40,24 @@ public class PanelRenderer extends Component {
     @Override
     public void drawScreen(int mouseX, int mouseY) {
     	FontRenderer fontRenderer = FontUtil.getFontRenderer("interSemiBold.ttf", 15);
-    	Color outlineColor = new Color(getModule(ClickGUI.class).outlineColor.get().getRGB());
+    	ClickGUI gui = getModule(ClickGUI.class);
     	
+    	Color outline = new Color(gui.red.getAsInt(), gui.green.getAsInt(), gui.blue.getAsInt());
+    	    	
         if (dragging) {
             x = mouseX + dragX;
             y = mouseY + dragY;
         }
         
-    	if (getModule(ClickGUI.class).pref.isEnabled("Shaders")) {
+    	if (gui.shaders.get()) {
     		gradientBlur.set(x, y, (int) width, (int) height, 0);
-    		RenderUtil.drawBloomShadow(x, y, width, height, 14, 18, outlineColor.getRGB());
+    		RenderUtil.drawBloomShadow(x, y, width, height, 14, 18, outline.getRGB());
     	}
 
-        if (getModule(ClickGUI.class).pref.isEnabled("RoundedOutline")) {
-            RoundedUtil.drawRoundOutline(x - 2.1f, y, width + 3.5f, height, 8, 0.7f, new Color(19, 19, 19, 160), outlineColor);
+        if (gui.roundedOutline.get() && gui.shaders.get()) {
+            RoundedUtil.drawRoundOutline(x - 2.1f, y, width + 3.5f, height, 8, 0.7f, new Color(19, 19, 19, 160), outline);
         } else {
-            RenderUtil.drawBorderedRect(x - 2.1f, y, width + 3.5f, height, 1F, new Color(19, 19, 19, 160).getRGB(), outlineColor.getRGB());
+            RenderUtil.drawBorderedRect(x - 2.1f, y, width + 3.5f, height, 1F, new Color(19, 19, 19, 160).getRGB(), outline.getRGB());
         }
 
         int componentOffsetY = 15;

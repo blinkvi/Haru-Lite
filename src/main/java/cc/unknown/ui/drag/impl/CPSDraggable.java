@@ -35,13 +35,13 @@ public class CPSDraggable extends Drag {
         float adjustedY = Math.min(y, sr.getScaledHeight() - height);
 
         RoundedUtil.drawRound(adjustedX, adjustedY, width, height - 2, 6.0F, new Color(getModule(Interface.class).backgroundColor(), true));
-        FontUtil.getFontRenderer("neverlose.ttf", 24).drawString("e", adjustedX + padding, adjustedY + (height / 2) - 4, setting.color());
+        FontUtil.getFontRenderer("neverlose.ttf", 24).drawString("e", adjustedX + padding, adjustedY + (height / 2) - 4, hud.color());
         FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).drawString(cpsText, adjustedX + padding + iconSize * 2.5F, adjustedY + (height / 2) - 3, -1);
     }
 
     @Override
     public boolean shouldRender() {
-        return setting.isEnabled() && setting.elements.isEnabled("CPS");
+        return hud.isEnabled() && hud.elements.isEnabled("CPS");
     }
 }
 

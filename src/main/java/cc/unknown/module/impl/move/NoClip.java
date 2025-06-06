@@ -80,7 +80,6 @@ public class NoClip extends Module {
 		final int slot = InventoryUtil.findBlock();
 
 		if (slot == -1 || BlockUtil.insideBlock()) {
-			PlayerUtil.rightClick(false);
 			return;
 		}
 
@@ -94,6 +93,6 @@ public class NoClip extends Module {
 
 	@SubscribeEvent
 	public void onRender2D(Render2DEvent event) {
-		FontUtil.getFontRenderer("comfortaa.ttf", 17).drawCenteredString("presiona shift", event.width() / 2F, event.height() - 90, getModule(Interface.class).color());
+		FontUtil.getFontRenderer("comfortaa.ttf", 17).drawCenteredString("press shift", event.width() / 2F, event.height() - 90, getModule(Interface.class).color());
 	}
 }

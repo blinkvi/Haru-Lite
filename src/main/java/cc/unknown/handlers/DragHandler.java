@@ -36,7 +36,7 @@ public class DragHandler implements Accessor {
 	
 	private boolean isDisplay() {
 		if (!Display.isActive() || !Display.isVisible() || !Display.isCreated()) return false;
-		if (getModule(ClickGUI.class).pref.isEnabled("HideElementsInGui") && mc.currentScreen == getDropGui()) return false;
+		if (getModule(ClickGUI.class).hideElements.get() && mc.currentScreen == getDropGui()) return false;
 		return true;
 	}
 }

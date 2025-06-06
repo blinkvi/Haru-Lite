@@ -30,13 +30,13 @@ public class AutoArmor extends Module {
 			return;
 		}
 
-		if (clock.hasElapsedTicks((int) speed.getValue(), false)) {
+		if (clock.hasElapsedTicks(speed.getAsInt(), false)) {
 			if (!(mc.currentScreen instanceof GuiInventory)) {
 				return;
 			}
 
 			for (int type = 1; type < 5; ++type) {
-				if (clock.hasElapsedTicks((int) speed.getValue(), false)) {
+				if (clock.hasElapsedTicks(speed.getAsInt(), false)) {
 					if (mc.thePlayer.inventoryContainer.getSlot(4 + type).getHasStack()) {
 						ItemStack is = mc.thePlayer.inventoryContainer.getSlot(4 + type).getStack();
 						if (!InventoryUtil.bestArmor(is, type)) {
@@ -52,7 +52,7 @@ public class AutoArmor extends Module {
 			}
 			
 			for (int type = 1; type < 5; ++type) {
-				if (clock.hasElapsedTicks((int) speed.getValue(), false)) {
+				if (clock.hasElapsedTicks(speed.getAsInt(), false)) {
 					for (int i = 9; i < 45; ++i) {
 						if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
 							ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();

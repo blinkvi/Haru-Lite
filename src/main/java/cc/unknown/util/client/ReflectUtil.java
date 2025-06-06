@@ -1,9 +1,13 @@
 package cc.unknown.util.client;
 
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import cc.unknown.util.Accessor;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -187,12 +191,25 @@ public class ReflectUtil implements Accessor {
         return getPrivateField(ShaderGroup.class, shaderGroup, "listShaders", "field_148031_d");
     }
 
-    public static void flushOutboundQueue(NetworkManager networkManager) {
-        getPrivateMethod(NetworkManager.class, networkManager, "flushOutboundQueue", "func_150733_h");
+    public static void flushOutboundQueue() {
+        getPrivateMethod(NetworkManager.class, mc.getNetHandler().getNetworkManager(), "flushOutboundQueue", "func_150733_h");
     }
 
-    public static void dispatchPacket(NetworkManager networkManager, Packet<?> packet, GenericFutureListener<?>[] listeners) {
-        getPrivateMethod(NetworkManager.class, networkManager,Packet.class, GenericFutureListener[].class, packet, listeners, "dispatchPacket", "func_150732_b");
+    public static void dispatchPacket(Packet<?> packet, GenericFutureListener<?>[] listeners) {
+        getPrivateMethod(NetworkManager.class, mc.getNetHandler().getNetworkManager(), Packet.class, GenericFutureListener[].class, packet, listeners, "dispatchPacket", "func_150732_b");
+    }
+    
+    public static ReentrantReadWriteLock readWriteLock() {
+        return getPrivateField(NetworkManager.class, mc.getNetHandler().getNetworkManager(),"readWriteLock", "field_181680_j");
+    }
+    
+    public static Queue<Object> outboundPacketsQueue() {
+        return getPrivateField(NetworkManager.class, mc.getNetHandler().getNetworkManager(), "outboundPacketsQueue", "field_150745_j");
+    }
+
+    public static Object InboundHandlerTuplePacketListener(Packet packet) {
+        Constructor<?> constructor = getPrivateConstructor(getPrivateClass(NetworkManager.class, "InboundHandlerTuplePacketListener"), Packet.class, GenericFutureListener[].class );
+        return newInstance(constructor, packet, null);
     }
     
     public static boolean isShaders() {
@@ -297,7 +314,44 @@ public class ReflectUtil implements Accessor {
             return null;
         }
     }
+    
+    public static Class<?> getPrivateClass(Class<?> parentClass, String... innerClassSimpleNames) {
+        for (String simpleName : innerClassSimpleNames) {
+            for (Class<?> innerClass : parentClass.getDeclaredClasses()) {
+                if (innerClass.getSimpleName().equals(simpleName)) {
+                    return innerClass;
+                }
+            }
+        }
+        throw new RuntimeException("No matching inner class found in: " + parentClass.getName());
+    }
+    
+    public static Constructor<?> getPrivateConstructor(Class<?> clazz, Class<?>... parameterTypes) {
+        try {
+            Constructor<?> constructor = clazz.getDeclaredConstructor(parameterTypes);
+            makeAccessible(constructor);
+            return constructor;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
+    public static Object newInstance(Constructor<?> constructor, Object... args) {
+        try {
+            return constructor.newInstance(args);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static void makeAccessible(AccessibleObject obj) {
+        if (!obj.isAccessible()) {
+            obj.setAccessible(true);
+        }
+    }
+    
     public static <T> void setPrivateField(Class<? super T> classToAccess, T instance, Object value, String... fieldNames) {
         try {
             Field field = Arrays.stream(fieldNames).map(name -> {

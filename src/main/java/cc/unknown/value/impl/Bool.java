@@ -14,24 +14,31 @@ public class Bool extends Value {
     }
 
     public Bool(String name, Module module, boolean value) {
-        super(name, module, () -> true);
-        this.value = value;
+        this(name, module, value, () -> true);
     }
 
     public Bool(String name, boolean value) {
-        super(name, null, () -> true);
-        this.value = value;
+        this(name, null, value, () -> true);
     }
 
     public boolean get() {
         return value;
     }
 
+    public boolean isEnabled() {
+        return value;
+    }
+
     public void toggle() {
-        value = !value;
+        this.value = !this.value;
     }
 
     public void set(boolean value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Bool{name='%s', value=%s}", getName(), value);
     }
 }

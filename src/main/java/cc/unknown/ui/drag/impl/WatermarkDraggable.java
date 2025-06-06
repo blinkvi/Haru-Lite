@@ -35,11 +35,11 @@ public class WatermarkDraggable extends Drag {
         height = Math.min(height, sr.getScaledHeight() - renderY);
 
         RoundedUtil.drawRound(x, y, width, height - 2, 6.0F, new Color(getModule(Interface.class).backgroundColor(), true));
-        FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).drawString(title, x + padding + 2.0f, y + (height / 2) - 3, setting.color());
+        FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).drawString(title, x + padding + 2.0f, y + (height / 2) - 3, hud.color());
     }
 
     @Override
     public boolean shouldRender() {
-        return setting.isEnabled() && setting.elements.isEnabled("Watermark");
+        return hud.isEnabled() && hud.elements.isEnabled("Watermark");
     }
 }

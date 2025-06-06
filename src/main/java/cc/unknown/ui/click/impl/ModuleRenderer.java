@@ -10,7 +10,6 @@ import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontRenderer;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.value.impl.Bool;
-import cc.unknown.value.impl.Palette;
 import cc.unknown.value.impl.Mode;
 import cc.unknown.value.impl.MultiBool;
 import cc.unknown.value.impl.Slider;
@@ -26,8 +25,6 @@ public class ModuleRenderer extends Component {
         .forEach(value -> {
             if (value instanceof Bool) {
                 values.add(new BooleanRenderer((Bool) value));
-            } else if (value instanceof Palette) {
-                values.add(new ColorRenderer((Palette) value));
             } else if (value instanceof Slider) {
                 values.add(new SliderRenderer((Slider) value));
             } else if (value instanceof Mode) {
@@ -41,8 +38,9 @@ public class ModuleRenderer extends Component {
     @Override
     public void drawScreen(int mouseX, int mouseY) {
     	FontRenderer fontRenderer = FontUtil.getFontRenderer("interSemiBold.ttf", 15);
+    	ClickGUI gui = getModule(ClickGUI.class);
     	
-    	if (getModule(ClickGUI.class).pref.isEnabled("ToolTips")) { // tooltips
+    	if (gui.toolTips.get()) {
 	        if (isHovered(x, y, width, 10F, mouseX, mouseY)) {
 	            String description = module.getModuleInfo().description();
 	            if (!description.isEmpty()) {
@@ -61,7 +59,7 @@ public class ModuleRenderer extends Component {
         float textWidth = (float) fontRenderer.getStringWidth(moduleName);
         float textX = x + (width - textWidth) / 2F;
         
-        fontRenderer.drawString(moduleName, textX, y + 4F, module.isEnabled() ? getModule(ClickGUI.class).mainColor.get().getRGB() : new Color(160, 160, 160).getRGB());
+        fontRenderer.drawString(moduleName, textX, y + 4F, module.isEnabled() ? new Color(gui.red2.getAsInt(), gui.green2.getAsInt(), gui.blue2.getAsInt()).getRGB() : new Color(160, 160, 160).getRGB());
 
         if (module.isExpanded()) {
             AtomicInteger offset = new AtomicInteger(yOffset);

@@ -181,4 +181,8 @@ public class NetworkUtil implements Accessor {
                 && mc.getCurrentServerData() != null
                 && mc.getCurrentServerData().serverIP.toLowerCase().contains(server);
     }
+
+    public static boolean isUniversocraft() {
+        return isServer("15.204.208.82") || isServer("universocraft.org") || isServer("universocraft.es") || isServer("universocraft.net") || isServer("universocraft.com");
+    }
 }

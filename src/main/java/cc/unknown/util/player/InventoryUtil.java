@@ -25,9 +25,12 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemBow;
+import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemEgg;
 import net.minecraft.item.ItemExpBottle;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemPickaxe;
+import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemSnowball;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
@@ -66,10 +69,40 @@ public class InventoryUtil implements Accessor {
 		return slot;
 	}
 
+	
+    public static Item getItem() {
+        ItemStack stack = getItemStack();
+        return stack == null ? null : stack.getItem();
+    }
+    
+    public static ItemStack getItemStack() {
+        return (mc.thePlayer == null || mc.thePlayer.inventoryContainer == null ? null : mc.thePlayer.inventoryContainer.getSlot(mc.thePlayer.inventory.currentItem + 36).getStack());
+    }
+
 	public static boolean isSword() {
 		return getItem() instanceof ItemSword;
 	}
-
+	
+	public static boolean isBow() {
+		return getItem() instanceof ItemBow;
+	}
+    
+	public static boolean isFood() {
+		return getItem() instanceof ItemFood;
+	}
+	
+	public static boolean isDrink() {
+		return getItem() instanceof ItemPotion || getItem() instanceof ItemBucketMilk;
+	}
+	
+    public static boolean getProjectiles() {
+    	return getItem() instanceof ItemExpBottle || getItem() instanceof ItemEgg || getItem() instanceof ItemSnowball;
+    }
+    
+    public static boolean getAnyBlock() {
+    	return getItem() instanceof ItemBlock;
+    }
+    
 	public static int findTool(final BlockPos blockPos) {
 		float bestSpeed = 1;
 		int bestSlot = -1;
@@ -194,23 +227,6 @@ public class InventoryUtil implements Accessor {
 
 		return bestTool;
 	}
-
-    public static Item getItem() {
-        ItemStack stack = getItemStack();
-        return stack == null ? null : stack.getItem();
-    }
-    
-    public static ItemStack getItemStack() {
-        return (mc.thePlayer == null || mc.thePlayer.inventoryContainer == null ? null : mc.thePlayer.inventoryContainer.getSlot(mc.thePlayer.inventory.currentItem + 36).getStack());
-    }
-    
-    public static boolean getProjectiles() {
-    	return getItem() instanceof ItemExpBottle || getItem() instanceof ItemEgg || getItem() instanceof ItemSnowball;
-    }
-    
-    public static boolean getAnyBlock() {
-    	return getItem() instanceof ItemBlock;
-    }
     
     public static Block getBlock() {
         ItemStack heldItem = getItemStack();

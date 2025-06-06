@@ -49,7 +49,6 @@ public class AimAssist extends Module {
 	private final Mode speedMode = new Mode("Speed", this, () -> mode.is("Regular"), "Random", "Random", "Secure", "Gaussian");
 	
 	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
-			new Bool("MultiPoint", false),
 			new Bool("RequireClicking", true),
 			new Bool("LockTarget", false),
 			new Bool("IgnoreFriends", false),
@@ -132,7 +131,7 @@ public class AimAssist extends Module {
 		    double yawFov = PlayerUtil.fovFromTarget(target);
 		    double yawAdjustment = getSpeedRandomize(speedMode.getMode(), yawFov, yawOffset, hSpeed.getValue(), hMult.getValue());
 	
-		    float pitchOffset = (float) (MathUtil.randomDouble(Math.min(vSpeed.getValue(), vMult.getValue()) * 10f, Math.max(vSpeed.getValue(), vMult.getValue()) * 10f) / 90f);
+		    float pitchOffset = MathUtil.randomFloat(Math.min(vSpeed.getAsFloat(), vMult.getAsFloat()) * 10f, Math.max(vSpeed.getAsFloat(), vMult.getAsFloat()) * 10f) / 90f;
 		    float pitchEntity = (float) PlayerUtil.pitchFromTarget(target);
 		    
 		    float resultVertical = (float) getSpeedRandomize(speedMode.getMode(), pitchEntity, pitchOffset, vSpeed.getValue(), vMult.getValue());
@@ -167,10 +166,9 @@ public class AimAssist extends Module {
 	private boolean isValidTarget(EntityPlayer player, int fov) {
 		if (player == mc.thePlayer || !player.isEntityAlive()) return false;
 	    if (PlayerUtil.unusedNames(player)) return false;
-	    if (conditionals.isEnabled("MultiPoint") && mc.pointedEntity != null && mc.pointedEntity == target) return false;
 	    if (!conditionals.isEnabled("IgnoreInvisibles") && player.isInvisible()) return false;
 	    if (FriendUtil.isFriend(player) && conditionals.isEnabled("IgnoreFriends")) return false;
-	    if (conditionals.isEnabled("IgnoreTeams") && !mc.thePlayer.isOnSameTeam(player)) return false;
+	    if (conditionals.isEnabled("IgnoreTeams") && PlayerUtil.isTeam(player)) return false;
 	    if (mc.thePlayer.getDistanceToEntity(player) > distance.getValue()) return false;
 	    if (conditionals.isEnabled("VisibilityCheck") && !mc.thePlayer.canEntityBeSeen(player)) return false;
 	    return fov == 180 || PlayerUtil.fov(fov, player);

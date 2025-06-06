@@ -55,7 +55,7 @@ public class AutoTool extends Module {
 	public void onPreTick(ClientTickEvent event) {
     	if (event.phase == Phase.END) return;
 		if (!isInGame()) return;
-        if (!delayTimer.hasPassed((long) (delay.getValue() * 50))) return;
+        if (!delayTimer.hasPassed(delay.getAsLong() * 50)) return;
         
         if (mc.gameSettings.keyBindAttack.isKeyDown() && mc.objectMouseOver != null && 
             mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && 

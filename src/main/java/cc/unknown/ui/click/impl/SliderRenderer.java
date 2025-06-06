@@ -21,6 +21,7 @@ public class SliderRenderer extends Component {
 
     @Override
     public void drawScreen(int mouseX, int mouseY) {
+    	ClickGUI gui = getModule(ClickGUI.class);
         double minValue = value.getMin();
         double maxValue = value.getMax();
         double currentValue = value.get();
@@ -28,10 +29,10 @@ public class SliderRenderer extends Component {
         double progress = (currentValue - minValue) / (maxValue - minValue);
         progress = Math.min(1, Math.max(0, progress));
 
-        if (getModule(ClickGUI.class).pref.isEnabled("RoundedButtons")) {
-            RoundedUtil.drawRound(x + 3F, y + 2, (width - 5) * (float) progress, height - 4, 2, new Color(getModule(ClickGUI.class).mainColor.get().getRGB()));
+        if (gui.roundedButtons.get()) {
+            RoundedUtil.drawRound(x + 3F, y + 2, (width - 5) * (float) progress, height - 4, 2, new Color(gui.red2.getAsInt(), gui.green2.getAsInt(), gui.blue2.getAsInt()));
         } else {
-            RenderUtil.drawRect(x + 3F, y + 2, (width - 5) * (float) progress, height - 4, new Color(getModule(ClickGUI.class).mainColor.get().getRGB()));
+            RenderUtil.drawRect(x + 3F, y + 2, (width - 5) * (float) progress, height - 4, new Color(gui.red2.getAsInt(), gui.green2.getAsInt(), gui.blue2.getAsInt()).getRGB());
         }
 
         FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawString(value.getName(), x + 5F, y + 4F, -1);

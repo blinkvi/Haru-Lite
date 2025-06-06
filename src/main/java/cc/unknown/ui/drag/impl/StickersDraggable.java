@@ -15,22 +15,16 @@ public class StickersDraggable extends Drag {
 
     @Override
     public void render(ScaledResolution sr) {
-        StickersType sticker = setting.stickersType.getMode(StickersType.class);
+        StickersType sticker = hud.stickersType.getMode(StickersType.class);
 
-        if (sticker != null) {
-            RenderUtil.image(
-                new ResourceLocation(sticker.getImagePath()),
-                (int) renderX,
-                (int) renderY,
-                (int) sticker.getWidth(),
-                (int) sticker.getHeight()
-            );
-        }
+        try {
+        	RenderUtil.image(new ResourceLocation(sticker.imagePath), (int) renderX, (int) renderY, (int) sticker.width, (int) sticker.height);
+        } catch (Exception e) { }
     }
     
     @Override
     public boolean shouldRender() {
-        return setting.isEnabled() && setting.elements.isEnabled("Stickers");
+        return hud.isEnabled();
     }
 }
 

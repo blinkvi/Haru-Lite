@@ -1,6 +1,7 @@
 package cc.unknown.value.impl;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -14,49 +15,44 @@ public class Mode extends Value {
 
     public Mode(String name, Module module, Supplier<Boolean> visible, String current, String... modes) {
         super(name, module, visible);
-        this.modes = Arrays.asList(modes);
-        this.index = this.modes.indexOf(current);
+        this.modes = Collections.unmodifiableList(Arrays.asList(modes));
+        this.index = findIndex(current);
     }
 
     public Mode(String name, Module module, String current, String... modes) {
-        super(name, module, () -> true);
-        this.modes = Arrays.asList(modes);
-        this.index = this.modes.indexOf(current);
+        this(name, module, () -> true, current, modes);
     }
-    
-    public Mode(String name, Module module, Enum<?> defaultMode, Enum<?>... enumModes) {
-        super(name, module, () -> true);
-        this.modes = Arrays.stream(enumModes).map(Enum::toString).collect(Collectors.toList());
-        this.index = this.modes.indexOf(defaultMode.toString());
+
+    public Mode(String name, Module module, Enum<?> current, Enum<?>... enumModes) {
+        this(name, module, () -> true, current, enumModes);
     }
 
     public Mode(String name, Module module, Supplier<Boolean> visible, Enum<?> current, Enum<?>... enumModes) {
         super(name, module, visible);
         this.modes = Arrays.stream(enumModes).map(Enum::toString).collect(Collectors.toList());
-        this.index = this.modes.indexOf(current.toString());
+        this.index = findIndex(current.toString());
+    }
+
+    private int findIndex(String mode) {
+        int i = modes.indexOf(mode);
+        return i >= 0 ? i : 0;
     }
 
     public boolean is(String mode) {
-        return get().equals(mode);
+        return get().equalsIgnoreCase(mode);
     }
 
     public String get() {
-        if (index < 0 || index >= modes.size()) {
-            return modes.get(0);
-        }
-        return modes.get(index);
+        return index >= 0 && index < modes.size() ? modes.get(index) : modes.get(0);
     }
 
     public void set(String mode) {
-        int newIndex = modes.indexOf(mode);
-        if (newIndex != -1) {
-            this.index = newIndex;
-        }
+        this.index = findIndex(mode);
     }
 
-    public void set(int mode) {
-        if (mode >= 0 && mode < modes.size()) {
-            this.index = mode;
+    public void set(int index) {
+        if (index >= 0 && index < modes.size()) {
+            this.index = index;
         }
     }
 
@@ -65,36 +61,18 @@ public class Mode extends Value {
     }
 
     public void setIndex(int index) {
-        if (index >= 0 && index < modes.size()) {
-            this.index = index;
-        }
+        set(index);
     }
 
     public String getMode() {
-        if (index < 0 || index >= modes.size()) {
-            index = 0;
-        }
-        return modes.get(index);
-    }
-    
-    public <T extends Enum<T>> T getMode(Class<T> enumClass) {
-        String mode = get();
-        for (T constant : enumClass.getEnumConstants()) {
-            if (constant.toString().equalsIgnoreCase(mode)) {
-                return constant;
-            }
-        }
-        return null;
+        return get();
     }
 
-    public void setMode(String mode) {
-        int newIndex = modes.indexOf(mode);
-        if (newIndex != -1) {
-            this.index = newIndex;
-        }
+    public <T extends Enum<T>> T getMode(Class<T> enumClass) {
+        return Arrays.stream(enumClass.getEnumConstants()).filter(e -> e.toString().equalsIgnoreCase(get())).findFirst().orElse(null);
     }
 
     public List<String> getModes() {
-        return modes;
+        return Collections.unmodifiableList(modes);
     }
 }

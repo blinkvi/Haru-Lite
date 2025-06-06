@@ -20,7 +20,8 @@ public class BooleanRenderer extends Component {
     @Override
     public void drawScreen(int mouseX, int mouseY) {
     	FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawString(value.getName(), x + 5F, y + 4F, -1);
-    	
+    	ClickGUI gui = getModule(ClickGUI.class);
+
         float boxSize = 8F;
         float boxX = x + width - boxSize - 6F;
         float boxY = y + 2F;
@@ -28,7 +29,7 @@ public class BooleanRenderer extends Component {
         RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, new Color(36, 36, 36).getRGB());
 
         if (value.get()) {
-            RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, getModule(ClickGUI.class).mainColor.get().getRGB());
+            RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, new Color(gui.red2.getAsInt(), gui.green2.getAsInt(), gui.blue2.getAsInt()).getRGB());
         }
 
         super.drawScreen(mouseX, mouseY);

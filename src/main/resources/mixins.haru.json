@@ -73,7 +73,9 @@
 		"MixinGuiButton",
 		"MixinRender",
 		"MixinGlStateManager",
-		"MixinFluidRegistry"
+		"MixinFluidRegistry",
+		"MixinC02PacketUseEntity",
+		"MixinS14PacketEntity"
     	
     ]
 }

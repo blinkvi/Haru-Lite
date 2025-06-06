@@ -21,27 +21,15 @@ public class Slider extends Value {
     }
 
     public Slider(String name, Module module, double value, double min, double max, Supplier<Boolean> visible) {
-        super(name, module, visible);
-        this.value = value;
-        this.min = min;
-        this.max = max;
-        this.increment = 1;
+        this(name, module, value, min, max, 1.0, visible);
     }
 
     public Slider(String name, Module module, double value, double min, double max, double increment) {
-        super(name, module, () -> true);
-        this.value = value;
-        this.min = min;
-        this.max = max;
-        this.increment = increment;
+        this(name, module, value, min, max, increment, () -> true);
     }
 
     public Slider(String name, Module module, double value, double min, double max) {
-        super(name, module, () -> true);
-        this.value = value;
-        this.min = min;
-        this.max = max;
-        this.increment = 1;
+        this(name, module, value, min, max, 1.0, () -> true);
     }
 
     public double get() {	    
@@ -52,9 +40,21 @@ public class Slider extends Value {
         this.value = MathHelper.clamp_double(value, getMin(), getMax());
     }
 
-	public double getValue() {
-		return value;
-	}
+    public double getValue() {
+        return value;
+    }
+
+    public float getAsFloat() {
+        return (float) value;
+    }
+
+    public int getAsInt() {
+        return (int) value;
+    }
+
+    public long getAsLong() {
+        return (long) value;
+    }
 
 	public double getMin() {
 	    return min;

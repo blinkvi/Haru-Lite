@@ -1,21 +1,18 @@
 package cc.unknown.mixin.mixins;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.Shadow;
 
-import net.minecraft.entity.Entity;
+import cc.unknown.mixin.interfaces.IS14PacketEntity;
 import net.minecraft.network.play.server.S14PacketEntity;
-import net.minecraft.world.World;
 
 @Mixin(S14PacketEntity.class)
-public class MixinS14PacketEntity {
+public class MixinS14PacketEntity implements IS14PacketEntity {
+	@Shadow
+	protected int entityId;
 
-    @Inject(method = "getEntity", at = @At("HEAD"), cancellable = true, remap = false)
-    private void addNullCheck(World worldIn, CallbackInfoReturnable<Entity> cir) {
-        if (worldIn == null) {
-            cir.setReturnValue(null);
-        }
-    }
+	@Override
+	public int getEntityId() {
+		return this.entityId;
+	}
 }

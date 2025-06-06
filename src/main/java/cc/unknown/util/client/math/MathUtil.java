@@ -91,10 +91,10 @@ public class MathUtil implements Accessor {
     public static boolean isWholeNumber(double num) {
         return num == Math.floor(num);
     }
-
-    public static boolean chance(double percentage) {
-        return Math.random() * 100 < percentage;
-    }
+    
+	public static boolean chance(double value) {
+	    return value >= 100 || Math.random() < value / 100.0;
+	}
 
     public static double randomSin() {
         return Math.sin(nextDouble(0.0, Math.PI * 2));

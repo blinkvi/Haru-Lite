@@ -27,13 +27,13 @@ public class CosmeticFile extends Directory {
         Cosmetics cosmetics = Haru.instance.getModuleManager().getModule(Cosmetics.class);
         if (cosmetics == null || sc == null) return;
         
-        if (sc.getHalo() != null) cosmetics.haloType.setMode(sc.getHalo());
-        if (sc.getHat() != null) cosmetics.hatType.setMode(sc.getHat());
-        if (sc.getPet() != null) cosmetics.petType.setMode(sc.getPet());
-        if (sc.getAura() != null) cosmetics.auraType.setMode(sc.getAura());
-        if (sc.getWings() != null) cosmetics.wingsType.setMode(sc.getWings());
-        if (sc.getAccesories() != null) cosmetics.accesoriesType.setMode(sc.getAccesories());
-        if (sc.getCape() != null) cosmetics.capeType.setMode(sc.getCape());
+        if (sc.getHalo() != null) cosmetics.haloType.set(sc.getHalo());
+        if (sc.getHat() != null) cosmetics.hatType.set(sc.getHat());
+        if (sc.getPet() != null) cosmetics.petType.set(sc.getPet());
+        if (sc.getAura() != null) cosmetics.auraType.set(sc.getAura());
+        if (sc.getWings() != null) cosmetics.wingsType.set(sc.getWings());
+        if (sc.getAccesories() != null) cosmetics.accesoriesType.set(sc.getAccesories());
+        if (sc.getCape() != null) cosmetics.capeType.set(sc.getCape());
     }
 
     @Override

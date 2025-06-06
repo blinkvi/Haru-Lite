@@ -29,7 +29,7 @@ public abstract class Drag implements Accessor {
     public boolean dragging;
     private int dragX, dragY;
     public int align;
-    protected Interface setting = Haru.instance.getModuleManager().getModule(Interface.class);
+    protected Interface hud = Haru.instance.getModuleManager().getModule(Interface.class);
     
     private int LEFT = 1;
     private int RIGHT = 2;

@@ -43,7 +43,7 @@ public class PotionStatusDraggable extends Drag {
 
         fontRendererSemiBold.drawCenteredString(title, posX + width / 2, renderY + padding + 2, -1);
 
-        FontUtil.getFontRenderer("nursultan.ttf", 14).drawString("E", posX + width - 16, renderY + 9, setting.color(0));
+        FontUtil.getFontRenderer("nursultan.ttf", 14).drawString("E", posX + width - 16, renderY + 9, hud.color(0));
 
         final float[] posYRef = {renderY + fontRendererRegular.getHeight() + padding * 2 + 3f};
         final float[] localHeightRef = {localHeight};
@@ -79,6 +79,6 @@ public class PotionStatusDraggable extends Drag {
 
     @Override
     public boolean shouldRender() {
-        return setting.isEnabled() && setting.elements.isEnabled("PotionStatus");
+        return hud.isEnabled() && hud.elements.isEnabled("PotionStatus");
     }
 }

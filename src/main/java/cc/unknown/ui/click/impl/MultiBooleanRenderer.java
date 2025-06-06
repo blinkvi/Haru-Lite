@@ -20,6 +20,7 @@ public class MultiBooleanRenderer extends Component {
     @Override
     public void drawScreen(int mouseX, int mouseY) {
         float offset = 0;
+        ClickGUI gui = getModule(ClickGUI.class);
 
         if (expanded) {
             RenderUtil.drawRect(x + 3F, y, width - 5, height, new Color(17, 17, 17, 160));
@@ -40,7 +41,7 @@ public class MultiBooleanRenderer extends Component {
                 RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, new Color(17, 17, 17, 160).getRGB());
 
                 if (boolValue.get()) {
-                    RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, getModule(ClickGUI.class).mainColor.get().getRGB());
+                    RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, new Color(gui.red2.getAsInt(), gui.green2.getAsInt(), gui.blue2.getAsInt()).getRGB());
                 }
             }
         }

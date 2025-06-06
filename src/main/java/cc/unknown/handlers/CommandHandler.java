@@ -3,31 +3,24 @@ package cc.unknown.handlers;
 import java.util.Arrays;
 
 import cc.unknown.Haru;
-import cc.unknown.event.netty.OutgoingEvent;
-import net.minecraft.network.play.client.C01PacketChatMessage;
+import cc.unknown.event.player.ChatInputEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CommandHandler {
 	
 	@SubscribeEvent
-	public void onOutgoing(OutgoingEvent event) {
-	    if (event.packet instanceof C01PacketChatMessage) {
-	        C01PacketChatMessage packet = (C01PacketChatMessage) event.packet;
-	        String message = packet.getMessage();
+	public void onChat(ChatInputEvent event) {
+	    String message = event.message;
 
-	        if (message.startsWith(".")) {
-	            event.setCanceled(true);
+	    if (message.startsWith(".")) {
+	        event.setCanceled(true);
 
-	            String[] args = message.substring(1).split(" ");
-	            if (args.length > 0) {
-	                Haru.instance.getCmdManager().getCommands().stream()
-	                    .filter(c -> args[0].equalsIgnoreCase(c.prefix()))
-	                    .findFirst()
-	                    .ifPresent(c -> {
-	                        String[] commandArgs = Arrays.copyOfRange(args, 1, args.length);
-	                        c.execute(commandArgs);
-	                    });
-	            }
+	        String[] args = message.substring(1).split(" ");
+	        if (args.length > 0) {
+	            Haru.instance.getCmdManager().getCommands().stream().filter(c -> args[0].equalsIgnoreCase(c.prefix())).findFirst().ifPresent(c -> {
+	            	String[] commandArgs = Arrays.copyOfRange(args, 1, args.length);
+	            	c.execute(commandArgs);
+	            });
 	        }
 	    }
 	}
