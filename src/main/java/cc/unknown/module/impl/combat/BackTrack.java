@@ -43,8 +43,8 @@ public class BackTrack extends Module {
 
 	private Slider delay = new Slider("Delay", this, 90, 1, 200, 1);
 	private Slider distance = new Slider("Distance", this, 6, 3.1, 6, 0.01);
-	private Bool onlyCombat = new Bool("OnlyCombat", true);
-	private Bool renderPosition = new Bool("RenderPosition", true);
+	private Bool onlyCombat = new Bool("OnlyCombat", this, true);
+	private Bool renderPosition = new Bool("RenderPosition", this, true);
 
 	private Slider red = new Slider("Red", this, 255, 0, 255, 1, renderPosition::get);
 	private Slider green = new Slider("Green", this, 0, 0, 255, 1, renderPosition::get);
@@ -63,7 +63,6 @@ public class BackTrack extends Module {
 
 	@Override
 	public void onEnable() {
-		super.onEnable();
 		if (mc.thePlayer == null) {
 			toggle();
 			return;
@@ -76,7 +75,6 @@ public class BackTrack extends Module {
 
 	@Override
 	public void onDisable() {
-		super.onDisable();
 		if (mc.thePlayer == null) return;
 		if (mc.thePlayer != null && !queue.isEmpty()) {
 			queue.forEach(e -> PacketUtil.receiveNoEvent(e.packet));
@@ -102,7 +100,7 @@ public class BackTrack extends Module {
 	public void onClientTick(ClientTickEvent event) {
 		if (event.phase == Phase.END) return;
 		
-		while(!queue.isEmpty() && queue.peek().stopWatch.reached(delay.getAsInt())) {
+		while(!queue.isEmpty() && queue.peek().clock.reached(delay.getAsInt())) {
 			Packet packet = queue.poll().packet;
 			PacketUtil.receiveNoEvent(packet);
 		}

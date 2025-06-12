@@ -15,7 +15,7 @@ public final class BindCom extends Command {
     @Override
     public void execute(final String[] args) {
         if (args.length < 1) {
-            error("Uso correcto: .b <modulo> <tecla>");
+            error("Correct usage: .b <module> <key>");
             return;
         }
 
@@ -23,7 +23,7 @@ public final class BindCom extends Command {
 
         switch (action) {
             case "list":
-                StringBuilder bindList = new StringBuilder("Lista de binds:\n");
+                StringBuilder bindList = new StringBuilder("Bind list:\n");
                 boolean[] hasBinds = {false};
 
                 Haru.instance.getModuleManager().getModules().forEach(module -> {
@@ -37,13 +37,13 @@ public final class BindCom extends Command {
                 if (hasBinds[0]) {
                     success(bindList.toString());
                 } else {
-                    success("No hay binds asignados.");
+                    success("No binds assigned.");
                 }
                 return;
 
             case "clear":
                 Haru.instance.getModuleManager().getModules().forEach(module -> module.setKeyBind(0));
-                success("Se han eliminado todos los binds.");
+                success("All binds have been cleared.");
                 return;
         }
 
@@ -57,7 +57,7 @@ public final class BindCom extends Command {
             if (!foundModule[0] && module.getName().replace(" ", "").equalsIgnoreCase(moduleName)) {
                 int keyBind = Keyboard.getKeyIndex(keyName);
                 if (keyBind == -1) {
-                    error("Tecla inválida: " + keyName);
+                    error("Invalid key: " + keyName);
                     return;
                 }
 
@@ -69,7 +69,7 @@ public final class BindCom extends Command {
         });
 
         if (!foundModule[0]) {
-            error("No se encontró el módulo: " + moduleName);
+            error("Module not found: " + moduleName);
         }
     }
 }

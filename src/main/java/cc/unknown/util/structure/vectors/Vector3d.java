@@ -45,7 +45,7 @@ public class Vector3d {
     public Vector3d add(final double x, final double y, final double z) {
         return new Vector3d(this.x + x, this.y + y, this.z + z);
     }
-
+ 
     public Vector3d add(final Vector3d vector) {
         return add(vector.x, vector.y, vector.z);
     }

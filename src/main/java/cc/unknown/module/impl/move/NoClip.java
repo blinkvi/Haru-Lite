@@ -13,6 +13,7 @@ import cc.unknown.util.player.BlockUtil;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.util.render.font.FontUtil;
+import cc.unknown.value.impl.Bool;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.util.AxisAlignedBB;
@@ -22,6 +23,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "NoClip", description = "", category = Category.MOVE)
 public class NoClip extends Module {
+
+	private final Bool block = new Bool("Block", this, true);
 
 	private int lastSlot;
 	
@@ -40,7 +43,7 @@ public class NoClip extends Module {
 	
 	@SubscribeEvent
 	public void onBlockAABB(BlockAABBEvent event) {
-		if (!BlockUtil.insideBlock()) return;
+		if (block.get() && !BlockUtil.insideBlock()) return;
 
 		Block block = event.block;
 		BlockPos pos = event.blockPos;
@@ -50,10 +53,10 @@ public class NoClip extends Module {
 		boolean isSneaking = mc.gameSettings.keyBindSneak.isKeyDown();
 		boolean isAirBlock = block instanceof BlockAir;
 
-		event.boundingBox = null;
+		if (!this.block.get())
+			event.boundingBox = null;
 
 		if (!isSneaking) {
-
 			if (y < mc.thePlayer.posY) {
 				event.boundingBox = expandedBox.offset(x, y, z);
 			}
@@ -70,7 +73,7 @@ public class NoClip extends Module {
 	}
 
     @SubscribeEvent
-    public void onPreAttack(PrePositionEvent event) {
+    public void onPrePosition(PrePositionEvent event) {
 		if (lastSlot == -1) {
 			lastSlot = mc.thePlayer.inventory.currentItem;
 		}
@@ -79,7 +82,7 @@ public class NoClip extends Module {
 		
 		final int slot = InventoryUtil.findBlock();
 
-		if (slot == -1 || BlockUtil.insideBlock()) {
+		if (slot == -1|| (BlockUtil.insideBlock() && block.get())) {
 			return;
 		}
 

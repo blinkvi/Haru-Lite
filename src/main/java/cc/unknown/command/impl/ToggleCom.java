@@ -17,15 +17,14 @@ public final class ToggleCom extends Command {
             for (final Module module : Haru.instance.getModuleManager().getModules()) {
                 if (module.getName().replace(" ", "").equalsIgnoreCase(moduleName)) {
                     module.toggle();
-                    success(module.getName() + " has " + 
+                    success(module.getName() + " has been " +
                             (module.isEnabled() ? "\u00a7AEnabled\u00a77." : "\u00a7CDisabled\u00a77."));
                     return;
                 }
             }
-            error("No se encontró el módulo: " + moduleName);
+            error("Module not found: " + moduleName);
         } else {
-            error("Uso correcto: .t <módulo>");
+            error("Correct usage: .t <module>");
         }
     }
-
 }

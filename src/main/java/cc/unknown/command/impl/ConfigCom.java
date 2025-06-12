@@ -16,95 +16,95 @@ public final class ConfigCom extends Command {
 
     @Override
     public void execute(final String[] args) {
-    	String command = args[0];
-    	File dir = Haru.CFG_DIR;
-    	
+        String command = args[0];
+        File dir = Haru.CFG_DIR;
+
         if (args.length == 1) {
-        	switch (command) {
-        	case "list":
-        	case "lista":
-        	case "listar":
-                String[] configs = getConfigList();
-                if (configs.length == 0) {
-                    warning("No hay configs guardadas.");
-                } else {
-                    success("Configs disponibles: " + String.join(", ", configs));
-                }
-        		break;
-        	case "folder":
-        	case "open":
-        	case "abrir":
-                if (Desktop.isDesktopSupported()) {
-                    try {
-                        Desktop.getDesktop().open(dir);
-                        success("Se ha abierto la carpeta de configuraciones.");
-                    } catch (IOException e) {
-                        error("No se pudo abrir la carpeta.");
-                        e.printStackTrace();
+            switch (command) {
+                case "list":
+                case "lista":
+                case "listar":
+                    String[] configs = getConfigList();
+                    if (configs.length == 0) {
+                        warning("There are no saved configs.");
+                    } else {
+                        success("Available configs: " + String.join(", ", configs));
                     }
-                } else {
-                    warning("Abrir carpetas no es compatible en este sistema.");
-                }
-        		break;
-        	}
+                    break;
+                case "folder":
+                case "open":
+                case "abrir":
+                    if (Desktop.isDesktopSupported()) {
+                        try {
+                            Desktop.getDesktop().open(dir);
+                            success("The config folder has been opened.");
+                        } catch (IOException e) {
+                            error("Failed to open the folder.");
+                            e.printStackTrace();
+                        }
+                    } else {
+                        warning("Opening folders is not supported on this system.");
+                    }
+                    break;
+            }
         }
-        
+
         if (args.length == 2) {
-        	String name = args[1];
-        	Config cfg = new Config(name);
+            String name = args[1];
+            Config cfg = new Config(name);
             File configFile = new File(dir, name + ".json");
-        	
-        	switch (command) {
-        	case "load":
-                if (getCfgManager().load(cfg)) {
-                    getCfgManager().currentConfig = name;
-                    success("Config cargada: " + name);
-                } else {
-                    warning("No se pudo cargar la config: " + name);
-                }
-        		break;
-        	case "guardar":
-        	case "save":
-        		this.handleSave(name);
-        		break;
-        	case "crear":
-        	case "create":
-                try {
-                    if (configFile.createNewFile()) {
+
+            switch (command) {
+                case "load":
+                    if (getCfgManager().load(cfg)) {
                         getCfgManager().currentConfig = name;
-                        success("Config creada y establecida como actual: " + name);
-                        handleSave(name);
+                        success("Config loaded: " + name);
                     } else {
-                        warning("La config ya existe: " + name);
+                        warning("Could not load the config: " + name);
                     }
-                } catch (IOException e) {
-                    error("No se pudo crear la config: " + name);
-                }
-        		break;
-        	case "remove":
-        	case "delete":
-        	case "rm":
-        	case "eliminar":
-        	case "borrar":
-                if (configFile.exists()) {
-                    if (configFile.delete()) {
-                        success("Config eliminada: " + name);
+                    break;
+                case "guardar":
+                case "save":
+                    this.handleSave(name);
+                    break;
+                case "crear":
+                case "create":
+                    try {
+                        if (configFile.createNewFile()) {
+                            getCfgManager().currentConfig = name;
+                            success("Config created and set as current: " + name);
+                            handleSave(name);
+                        } else {
+                            warning("The config already exists: " + name);
+                        }
+                    } catch (IOException e) {
+                        error("Could not create the config: " + name);
+                    }
+                    break;
+                case "remove":
+                case "delete":
+                case "rm":
+                case "eliminar":
+                case "borrar":
+                    if (configFile.exists()) {
+                        if (configFile.delete()) {
+                            success("Config deleted: " + name);
+                        } else {
+                            warning("Could not delete the config: " + name);
+                        }
                     } else {
-                        warning("No se pudo eliminar la config: " + name);
+                        error("The config does not exist: " + name);
                     }
-                } else {
-                    error("La config no existe: " + name);
-                }
-        		break;
-        	}
+                    break;
+            }
         }
     }
 
     private void handleSave(String configName) {
         if (getCfgManager().save(new Config(configName))) {
-            success("Config guardada: " + configName);
+            success("Config saved: " + configName);
         } else {
-            error("Error al guardar la config: " + configName);
+            error("Failed to save the config: " + configName);
         }
     }
 

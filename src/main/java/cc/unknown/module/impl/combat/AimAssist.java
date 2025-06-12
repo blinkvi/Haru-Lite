@@ -142,7 +142,7 @@ public class AimAssist extends Module {
 	    }
 	}
 
-	private EntityPlayer getEnemy() {
+	public EntityPlayer getEnemy() {
 	    int fov = (int) angle.getValue();
 	    EntityPlayer bestTarget = null;
 	    double bestScore = Double.MAX_VALUE;

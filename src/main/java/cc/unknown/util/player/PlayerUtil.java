@@ -6,6 +6,8 @@ import org.lwjgl.input.Mouse;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
+import cc.unknown.util.player.move.RotationUtil;
+import cc.unknown.util.structure.vectors.Vector2f;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.client.settings.KeyBinding;
@@ -22,11 +24,13 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 public class PlayerUtil implements Accessor {
-
+	
     public static boolean checkAir() {
         BlockPos belowPlayer = new BlockPos(mc.thePlayer).down();
         Block blockBelow = mc.theWorld.getBlockState(belowPlayer).getBlock();
@@ -39,32 +43,6 @@ public class PlayerUtil implements Accessor {
     
     public static Block blockRelativeToPlayer(final double offsetX, final double offsetY, final double offsetZ) {
         return mc.theWorld.getBlockState(new BlockPos(mc.thePlayer).add(offsetX, offsetY, offsetZ)).getBlock();
-    }
-    
-    public static boolean isOnEdgeWithBlockCheck(double negativeOffset, double positiveOffset) {
-        AxisAlignedBB box = mc.thePlayer.getEntityBoundingBox();
-        
-        AxisAlignedBB adjustedBox = box
-            .offset(0, -0.2, 0)
-            .expand(-negativeOffset, 0, -negativeOffset);
-
-        boolean noCollisionBelow = mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, adjustedBox).isEmpty();
-
-        BlockPos blockPos = new BlockPos(mc.thePlayer).add(positiveOffset, 0, positiveOffset);
-        Block blockBelow = mc.theWorld.getBlockState(blockPos).getBlock();
-
-        boolean isAirOrReplaceable = blockBelow.getMaterial().isReplaceable();
-
-        return noCollisionBelow && isAirOrReplaceable;
-    }
-    
-    public static boolean isOnEdgeWithBlockCheck(double offset) {
-        BlockPos blockPos = new BlockPos(mc.thePlayer).add(offset, -1, offset);
-        Block blockBelow = mc.theWorld.getBlockState(blockPos).getBlock();
-
-        boolean isAirOrReplaceable = blockBelow.getMaterial().isReplaceable();
-
-        return isAirOrReplaceable;
     }
     
     public static boolean isOverVoid(double x, double y, double z) {

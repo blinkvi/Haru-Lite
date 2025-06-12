@@ -25,6 +25,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -158,6 +159,10 @@ public class ReflectUtil implements Accessor {
     public static void setPressTime(KeyBinding key, int value) {
         setPrivateField(KeyBinding.class, key, value, "pressTime", "field_151474_i");
     }
+    
+    public static void setPressed(KeyBinding key, boolean bool) {
+    	setPrivateField(KeyBinding.class, key, bool, "bool", "field_74513_e");
+    }
 
     public static void loadShader(ResourceLocation shader) {
         getPrivateMethod(EntityRenderer.class, mc.entityRenderer, ResourceLocation.class, shader, "func_175069_a", "loadShader");
@@ -210,6 +215,10 @@ public class ReflectUtil implements Accessor {
     public static Object InboundHandlerTuplePacketListener(Packet packet) {
         Constructor<?> constructor = getPrivateConstructor(getPrivateClass(NetworkManager.class, "InboundHandlerTuplePacketListener"), Packet.class, GenericFutureListener[].class );
         return newInstance(constructor, packet, null);
+    }
+    
+    public static INetHandler packetListener() {
+    	return getPrivateField(NetworkManager.class, mc.getNetHandler().getNetworkManager(), "packetListener", "field_150744_m");
     }
     
     public static boolean isShaders() {

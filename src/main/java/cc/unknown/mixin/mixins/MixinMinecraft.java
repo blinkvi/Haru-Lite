@@ -24,7 +24,6 @@ import cc.unknown.event.GameLoopEvent;
 import cc.unknown.event.player.AttackEvent;
 import cc.unknown.event.player.PlaceEvent;
 import cc.unknown.mixin.interfaces.ISession;
-import cc.unknown.module.impl.combat.AimAssist;
 import cc.unknown.module.impl.combat.Piercing;
 import cc.unknown.module.impl.combat.Reach;
 import net.minecraft.client.Minecraft;
@@ -181,13 +180,6 @@ public abstract class MixinMinecraft implements ISession {
             EntityLivingBase attackedEntity = (EntityLivingBase) this.objectMouseOver.entityHit;
             AttackEvent event = new AttackEvent(attackedEntity);
             MinecraftForge.EVENT_BUS.post(event);
-
-            AimAssist aim = Haru.instance.getModuleManager().getModule(AimAssist.class);
-            
-            if (aim.conditionals.isEnabled("LockTarget") && this.currentScreen == null) {
-                lockedTargets.add(attackedEntity);
-                target = attackedEntity;
-            }
 		}
     }
 

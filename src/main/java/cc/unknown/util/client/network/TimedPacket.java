@@ -5,17 +5,17 @@ import net.minecraft.network.Packet;
 
 public class TimedPacket {
 
-    public final Packet<?> packet;
-    public final Clock stopWatch;
+    public final Packet packet;
+    public final Clock clock;
 
     public TimedPacket(Packet<?> packet) {
         this.packet = packet;
-        this.stopWatch = new Clock();
+        this.clock = new Clock();
     }
 
     public TimedPacket(final Packet<?> packet, long stopWatchTime) {
         this.packet = packet;
-        this.stopWatch = new Clock();
-        this.stopWatch.hasPassed(stopWatchTime);
+        this.clock = new Clock();
+        this.clock.hasPassed(stopWatchTime);
     }
 }

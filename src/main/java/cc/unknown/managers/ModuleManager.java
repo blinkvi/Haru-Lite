@@ -36,6 +36,8 @@ public final class ModuleManager extends SList<Module> {
         		BackTrack.class,
         		Piercing.class,
         		MoreKB.class,
+        		Criticals.class,
+        		FakeLag.class,
         		Velocity.class,
         		NoHitDelay.class,
         		

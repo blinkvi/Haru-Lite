@@ -2,11 +2,10 @@ package cc.unknown.command.impl;
 
 import java.util.HashMap;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import cc.unknown.command.Command;
 import cc.unknown.handlers.AutoJoinHandler;
 import cc.unknown.util.render.client.ChatUtil;
+import cc.unknown.util.render.client.ColorUtil;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 
@@ -26,7 +25,7 @@ public class JoinCom extends Command {
 	    }
 
 	    if (args.length < 2) {
-	        warning("Uso: .game <modo> <lobby>");
+	        warning("Usage: .game <mode> <lobby>");
 	        return;
 	    }
 
@@ -40,19 +39,19 @@ public class JoinCom extends Command {
 	    String gameName = args[0];
 
 	    if (!this.hashMap.containsKey(gameName)) {
-	        warning("Modo inválido. Usa: .game list");
+	        warning("Invalid mode. Use: .game list");
 	        return;
 	    }
 
 	    if (!args[1].matches("\\d+")) {
-	        warning("Número de lobby inválido.");
+	        warning("Invalid lobby number.");
 	        return;
 	    }
 
 	    int lobbyNumber = Integer.parseInt(args[1]);
 
 	    if (lobbyNumber <= 0) {
-	        warning("El lobby debe ser mayor a 0.");
+	        warning("Lobby number must be greater than 0.");
 	        return;
 	    }
 
@@ -61,11 +60,11 @@ public class JoinCom extends Command {
 
     private String getList() {
         return "\n" +
-                ChatFormatting.GREEN + " - " + ChatFormatting.WHITE + "sw" + ChatFormatting.GRAY + " (Skywars)        \n" +
-                ChatFormatting.GREEN + " - " + ChatFormatting.WHITE + "tsw" + ChatFormatting.GRAY + " (Team Skywars)  \n" +
-                ChatFormatting.GREEN + " - " + ChatFormatting.WHITE + "tnt" + ChatFormatting.GRAY + " (Tnt Tag)       \n" +
-                ChatFormatting.GREEN + " - " + ChatFormatting.WHITE + "bw" + ChatFormatting.GRAY + " (Bedwars)        \n" +
-                ChatFormatting.GREEN + " - " + ChatFormatting.WHITE + "pgames" + ChatFormatting.GRAY + " (Party Games)\n" +
-                ChatFormatting.GREEN + " - " + ChatFormatting.WHITE + "arena" + ChatFormatting.GRAY + " (Arenapvp)    \n";
+                ColorUtil.green + " - " + ColorUtil.white + "sw" + ColorUtil.gray + " (Skywars)        \n" +
+                ColorUtil.green + " - " + ColorUtil.white + "tsw" + ColorUtil.gray + " (Team Skywars)  \n" +
+                ColorUtil.green + " - " + ColorUtil.white + "tnt" + ColorUtil.gray + " (Tnt Tag)       \n" +
+                ColorUtil.green + " - " + ColorUtil.white + "bw" + ColorUtil.gray + " (Bedwars)        \n" +
+                ColorUtil.green + " - " + ColorUtil.white + "pgames" + ColorUtil.gray + " (Party Games)\n" +
+                ColorUtil.green + " - " + ColorUtil.white + "arena" + ColorUtil.gray + " (Arenapvp)    \n";
     }
 }

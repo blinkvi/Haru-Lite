@@ -12,10 +12,6 @@ public final class HelpCom extends Command {
     
     @Override
     public void execute(final String[] args) {
-        getInstance().getCmdManager().getCommands().forEach(command -> 
-        success(StringUtils.capitalize(command.prefix()))
-        
-        		
-        );
+        getInstance().getCmdManager().getCommands().forEach(command -> success(StringUtils.capitalize(command.prefix())));
     }
 }

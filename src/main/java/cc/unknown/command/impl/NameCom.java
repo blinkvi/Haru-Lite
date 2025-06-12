@@ -19,26 +19,25 @@ public final class NameCom extends Command {
 
         if (args.length == 0) {
             GuiScreen.setClipboardString(name);
-            success("Nick copiado - [" + name + "]");
+            success("Copied IGN - [" + name + "]");
             return;
         }
 
         if (args.length == 1 && !args[0].trim().isEmpty()) {
             String newName = args[0].trim();
-            
+
             if (!newName.equals(nameProtect.name)) {
                 nameProtect.name = newName;
                 if (!lastMessage.isEmpty()) {
-                    success("Nick sustituido por - [" + newName + "]");
+                    success("Replaced IGN with - [" + newName + "]");
                 } else {
-                    success("Nick sustituido por - [" + newName + "]");
+                    success("Replaced IGN with - [" + newName + "]");
                 }
-                
-                lastMessage = "Nick sustituido por - [" + newName + "]";
+
+                lastMessage = "Replaced IGN with - [" + newName + "]";
             }
         } else {
-            error("Uso incorrecto. Usa: .ign [nombre]");
+            error("Invalid usage. Use: .ign [name]");
         }
     }
-
 }
