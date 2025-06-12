@@ -11,15 +11,15 @@ public class PacketUtil implements Accessor {
 	}
 
 	public static void sendNoEvent(final Packet packet) {
-		((INetworkManager) mc.getNetHandler()).addToSendQueueUnregistered(packet);
+		((INetworkManager) mc.getNetHandler().getNetworkManager()).addToSendQueueUnregistered(packet);
 	}
 
-	public static void receive(final Packet<?> packet) {
-		((INetworkManager) mc.getNetHandler()).addToReceiveQueue(packet);
+	public static void receive(final Packet packet) {
+		((INetworkManager) mc.getNetHandler().getNetworkManager()).addToReceiveQueue(packet);
 	}
 
-	public static void receiveNoEvent(final Packet<?> packet) {
-		((INetworkManager) mc.getNetHandler()).addToReceiveQueueUnregistered(packet);
+	public static void receiveNoEvent(final Packet packet) {
+		((INetworkManager) mc.getNetHandler().getNetworkManager()).addToReceiveQueueUnregistered(packet);
 	}
 
 	public static void windowsClick(int slot, String name) {
@@ -32,5 +32,4 @@ public class PacketUtil implements Accessor {
 			break;
 		}
 	}
-
 }
