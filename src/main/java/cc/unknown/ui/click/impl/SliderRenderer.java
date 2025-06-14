@@ -53,8 +53,6 @@ public class SliderRenderer extends Component {
                 value.setValue(maxValue);
             }
         }
-
-
         super.drawScreen(mouseX, mouseY);
     }
 

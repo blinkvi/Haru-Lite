@@ -63,7 +63,6 @@ public final class ModuleManager extends SList<Module> {
                 Ambience.class,
                 BedPlates.class,
                 Cosmetics.class,
-                FakeHackers.class,
                 MusicPlayer.class,
                 NameProtect.class,
                 NameTags.class,
@@ -75,6 +74,7 @@ public final class ModuleManager extends SList<Module> {
                 NoFall.class,
                 NoClip.class,
         		NoSlow.class,
+        		Timer.class,
         		Sprint.class
         );
     }

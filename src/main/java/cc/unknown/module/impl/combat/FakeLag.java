@@ -40,6 +40,11 @@ public class FakeLag extends Module {
 	
 	@Override
 	public void onEnable() {
+		if (mc.thePlayer == null) {
+			toggle();
+			return;
+		}
+		
 		out.clear();
 		correctValues(minOut, maxOut);
 		correctValues(minInb, maxInb);
@@ -64,7 +69,7 @@ public class FakeLag extends Module {
 		
     	if (receive.reachedSince(minInb.getAsInt(), maxInb.getAsInt())) {
     		while (!inb.isEmpty()) {
-    			inb.get(0).processPacket(ReflectUtil.packetListener());
+    			inb.get(0).processPacket(mc.getNetHandler());
     			inb.remove(inb.get(0));
     		}
     		receive.reset();
@@ -90,9 +95,6 @@ public class FakeLag extends Module {
 	
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event) {
-		correctValues(minOut, maxOut);
-		correctValues(minInb, maxInb);
-		
 		if (event.phase == Phase.START) {
 			if (mc.thePlayer == null || mc.thePlayer.isDead) return;
 			if (!MathUtil.chance(chance.getValue())) return; 

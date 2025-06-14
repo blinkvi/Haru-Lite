@@ -25,7 +25,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -35,7 +34,7 @@ import net.minecraft.util.Session;
 import net.minecraft.util.Timer;
 import net.minecraft.util.Vec3;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ReflectUtil implements Accessor {
     public static final boolean hasOptifine = Arrays.stream(GameSettings.class.getFields()).anyMatch(f -> f.getName().equals("ofFastRender"));
 
@@ -161,7 +160,11 @@ public class ReflectUtil implements Accessor {
     }
     
     public static void setPressed(KeyBinding key, boolean bool) {
-    	setPrivateField(KeyBinding.class, key, bool, "bool", "field_74513_e");
+    	setPrivateField(KeyBinding.class, key, bool, "pressed", "field_74513_e");
+    }
+    
+    public static boolean isPressed(KeyBinding key) {
+    	return getPrivateField(KeyBinding.class, key, "pressed", "field_74513_e");
     }
 
     public static void loadShader(ResourceLocation shader) {
@@ -200,7 +203,7 @@ public class ReflectUtil implements Accessor {
         getPrivateMethod(NetworkManager.class, mc.getNetHandler().getNetworkManager(), "flushOutboundQueue", "func_150733_h");
     }
 
-    public static void dispatchPacket(Packet<?> packet, GenericFutureListener<?>[] listeners) {
+    public static void dispatchPacket(Packet packet, GenericFutureListener[] listeners) {
         getPrivateMethod(NetworkManager.class, mc.getNetHandler().getNetworkManager(), Packet.class, GenericFutureListener[].class, packet, listeners, "dispatchPacket", "func_150732_b");
     }
     
@@ -212,18 +215,14 @@ public class ReflectUtil implements Accessor {
         return getPrivateField(NetworkManager.class, mc.getNetHandler().getNetworkManager(), "outboundPacketsQueue", "field_150745_j");
     }
 
-    public static Object InboundHandlerTuplePacketListener(Packet packet) {
-        Constructor<?> constructor = getPrivateConstructor(getPrivateClass(NetworkManager.class, "InboundHandlerTuplePacketListener"), Packet.class, GenericFutureListener[].class );
+	public static Object InboundHandlerTuplePacketListener(Packet packet) {
+        Constructor constructor = getPrivateConstructor(getPrivateClass(NetworkManager.class, "InboundHandlerTuplePacketListener"), Packet.class, GenericFutureListener[].class );
         return newInstance(constructor, packet, null);
-    }
-    
-    public static INetHandler packetListener() {
-    	return getPrivateField(NetworkManager.class, mc.getNetHandler().getNetworkManager(), "packetListener", "field_150744_m");
     }
     
     public static boolean isShaders() {
         try {
-            Class<?> configClass = Class.forName("Config");
+            Class configClass = Class.forName("Config");
             return (boolean) configClass.getMethod("isShaders").invoke(null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -239,7 +238,7 @@ public class ReflectUtil implements Accessor {
         }
 
         try {
-            Class<?> configClass = Class.forName("Config");
+            Class configClass = Class.forName("Config");
             Field field = configClass.getDeclaredField(fieldName);
             field.setAccessible(true);
             field.setBoolean(null, value);
@@ -263,11 +262,11 @@ public class ReflectUtil implements Accessor {
             }
 
             int paramCount = stringIndex / 2;
-            Class<?>[] paramTypes = new Class<?>[paramCount];
+            Class[] paramTypes = new Class[paramCount];
             Object[] args = new Object[paramCount];
 
             for (int i = 0; i < paramCount; i++) {
-                paramTypes[i] = (Class<?>) values[i];
+                paramTypes[i] = (Class) values[i];
                 args[i] = values[i + paramCount];
             }
 
@@ -289,7 +288,7 @@ public class ReflectUtil implements Accessor {
         }
     }
 
-    public static <T> T getPrivateField(Class<?> clazz, Object instance, String... fieldNames) {
+    public static <T> T getPrivateField(Class clazz, Object instance, String... fieldNames) {
         try {
             Field field = Arrays.stream(fieldNames).map(name -> {
                 try {
@@ -302,7 +301,7 @@ public class ReflectUtil implements Accessor {
             field.setAccessible(true);
             Object value;
 
-            Class<?> type = field.getType();
+            Class type = field.getType();
             if (type.isPrimitive()) {
                 if (type == int.class) value = field.getInt(instance);
                 else if (type == float.class) value = field.getFloat(instance);
@@ -324,9 +323,9 @@ public class ReflectUtil implements Accessor {
         }
     }
     
-    public static Class<?> getPrivateClass(Class<?> parentClass, String... innerClassSimpleNames) {
+    public static Class getPrivateClass(Class parentClass, String... innerClassSimpleNames) {
         for (String simpleName : innerClassSimpleNames) {
-            for (Class<?> innerClass : parentClass.getDeclaredClasses()) {
+            for (Class innerClass : parentClass.getDeclaredClasses()) {
                 if (innerClass.getSimpleName().equals(simpleName)) {
                     return innerClass;
                 }
@@ -335,9 +334,9 @@ public class ReflectUtil implements Accessor {
         throw new RuntimeException("No matching inner class found in: " + parentClass.getName());
     }
     
-    public static Constructor<?> getPrivateConstructor(Class<?> clazz, Class<?>... parameterTypes) {
+    public static Constructor getPrivateConstructor(Class clazz, Class... parameterTypes) {
         try {
-            Constructor<?> constructor = clazz.getDeclaredConstructor(parameterTypes);
+            Constructor constructor = clazz.getDeclaredConstructor(parameterTypes);
             makeAccessible(constructor);
             return constructor;
         } catch (Exception e) {
@@ -346,7 +345,7 @@ public class ReflectUtil implements Accessor {
         }
     }
 
-    public static Object newInstance(Constructor<?> constructor, Object... args) {
+    public static Object newInstance(Constructor constructor, Object... args) {
         try {
             return constructor.newInstance(args);
         } catch (Exception e) {

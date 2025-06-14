@@ -21,7 +21,7 @@ public class AutoArmor extends Module {
 	private final Clock clock = new Clock();
 
 	@SubscribeEvent
-	public void onMoveInput(PreMoveInputEvent event) {
+	public void onPreMoveInput(PreMoveInputEvent event) {
 		if (mc.currentScreen == null) {
 			startTimer.reset();
 		}

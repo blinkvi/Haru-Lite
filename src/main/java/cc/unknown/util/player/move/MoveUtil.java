@@ -41,6 +41,23 @@ public class MoveUtil implements Accessor {
         return Math.toRadians(rotationYaw);
     }
     
+    public static double direction() {
+        float moveYaw = mc.thePlayer.rotationYaw;
+        if (mc.thePlayer.moveForward != 0.0F && mc.thePlayer.moveStrafing == 0.0F) {
+          moveYaw += (mc.thePlayer.moveForward > 0.0F) ? 0.0F : 180.0F;
+        } else if (mc.thePlayer.moveForward != 0.0F && mc.thePlayer.moveStrafing != 0.0F) {
+          if (mc.thePlayer.moveForward > 0.0F) {
+            moveYaw += (mc.thePlayer.moveStrafing > 0.0F) ? -45.0F : 45.0F;
+          } else {
+            moveYaw -= (mc.thePlayer.moveStrafing > 0.0F) ? -45.0F : 45.0F;
+          } 
+          moveYaw += (mc.thePlayer.moveForward > 0.0F) ? 0.0F : 180.0F;
+        } else if (mc.thePlayer.moveStrafing != 0.0F && mc.thePlayer.moveForward == 0.0F) {
+          moveYaw += (mc.thePlayer.moveStrafing > 0.0F) ? -90.0F : 90.0F;
+        } 
+        return Math.floorMod((int)moveYaw, 360);
+      }
+    
     public static void stop() {
         mc.thePlayer.motionX = 0;
         mc.thePlayer.motionZ = 0;
