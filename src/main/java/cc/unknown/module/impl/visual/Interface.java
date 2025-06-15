@@ -22,15 +22,15 @@ public class Interface extends Module {
 	
 	public final Mode mode = new Mode("Mode", this, "Neon", "Fade", "Slinky", "Magic", "Neon", "Blaze", "Ghoul", "Static");
 	
-	public final Slider red = new Slider("RedFirst", this, 255, 0, 255, 1, () -> mode.is("Static") || mode.is("Fade"));
-	public final Slider green = new Slider("GreenFirst", this, 0, 0, 255, 1, () -> mode.is("Static") || mode.is("Fade"));
-	public final Slider blue = new Slider("BlueFirst", this, 0, 0, 255, 1, () -> mode.is("Static") || mode.is("Fade"));
+	public final Slider red = new Slider("RedFirst", this, 255, 0, 255, () -> mode.is("Static") || mode.is("Fade"));
+	public final Slider green = new Slider("GreenFirst", this, 0, 0, 255, () -> mode.is("Static") || mode.is("Fade"));
+	public final Slider blue = new Slider("BlueFirst", this, 0, 0, 255, () -> mode.is("Static") || mode.is("Fade"));
 	
-	public final Slider red2 = new Slider("RedSecond", this, 255, 0, 255, 1, () -> mode.is("Fade"));
-	public final Slider green2 = new Slider("GreenSecond", this, 0, 0, 255, 1, () -> mode.is("Fade"));
-	public final Slider blue2 = new Slider("BlueSecond", this, 0, 0, 255, 1, () -> mode.is("Fade"));
+	public final Slider red2 = new Slider("RedSecond", this, 255, 0, 255, () -> mode.is("Fade"));
+	public final Slider green2 = new Slider("GreenSecond", this, 0, 0, 255, () -> mode.is("Fade"));
+	public final Slider blue2 = new Slider("BlueSecond", this, 0, 0, 255, () -> mode.is("Fade"));
 	
-	public final Slider fadeSpeed = new Slider("FadeSpeed", this, 1, 1, 10, 1, () -> mode.is("Fade"));
+	public final Slider fadeSpeed = new Slider("FadeSpeed", this, 1, 1, 10, () -> mode.is("Fade"));
 	
 	public final Slider fontSize = new Slider("FontSize", this, 17, 6, 100);
 	public final Slider textHeight = new Slider("FontHeight", this, 3, 0, 40);

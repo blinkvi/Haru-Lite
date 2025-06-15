@@ -4,6 +4,7 @@ import cc.unknown.mixin.interfaces.INetworkManager;
 import cc.unknown.util.Accessor;
 import net.minecraft.network.Packet;
 
+@SuppressWarnings("rawtypes")
 public class PacketUtil implements Accessor {
 
 	public static void send(final Packet packet) {

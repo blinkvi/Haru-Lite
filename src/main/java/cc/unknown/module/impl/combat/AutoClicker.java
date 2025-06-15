@@ -24,7 +24,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "AutoClicker", description = "Automatically clicks for you.", category = Category.COMBAT)
@@ -50,19 +49,13 @@ public class AutoClicker extends Module {
 	private boolean leftn;
 
 	@Override
-	public void onEnable() {
-		correctValues(minCPS, maxCPS);
+	public void guiUpdate() {
+		correct(minCPS, maxCPS);
 	}
 
 	@Override
 	public void onDisable() {
 		leftDownTime = leftUpTime = 0L;
-	}
-
-	@SubscribeEvent
-	public void onPostTick(ClientTickEvent event) {
-		if (event.phase == Phase.START) return;
-		correctValues(minCPS, maxCPS);
 	}
 
 	@SubscribeEvent

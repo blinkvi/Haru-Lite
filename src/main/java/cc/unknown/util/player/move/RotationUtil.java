@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import akka.japi.Pair;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.structure.vectors.Vector2d;
@@ -225,4 +226,36 @@ public class RotationUtil implements Accessor {
 
 		}
 	}
+	
+    public static Pair<Pair<Float, Float>, Pair<Float, Float>> getRotation(AxisAlignedBB boundingBox) {
+        AxisAlignedBB box = boundingBox.expand(-0.05, -0.9, -0.1).offset(0, 0.405, 0);
+
+        float yaw1 = getYaw(new Vec3(box.minX, 0, box.minZ));
+        float yaw2 = getYaw(new Vec3(box.maxX, 0, box.maxZ));
+
+        float pitch1 = getPitch(new Vec3(0, box.minY, 0));
+        float pitch2 = getPitch(new Vec3(0, box.maxY, 0));
+
+        return new Pair<>(
+                sortYaw(yaw1, yaw2),
+                new Pair<>(Math.min(pitch1, pitch2), Math.max(pitch1, pitch2))
+        );
+    }
+    
+    private static float fixYaw(float yaw) {
+        while (yaw < 0) {
+            yaw += 360;
+        }
+        while (yaw > 360) {
+            yaw -= 360;
+        }
+        return yaw;
+    }
+    
+    private static Pair<Float, Float> sortYaw(final float yaw1, final float yaw2) {
+        final float fixedYaw1 = fixYaw(yaw1);
+        final float fixedYaw2 = fixYaw(yaw2);
+
+        return (fixedYaw1 < fixedYaw2) ? new Pair<>(yaw1, yaw2) : new Pair<>(yaw2, yaw1);
+    }
 }

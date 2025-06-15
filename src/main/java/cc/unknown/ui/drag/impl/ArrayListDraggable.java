@@ -82,7 +82,7 @@ public class ArrayListDraggable extends Drag {
 
     private void renderText(Module module, float localX, float localY, float offset, int width, float alphaAnimation, int middle, int index) {
         String text = module.getName();
-        int color = ColorUtil.swapAlpha(hud.color(index), (int) alphaAnimation * new Color(hud.red.getAsFloat(), hud.green.getAsFloat(), hud.blue.getAsFloat()).getAlpha());
+        int color = ColorUtil.swapAlpha(hud.color(index), (int) alphaAnimation * new Color(hud.red.getAsInt(), hud.green.getAsInt(), hud.blue.getAsInt()).getAlpha());
         float textY = localY + offset + 6;
 
         if (localX < middle) {

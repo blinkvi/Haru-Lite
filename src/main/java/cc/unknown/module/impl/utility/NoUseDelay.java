@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "NoUseDelay", description = "Remove consume delay.", category = Category.UTILITY)
 public class NoUseDelay extends Module {
 	
-	private final Slider ticks = new Slider("Ticks", this, 17, 0, 30);
+	private final Slider ticks = new Slider("Ticks", this, 17, 1, 30);
 	
     @SubscribeEvent
     public void onPrePosition(PrePositionEvent event) {

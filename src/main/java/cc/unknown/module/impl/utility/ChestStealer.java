@@ -1,237 +1,134 @@
 package cc.unknown.module.impl.utility;
 
 import java.util.ArrayList;
-
-import org.lwjgl.opengl.Display;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
 import cc.unknown.util.client.math.MathUtil;
-import cc.unknown.util.client.system.Clock;
+import cc.unknown.util.client.network.PacketUtil;
+import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.value.impl.Bool;
 import cc.unknown.value.impl.Slider;
-import net.minecraft.block.BlockFalling;
-import net.minecraft.block.BlockSlime;
-import net.minecraft.block.BlockTNT;
 import net.minecraft.client.gui.inventory.GuiChest;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerChest;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemAnvilBlock;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemFood;
-import net.minecraft.item.ItemPotion;
-import net.minecraft.item.ItemSkull;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemEmptyMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
-import net.minecraft.item.ItemTool;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "ChestStealer", description = "", category = Category.UTILITY)
 public class ChestStealer extends Module {
 
-	private final Slider startDelay = new Slider("StartDelay", this, 2, 0, 20);
-	private final Slider minDelay = new Slider("MinDelay", this, 1, 0, 20);
-	private final Slider maxDelay = new Slider("MaxDelay", this, 1, 0, 20);
-	private final Bool ignoreJunk = new Bool("IgnoreJunk", this, true);
-	private final Bool autoClose = new Bool("AutoClose", this, true);
+	private final Bool mouseControl = new Bool("MouseControl", this, false);
+	private final Bool notMoving = new Bool("NotMoving", this, false);
+	private final Slider minStartDelay = new Slider("MinStartDelay", this, 100, 0, 500, 10);
+	private final Slider maxStartDelay = new Slider("MaxStartDelay", this, 200, 0, 500, 10);
+	private final Slider minStealDelay = new Slider("MinStealDelay", this, 100, 0, 500, 10);
+	private final Slider maxStealDelay = new Slider("MaxStartDelay", this, 150, 0, 500, 10);
 
-	private final Clock clock = new Clock();
-	private final Clock startTimer = new Clock();
+	private final Bool shuffle = new Bool("Shuffle", this, false);
+	private final Bool autoClose = new Bool("AutoClose", this, false);
+	private final Bool autoCloseIfInvFull = new Bool("AutoCloseIfInvFull", this, true, autoClose::get);
+	private final Slider minCloseDelay = new Slider("MinCloseDelay", this, 50, 0, 500, 10, autoClose::get);
+	private final Slider maxCloseDelay = new Slider("MaxCloseDelay", this, 100, 0, 500, 10, autoClose::get);
+	private final Bool ignoreTrash = new Bool("Ignore trash", false);
 
-	private int decidedTimer = 0;
+	private static State state = State.NONE;
+	private final Set<Integer> stole = new HashSet<>();
+	private long nextStealTime;
+	private long nextCloseTime;
 
-	public static boolean closeAfterContainer;
-
-	private boolean gotItems;
-	private int ticksInChest;
-
-	private boolean lastInChest;
-	
 	@Override
 	public void onEnable() {
-		correctValues(minDelay, maxDelay);
-	}
-	
-	@SubscribeEvent
-	public void onPostTick(ClientTickEvent event) {
-		if (event.phase == Phase.START) return;
-		correctValues(minDelay, maxDelay);
+		stole.clear();
 	}
 
-	@SubscribeEvent
-	public void onRenderTick(PrePositionEvent event) {
-		if (!lastInChest) {
-			startTimer.reset();
-		}
-
-		lastInChest = mc.currentScreen instanceof GuiChest;
-
-		if (mc.currentScreen instanceof GuiChest) {
-			if (!startTimer.hasPassedTicks((int) startDelay.getValue()))
-				return;
-
-			if (decidedTimer == 0) {
-				final int delayFirst = (int) Math.floor(Math.min(minDelay.getValue(), maxDelay.getValue()));
-				final int delaySecond = (int) Math.ceil(Math.max(minDelay.getValue(), maxDelay.getValue()));
-				decidedTimer = MathUtil.randomInt(delayFirst, delaySecond);
-			}
-
-			if (clock.hasPassedTicks(decidedTimer)) {
-				final ContainerChest chest = (ContainerChest) mc.thePlayer.openContainer;
-
-				boolean randomize = false;
-
-				if (randomize) {
-					boolean found = false;
-					for (int i = 0; i < chest.inventorySlots.size(); i++) {
-						final ItemStack stack = chest.getLowerChestInventory().getStackInSlot(i);
-
-						if (stack != null && (itemWhitelisted(stack) && ignoreJunk.get())) {
-							found = true;
-						}
-					}
-
-					int i = 0;
-					while (chest.getLowerChestInventory().getStackInSlot(i) == null) {
-						i = MathUtil.randomInt(1, chest.inventorySlots.size());
-						break;
-					}
-
-					final ItemStack stack = chest.getLowerChestInventory().getStackInSlot(i);
-
-					if (stack != null && (itemWhitelisted(stack) && ignoreJunk.get())) {
-						mc.playerController.windowClick(chest.windowId, i, 0, 1, mc.thePlayer);
-						clock.reset();
-						final int delayFirst = (int) Math.floor(Math.min(minDelay.getValue(), maxDelay.getValue()));
-						final int delaySecond = (int) Math.ceil(Math.max(minDelay.getValue(), maxDelay.getValue()));
-						decidedTimer = MathUtil.randomInt(delayFirst, delaySecond);
-						gotItems = true;
-						return;
-					}
-
-					if (gotItems && !found && autoClose.get() && ticksInChest > 3) {
-						mc.thePlayer.closeScreen();
-						return;
-					}
-				} else {
-					for (int i = 0; i < chest.inventorySlots.size(); i++) {
-						final ItemStack stack = chest.getLowerChestInventory().getStackInSlot(i);
-
-						if (stack != null && (itemWhitelisted(stack) && ignoreJunk.get())) {
-							mc.playerController.windowClick(chest.windowId, i, 0, 1, mc.thePlayer);
-							clock.reset();
-							final int delayFirst = (int) Math.floor(Math.min(minDelay.getValue(), maxDelay.getValue()));
-							final int delaySecond = (int) Math.ceil(Math.max(minDelay.getValue(), maxDelay.getValue()));
-							decidedTimer = MathUtil.randomInt(delayFirst, delaySecond);
-							gotItems = true;
-							return;
-						}
-					}
-
-					if (gotItems && autoClose.get() && ticksInChest > 3) {
-						mc.thePlayer.closeScreen();
-					}
-				}
-			}
-		}
+	@Override
+	public void guiUpdate() {
+		correct(minStartDelay, maxStartDelay);
+		correct(minStealDelay, maxStealDelay);
+		correct(minCloseDelay, maxCloseDelay);
 	}
 
 	@SubscribeEvent
 	public void onPrePosition(PrePositionEvent event) {
-		if (mc.currentScreen instanceof GuiChest && Display.isVisible()) {
-			mc.mouseHelper.mouseXYChange();
-			mc.mouseHelper.ungrabMouseCursor();
-			mc.mouseHelper.grabMouseCursor();
-		}
-
 		if (mc.currentScreen instanceof GuiChest) {
-			ticksInChest++;
-
-			if (ticksInChest * 50 > 255) {
-				ticksInChest = 10;
+			if (notMoving.get()) {
+				mc.thePlayer.motionX = 0;
+				mc.thePlayer.motionZ = 0;
 			}
-		} else {
-			ticksInChest--;
-			gotItems = false;
 
-			if (ticksInChest < 0) {
-				ticksInChest = 0;
+			if (mouseControl.get()) {
+				mc.inGameHasFocus = true;
+				mc.mouseHelper.grabMouseCursor();
+			}
+
+			switch (state) {
+			case STEAL:
+				while (nextStealTime <= System.currentTimeMillis()) {
+					if (autoCloseIfInvFull.get() && InventoryUtil.isFull()) {
+						close();
+						return;
+					}
+					final ContainerChest containerChest = (ContainerChest) mc.thePlayer.openContainer;
+
+					final List<Integer> items = getUnStoleItems(containerChest);
+					if (items.isEmpty()) {
+						close();
+						return;
+					}
+
+					final int slot = items.get(0);
+
+					stole.add(slot);
+					PacketUtil.windowsClick(slot, "Shift");
+					nextStealTime = System.currentTimeMillis()
+							+ MathUtil.randomizeInt(minStealDelay.getAsInt(), maxStealDelay.getAsInt());
+				}
+				break;
+			case AFTER:
+				if (autoClose.get() && nextCloseTime <= System.currentTimeMillis()) {
+					mc.thePlayer.closeScreen();
+					state = State.NONE;
+				}
+				break;
+			default:
+				break;
 			}
 		}
 	}
 
-	private boolean itemWhitelisted(final ItemStack itemStack) {
-		final ArrayList<Item> whitelistedItems = new ArrayList<Item>() {
-			private static final long serialVersionUID = -4063268508656626059L;
-
-			{
-				add(Items.ender_pearl);
-				add(Items.iron_ingot);
-				add(Items.snowball);
-				add(Items.gold_ingot);
-				add(Items.redstone);
-				add(Items.diamond);
-				add(Items.emerald);
-				add(Items.quartz);
-				add(Items.bow);
-				add(Items.arrow);
-				add(Items.fishing_rod);
-			}
-		};
-		final Item item = itemStack.getItem();
-		final String itemName = itemStack.getDisplayName();
-
-		if (itemName.contains("Right Click") || itemName.contains("Click to Use")
-				|| itemName.contains("Players Finder")) {
-			return true;
-		}
-
-		final ArrayList<Integer> whitelistedPotions = new ArrayList<Integer>() {
-			private static final long serialVersionUID = -5531907215825315299L;
-
-			{
-				add(6);
-				add(1);
-				add(5);
-				add(8);
-				add(14);
-				add(12);
-				add(10);
-				add(16);
-			}
-		};
-
-		if (item instanceof ItemPotion) {
-			final int potionID = getPotionId(itemStack);
-			return whitelistedPotions.contains(potionID);
-		}
-
-		return (item instanceof ItemBlock && !(((ItemBlock) item).getBlock() instanceof BlockTNT)
-				&& !(((ItemBlock) item).getBlock() instanceof BlockSlime)
-				&& !(((ItemBlock) item).getBlock() instanceof BlockFalling)) || item instanceof ItemAnvilBlock
-				|| item instanceof ItemSword || item instanceof ItemArmor || item instanceof ItemTool
-				|| item instanceof ItemFood || item instanceof ItemSkull || itemName.contains("\247")
-				|| whitelistedItems.contains(item) && !item.equals(Items.spider_eye);
+	private void close() {
+		nextCloseTime = MathUtil.randomizeInt(minCloseDelay.getAsInt(), maxCloseDelay.getAsInt());
+		state = State.AFTER;
 	}
 
-	private int getPotionId(final ItemStack potion) {
-		final Item item = potion.getItem();
-
-		try {
-			if (item instanceof ItemPotion) {
-				final ItemPotion p = (ItemPotion) item;
-				return p.getEffects(potion.getMetadata()).get(0).getPotionID();
-			}
-		} catch (final NullPointerException ignored) {
+	private List<Integer> getUnStoleItems(ContainerChest containerChest) {
+		IInventory chest = containerChest.getLowerChestInventory();
+		List<Integer> items = new ArrayList<>(chest.getSizeInventory());
+		for (int i = 0; i < chest.getSizeInventory(); i++) {
+			if (stole.contains(i))
+				continue;
+			ItemStack stack = chest.getStackInSlot(i);
+			if (stack == null || stack.getItem() instanceof ItemEmptyMap) continue;
+			if (ignoreTrash.get() && InventoryUtil.trash(stack, true, true)) continue;
+			items.add(i);
 		}
 
-		return 0;
+		if (shuffle.get()) {
+			Collections.shuffle(items);
+		}
+
+		return items;
 	}
 
+	enum State {
+		NONE, BEFORE, STEAL, AFTER
+	}
 }

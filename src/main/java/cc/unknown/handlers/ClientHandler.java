@@ -41,6 +41,21 @@ public class ClientHandler implements Accessor {
 		}	
 	}
 	
+    @SubscribeEvent
+    public void onTick(ClientTickEvent event) {
+        if (event.phase == Phase.END) {
+            try {
+                if (isInGame()) {
+                    for (Module module : getModuleManager().getModules()) {
+                        if (mc.currentScreen instanceof DropGui) {
+                            module.guiUpdate();
+                        }
+                    }
+                }
+            } catch (Throwable ignored) { }
+        }
+    }
+	
 	@SubscribeEvent
 	public void onKeyInput(KeyInputEvent event) {
 		int key = Keyboard.getEventKey();

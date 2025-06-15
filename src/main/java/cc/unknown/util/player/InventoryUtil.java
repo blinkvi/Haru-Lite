@@ -1,7 +1,5 @@
 package cc.unknown.util.player;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import cc.unknown.util.Accessor;
+import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.system.Clock;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -69,6 +68,14 @@ public class InventoryUtil implements Accessor {
 		return slot;
 	}
 
+    public static boolean isFull() {
+        for (int i = 9; i < 45; i++) {
+            if (mc.thePlayer.inventoryContainer.getSlot(i).getStack() == null) {
+                return false;
+            }
+        }
+        return true;
+    }
 	
     public static Item getItem() {
         ItemStack stack = getItemStack();
@@ -244,14 +251,7 @@ public class InventoryUtil implements Accessor {
             if (inventoryStopWatch.hasPassed(clickDelay)) {
                 int x = Mouse.getX() * gui.width / mc.displayWidth;
                 int y = gui.height - Mouse.getY() * gui.height / mc.displayHeight - 1;
-
-                try {
-                    Method mouseClicked = GuiScreen.class.getDeclaredMethod("mouseClicked", int.class, int.class, int.class);
-                    mouseClicked.setAccessible(true);
-                    mouseClicked.invoke(gui, x, y, mouseButton);
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+                ReflectUtil.mouseClicked(x, y, mouseButton);
                 inventoryStopWatch.reset();
             }
         }

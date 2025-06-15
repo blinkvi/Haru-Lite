@@ -23,8 +23,6 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "Reach", description = "Sets the attack range.", category = Category.COMBAT)
 public class Reach extends Module {
@@ -39,16 +37,10 @@ public class Reach extends Module {
 			new Bool("MoveOnly", false)));
 
 	@Override
-	public void onEnable() {
-		correctValues(min, max);
+	public void guiUpdate() {
+		correct(min, max);
 	}
-	
-	@SubscribeEvent
-	public void onPostTick(ClientTickEvent event) {
-		if (event.phase == Phase.START) return;
-		correctValues(min, max);
-	}
-	
+
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onMouse(MouseEvent event) {
 		if (event.button >= 0 && event.buttonstate && isInGame()) {
@@ -62,7 +54,7 @@ public class Reach extends Module {
 				&& (!conditionals.isEnabled("WeaponOnly") || InventoryUtil.isSword())
 				&& (!conditionals.isEnabled("MoveOnly") || MoveUtil.isMoving())
 				&& (!conditionals.isEnabled("SprintOnly") || mc.thePlayer.isSprinting())
-				&& (!MathUtil.chance(chance.getValue()))) {
+				&& (MathUtil.chance(chance.getValue()))) {
 
 			double r = MathUtil.randomizeDouble(min.getValue(), max.getValue());
 			Object[] o = getEntity(r);

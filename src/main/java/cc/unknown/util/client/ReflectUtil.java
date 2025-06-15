@@ -13,6 +13,7 @@ import cc.unknown.util.Accessor;
 import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -64,6 +65,10 @@ public class ReflectUtil implements Accessor {
 
     public static void setInWeb(boolean bool) {
         setPrivateField(Entity.class, mc.thePlayer, bool, "isInWeb", "field_70134_J");
+    }
+        
+    public static boolean isHittingBlock() {
+    	return getPrivateField(PlayerControllerMP.class, mc.playerController, "isHittingBlock", "field_78778_j");
     }
 
     public static int getBlockHitDelay() {
@@ -149,6 +154,10 @@ public class ReflectUtil implements Accessor {
 
     public static void clickMouse() {
         getPrivateMethod(Minecraft.class, mc, "func_147116_af", "clickMouse");
+    }
+    
+    public static void mouseClicked(int mouseX, int mouseY, int button) {
+    	getPrivateMethod(GuiScreen.class, mc.currentScreen, int.class, int.class, int.class, mouseX, mouseY, button, "mouseClicked", "func_146192_a");
     }
 
     public static void rightClickMouse() {

@@ -24,8 +24,8 @@ import net.minecraft.world.WorldSettings;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@ModuleInfo(name = "BridgeAssist", description = "Automatically sneaks for you when you are near the edge of a block.", category = Category.MOVE)	
-public class BridgeAssist extends Module {
+@ModuleInfo(name = "LegitScaffold", description = "Automatically sneaks for you when you are near the edge of a block.", category = Category.MOVE)	
+public class LegitScaffold extends Module {
     
 	private final Slider edge = new Slider("Edge", this, 0.15, -0.2, 0.30, 0.01);
     
@@ -57,7 +57,7 @@ public class BridgeAssist extends Module {
 
 	@SubscribeEvent
 	public void onPlace(PlaceEvent event) {		
-		if (isShifting || shouldBridge) {
+		if (isShifting) {
 			isShifting = false;
 		}
 	}
@@ -81,7 +81,7 @@ public class BridgeAssist extends Module {
 				return;
 			}
 		}
-        
+
         if (conditionals.isEnabled("OnlyBackwards") && (mc.thePlayer.movementInput.moveForward > 0) && (mc.thePlayer.movementInput.moveStrafe == 0) || mc.thePlayer.movementInput.moveForward >= 0) {
             shouldBridge = false;
             isShifting = false;

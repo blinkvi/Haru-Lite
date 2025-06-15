@@ -2,6 +2,7 @@ package cc.unknown.module.impl.move;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
@@ -9,13 +10,11 @@ import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.value.impl.Bool;
 import cc.unknown.value.impl.Slider;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "Timer", description = "Faster game.", category = Category.MOVE)
 public class Timer extends Module {
 	
-	private final Slider speed = new Slider("Speed", this, 1.5, 0.05, 25, 0.05);
+	private final Slider speed = new Slider("Speed", this, 1.5, 0.05, 25, 0.05, () -> !this.ground.get() && !this.air.get());
 	private final Slider variation = new Slider("Randomization", this, 15, 0, 50, 5);
 	
 	private final Bool ground = new Bool("Ground", this, false);
@@ -25,14 +24,19 @@ public class Timer extends Module {
 	
 	@Override
 	public void onEnable() {
-		ReflectUtil.getTimer().timerSpeed = 1f;
+		ReflectUtil.getTimer().timerSpeed = 1.0f;
+	}
+	
+	@Override
+	public void onDisable() {
+		ReflectUtil.getTimer().timerSpeed = 1.0f;
 	}
 
 	@SubscribeEvent
-	public void onClientTick(TickEvent.ClientTickEvent event) {
-	    if (event.phase == Phase.START && mc.thePlayer != null) {
-	        ReflectUtil.getTimer().timerSpeed = calculateTimerSpeed();
-	    }
+	public void onPrePosition(PrePositionEvent event) {
+		if (!isInGame()) return;
+		
+		ReflectUtil.getTimer().timerSpeed = calculateTimerSpeed();
 	}
 	
 	private float calculateTimerSpeed() {
@@ -47,13 +51,13 @@ public class Timer extends Module {
 	        baseSpeed = speed.getAsFloat();
 	    }
 
-	    float variationAmount = variation.getAsFloat();
+	    float randomization = variation.getAsInt();
 	    
-	    if (variationAmount <= 0) {
-	        return Math.max(baseSpeed, 0.1F);
+	    if (randomization == 0) {
+	        return baseSpeed;
 	    }
 
-	    float halfVariation = variationAmount / 2.0F;
+	    float halfVariation = randomization / 2.0F;
 	    float randomOffset = ThreadLocalRandom.current().nextFloat() * halfVariation * 2 - halfVariation;
 
 	    return Math.max(baseSpeed + randomOffset, 0.1F);

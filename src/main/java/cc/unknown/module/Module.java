@@ -42,6 +42,7 @@ public abstract class Module implements Accessor {
 
     public void onEnable() { }
     public void onDisable() { }
+	public void guiUpdate() { }
     public boolean isEnabled() { return state; }
     public boolean isDisabled() { return !state; }
     
@@ -141,17 +142,12 @@ public abstract class Module implements Accessor {
         return true;
     }
 
-    public void correctValues(Slider min, Slider max) {
-    	double minValue = min.getValue();
-    	double maxValue = max.getValue();
-
-	    if (minValue >= maxValue) {
-	        minValue = maxValue;
-	        min.setValue(minValue);
-	        
-	        maxValue = minValue;
-	        max.setValue(maxValue);
-	    }
+    public void correct(Slider c, Slider d) {
+        if (c.getValue() > d.getValue()) {
+            double p = c.getValue();
+            c.setValue(d.getValue());
+            d.setValue(p);
+        }
     }
 
 	public SList<Value> getValues() {

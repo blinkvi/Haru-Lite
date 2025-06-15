@@ -14,8 +14,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "Criticals", description = "", category = Category.COMBAT)
 public class Criticals extends Module {
 		
-    public final Slider timer = new Slider("Timer", this, 0.5, 0.1, 1, 0.1);
-    public final Slider delay = new Slider("Delay", this, 2000, 100, 3000, 100);
+	private final Slider timer = new Slider("Timer", this, 0.5, 0.1, 1, 0.1);
+    private final Slider delay = new Slider("Delay", this, 2000, 100, 3000, 100);
 	private final Slider range = new Slider("Range", this, 3, 3, 6, 0.1);
     private final Slider chance = new Slider("Chance", this, 100, 0, 100);
 	
@@ -33,9 +33,9 @@ public class Criticals extends Module {
 
 	@SubscribeEvent
 	public void onAttack(AttackEvent event) {
-		if (MathUtil.chance(chance.getValue())) {
-			attacked = true;
-		}
+		if (!MathUtil.chance(chance.getValue())) return;
+		
+		attacked = true;
     }
 	
 	@SubscribeEvent

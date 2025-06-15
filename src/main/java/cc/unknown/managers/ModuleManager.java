@@ -69,7 +69,7 @@ public final class ModuleManager extends SList<Module> {
                 Chams.class,
                 
                 // move
-                BridgeAssist.class,
+                LegitScaffold.class,
                 NoJumpDelay.class,
                 NoFall.class,
                 NoClip.class,
