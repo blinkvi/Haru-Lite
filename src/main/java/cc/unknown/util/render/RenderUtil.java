@@ -518,7 +518,7 @@ public final class RenderUtil implements Accessor {
 		drawGradientRect(x, y, width, height, false, topColor, bottomColor);
 	}
 
-	public static void setupRenderState(Color color, float width) {
+	public static void setupRenderState(Color color) {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);

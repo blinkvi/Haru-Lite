@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class NoHitDelay extends Module {
 	
     @SubscribeEvent
-    public void onPreAttack(PreUpdateEvent event) {
+    public void onPreUpdate(PreUpdateEvent event) {
         if (!isInGame()) return;
         ReflectUtil.setLeftClickCounter(0);
     }

@@ -24,9 +24,9 @@ public final class ClickGUI extends Module {
 	public final Bool hideElements = new Bool("HideElementsInGui", this, true);
 	public final Slider alpha = new Slider("AlphaBackground", this, 120, 20, 190, 10);
 		
-	public final Bool shaders = new Bool("Shaders", this, false);
-	public final Bool roundedOutline = new Bool("RoundedOutline", this, false, shaders::get);
-	public final Bool roundedButtons = new Bool("RoundedButtons", this, false, shaders::get);
+	public final Bool shaders = new Bool("Shaders", this, true);
+	public final Bool roundedOutline = new Bool("RoundedOutline", this, true, shaders::get);
+	public final Bool roundedButtons = new Bool("RoundedButtons", this, true, shaders::get);
 	
 	public final Slider red = new Slider("Red [Outline]", this, 255, 0, 255, 1);
 	public final Slider green = new Slider("Green [Outline]", this, 0, 0, 255, 1);

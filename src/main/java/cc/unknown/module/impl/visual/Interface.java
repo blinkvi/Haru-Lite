@@ -18,7 +18,7 @@ import cc.unknown.value.impl.Slider;
 
 @ModuleInfo(name = "Interface", description = "Renders the client interface.", category = Category.VISUAL)
 public class Interface extends Module {
-	public final Mode stickersType = new Mode("Sticker", this, StickersType.UZAKI, StickersType.values());
+	public final Mode stickersType = new Mode("Sticker", this, StickersType.LOONA, StickersType.values());
 	
 	public final Mode mode = new Mode("Mode", this, "Neon", "Fade", "Slinky", "Magic", "Neon", "Blaze", "Ghoul", "Static");
 	

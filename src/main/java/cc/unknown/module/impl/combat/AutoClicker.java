@@ -1,9 +1,11 @@
 package cc.unknown.module.impl.combat;
 
 import cc.unknown.event.player.PreTickEvent;
+import cc.unknown.event.player.PreUpdateEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
+import cc.unknown.util.client.ReflectUtil;
 import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.player.PlayerUtil;
@@ -30,6 +32,12 @@ public class AutoClicker extends Module {
     @Override
     public void guiUpdate() {
     	correct(minCps, maxCps);
+    }
+    
+    @SubscribeEvent
+    public void onPreUpdate(PreUpdateEvent event) {
+        if (!isInGame()) return;
+        ReflectUtil.setLeftClickCounter(0);
     }
 
     @SubscribeEvent

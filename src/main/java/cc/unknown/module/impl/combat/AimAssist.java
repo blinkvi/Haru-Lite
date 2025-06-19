@@ -35,11 +35,14 @@ public class AimAssist extends Module {
     @SubscribeEvent
     public void onClientTick(ClientTickEvent event) {
     	if (event.phase == Phase.END) {
+
+            if (mc.thePlayer == null || mc.currentScreen != null || !mc.inGameHasFocus) return;
     	    if (mc.gameSettings.keyBindAttack.isKeyDown()) clock.reset();
-
-            if (mc.thePlayer == null || mc.currentScreen != null || !mc.inGameHasFocus || (clickAim.get() && (clock.hasPassed(150) || !mc.thePlayer.isSwingInProgress)) || (weaponOnly.get() && InventoryUtil.isSword()) || (breakBlocks.get() && breakBlock())) return;
-
-            Entity en = this.getEnemy();
+    	    if (clickAim.get() && (clock.hasPassed(150) || !mc.thePlayer.isSwingInProgress)) return;
+    	    if (breakBlocks.get() && breakBlock()) return;
+    	    if (weaponOnly.get() && !InventoryUtil.isSword()) return;
+    	    
+            Entity en = getEnemy();
             if (en != null) {
                 double n = n(en);
                 if (n > 1 || n < -1) {

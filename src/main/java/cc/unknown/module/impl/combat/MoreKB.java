@@ -17,7 +17,6 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.INpc;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -28,7 +27,6 @@ public class MoreKB extends Module {
 
 	private Slider delay = new Slider("Delay", this, 100, 0, 200, 5);
 	private Slider chance = new Slider("Chance", this, 100, 0, 100, 1);
-	private Slider threshold = new Slider("Threshold", this, 120, 0, 180, 1);
 	private Slider distanceToEntity = new Slider("Distance", this, 4, 3, 10, 1);
 	
 	private Bool onlyGround = new Bool("OnlyGround", this, false);
@@ -57,7 +55,6 @@ public class MoreKB extends Module {
 		if (onlyMove.get() && !MoveUtil.isMoving()) return;
 		if (onlyMoveForward.get() && mc.thePlayer.movementInput.moveStrafe != 0f) return;
 		if (onlyGround.get() && !mc.thePlayer.onGround) return;
-		if (exceedsRotationThreshold(target)) return;
 		if (mc.thePlayer.getDistanceToEntity(target) <= distanceToEntity.getAsFloat()) return;
 		    
 		if (clock.hasPassed(delay.getAsInt())) {
@@ -102,14 +99,6 @@ public class MoreKB extends Module {
         }
 	}
 
-	private boolean exceedsRotationThreshold(EntityPlayer target) {
-	    double deltaX = mc.thePlayer.posX - target.posX;
-	    double deltaZ = mc.thePlayer.posZ - target.posZ;
-	    float calculatedYaw = (float) (MathHelper.atan2(deltaZ, deltaX) * 180.0 / Math.PI - 90.0);
-	    float yawDifference = Math.abs(MathHelper.wrapAngleTo180_float(calculatedYaw - target.rotationYawHead));
-	    return yawDifference > threshold.getAsFloat();
-	}
-	
 	private boolean shouldJump() {
 	    return mc.thePlayer.isInWater() || mc.thePlayer.isInLava();
 	}
