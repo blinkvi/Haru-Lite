@@ -76,10 +76,10 @@ public abstract class MixinGuiIngame extends Gui {
 		ci.cancel();
 	}
 
-	@Inject(method = "renderBossHealth", at = @At("HEAD"), cancellable = true)
+	/*@Inject(method = "renderBossHealth", at = @At("HEAD"), cancellable = true)
 	private void cancelBossHealth(CallbackInfo ci) {
 		ci.cancel();
-	}
+	}*/
 
 	@Inject(method = "renderPumpkinOverlay", at = @At("HEAD"), cancellable = true)
 	private void cancelPumpkinOverlay(CallbackInfo ci) {

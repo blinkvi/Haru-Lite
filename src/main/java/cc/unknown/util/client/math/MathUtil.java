@@ -28,6 +28,11 @@ public class MathUtil implements Accessor {
         return min + ((max - min) * Math.random());
     }
     
+    public static int nextInt(int min, int max) {
+        if (min == max || max - min <= 0D) return min;
+        return (int) (min + ((max - min) * Math.random()));
+    }
+    
     public static int randomizeSafeInt(int min, int max) {
     	double randomPercent = randomDouble(0.7, 1.3);
     	return (int) (randomPercent * randomInt(min, max + 1));

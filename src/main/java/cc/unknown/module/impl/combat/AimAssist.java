@@ -1,238 +1,114 @@
 package cc.unknown.module.impl.combat;
-import java.util.Arrays;
-import java.util.List;
+import org.lwjgl.input.Mouse;
 
-import akka.japi.Pair;
-import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.module.Module;
 import cc.unknown.module.api.Category;
 import cc.unknown.module.api.ModuleInfo;
-import cc.unknown.util.client.ReflectUtil;
+import cc.unknown.util.client.math.MathUtil;
 import cc.unknown.util.client.system.Clock;
-import cc.unknown.util.player.FriendUtil;
 import cc.unknown.util.player.InventoryUtil;
-import cc.unknown.util.player.PlayerUtil;
-import cc.unknown.util.player.move.RotationUtil;
-import cc.unknown.util.structure.vectors.Vec3;
 import cc.unknown.value.impl.Bool;
-import cc.unknown.value.impl.MultiBool;
 import cc.unknown.value.impl.Slider;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 @ModuleInfo(name = "AimAssist", description = "Assists with aiming at opponents in a legitimate manner.", category = Category.COMBAT)
 public class AimAssist extends Module {
 	
-	private final Slider horizontal = new Slider("HorizontalSpeed", this, 5, 1, 20, 0.1);
-	private final Bool verticalCheck = new Bool("Vertical", this, false);
-	private final Slider vertical = new Slider("VerticalSpeed", this, 5, 1, 20, 0.1, verticalCheck::get);
+	private final Slider horizontal = new Slider("Horizontal", this, 60, 10, 100, 1);
+	private final Slider distance = new Slider("Distance", this, 4.5, 1, 10, 0.5);
+	private final Bool clickAim = new Bool("ClickAim", this, true);
+	private final Bool weaponOnly = new Bool("WeaponOnly", this, false);
+	private final Bool aimInvis = new Bool("AimAtInvis", this, false);
+	private final Bool breakBlocks = new Bool("BreakBlocks", this, true);
 	
-	private final Slider fov = new Slider("Fov", this, 0, 0, 360);
+	public boolean breakHeld = false;
+	private final Clock clock = new Clock();
 	
-	private final Slider range = new Slider("Range", this, 3.5, 0.1, 8, 0.1);
-	
-	public final MultiBool conditionals = new MultiBool("Conditionals", this, Arrays.asList(
-			new Bool("RequireClick", true),
-			new Bool("LockTarget", true),
-			new Bool("IncreaseStrafe", true),
-			new Bool("CheckBlockBreak", true),
-			new Bool("IgnoreTeams", true),
-			new Bool("VisibilityCheck", true),
-			new Bool("WeaponsOnly", true)));
-
-    private Double yawNoise = null;
-    private Double pitchNoise = null;
-    private long nextNoiseRefreshTime = -1;
-    private long nextNoiseEmptyTime = 200;
-    
-    private final Clock clock = new Clock();
-
-    @Override
-    public void onDisable() {
-        yawNoise = pitchNoise = null;
-        nextNoiseRefreshTime = -1;
-    }
-    
     @SubscribeEvent
-    public void onPrePosition(PrePositionEvent event) {
-        if (noAction()) {
-            return;
-        }
+    public void onClientTick(ClientTickEvent event) {
+    	if (event.phase == Phase.END) {
+    	    if (mc.gameSettings.keyBindAttack.isKeyDown()) clock.reset();
 
-        final EntityPlayer target = getEnemy();
-        if (target == null) return;
-        final boolean onTarget = mc.objectMouseOver != null
-                && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY
-                && mc.objectMouseOver.entityHit == target;
+            if (mc.thePlayer == null || mc.currentScreen != null || !mc.inGameHasFocus || (clickAim.get() && (clock.hasPassed(150) || !mc.thePlayer.isSwingInProgress)) || (weaponOnly.get() && InventoryUtil.isSword()) || (breakBlocks.get() && breakBlock())) return;
 
-        double deltaYaw = yawNoise;
-        double deltaPitch = pitchNoise;
+            Entity en = this.getEnemy();
+            if (en != null) {
+                double n = n(en);
+                if (n > 1 || n < -1) {
+                    float val = (float)(-(MathUtil.randomDouble(horizontal.getValue() - 1.47328, horizontal.getValue() + 2.48293) / 100 + n / (101 - MathUtil.randomDouble(horizontal.getValue() - 4.723847, horizontal.getValue()))));
+                    float strafe = mc.thePlayer.moveStrafing;
+                    if (strafe != 0) val += -strafe * 0.03f;
 
-        double hSpeed = horizontal.getValue() + 10;
-        double vSpeed = vertical.getValue() + 10;
-
-
-        if (onTarget) {
-            if (conditionals.isEnabled("LockTarget")) {
-                hSpeed *= 0.85;
-                vSpeed *= 0.85;
-            } else {
-                hSpeed = 0;
-                vSpeed = 0;
+                    mc.thePlayer.rotationYaw += val;
+                }
             }
-        }
-
-        if (conditionals.isEnabled("IncreaseStrafe")) {
-            int mouseX = Math.abs(mc.mouseHelper.deltaX);
-            int mouseY = Math.abs(mc.mouseHelper.deltaY);
-
-            if (mouseX > 100)
-                hSpeed = 0;
-            else
-                hSpeed = Math.min(hSpeed, (100 - mouseX) / 35.0);
-
-            if (mouseY > 100)
-                vSpeed = 0;
-            else
-                vSpeed = Math.min(hSpeed, (100 - mouseY) / 35.0);
-        }
-
-        final Pair<Pair<Float, Float>, Pair<Float, Float>> rotation = RotationUtil.getRotation(target.getEntityBoundingBox());
-        final Pair<Float, Float> yaw = rotation.first();
-        final Pair<Float, Float> pitch = rotation.second();
-
-        boolean move = false;
-
-        final float curYaw = mc.thePlayer.rotationYaw;
-        final float curPitch = mc.thePlayer.rotationPitch;
-        if (yaw.first() > curYaw) {
-            move = true;
-            final float after = rotMove(yaw.first(), curYaw, (float) hSpeed);
-            deltaYaw += after - curYaw;
-        } else if (yaw.second() < curYaw) {
-            move = true;
-            final float after = rotMove(yaw.second(), curYaw, (float) hSpeed);
-            deltaYaw += after - curYaw;
-        }
-        
-        if (verticalCheck.get()) {
-            if (pitch.first() > curPitch) {
-                move = true;
-                final float after = rotMove(pitch.first(), curPitch, (float) vSpeed);
-                deltaPitch += after - curPitch;
-            } else if (pitch.second() < curPitch) {
-                move = true;
-                final float after = rotMove(pitch.second(), curPitch, (float) vSpeed);
-                deltaPitch += after - curPitch;
-            }
-        }
-
-        if (move) {
-            deltaYaw += (Math.random() - 0.5) * Math.min(0.8, deltaPitch / 10.0);
-            deltaPitch += (Math.random() - 0.5) * Math.min(0.8, deltaYaw / 10.0);
-        }
-
-        mc.thePlayer.rotationYaw += deltaYaw;
-        mc.thePlayer.rotationPitch += deltaPitch;
+    	}
     }
     
-    @SubscribeEvent
-    public void onRender(TickEvent.RenderTickEvent event) {
-        long time = System.currentTimeMillis();
-        if (nextNoiseRefreshTime == -1 || time >= nextNoiseRefreshTime + nextNoiseEmptyTime) {
-            nextNoiseRefreshTime = (long) (time + Math.random() * 60 + 80);
-            nextNoiseEmptyTime = (long) (Math.random() * 100 + 180);
-            yawNoise = (Math.random() - 0.5) * 2 * ((Math.random() - 0.5) * 0.3 + 0.8);
-            pitchNoise = (Math.random() - 0.5) * 2 * ((Math.random() - 0.5) * 0.35 + 0.6);
-        } else if (time >= nextNoiseRefreshTime) {
-            yawNoise = 0d;
-            pitchNoise = 0d;
+    public Entity getEnemy() {
+        for (EntityPlayer en : mc.theWorld.playerEntities) {
+            if (!isTarget(en)) {
+                continue;
+            } else if (!aimInvis.get() && en.isInvisible()) {
+                continue;
+            } else if ((double) mc.thePlayer.getDistanceToEntity(en) > distance.getAsFloat()) {
+                continue;
+            }
+            return en;
         }
+        return null;
     }
-    
-    private EntityPlayer getEnemy() {
-        final List<EntityPlayer> players = mc.theWorld.playerEntities;
-        final Vec3 playerPos = new Vec3(mc.thePlayer);
 
-        EntityPlayer target = null;
-        double targetFov = Double.MAX_VALUE;
-        for (final EntityPlayer entityPlayer : players) {
-            if (entityPlayer != mc.thePlayer && entityPlayer.deathTime == 0) {
-                double dist = playerPos.distanceTo(entityPlayer);
-                if (FriendUtil.isFriend(entityPlayer)) continue;
-                if (conditionals.isEnabled("IgnoreTeams") && PlayerUtil.isTeam(entityPlayer)) continue;
-                if (dist > range.getValue()) continue;
-                if (fov.getAsInt() != 360 && !PlayerUtil.fov(fov.getAsInt(), entityPlayer)) continue;
-                if (conditionals.isEnabled("VisibilityCheck") && !mc.thePlayer.canEntityBeSeen(entityPlayer)) continue;
-                double curFov = Math.abs(PlayerUtil.getFov(entityPlayer.posX, entityPlayer.posZ));
-                if (curFov < targetFov) {
-                    target = entityPlayer;
-                    targetFov = curFov;
+    public static boolean fov(Entity entity, float fov) {
+        fov = (float) ((double) fov * 0.5D);
+        double v = ((double) (mc.thePlayer.rotationYaw - m(entity)) % 360.0D + 540.0D) % 360.0D - 180.0D;
+        return v > 0.0D && v < (double) fov || (double) (-fov) < v && v < 0.0D;
+    }
+
+    public static double n(Entity en) {
+        return ((double) (mc.thePlayer.rotationYaw - m(en)) % 360.0D + 540.0D) % 360.0D - 180.0D;
+    }
+
+    public static float m(Entity ent) {
+        double x = ent.posX - mc.thePlayer.posX;
+        double z = ent.posZ - mc.thePlayer.posZ;
+        double yaw = Math.atan2(x, z) * 57.2957795D;
+        return (float) (yaw * -1.0D);
+    }
+
+    public boolean breakBlock() {
+        if (breakBlocks.get() && mc.objectMouseOver != null) {
+            BlockPos p = mc.objectMouseOver.getBlockPos();
+            if (p != null && Mouse.isButtonDown(0)) {
+                if (mc.theWorld.getBlockState(p).getBlock() != Blocks.air
+                        && !(mc.theWorld.getBlockState(p).getBlock() instanceof BlockLiquid)) {
+                    if (!breakHeld) {
+                        int e = mc.gameSettings.keyBindAttack.getKeyCode();
+                        KeyBinding.setKeyBindState(e, true);
+                        KeyBinding.onTick(e);
+                        breakHeld = true;
+                    }
+                    return true;
+                }
+                if (breakHeld) {
+                    breakHeld = false;
                 }
             }
         }
-        return target;
+        return false;
     }
 
-    private float rotMove(float target, float current, float diff) {
-        float delta;
-        if (target > current) {
-            float dist1 = target - current;
-            float dist2 = current + 360 - target;
-            if (dist1 > dist2) {
-                delta = -current - 360 + target;
-            } else {
-                delta = dist1;
-            }
-        } else if (target < current) {
-            float dist1 = current - target;
-            float dist2 = target + 360 - current;
-            if (dist1 > dist2) {
-                delta = current + 360 + target;
-            } else {
-                delta = -dist1;
-            }
-        } else {
-            return current;
-        }
-
-        delta = normalize(delta, -180, 180);
-
-        if (Math.abs(delta) < 0.1 * Math.random() + 0.1) {
-            return current;
-        } else if (Math.abs(delta) <= diff) {
-            return current + delta;
-        } else {
-            if (delta < 0) {
-                return current - diff;
-            } else if (delta > 0) {
-                return current + diff;
-            } else {
-                return current;
-            }
-        }
-    }
-    
-    private float normalize(float yaw, float min, float max) {
-        yaw %= 360.0F;
-        if (yaw >= max) {
-            yaw -= 360.0F;
-        }
-        if (yaw < min) {
-            yaw += 360.0F;
-        }
-
-        return yaw;
-    }
-    
-    private boolean noAction() {
-        if (mc.currentScreen != null || !mc.inGameHasFocus) return true;
-        if (conditionals.isEnabled("WeaponsOnly") && !InventoryUtil.isSword()) return true;
-        if (yawNoise == null || pitchNoise == null) return true;
-        if (mc.gameSettings.keyBindAttack.isKeyDown()) clock.reset();
-        if (conditionals.isEnabled("RequireClick") && (clock.hasPassed(150) || !mc.thePlayer.isSwingInProgress)) return true;
-        return conditionals.isEnabled("CheckBlockBreak") && ReflectUtil.isHittingBlock();
+    public boolean isTarget(EntityPlayer en) {
+        if (en == mc.thePlayer)
+            return false;
+        return en.deathTime == 0;
     }
 }

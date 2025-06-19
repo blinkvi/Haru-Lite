@@ -129,13 +129,13 @@ public class PacketHandler implements Accessor {
             return (!("http".equals(scheme) || "https".equals(scheme) || isLevel)) || (isLevel && (url.contains("..") || !url.endsWith("/resources.zip"))) ? throwFailed(hash) : false;
 
         } catch (Exception e) {
-            PacketUtil.sendNoEvent(new C19PacketResourcePackStatus(hash, C19PacketResourcePackStatus.Action.FAILED_DOWNLOAD));
+            PacketUtil.send(new C19PacketResourcePackStatus(hash, C19PacketResourcePackStatus.Action.FAILED_DOWNLOAD));
             return true;
         }
     }
 
     private boolean throwFailed(String hash) {
-        PacketUtil.sendNoEvent(new C19PacketResourcePackStatus(hash, C19PacketResourcePackStatus.Action.FAILED_DOWNLOAD));
+        PacketUtil.send(new C19PacketResourcePackStatus(hash, C19PacketResourcePackStatus.Action.FAILED_DOWNLOAD));
         return true;
     }
 }

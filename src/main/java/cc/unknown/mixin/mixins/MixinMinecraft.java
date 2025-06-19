@@ -23,6 +23,7 @@ import cc.unknown.Haru;
 import cc.unknown.event.GameLoopEvent;
 import cc.unknown.event.player.AttackEvent;
 import cc.unknown.event.player.PlaceEvent;
+import cc.unknown.event.player.PreTickEvent;
 import cc.unknown.mixin.interfaces.ISession;
 import cc.unknown.module.impl.combat.Piercing;
 import cc.unknown.module.impl.combat.Reach;
@@ -137,8 +138,13 @@ public abstract class MixinMinecraft implements ISession {
 			}
 		}
 	}
+	
+	@Inject(method = "runTick", at = @At("HEAD"))
+	public void preTick(CallbackInfo ci) {
+		MinecraftForge.EVENT_BUS.post(new PreTickEvent());
+	}
 
-	@Inject(method = { "toggleFullscreen" }, at = { @At("RETURN") })
+	@Inject(method = "toggleFullscreen", at = @At("RETURN"))
 	public void toggleFullscreen(CallbackInfo info) {
 		if (!this.fullscreen) {
 			Display.setResizable(false);

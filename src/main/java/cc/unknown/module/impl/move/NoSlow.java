@@ -25,7 +25,6 @@ public class NoSlow extends Module {
 
     private final Mode mode = new Mode("Mode", this, "Regular", "Regular", "NoItemRelease");
     private final Slider speed = new Slider("Speed", this, 1f, 0.2f, 1f, 0.1f, () -> mode.is("Regular"));
-    private final Bool easterEgg = new Bool("Intrusive", this, false, () -> mode.is("Regular") && NetworkUtil.isUniversocraft());
 
     public final MultiBool whitelist = new MultiBool("ItemsToWhitelist", this, () -> mode.is("Regular"), Arrays.asList(
         new Bool("Sword", false),
@@ -64,17 +63,6 @@ public class NoSlow extends Module {
             float value = speed.getAsFloat();
             event.forwardMultiplier = value;
             event.strafeMultiplier = value;
-        }
-    }
-
-    @SubscribeEvent
-    public void onPreUpdate(PreUpdateEvent event) {
-        if (!isInGame() || !mode.is("Regular") || !easterEgg.get() || !NetworkUtil.isUniversocraft()) return;
-
-        if (mc.thePlayer.getItemInUseDuration() <= 2 && !isWhitelistedItem()) {
-            int current = mc.thePlayer.inventory.currentItem;
-            PacketUtil.sendNoEvent(new C09PacketHeldItemChange((current + 1) % 2));
-            PacketUtil.sendNoEvent(new C09PacketHeldItemChange(current));
         }
     }
 }
