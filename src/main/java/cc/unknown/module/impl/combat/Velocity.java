@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.lwjgl.input.Keyboard;
 
+import cc.unknown.event.player.AttackEvent;
 import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.event.player.StrafeEvent;
 import cc.unknown.module.Module;
@@ -17,11 +18,12 @@ import cc.unknown.value.impl.Bool;
 import cc.unknown.value.impl.Mode;
 import cc.unknown.value.impl.MultiBool;
 import cc.unknown.value.impl.Slider;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @ModuleInfo(name = "Velocity", description = "Modifies the knockback you get.", category = Category.COMBAT)
 public class Velocity extends Module {
-    private final Mode mode = new Mode("Mode", this, "Normal", "Legit", "Normal");
+    private final Mode mode = new Mode("Mode", this, "Normal", "Legit", "Normal", "Intave");
     
     private final Mode jumpMode = new Mode("JumpMode", this, () -> mode.is("Legit"), "Normal", "Normal", "Hits", "Ticks");
     
@@ -44,17 +46,34 @@ public class Velocity extends Module {
 	
 	private int hit = 0, tick = 0;
 	private boolean reset;
+	private boolean attacked;
 	
 	@Override
 	public void guiUpdate() {
 		correct(minTicks, maxTicks);
 		correct(minHits, maxHits);
 	}
+	
+	@SubscribeEvent
+	public void onAttack(AttackEvent event) {
+		if (mode.is("Intave")) {
+			 attacked = true;
+		}
+	}
 
     @SubscribeEvent
     public void onPrePosition(PrePositionEvent event) {
     	if (mc.thePlayer.hurtTime > 0) {
 			switch (mode.getMode()) {
+			case "Intave":
+		        if (mc.objectMouseOver.typeOfHit.equals(MovingObjectPosition.MovingObjectType.ENTITY) && mc.thePlayer.hurtTime > 0 && !attacked) {
+		            mc.thePlayer.motionX *= 0.6D;
+		            mc.thePlayer.motionZ *= 0.6D;
+		            mc.thePlayer.setSprinting(false);
+		        }
+
+		        attacked = false;
+				break;
 			case "Normal":
 				if (horizontal.getAsInt() > 0 || horizontal.getAsInt() < 0 && vertical.getAsInt() > 0 || vertical.getAsInt() < 0) {
 					mc.thePlayer.motionX *= horizontal.getAsInt() / 100;
