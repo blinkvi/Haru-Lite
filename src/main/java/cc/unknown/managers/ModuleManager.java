@@ -61,6 +61,7 @@ public final class ModuleManager extends SList<Module> {
                 BedPlates.class,
                 Cosmetics.class,
                 MusicPlayer.class,
+                NoRender.class,
                 NameProtect.class,
                 NameTags.class,
                 Chams.class,

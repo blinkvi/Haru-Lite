@@ -10,6 +10,7 @@ import cc.unknown.util.client.system.Clock;
 import cc.unknown.util.player.InventoryUtil;
 import cc.unknown.util.player.PlayerUtil;
 import cc.unknown.value.impl.Bool;
+import cc.unknown.value.impl.Slider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
@@ -18,7 +19,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @ModuleInfo(name = "BlockHit", description = "Automatically blocks for you.", category = Category.COMBAT)
 public class BlockHit extends Module {
 
-    private final Bool swingCheck = new Bool("Swing Check", this, true);
+	private final Slider delay = new Slider("Delay", this, 500, 0, 1000, 10);
+    private final Slider distance = new Slider("ClosetDistance", this, 16, 0, 20);
+    private final Bool swingCheck = new Bool("SwingCheck", this, true);
 
     private final Clock timer = new Clock();
     private EntityPlayer target;
@@ -35,7 +38,7 @@ public class BlockHit extends Module {
     public void onPreUpdate(PreUpdateEvent event) {
         if (mc.theWorld == null || mc.thePlayer == null) return;
 
-        double closestDistance = 16.0;
+        double closestDistance = distance.get();
         EntityPlayer closestTarget = null;
 
         for (EntityPlayer entity : mc.theWorld.playerEntities) {
@@ -62,8 +65,8 @@ public class BlockHit extends Module {
                 && !(packet instanceof C02PacketUseEntity)
                 && target != null
                 && target.swingProgressInt > 0
-                && (mc.thePlayer.hurtTime == 0 && timer.hasPassed(500) || mc.thePlayer.hurtTime == 9)
-                && (!swingCheck.get() || mc.thePlayer.isSwingInProgress);
+                && (mc.thePlayer.hurtTime == 0 && timer.hasPassed(delay.getAsInt()) || mc.thePlayer.hurtTime == 9)
+                && (!swingCheck.get() || mc.thePlayer.isSwingInProgress)	;
 
         if (shouldBlock) {
             ReflectUtil.setPressed(mc.gameSettings.keyBindUseItem, true);

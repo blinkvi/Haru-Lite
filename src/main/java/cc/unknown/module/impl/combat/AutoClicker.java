@@ -44,14 +44,19 @@ public class AutoClicker extends Module {
     public void onTick(PreTickEvent event) {
     	if (!isInGame()) return;
     	
-        if (breakBlocks.get() && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) return;
-
-        if (mc.gameSettings.keyBindAttack.isKeyDown()) {
-            if (clock.hasPassed(1000 / MathUtil.nextInt(minCps.getAsInt(), maxCps.getAsInt()))) {
-                KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
-                PlayerUtil.setMouseButtonState(0, true);
-                clock.reset();
-            }
-        }
+    	try {
+    	
+	        if (breakBlocks.get() && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) return;
+	
+	        if (mc.gameSettings.keyBindAttack.isKeyDown()) {
+	            if (clock.hasPassed(1000 / MathUtil.nextInt(minCps.getAsInt(), maxCps.getAsInt()))) {
+	                KeyBinding.onTick(mc.gameSettings.keyBindAttack.getKeyCode());
+	                PlayerUtil.setMouseButtonState(0, true);
+	                clock.reset();
+	            }
+	        }
+    	} catch (NullPointerException e) {
+    		
+    	}
     }
 }

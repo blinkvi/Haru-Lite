@@ -70,7 +70,9 @@ public class Interface extends Module {
 	    COLOR_MODES.put("Neon",    (counter, alpha) -> alphaColor(ColorUtil.colorSwitch(Color.MAGENTA, new Color(0, 200, 255), 1000F, counter, 70L, 1), alpha));
 	    COLOR_MODES.put("Blaze",   (counter, alpha) -> alphaColor(ColorUtil.colorSwitch(new Color(139, 0, 0), new Color(255, 140, 0), 1000F, counter, 70L, 1), alpha));
 	    COLOR_MODES.put("Ghoul",   (counter, alpha) -> alphaColor(ColorUtil.colorSwitch(new Color(255, 0, 0), new Color(0, 0, 0), 1000F, counter, 70L, 1), alpha));
-	    COLOR_MODES.put("Fade",    (counter, alpha) -> alphaColor(ColorUtil.colorSwitch(new Color(red.getAsInt(), green.getAsInt(), blue.getAsInt()), new Color(red2.getAsInt(), green.getAsInt(), blue.getAsInt()), 1000F, counter, 70L, fadeSpeed.get()), alpha));
+	    COLOR_MODES.put("Fade",    (counter, alpha) -> alphaColor(ColorUtil.colorSwitch(
+	    		new Color(red.getAsInt(), green.getAsInt(), blue.getAsInt()),
+	    		new Color(red2.getAsInt(), green2.getAsInt(), blue2.getAsInt()), 1000F, counter, 70L, fadeSpeed.get()), alpha));
 	    COLOR_MODES.put("Static",  (counter, alpha) -> alphaColor(new Color(red.getAsInt(), green.getAsInt(), blue.getAsInt()), alpha));
 	}
 
@@ -80,7 +82,8 @@ public class Interface extends Module {
 
 	public int color(int counter, int alpha) {
 	    BiFunction<Integer, Integer, Integer> modeFunction = COLOR_MODES.get(mode.get());
-	    return modeFunction != null ? modeFunction.apply(counter, alpha) : alphaColor(new Color(red.getAsInt(), green.getAsInt(), blue.getAsInt()), alpha);
+	    return modeFunction != null ? modeFunction.apply(counter, alpha) : alphaColor(
+	    		new Color(red.getAsInt(), green.getAsInt(), blue.getAsInt()), alpha);
 	}
 
 	public int color(int counter) {

@@ -22,6 +22,7 @@ import cc.unknown.Haru;
 import cc.unknown.handlers.SpoofHandler;
 import cc.unknown.module.impl.visual.AntiDebuff;
 import cc.unknown.module.impl.visual.Interface;
+import cc.unknown.module.impl.visual.NoRender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiIngame;
@@ -76,14 +77,18 @@ public abstract class MixinGuiIngame extends Gui {
 		ci.cancel();
 	}
 
-	/*@Inject(method = "renderBossHealth", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "renderBossHealth", at = @At("HEAD"), cancellable = true)
 	private void cancelBossHealth(CallbackInfo ci) {
-		ci.cancel();
-	}*/
+		NoRender no = Haru.instance.getModuleManager().getModule(NoRender.class);
+		if (no.boss.get())
+			ci.cancel();
+	}
 
 	@Inject(method = "renderPumpkinOverlay", at = @At("HEAD"), cancellable = true)
 	private void cancelPumpkinOverlay(CallbackInfo ci) {
-		ci.cancel();
+		NoRender no = Haru.instance.getModuleManager().getModule(NoRender.class);
+		if (no.pumpkin.get())
+			ci.cancel();
 	}
 
 	@Inject(method = "renderDemo", at = @At("HEAD"), cancellable = true)
@@ -93,12 +98,16 @@ public abstract class MixinGuiIngame extends Gui {
 
 	@Inject(method = "renderPortal", at = @At("HEAD"), cancellable = true)
 	private void cancelPortal(CallbackInfo ci) {
-		ci.cancel();
+		NoRender no = Haru.instance.getModuleManager().getModule(NoRender.class);
+		if (no.portal.get())
+			ci.cancel();
 	}
 	
     @Inject(method = "renderVignette", at = @At("HEAD"), cancellable = true)
     private void cancelVignette(CallbackInfo ci) {
-    	ci.cancel();
+		NoRender no = Haru.instance.getModuleManager().getModule(NoRender.class);
+		if (no.vignette.get())
+			ci.cancel();
     }
 	
 	@Unique
