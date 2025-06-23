@@ -56,6 +56,8 @@ public class Velocity extends Module {
 	
 	@SubscribeEvent
 	public void onAttack(AttackEvent event) {
+		if (!isInGame()) return;
+		
 		if (mode.is("Intave")) {
 			 attacked = true;
 		}
@@ -63,6 +65,8 @@ public class Velocity extends Module {
 
     @SubscribeEvent
     public void onPrePosition(PrePositionEvent event) {
+    	if (!isInGame()) return;
+    	
     	if (mc.thePlayer.hurtTime > 0) {
 			switch (mode.getMode()) {
 			case "Intave":

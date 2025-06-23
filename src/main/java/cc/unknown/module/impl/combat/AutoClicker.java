@@ -25,7 +25,8 @@ public class AutoClicker extends Module {
 	private final Clock clock = new Clock();
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
+    	if (!isInGame()) return;
     	clock.reset();
     }
     

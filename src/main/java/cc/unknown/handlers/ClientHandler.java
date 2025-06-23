@@ -59,6 +59,7 @@ public class ClientHandler implements Accessor {
 	@SubscribeEvent
 	public void onKeyInput(KeyInputEvent event) {
 		int key = Keyboard.getEventKey();
+		if (!isInGame()) return;
 
 		if (key != Keyboard.CHAR_NONE && Keyboard.getEventKeyState()) {
 			Haru.instance.getModuleManager().getModules().stream().filter(module -> module.getKeyBind() == key).findFirst().ifPresent(module -> {
@@ -79,6 +80,8 @@ public class ClientHandler implements Accessor {
 	
 	@SubscribeEvent
 	public void onClick(MouseEvent event) {
+		if (!isInGame()) return;
+		
 		if (event.button == 0) {
 	        if (mc.gameSettings.keyBindTogglePerspective.isPressed()) {
 	            mc.gameSettings.thirdPersonView = (mc.gameSettings.thirdPersonView + 1) % 3;

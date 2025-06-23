@@ -22,7 +22,9 @@ public class Piercing extends Module {
 	
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onMouse(MouseEvent event) {
-		if (event.button >= 0 && event.buttonstate && isInGame()) {
+		if (!isInGame()) return;
+		
+		if (event.button >= 0 && event.buttonstate) {
 			call();
 		}
 	}

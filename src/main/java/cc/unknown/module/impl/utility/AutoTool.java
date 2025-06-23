@@ -35,6 +35,8 @@ public class AutoTool extends Module {
 
     @Override
     public void onDisable() {
+    	if (!isInGame()) return;
+    	
         if (wasDigging) {
             mc.thePlayer.inventory.currentItem = oldSlot;
             wasDigging = false;
@@ -44,6 +46,8 @@ public class AutoTool extends Module {
 
 	@SubscribeEvent
 	public void onAttack(AttackEvent event) {
+		if (!isInGame()) return;
+		
         if (conditionals.isEnabled("AutoSword")) {
             if (!mc.thePlayer.isEating()) {
                 InventoryUtil.bestSword(event.target);

@@ -47,7 +47,7 @@ public final class ModuleManager extends SList<Module> {
                 AutoGame.class,
                 FastPlace.class,
                 ChestStealer.class,
-                NoUseDelay.class,
+                FastUse.class,
                 FastMine.class,
                 FreeLook.class,
 
@@ -69,7 +69,9 @@ public final class ModuleManager extends SList<Module> {
                 // move
                 LegitScaffold.class,
                 NoJumpDelay.class,
+                Speed.class,
                 NoFall.class,
+                WallClimb.class,
                 NoClip.class,
         		NoSlow.class,
         		Timer.class,

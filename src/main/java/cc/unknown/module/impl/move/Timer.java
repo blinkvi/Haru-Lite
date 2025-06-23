@@ -24,11 +24,13 @@ public class Timer extends Module {
 	
 	@Override
 	public void onEnable() {
+		if (!isInGame()) return;
 		ReflectUtil.getTimer().timerSpeed = 1.0f;
 	}
 	
 	@Override
 	public void onDisable() {
+		if (!isInGame()) return;
 		ReflectUtil.getTimer().timerSpeed = 1.0f;
 	}
 

@@ -25,6 +25,8 @@ public class Criticals extends Module {
 	
     @Override
     public void onDisable() {
+    	if (!isInGame()) return;
+    	
         if (startTimer != -1) {
             ReflectUtil.getTimer().timerSpeed = 1.0f;
         }
@@ -33,6 +35,7 @@ public class Criticals extends Module {
 
 	@SubscribeEvent
 	public void onAttack(AttackEvent event) {
+		if (!isInGame()) return;
 		if (!MathUtil.chance(chance.getValue())) return;
 		
 		attacked = true;
@@ -41,6 +44,7 @@ public class Criticals extends Module {
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event) {
     	if (mc.thePlayer == null) return;
+    	if (!isInGame()) return;
 
     	if (startTimer != -1) {
     		if (mc.thePlayer.onGround || delayed || System.currentTimeMillis() - startTimer > delay.getAsLong()) {

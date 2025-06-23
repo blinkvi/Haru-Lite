@@ -23,6 +23,8 @@ import cc.unknown.value.impl.MultiBool;
 import cc.unknown.value.impl.Slider;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
@@ -51,9 +53,12 @@ public class AimAssist extends Module {
 	public boolean breakHeld = false;
 	private final Clock clock = new Clock();
 	private final Random random = new Random();
+	private ArrayList<Entity> teams = new ArrayList<>();
 	
     @SubscribeEvent
     public void onClientTick(ClientTickEvent event) {
+    	if (!isInGame()) return;
+    	
     	if (event.phase == Phase.END) {
 
             if (mc.thePlayer == null || mc.currentScreen != null || !mc.inGameHasFocus) return;
@@ -106,21 +111,17 @@ public class AimAssist extends Module {
 	    });
 
 		for (final EntityPlayer entityPlayer : mc.theWorld.playerEntities) {
-			if (entityPlayer != mc.thePlayer && entityPlayer.deathTime == 0) {
+			if (entityPlayer != mc.thePlayer && entityPlayer.deathTime == 0 && !entityPlayer.isDead) {
 
-				if (FriendUtil.isFriend(entityPlayer) && c.isEnabled("IgnoreFriends")) {
+				if (c.isEnabled("IgnoreFriends") && FriendUtil.isFriend(entityPlayer)) {
 					continue;
 				}
 
-				if (!mc.thePlayer.canEntityBeSeen(entityPlayer) && c.isEnabled("ViewCheck")) {
+				if (c.isEnabled("ViewCheck") && !mc.thePlayer.canEntityBeSeen(entityPlayer)) {
 					continue;
 				}
 
-				if (!PlayerUtil.isTeam(entityPlayer) && c.isEnabled("IgnoreTeams")) {
-					continue;
-				}
-
-				if (entityPlayer == mc.thePlayer || entityPlayer.isDead || isNPCShop(entityPlayer)) {
+				if (c.isEnabled("IgnoreTeams") && !isTeam(entityPlayer)) {
 					continue;
 				}
 
@@ -128,7 +129,7 @@ public class AimAssist extends Module {
 					continue;
 				}
 
-				if (mc.thePlayer.getDistanceSq(entityPlayer.getPosition()) > distance.getAsFloat()) {
+				if (mc.thePlayer.getDistanceToEntity(entityPlayer) > distance.getAsFloat()) {
 					continue;
 				}
 
@@ -141,10 +142,6 @@ public class AimAssist extends Module {
 		}
 
 		return null;
-	}
-
-	private boolean isNPCShop(EntityPlayer player) {
-		return player.getName().matches("[\\[§]?[NPC] ?\\]?|§a?Shop|SHOP|UPGRADES");
 	}
 
 	private boolean isWithinFOV(EntityPlayer player, int fieldOfView) {
@@ -176,6 +173,20 @@ public class AimAssist extends Module {
     private double fovFromEntity(EntityPlayer en) {
         return ((((double) (mc.thePlayer.rotationYaw - calculate(en)) % 360.0D) + 540.0D) % 360.0D) - 180.0D;
     }
+    
+    private boolean isTeam(Entity entity) {
+    	if(entity == mc.thePlayer) return true;
+    	for (Entity ent : teams) {
+    		if (ent.equals(entity))
+              return true;
+    	}
+    	try {
+    		EntityPlayer player = (EntityPlayer) entity;
+    		if(mc.thePlayer.isOnSameTeam((EntityLivingBase) entity) || mc.thePlayer.getDisplayName().getUnformattedText().startsWith(player.getDisplayName().getUnformattedText().substring(0, 2))) return true;
+    	} catch (Exception fhwhfhwe) { }
+    	return false;
+     }
+
     
     private float calculate(EntityPlayer ent) {
         double x = ent.posX - mc.thePlayer.posX;

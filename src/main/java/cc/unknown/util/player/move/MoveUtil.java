@@ -69,4 +69,25 @@ public class MoveUtil implements Accessor {
     	KeyBinding.setKeyBindState(mc.gameSettings.keyBindLeft.getKeyCode(), false);
     	KeyBinding.setKeyBindState(mc.gameSettings.keyBindRight.getKeyCode(), false);
     }
+    
+    public static float getStrafeYaw(float forward, float strafe) {
+        float yaw = mc.thePlayer.rotationYaw;
+
+        if((forward == 0) && (strafe == 0))
+            return yaw;
+
+        boolean reversed = forward < 0.0f;
+        float strafingYaw = 90.0f *
+                (forward > 0.0f ? 0.5f : reversed ? -0.5f : 1.0f);
+
+        if (reversed)
+            yaw += 180.0f;
+        if (strafe > 0.0f)
+            yaw -= strafingYaw;
+        else if (strafe < 0.0f)
+            yaw += strafingYaw;
+
+        return yaw;
+    }
+
 }
