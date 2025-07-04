@@ -76,6 +76,26 @@ public class ColorUtil implements Accessor {
         return colorSwitch(firstColor, secondColor, time, index, timePerIndex, speed, 255.0D);
     }
     
+    public static Color colorSwitch(Color color1, Color color2, Color color3, long ms, int offset) {
+        double scale = (((System.currentTimeMillis() + offset) % ms) / (double) ms) * 3;
+
+        if (scale > 2) {
+            return getGradient(color3, color1, scale - 2);
+        } else if (scale > 1) {
+            return getGradient(color2, color3, scale - 1);
+        } else {
+            return getGradient(color1, color2, scale);
+        }
+    }
+    
+    public static Color getGradient(Color color1, Color color2, double scale) {
+        scale = Math.max(0, Math.min(1, scale));
+
+        return new Color((int) (color1.getRed() + (color2.getRed() - color1.getRed()) * scale),
+                (int) (color1.getGreen() + (color2.getGreen() - color1.getGreen()) * scale),
+                (int) (color1.getBlue() + (color2.getBlue() - color1.getBlue()) * scale));
+    }
+    
     public static int getColorFromPercentage(float percentage) {
         return Color.HSBtoRGB(Math.min(1.0F, Math.max(0.0F, percentage)) / 3, 0.9F, 0.9F);
     }

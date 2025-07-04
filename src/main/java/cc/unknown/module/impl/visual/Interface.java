@@ -20,14 +20,19 @@ import cc.unknown.value.impl.Slider;
 @ModuleInfo(name = "Interface", description = "Renders the client interface.", category = Category.VISUAL)
 public class Interface extends Module {
 	public final Mode stickersType = new Mode("Sticker", this, StickersType.LOONA, StickersType.values());
-	public final Mode mode = new Mode("Mode", this, "Neon", "Fade", "Slinky", "Magic", "Neon", "Blaze", "Ghoul", "Static");
+	public final Mode mode = new Mode("Mode", this, "Neon", "Fade", "Slinky", "Magic", "Neon", "Blaze", "Ghoul", "Static", "Mixed");
 
-	public final MultiSlider firstColor = new MultiSlider("FirstColor", this, () -> mode.is("Static") || mode.is("Fade"), Arrays.asList(
+	public final MultiSlider firstColor = new MultiSlider("FirstColor", this, () -> mode.is("Static") || mode.is("Fade") || mode.is("Mixed"), Arrays.asList(
 			new Slider("Red", 255, 0, 255),
 			new Slider("Green", 0, 0, 255),
 			new Slider("Blue", 0, 0, 255)));
 	
-	public final MultiSlider twoColor = new MultiSlider("SecondColor", this, () -> mode.is("Fade"), Arrays.asList(
+	public final MultiSlider twoColor = new MultiSlider("SecondColor", this, () -> mode.is("Fade") || mode.is("Mixed"), Arrays.asList(
+			new Slider("Red", 255, 0, 255),
+			new Slider("Green", 0, 0, 255),
+			new Slider("Blue", 0, 0, 255)));
+	
+	public final MultiSlider threeColor = new MultiSlider("ThirdColor", this, () -> mode.is("Mixed"), Arrays.asList(
 			new Slider("Red", 255, 0, 255),
 			new Slider("Green", 0, 0, 255),
 			new Slider("Blue", 0, 0, 255)));
@@ -67,6 +72,7 @@ public class Interface extends Module {
 	    COLOR_MODES.put("Blaze",   (counter, alpha) -> alphaColor(ColorUtil.colorSwitch(new Color(139, 0, 0), new Color(255, 140, 0), 1000F, counter, 70L, 1), alpha));
 	    COLOR_MODES.put("Ghoul",   (counter, alpha) -> alphaColor(ColorUtil.colorSwitch(new Color(255, 0, 0), new Color(0, 0, 0), 1000F, counter, 70L, 1), alpha));
 	    COLOR_MODES.put("Fade",    (counter, alpha) -> alphaColor(ColorUtil.colorSwitch(new Color(firstColor.getAsInt(0), firstColor.getAsInt(1), firstColor.getAsInt(2)), new Color(twoColor.getAsInt(0), twoColor.getAsInt(1), twoColor.getAsInt(2)), 1000F, counter, 70L, fadeSpeed.get()), alpha));
+	    COLOR_MODES.put("Mixed",    (counter, alpha) -> alphaColor(ColorUtil.colorSwitch(new Color(firstColor.getAsInt(0), firstColor.getAsInt(1), firstColor.getAsInt(2)), new Color(twoColor.getAsInt(0), twoColor.getAsInt(1), twoColor.getAsInt(2)), new Color(threeColor.getAsInt(0), threeColor.getAsInt(1), threeColor.getAsInt(2)), fadeSpeed.getAsInt(), 0), alpha));
 	    COLOR_MODES.put("Static",  (counter, alpha) -> alphaColor(new Color(firstColor.getAsInt(0), firstColor.getAsInt(1), firstColor.getAsInt(2)), alpha));
 	}
 
