@@ -13,7 +13,7 @@ public class StringUtil {
 
         while (l < length && index < string.length()) {
             String character = String.valueOf(string.charAt(index));
-            l += font.getStringWidth(character);
+            l += font.width(character);
             index++;
             stringBuilder.append(character);
         }

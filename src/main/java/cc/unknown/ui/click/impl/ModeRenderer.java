@@ -16,9 +16,9 @@ public class ModeRenderer extends Component {
 
     @Override
     public void drawScreen(int mouseX, int mouseY) {
-        FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawString(value.getName(), x + 5F, y + 4F, -1);
-        FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawString(value.get(),
-                x + (width - 5) - FontUtil.getFontRenderer("interSemiBold.ttf", 13).getStringWidth(value.get()), y + 4F,
+        FontUtil.getFontRenderer("interSemiBold.ttf", 13).draw(value.getName(), x + 5F, y + 4F, -1);
+        FontUtil.getFontRenderer("interSemiBold.ttf", 13).draw(value.get(),
+                x + (width - 5) - FontUtil.getFontRenderer("interSemiBold.ttf", 13).width(value.get()), y + 4F,
                 -1);
         super.drawScreen(mouseX, mouseY);
     }

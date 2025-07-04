@@ -6,12 +6,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import cc.unknown.module.Module;
 import cc.unknown.module.impl.visual.ClickGUI;
-import cc.unknown.util.render.RenderUtil;
 import cc.unknown.util.render.font.FontRenderer;
 import cc.unknown.util.render.font.FontUtil;
 import cc.unknown.value.impl.Bool;
 import cc.unknown.value.impl.Mode;
 import cc.unknown.value.impl.MultiBool;
+import cc.unknown.value.impl.MultiSlider;
 import cc.unknown.value.impl.Slider;
 
 public class ModuleRenderer extends Component {
@@ -31,6 +31,8 @@ public class ModuleRenderer extends Component {
                 values.add(new ModeRenderer((Mode) value));
             } else if (value instanceof MultiBool) {
                 values.add(new MultiBooleanRenderer((MultiBool) value));
+            } else if (value instanceof MultiSlider) {
+            	values.add(new MultiSliderRenderer((MultiSlider) value));
             }
         });
     }
@@ -40,26 +42,19 @@ public class ModuleRenderer extends Component {
     	FontRenderer fontRenderer = FontUtil.getFontRenderer("interSemiBold.ttf", 15);
     	ClickGUI gui = getModule(ClickGUI.class);
     	
-    	if (gui.toolTips.get()) {
-	        if (isHovered(x, y, width, 10F, mouseX, mouseY)) {
-	            String description = module.getModuleInfo().description();
-	            if (!description.isEmpty()) {
-		            float tooltipWidth = (float) (fontRenderer.getStringWidth(description) + 10);
-		            float tooltipX = mouseX + 10;
-		            float tooltipY = mouseY + 10;
-		            RenderUtil.drawRect(tooltipX, tooltipY - 3, tooltipWidth - 6, 10, new Color(0, 0, 0, 150).getRGB());
-		            fontRenderer.drawString(description, tooltipX, tooltipY, new Color(255, 255, 255).getRGB());
-	            }
-	        }
-    	}
-        
+        Color colorMain = new Color(
+        		gui.colorMain.getAsInt(0),
+                gui.colorMain.getAsInt(1),
+                gui.colorMain.getAsInt(2)
+        );
+    	
         int yOffset = 11;
         String moduleName = module.getName().substring(0, 1).toUpperCase() + module.getName().substring(1);
         
-        float textWidth = (float) fontRenderer.getStringWidth(moduleName);
+        float textWidth = (float) fontRenderer.width(moduleName);
         float textX = x + (width - textWidth) / 2F;
         
-        fontRenderer.drawString(moduleName, textX, y + 4F, module.isEnabled() ? new Color(gui.red2.getAsInt(), gui.green2.getAsInt(), gui.blue2.getAsInt()).getRGB() : new Color(160, 160, 160).getRGB());
+        fontRenderer.draw(moduleName, textX, y + 4F, module.isEnabled() ? new Color(colorMain.getRGB()).getRGB() : new Color(160, 160, 160).getRGB());
 
         if (module.isExpanded()) {
             AtomicInteger offset = new AtomicInteger(yOffset);

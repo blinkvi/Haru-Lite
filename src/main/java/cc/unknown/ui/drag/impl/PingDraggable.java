@@ -28,7 +28,7 @@ public class PingDraggable extends Drag {
         float padding = 5.0F;
 
         String pingText = NetworkUtil.getPing(mc.thePlayer) + " ms";
-        float pingWidth = (float) FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).getStringWidth(pingText);
+        float pingWidth = (float) FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).width(pingText);
 
         width = iconSize * 2.5F + pingWidth + padding * 2;
         height = 20;
@@ -37,8 +37,8 @@ public class PingDraggable extends Drag {
         float adjustedY = Math.min(y, sr.getScaledHeight() - height);
 
         RoundedUtil.drawRound(adjustedX, adjustedY, width, height - 2, 6.0F, new Color(getModule(Interface.class).backgroundColor(), true));
-        FontUtil.getFontRenderer("nursultan.ttf", 18).drawString("Q", adjustedX + padding, adjustedY + (height / 2) - 3, hud.color());
-        FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).drawString(pingText, adjustedX + padding + iconSize * 2.5F, adjustedY + (height / 2) - 3, -1);
+        FontUtil.getFontRenderer("nursultan.ttf", 18).draw("Q", adjustedX + padding, adjustedY + (height / 2) - 3, hud.color());
+        FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).draw(pingText, adjustedX + padding + iconSize * 2.5F, adjustedY + (height / 2) - 3, -1);
     }
 
     @Override

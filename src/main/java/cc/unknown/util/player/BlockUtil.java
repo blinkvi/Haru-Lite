@@ -1,6 +1,5 @@
 package cc.unknown.util.player;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import org.lwjgl.input.Mouse;
 
@@ -64,28 +63,27 @@ public class BlockUtil implements Accessor {
         return material != null && material.isReplaceable();
     }
 
-	public static boolean insideBlock() {
-	    if (mc.thePlayer.ticksExisted < 5) {
-	        return false;
-	    }
+    public static boolean insideBlock() {
+        if (mc.thePlayer.ticksExisted < 5) {
+            return false;
+        }
 
-	    final EntityPlayerSP player = mc.thePlayer;
-	    final WorldClient world = mc.theWorld;
-	    final AxisAlignedBB bb = player.getEntityBoundingBox();
-
-	    int minX = MathHelper.floor_double(bb.minX);
-	    int maxX = MathHelper.floor_double(bb.maxX) + 1;
-	    int minY = MathHelper.floor_double(bb.minY);
-	    int maxY = MathHelper.floor_double(bb.maxY) + 1;
-	    int minZ = MathHelper.floor_double(bb.minZ);
-	    int maxZ = MathHelper.floor_double(bb.maxZ) + 1;
-
-	    return IntStream.range(minX, maxX).boxed().flatMap(x -> IntStream.range(minY, maxY).boxed().flatMap(y -> IntStream.range(minZ, maxZ).mapToObj(z -> new BlockPos(x, y, z)))).anyMatch(pos -> {
-	    	Block block = world.getBlockState(pos).getBlock();
-	    	AxisAlignedBB box = block != null && !(block instanceof BlockAir) ? block.getCollisionBoundingBox(world, pos, world.getBlockState(pos)) : null;
-	    	return box != null && player.getEntityBoundingBox().intersectsWith(box);
-	    });
-	}
+        final EntityPlayerSP player = PlayerUtil.mc.thePlayer;
+        final WorldClient world = PlayerUtil.mc.theWorld;
+        final AxisAlignedBB bb = player.getEntityBoundingBox();
+        for (int x = MathHelper.floor_double(bb.minX); x < MathHelper.floor_double(bb.maxX) + 1; ++x) {
+            for (int y = MathHelper.floor_double(bb.minY); y < MathHelper.floor_double(bb.maxY) + 1; ++y) {
+                for (int z = MathHelper.floor_double(bb.minZ); z < MathHelper.floor_double(bb.maxZ) + 1; ++z) {
+                    final Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
+                    final AxisAlignedBB boundingBox;
+                    if (block != null && !(block instanceof BlockAir) && (boundingBox = block.getCollisionBoundingBox(world, new BlockPos(x, y, z), world.getBlockState(new BlockPos(x, y, z)))) != null && player.getEntityBoundingBox().intersectsWith(boundingBox)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 	
     public static double getDamage(final ItemStack itemStack) {
         double getAmount = 0;

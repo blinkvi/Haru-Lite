@@ -37,8 +37,8 @@ public class InventoryDraggable extends Drag {
         float adjustedY = Math.min(y, sr.getScaledHeight() - height);
 
         RoundedUtil.drawRound(adjustedX, adjustedY, width, height, 6F, new Color(hud.backgroundColor(), true));
-        FontUtil.getFontRenderer("interSemiBold.ttf", 15).drawString("Inventory", adjustedX + 19.0F, adjustedY + 5.5F, new Color(255, 255, 255, 255).getRGB());
-        FontUtil.getFontRenderer("nursultan.ttf", 16).drawString("A", adjustedX + 5.0F, adjustedY + 6.0F, -1);
+        FontUtil.getFontRenderer("interSemiBold.ttf", 15).draw("Inventory", adjustedX + 19.0F, adjustedY + 5.5F, new Color(255, 255, 255, 255).getRGB());
+        FontUtil.getFontRenderer("nursultan.ttf", 16).draw("A", adjustedX + 5.0F, adjustedY + 6.0F, -1);
 
         float startX = adjustedX + 0.7F;
         float startY = adjustedY + 17.5F;

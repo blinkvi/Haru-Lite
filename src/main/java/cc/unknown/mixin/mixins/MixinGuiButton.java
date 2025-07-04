@@ -43,14 +43,14 @@ public abstract class MixinGuiButton {
 			
 			RenderUtil.drawRoundedRect((double)xPosition, (double)yPosition, (double)width, (double)height, (float)20, new Color(1, 1, 1, 150).getRGB());
 	
-			int textWidth = (int) FontUtil.getFontRenderer("comfortaa.ttf", 16).getStringWidth(displayString);
+			int textWidth = (int) FontUtil.getFontRenderer("comfortaa.ttf", 16).width(displayString);
 			int textHeight = (int) FontUtil.getFontRenderer("comfortaa.ttf", 16).getHeight();
 			float centeredX = xPosition + (width / 2.0f) - (textWidth / 2.0f);
 			float centeredY = yPosition + (height / 1.6f) - (textHeight / 1.6f);
 			
 			this.mouseDragged(mc, mouseX, mouseY);
 			
-			FontUtil.getFontRenderer("comfortaa.ttf", 16).drawStringWithShadow(displayString, centeredX, centeredY, color);
+			FontUtil.getFontRenderer("comfortaa.ttf", 16).drawWithShadow(displayString, centeredX, centeredY, color);
         }
 	}
 	

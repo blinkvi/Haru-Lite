@@ -53,6 +53,18 @@ public class Vec3 {
         return MathHelper.sqrt_double(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
     }
     
+    public Vec3 add(Vec3 vec3) {
+        return add(vec3.x(), vec3.y(), vec3.z());
+    }
+
+    public Vec3 add(final double x, final double y, final double z) {
+        return new Vec3(x() + x, y() + y, z() + z);
+    }
+    
+    public net.minecraft.util.Vec3 toVec3() {
+        return new net.minecraft.util.Vec3(x, y, z);
+    }
+    
     public double x() { return x; }
     public double y() { return y; }
     public double z() { return z; }

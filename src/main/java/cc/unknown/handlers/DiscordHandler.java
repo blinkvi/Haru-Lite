@@ -25,7 +25,7 @@ public class DiscordHandler implements Accessor {
 	public void start() {
 	    if (initialized) return;
 
-	    try {
+
 	        this.timeElapsed = System.currentTimeMillis();
 	        NameProtect protect = getModule(NameProtect.class);
 
@@ -68,10 +68,7 @@ public class DiscordHandler implements Accessor {
 	            }
 	        }.start();
 
-	    } catch (UnsatisfiedLinkError e) {
-	        System.err.println("Discord RPC already loaded in another classloader. Skipping initialization.");
-	        e.printStackTrace();
-	    }
+
 	}
 
 	public void stop() {

@@ -21,18 +21,24 @@ public class MultiBooleanRenderer extends Component {
     public void drawScreen(int mouseX, int mouseY) {
         float offset = 0;
         ClickGUI gui = getModule(ClickGUI.class);
+        
+        Color colorMain = new Color(
+        		gui.colorMain.getAsInt(0),
+                gui.colorMain.getAsInt(1),
+                gui.colorMain.getAsInt(2)
+        );
 
         if (expanded) {
             RenderUtil.drawRect(x + 3F, y, width - 5, height, new Color(17, 17, 17, 160));
         }
 
-        FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawCenteredString(value.getName() + "...", x + 50F, y + 4F, -1);
+        FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawCentered(value.getName() + "...", x + 50F, y + 4F, -1);
 
         if (expanded) {
             for (Bool boolValue : value.getValues()) {
                 offset += 11;
 
-                FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawString(boolValue.getName(), x + 5F, y + 4F + offset, -1);
+                FontUtil.getFontRenderer("interSemiBold.ttf", 13).draw(boolValue.getName(), x + 5F, y + 4F + offset, -1);
 
                 float boxSize = 8F;
                 float boxX = x + width - boxSize - 6F;
@@ -41,7 +47,7 @@ public class MultiBooleanRenderer extends Component {
                 RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, new Color(17, 17, 17, 160).getRGB());
 
                 if (boolValue.get()) {
-                    RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, new Color(gui.red2.getAsInt(), gui.green2.getAsInt(), gui.blue2.getAsInt()).getRGB());
+                    RenderUtil.drawRoundedRect(boxX, boxY, boxSize, boxSize, 8f, new Color(colorMain.getRGB()).getRGB());
                 }
             }
         }

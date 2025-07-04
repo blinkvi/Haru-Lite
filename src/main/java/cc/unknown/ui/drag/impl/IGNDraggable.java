@@ -27,7 +27,7 @@ public class IGNDraggable extends Drag {
         float padding = 5.0F;
         String playerName = mc.thePlayer.getName();
         
-        float playerNameWidth = (float) FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).getStringWidth(playerName);
+        float playerNameWidth = (float) FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).width(playerName);
 
         width = iconSize * 2.5F + playerNameWidth + padding * 2;
         height = 20;
@@ -36,8 +36,8 @@ public class IGNDraggable extends Drag {
         float adjustedY = Math.min(y, sr.getScaledHeight() - height);
 
         RoundedUtil.drawRound(adjustedX, adjustedY, width, height - 2, 6.0F, new Color(getModule(Interface.class).backgroundColor(), true));
-        FontUtil.getFontRenderer("neverlose.ttf", 20).drawString("b", adjustedX + padding, adjustedY + (height / 2) - 3, hud.color());
-        FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).drawString(playerName, adjustedX + padding + iconSize * 2.5F, adjustedY + (height / 2) - 3, -1);
+        FontUtil.getFontRenderer("neverlose.ttf", 20).draw("b", adjustedX + padding, adjustedY + (height / 2) - 3, hud.color());
+        FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).draw(playerName, adjustedX + padding + iconSize * 2.5F, adjustedY + (height / 2) - 3, -1);
     }
 
     @Override

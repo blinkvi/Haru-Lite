@@ -102,7 +102,7 @@ public final class NameTags extends Module {
 
 	    int fontSize = 20;
 	    String fontName = "consolas.ttf";
-	    double nameWidth = FontUtil.getFontRenderer(fontName, fontSize).getStringWidth(name);
+	    double nameWidth = FontUtil.getFontRenderer(fontName, fontSize).width(name);
 
 	    switch (mode.getMode()) {
 	    case "Default":
@@ -112,7 +112,7 @@ public final class NameTags extends Module {
 	    	FontUtil.getFontRenderer(fontName, fontSize).drawSmoothString(name, (float) (-nameWidth / 2), 0, -1);
 	    	break;
 	    case "Normal":
-	    	FontUtil.getFontRenderer(fontName, fontSize).drawString(name, (float) (-nameWidth / 2), 0, -1);
+	    	FontUtil.getFontRenderer(fontName, fontSize).draw(name, (float) (-nameWidth / 2), 0, -1);
 	    	break;
 	    }
 
@@ -176,11 +176,11 @@ public final class NameTags extends Module {
 	        int remainingDurability = stack.getMaxDamage() - stack.getItemDamage();
 	        String durabilityText = String.valueOf(remainingDurability);
 
-	        int textWidth = (int) FontUtil.getFontRenderer("consolas.ttf", 20).getStringWidth(durabilityText);
+	        int textWidth = (int) FontUtil.getFontRenderer("consolas.ttf", 20).width(durabilityText);
 	        float drawX = (float) (x * 2 - textWidth / 2) + 20;
 	        float drawY = (float) (y - 12);
 
-	        FontUtil.getFontRenderer("consolas.ttf", 20).drawStringWithShadow(durabilityText, drawX, drawY, 0xFFFFFF);
+	        FontUtil.getFontRenderer("consolas.ttf", 20).drawWithShadow(durabilityText, drawX, drawY, 0xFFFFFF);
 	    }
 		
 	    if (armor.isEnabled("Enchants") && stack.getEnchantmentTagList() != null && stack.getEnchantmentTagList().tagCount() < 6) {
@@ -193,9 +193,9 @@ public final class NameTags extends Module {
 	                    String abbreviated = getEnchantmentAbbreviated(id);
 	                    String text = abbreviated + lvl;
 
-	                    int textWidth = (int) FontUtil.getFontRenderer("consolas.ttf", 20).getStringWidth(text);
+	                    int textWidth = (int) FontUtil.getFontRenderer("consolas.ttf", 20).width(text);
 	                    float drawX = (float) (x * 2 - textWidth / 2) + 20;
-	                    FontUtil.getFontRenderer("consolas.ttf", 20).drawStringWithShadow(text, drawX, (float) enchantY, -1);
+	                    FontUtil.getFontRenderer("consolas.ttf", 20).drawWithShadow(text, drawX, (float) enchantY, -1);
 	                    enchantY += 8;
 	                }
 	            }

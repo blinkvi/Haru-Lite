@@ -26,7 +26,7 @@ public class CPSDraggable extends Drag {
         float padding = 5.0F;
 
         String cpsText = ClientHandler.getLeftClickCounter() + " | " + ClientHandler.getRightClickCounter() + " CPS";
-        float cpsWidth = (float) (FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).getStringWidth(cpsText) + iconSize * 2.5F + 10);
+        float cpsWidth = (float) (FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).width(cpsText) + iconSize * 2.5F + 10);
 
         width = iconSize * 2.5F + cpsWidth - 20 + padding * 2;
         height = 20;
@@ -35,8 +35,8 @@ public class CPSDraggable extends Drag {
         float adjustedY = Math.min(y, sr.getScaledHeight() - height);
 
         RoundedUtil.drawRound(adjustedX, adjustedY, width, height - 2, 6.0F, new Color(getModule(Interface.class).backgroundColor(), true));
-        FontUtil.getFontRenderer("neverlose.ttf", 24).drawString("e", adjustedX + padding, adjustedY + (height / 2) - 4, hud.color());
-        FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).drawString(cpsText, adjustedX + padding + iconSize * 2.5F, adjustedY + (height / 2) - 3, -1);
+        FontUtil.getFontRenderer("neverlose.ttf", 24).draw("e", adjustedX + padding, adjustedY + (height / 2) - 4, hud.color());
+        FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).draw(cpsText, adjustedX + padding + iconSize * 2.5F, adjustedY + (height / 2) - 3, -1);
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.mojang.authlib.GameProfile;
 
 import cc.unknown.event.player.ChatInputEvent;
+import cc.unknown.event.player.LivingEvent;
 import cc.unknown.event.player.PostUpdateEvent;
 import cc.unknown.event.player.PrePositionEvent;
 import cc.unknown.event.player.PreUpdateEvent;
@@ -226,6 +227,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer {
 
     @Overwrite
     public void onLivingUpdate() {
+    	MinecraftForge.EVENT_BUS.post(new LivingEvent());
         if (sprintingTicksLeft > 0) {
             --sprintingTicksLeft;
 

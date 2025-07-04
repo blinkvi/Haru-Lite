@@ -36,14 +36,14 @@ public class PotionStatusDraggable extends Drag {
         FontRenderer fontRendererRegular = FontUtil.getFontRenderer("interRegular.ttf", (int) fontSize);
         FontRenderer fontRendererSemiBold = FontUtil.getFontRenderer("interSemiBold.ttf", (int) fontSize);
 
-        float maxWidth = (float) (fontRendererSemiBold.getStringWidth(title) + padding * 2);
+        float maxWidth = (float) (fontRendererSemiBold.width(title) + padding * 2);
         float localHeight = fontRendererRegular.getHeight() + padding * 2 + 3f;
 
         RoundedUtil.drawRound(posX, renderY, width, height, 8, new Color(getModule(Interface.class).backgroundColor(), true));
 
-        fontRendererSemiBold.drawCenteredString(title, posX + width / 2, renderY + padding + 2, -1);
+        fontRendererSemiBold.drawCentered(title, posX + width / 2, renderY + padding + 2, -1);
 
-        FontUtil.getFontRenderer("nursultan.ttf", 14).drawString("E", posX + width - 16, renderY + 9, hud.color(0));
+        FontUtil.getFontRenderer("nursultan.ttf", 14).draw("E", posX + width - 16, renderY + 9, hud.color(0));
 
         final float[] posYRef = {renderY + fontRendererRegular.getHeight() + padding * 2 + 3f};
         final float[] localHeightRef = {localHeight};
@@ -57,12 +57,12 @@ public class PotionStatusDraggable extends Drag {
             String durationText = Potion.getDurationString(effect);
             String nameText = potionName + (effect.getAmplifier() > 0 ? " " + I18n.format("enchantment.level." + (effect.getAmplifier() + 1)) : "");
 
-            float nameWidth = (float) fontRendererRegular.getStringWidth(nameText);
-            float durationWidth = (float) fontRendererRegular.getStringWidth(durationText);
+            float nameWidth = (float) fontRendererRegular.width(nameText);
+            float durationWidth = (float) fontRendererRegular.width(durationText);
             float localWidth = nameWidth + durationWidth + padding * 3;
 
-            fontRendererRegular.drawString(nameText, posX + padding, posYRef[0] + 2, -1);
-            fontRendererRegular.drawString(durationText, posX + width - padding - durationWidth, posYRef[0] + 2, -1);
+            fontRendererRegular.draw(nameText, posX + padding, posYRef[0] + 2, -1);
+            fontRendererRegular.draw(durationText, posX + width - padding - durationWidth, posYRef[0] + 2, -1);
 
             maxWidthRef[0] = Math.max(maxWidthRef[0], localWidth);
 

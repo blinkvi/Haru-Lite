@@ -25,55 +25,55 @@ public class FontRenderer extends CFont {
         this.setupBoldItalicIDs();
     }
 
-    public int drawStringWithShadow(String text, double x2, float y2, int color) {
+    public int drawWithShadow(String text, double x2, float y2, int color) {
 
-        float shadowWidth = this.drawString(text, x2 + 0.9f, (double) y2 + 0.5f, color, true, 8.3f);
+        float shadowWidth = this.draw(text, x2 + 0.9f, (double) y2 + 0.5f, color, true, 8.3f);
 
-        return (int) Math.max(shadowWidth, this.drawString(text, x2, y2, color, false, 8.3f));
+        return (int) Math.max(shadowWidth, this.draw(text, x2, y2, color, false, 8.3f));
     }
     
-    public void drawCenteredStringWithOutline(String text, double x, double y, int color) {
-        drawCenteredString(text, x - .5, y, 0x000000);
+    public void drawCenteredWithOutline(String text, double x, double y, int color) {
+        drawCentered(text, x - .5, y, 0x000000);
 
-        drawCenteredString(text, x + .5, y, 0x000000);
+        drawCentered(text, x + .5, y, 0x000000);
 
-        drawCenteredString(text, x, y - .5, 0x000000);
+        drawCentered(text, x, y - .5, 0x000000);
 
-        drawCenteredString(text, x, y + .5, 0x000000);
+        drawCentered(text, x, y + .5, 0x000000);
 
-        drawCenteredString(text, x, y, color);
+        drawCentered(text, x, y, color);
     }
     
-    public final float drawCenteredString(String text, double x, double y, int color) {
-        return drawString(text, (float) (x - (double) getStringWidth(text) / 2), (float) y, color);
+    public final float drawCentered(String text, double x, double y, int color) {
+        return draw(text, (float) (x - (double) width(text) / 2), (float) y, color);
     }
 
-    public void drawCenteredStringWithOutline(String text, double x, double y, int color, int outlineColor) {
-        drawCenteredString(text, x - .5, y, outlineColor);
+    public void drawCenteredWithOutline(String text, double x, double y, int color, int outlineColor) {
+        drawCentered(text, x - .5, y, outlineColor);
 
-        drawCenteredString(text, x + .5, y, outlineColor);
+        drawCentered(text, x + .5, y, outlineColor);
 
-        drawCenteredString(text, x, y - .5, outlineColor);
+        drawCentered(text, x, y - .5, outlineColor);
 
-        drawCenteredString(text, x, y + .5, outlineColor);
+        drawCentered(text, x, y + .5, outlineColor);
 
-        drawCenteredString(text, x, y, color);
+        drawCentered(text, x, y, color);
     }
     
-    public final void drawOutlinedString(String str, float x, float y, int internalCol, int externalCol) {
-        this.drawString(str, x - 0.5f, y, externalCol);
-        this.drawString(str, x + 0.5f, y, externalCol);
-        this.drawString(str, x, y - 0.5f, externalCol);
-        this.drawString(str, x, y + 0.5f, externalCol);
-        this.drawString(str, x, y, internalCol);
+    public final void drawOutlined(String str, float x, float y, int internalCol, int externalCol) {
+        this.draw(str, x - 0.5f, y, externalCol);
+        this.draw(str, x + 0.5f, y, externalCol);
+        this.draw(str, x, y - 0.5f, externalCol);
+        this.draw(str, x, y + 0.5f, externalCol);
+        this.draw(str, x, y, internalCol);
     }
 
-    public int drawString(String text, double x2, float y2, int color) {
-        return (int) this.drawString(text, x2, y2, color, false, 8.3f);
+    public int draw(String text, double x2, float y2, int color) {
+        return (int) this.draw(text, x2, y2, color, false, 8.3f);
     }
 
     public int drawPassword(String text, double x2, float y2, int color) {
-        return (int) this.drawString(text.replaceAll(".", "."), x2, y2, color, false, 8f);
+        return (int) this.draw(text.replaceAll(".", "."), x2, y2, color, false, 8f);
     }
 
     public int drawNoBSString(String text, double x2, float y2, int color) {
@@ -85,34 +85,34 @@ public class FontRenderer extends CFont {
     }
 
     public int drawCenteredSmoothString(String text, double x2, float y2, int color) {
-        return (int) this.drawSmoothString(text, x2 - (float) (this.getStringWidth(text) / 2), y2, color, false);
+        return (int) this.drawSmoothString(text, x2 - (float) (this.width(text) / 2), y2, color, false);
     }
 
     public double getPasswordWidth(String text) {
         return this.getStringWidth(text.replaceAll(".", "."), 8);
     }
 
-    public float drawCenteredString(String text, float x2, float y2, int color) {
-        return this.drawString(text, x2 - (float) (this.getStringWidth(text) / 2), y2, color);
+    public float drawCentered(String text, float x2, float y2, int color) {
+        return this.draw(text, x2 - (float) (this.width(text) / 2), y2, color);
     }
 
     public float drawNoBSCenteredString(String text, float x2, float y2, int color) {
-        return this.drawNoBSString(text, x2 - (float) (this.getStringWidth(text) / 2), y2, color);
+        return this.drawNoBSString(text, x2 - (float) (this.width(text) / 2), y2, color);
     }
 
     public float drawCenteredStringWithShadow(String text, float x2, float y2, int color) {
-        return this.drawStringWithShadow(text, x2 - (float) (this.getStringWidth(text) / 2), y2, color);
+        return this.drawWithShadow(text, x2 - (float) (this.width(text) / 2), y2, color);
     }
     
     public void drawCenteredTextScaled(final String text, final int givenX, final int givenY, final int color, final double givenScale) {
         GL11.glPushMatrix();
         GL11.glTranslated((double)givenX, (double)givenY, 0.0);
         GL11.glScaled(givenScale, givenScale, givenScale);
-        this.drawCenteredString(text, 0.0f, 0.0f, color);
+        this.drawCentered(text, 0.0f, 0.0f, color);
         GL11.glPopMatrix();
     }
 
-	public float drawString(String text, double x, double y, int color, boolean shadow, float kerning) {
+	public float draw(String text, double x, double y, int color, boolean shadow, float kerning) {
         x -= 1.0;
 
         if (text == null)
@@ -518,7 +518,7 @@ public class FontRenderer extends CFont {
     	return this.getHeight();
     }
 
-    public double getStringWidth(String text) {
+    public double width(String text) {
         if (text == null)
 			return 0;
         
@@ -616,7 +616,7 @@ public class FontRenderer extends CFont {
     public List<String> wrapWords(String text, double width) {
         ArrayList<String> finalWords = new ArrayList<>();
 
-        if (getStringWidth(text) > width) {
+        if (width(text) > width) {
             String[] words = text.split(" ");
             StringBuilder currentWord = new StringBuilder();
             char lastColorCode = 65535;
@@ -629,7 +629,7 @@ public class FontRenderer extends CFont {
 						lastColorCode = word.toCharArray()[innerIndex + 1];
                 }
 
-                if (getStringWidth(currentWord + word + " ") < width)
+                if (width(currentWord + word + " ") < width)
 					currentWord.append(word).append(" ");
 				else {
                     finalWords.add(currentWord.toString());
@@ -638,7 +638,7 @@ public class FontRenderer extends CFont {
             }
 
             if (currentWord.length() > 0)
-				if (getStringWidth(currentWord.toString()) < width) {
+				if (width(currentWord.toString()) < width) {
                     finalWords.add("\u00a7" + lastColorCode + currentWord + " ");
                     currentWord = new StringBuilder();
                 } else
@@ -661,7 +661,7 @@ public class FontRenderer extends CFont {
             if ((c == '\u00a7') && (index < (chars.length - 1)))
 				lastColorCode = chars[index + 1];
 
-            if (getStringWidth(currentWord.toString() + c) < width)
+            if (width(currentWord.toString() + c) < width)
 				currentWord.append(c);
 			else {
                 finalWords.add(currentWord.toString());

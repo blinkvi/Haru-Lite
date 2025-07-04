@@ -50,9 +50,17 @@ public class Clock {
     public boolean reached(float millis) {
         return getElapsedTime() >= millis;
     }
+    
+    public boolean floating(float millis) {
+        return getTime() >= millis;
+    }
 
     public boolean isFinished() {
         return System.currentTimeMillis() >= startTime;
+    }
+    
+    public long getTime() {
+        return Math.max(0L, System.currentTimeMillis() - startTime);
     }
 
     public void reset() {

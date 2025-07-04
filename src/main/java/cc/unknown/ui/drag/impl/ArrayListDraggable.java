@@ -57,7 +57,7 @@ public class ArrayListDraggable extends Drag {
     }
 
     private int getModuleWidth(Module module) {
-        return (int) FontUtil.getConsolas(hud.fontSize.getAsInt()).getStringWidth(module.getName());
+        return (int) FontUtil.getConsolas(hud.fontSize.getAsInt()).width(module.getName());
     }
 
     private int getModuleHeight() {
@@ -82,14 +82,14 @@ public class ArrayListDraggable extends Drag {
 
     private void renderText(Module module, float localX, float localY, float offset, int width, float alphaAnimation, int middle, int index) {
         String text = module.getName();
-        int color = ColorUtil.swapAlpha(hud.color(index), (int) alphaAnimation * new Color(hud.red.getAsInt(), hud.green.getAsInt(), hud.blue.getAsInt()).getAlpha());
+        int color = ColorUtil.swapAlpha(hud.color(index), (int) alphaAnimation * new Color(hud.twoColor.getAsInt(0), hud.twoColor.getAsInt(1), hud.twoColor.getAsInt(2)).getAlpha());
         float textY = localY + offset + 6;
 
         if (localX < middle) {
-        	FontUtil.getConsolas(hud.fontSize.getAsInt()).drawStringWithShadow(text, localX, textY - 3, color);
+        	FontUtil.getConsolas(hud.fontSize.getAsInt()).drawWithShadow(text, localX, textY - 3, color);
         } else {
             float textX = localX - width + this.width - 2;
-            FontUtil.getConsolas(hud.fontSize.getAsInt()).drawStringWithShadow(text, textX, textY - 1, color);
+            FontUtil.getConsolas(hud.fontSize.getAsInt()).drawWithShadow(text, textX, textY - 1, color);
         }
     }
 

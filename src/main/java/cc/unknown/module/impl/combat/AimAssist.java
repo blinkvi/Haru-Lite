@@ -121,7 +121,7 @@ public class AimAssist extends Module {
 					continue;
 				}
 
-				if (c.isEnabled("IgnoreTeams") && !isTeam(entityPlayer)) {
+				if (c.isEnabled("IgnoreTeams") && isTeam(entityPlayer)) {
 					continue;
 				}
 

@@ -5,17 +5,20 @@ import net.minecraft.network.Packet;
 
 public class TimedPacket {
 
-    public final Packet packet;
-    public final Clock clock;
+    public final Packet<?> packet;
+    public final Clock time;
+    public final long millis;
 
     public TimedPacket(Packet<?> packet) {
         this.packet = packet;
-        this.clock = new Clock();
+        this.time = new Clock();
+        this.millis = System.currentTimeMillis();
     }
 
-    public TimedPacket(final Packet<?> packet, long stopWatchTime) {
+    public TimedPacket(final Packet<?> packet, final long millis) {
         this.packet = packet;
-        this.clock = new Clock();
-        this.clock.hasPassed(stopWatchTime);
+        this.millis = millis;
+        this.time = new Clock();
     }
+
 }

@@ -26,7 +26,7 @@ public class WatermarkDraggable extends Drag {
         float padding = 5.0F;
 
         String title = Haru.NAME + " " + Haru.VERSION;
-        float titleWidth = (float) FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).getStringWidth(title);
+        float titleWidth = (float) FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).width(title);
 
         width = 2.0f + titleWidth + padding * 2;
         height = 20;
@@ -35,7 +35,7 @@ public class WatermarkDraggable extends Drag {
         height = Math.min(height, sr.getScaledHeight() - renderY);
 
         RoundedUtil.drawRound(x, y, width, height - 2, 6.0F, new Color(getModule(Interface.class).backgroundColor(), true));
-        FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).drawString(title, x + padding + 2.0f, y + (height / 2) - 3, hud.color());
+        FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).draw(title, x + padding + 2.0f, y + (height / 2) - 3, hud.color());
     }
 
     @Override

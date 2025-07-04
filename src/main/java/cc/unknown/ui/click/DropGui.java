@@ -12,73 +12,73 @@ import cc.unknown.module.api.Category;
 import cc.unknown.module.impl.visual.ClickGUI;
 import cc.unknown.util.Accessor;
 import cc.unknown.util.render.RenderUtil;
-import cc.unknown.util.render.enums.StickersType;
 import cc.unknown.util.structure.list.SList;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.ResourceLocation;
 
 public class DropGui extends GuiScreen {
     private final SList<PanelRenderer> windows = new SList<>();
     private int guiYMoveLeft = 0;
     private static final int SCROLL_SPEED = 30;
-    public float startX, startY;
-    public float x, y;
-    public float buttonWidth, spacingY;
-    private PanelRenderer win;
-
-    public DropGui() {
-        ScaledResolution sr = new ScaledResolution(Accessor.mc);
-        float screenWidth = sr.getScaledWidth();
-        float screenHeight = sr.getScaledHeight();
-
-        buttonWidth = 100;
-        spacingY = 30;
-
-        startX = (screenWidth - buttonWidth) / 2.0f;
-        startY = screenHeight / 4.0f;
-
-        final int[] index = {0};
-
-        Arrays.stream(Category.values()).forEach(category -> {
-            x = startX;
-            y = startY + index[0] * (buttonWidth / 2 - spacingY);
-            windows.add(new PanelRenderer(category, x, y));
-            index[0]++;
-        });
-    }
+    private int lastWidth = -1;
+    private int lastHeight = -1;
 
     @Override
     public void initGui() {
         super.initGui();
+
+        ScaledResolution sr = new ScaledResolution(Accessor.mc);
+        float screenWidth = sr.getScaledWidth();
+        float screenHeight = sr.getScaledHeight();
+
+        if (windows.isEmpty()) {
+            float buttonWidth = 100;
+            float spacingY = 30;
+            float startX = (screenWidth - buttonWidth) / 2.0f;
+            float startY = screenHeight / 4.0f;
+
+            final int[] index = {0};
+
+            Arrays.stream(Category.values()).forEach(category -> {
+                float x = startX;
+                float y = startY + index[0] * (buttonWidth / 2 - spacingY);
+                PanelRenderer panel = new PanelRenderer(category, x, y);
+                panel.setRelativeX(x / screenWidth);
+                panel.setRelativeY(y / screenHeight);
+                windows.add(panel);
+                index[0]++;
+            });
+        }
     }
-    
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-    	ScaledResolution sr = new ScaledResolution(Accessor.mc);	
-    	ClickGUI gui = Haru.instance.getModuleManager().getModule(ClickGUI.class);
-        StickersType sticker = gui.waifuType.getMode(StickersType.class);
-        
+        ScaledResolution sr = new ScaledResolution(Accessor.mc);
+        int screenWidth = sr.getScaledWidth();
+        int screenHeight = sr.getScaledHeight();
+
+        if (screenWidth != lastWidth || screenHeight != lastHeight) {
+            lastWidth = screenWidth;
+            lastHeight = screenHeight;
+
+            windows.forEach(panel -> {
+                panel.setX(panel.getRelativeX() * screenWidth);
+                panel.setY(panel.getRelativeY() * screenHeight);
+            });
+        }
+
+        ClickGUI gui = Haru.instance.getModuleManager().getModule(ClickGUI.class);
         int alpha = Math.max(0, Math.min(255, (int) gui.alpha.getValue()));
-        RenderUtil.drawRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), new Color(0, 0, 0, alpha));
-	
+        RenderUtil.drawRect(0, 0, screenWidth, screenHeight, new Color(0, 0, 0, alpha).getRGB());
+
         if (guiYMoveLeft != 0) {
             int step = (int) (guiYMoveLeft * 0.15);
             if (step == 0) {
                 guiYMoveLeft = 0;
             } else {
-                for (PanelRenderer window : windows) {
-                    window.y = window.y + step;
-                }
+                windows.forEach(window -> window.y += step);
                 guiYMoveLeft -= step;
             }
-        }
-        
-        if (sticker != StickersType.NONE) {
-        	RenderUtil.image(new ResourceLocation(
-        			sticker.imagePath),
-        			(int) 2 / sr.getScaledWidth() + (float) gui.width.getValue(), 
-        			(int) 2 / sr.getScaledHeight() + (float) gui.height.getValue(), (int) sticker.width, (int) sticker.height);
         }
 
         windows.forEach(window -> window.drawScreen(mouseX, mouseY));
@@ -102,87 +102,29 @@ public class DropGui extends GuiScreen {
     public void handleMouseInput() throws IOException {
         super.handleMouseInput();
         int dWheel = Mouse.getDWheel();
-        if (dWheel != 0) {
-            mouseScrolled(dWheel);
-        }
+        if (dWheel != 0) mouseScrolled(dWheel);
     }
 
-    public void mouseScrolled(int dWheel) {
-        if (dWheel > 0) {
-            guiYMoveLeft += SCROLL_SPEED;
-        } else if (dWheel < 0) {
-            guiYMoveLeft -= SCROLL_SPEED;
-        }
+    private void mouseScrolled(int dWheel) {
+        guiYMoveLeft += (dWheel > 0 ? SCROLL_SPEED : -SCROLL_SPEED);
     }
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         switch (keyCode) {
-            case Keyboard.KEY_UP:
-                guiYMoveLeft += SCROLL_SPEED;
-                break;
-            case Keyboard.KEY_DOWN:
-                guiYMoveLeft -= SCROLL_SPEED;
-                break;
-            case Keyboard.KEY_ESCAPE:
-                mc.displayGuiScreen(null);
-                break;
-            default:
-                break;
+            case Keyboard.KEY_UP: guiYMoveLeft += SCROLL_SPEED;
+            case Keyboard.KEY_DOWN: guiYMoveLeft -= SCROLL_SPEED;
+            case Keyboard.KEY_ESCAPE: mc.displayGuiScreen(null);
         }
-
         super.keyTyped(typedChar, keyCode);
     }
-
 
     @Override
     public boolean doesGuiPauseGame() {
         return false;
     }
-    
-    @Override
-    public void onGuiClosed() {
-    	Haru.instance.getCfgManager().saveFiles();
-        super.onGuiClosed();
+
+    public SList<PanelRenderer> getWindows() {
+        return windows;
     }
-
-	public SList<PanelRenderer> getWindows() {
-		return windows;
-	}
-
-	public int getGuiYMoveLeft() {
-		return guiYMoveLeft;
-	}
-
-	public static int getScrollSpeed() {
-		return SCROLL_SPEED;
-	}
-
-	public float getStartX() {
-		return startX;
-	}
-
-	public float getStartY() {
-		return startY;
-	}
-
-	public float getX() {
-		return x;
-	}
-
-	public float getY() {
-		return y;
-	}
-
-	public float getButtonWidth() {
-		return buttonWidth;
-	}
-
-	public float getSpacingY() {
-		return spacingY;
-	}
-
-	public PanelRenderer getWin() {
-		return win;
-	}
 }

@@ -70,7 +70,7 @@ public class AltManager extends GuiScreen {
         int backgroundHeight = (int) (FontUtil.getFontRenderer("comfortaa.ttf", 16).getHeight() + 5);
         int backgroundY = (int) (height / 2 - 35 - (backgroundHeight / 2));
 
-        FontUtil.getFontRenderer("comfortaa.ttf", 16).drawCenteredString(
+        FontUtil.getFontRenderer("comfortaa.ttf", 16).drawCentered(
             status,
             width / 2, 
             (int) (backgroundY + backgroundHeight / 2 - FontUtil.getFontRenderer("consolas.ttf", 16).getHeight() / 2), 

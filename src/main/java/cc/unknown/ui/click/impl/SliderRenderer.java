@@ -28,17 +28,29 @@ public class SliderRenderer extends Component {
 
         double progress = (currentValue - minValue) / (maxValue - minValue);
         progress = Math.min(1, Math.max(0, progress));
+        
+        Color colorMain = new Color(
+        		gui.colorMain.getAsInt(0),
+                gui.colorMain.getAsInt(1),
+                gui.colorMain.getAsInt(2)
+        );
 
         if (gui.roundedButtons.get() && gui.shaders.get()) {
-            RoundedUtil.drawRound(x + 3F, y + 2, (width - 5) * (float) progress, height - 4, 2, new Color(gui.red2.getAsInt(), gui.green2.getAsInt(), gui.blue2.getAsInt()));
+            RoundedUtil.drawRound(x + 3F, y + 2, (width - 5) * (float) progress, height - 4, 2, new Color(colorMain.getRGB()));
         } else {
-            RenderUtil.drawRect(x + 3F, y + 2, (width - 5) * (float) progress, height - 4, new Color(gui.red2.getAsInt(), gui.green2.getAsInt(), gui.blue2.getAsInt()).getRGB());
+            RenderUtil.drawRect(x + 3F, y + 2, (width - 5) * (float) progress, height - 4, new Color(colorMain.getRGB()));
         }
 
-        FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawString(value.getName(), x + 5F, y + 4F, -1);
+        FontUtil.getFontRenderer("interSemiBold.ttf", 13).draw(value.getName(), x + 5F, y + 4F, -1);
 
-        FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawCenteredString(String.format("%.2f", currentValue), x + 88F, y + 4F, -1);
+        boolean isInteger = Math.abs(currentValue % 1) < 0.001;
+        String display = isInteger ? String.format("%.0f", currentValue) : String.format("%.2f", currentValue);
 
+        float xOffset = isInteger ? 4F : 0F;
+
+        FontUtil.getFontRenderer("interSemiBold.ttf", 13).drawCentered(display, x + 88F + xOffset, y + 4F, -1);
+        
+        
         if (Mouse.isButtonDown(0) && isHovered(x, y, width, height - 4, mouseX, mouseY)) {
             double mouseOffset = mouseX - (x + 3);
             double sliderWidth = width - 5;

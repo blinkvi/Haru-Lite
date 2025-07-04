@@ -73,7 +73,6 @@ public class Velocity extends Module {
 		        if (mc.objectMouseOver.typeOfHit.equals(MovingObjectPosition.MovingObjectType.ENTITY) && mc.thePlayer.hurtTime > 0 && !attacked) {
 		            mc.thePlayer.motionX *= 0.6D;
 		            mc.thePlayer.motionZ *= 0.6D;
-		            mc.thePlayer.setSprinting(false);
 		        }
 
 		        attacked = false;

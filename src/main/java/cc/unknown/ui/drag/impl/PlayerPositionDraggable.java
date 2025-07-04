@@ -27,7 +27,7 @@ public class PlayerPositionDraggable extends Drag {
         float padding = 5.0F;
 
         String playerPosition = (int) mc.thePlayer.posX + " " + (int) mc.thePlayer.posY + " " + (int) mc.thePlayer.posZ;
-        float positionWidth = (float) FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).getStringWidth(playerPosition);
+        float positionWidth = (float) FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).width(playerPosition);
 
         width = iconSize * 2.5F + positionWidth + padding * 2;
         height = 20;
@@ -36,8 +36,8 @@ public class PlayerPositionDraggable extends Drag {
         float adjustedY = Math.min(y, sr.getScaledHeight() - height);
 
         RoundedUtil.drawRound(adjustedX, adjustedY, width, height - 2, 4.0F, new Color(getModule(Interface.class).backgroundColor(), true));
-        FontUtil.getFontRenderer("nursultan.ttf", 18).drawString("F", adjustedX + padding, adjustedY + (height / 2) - 3, hud.color());
-        FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).drawString(playerPosition, adjustedX + padding + iconSize * 2.5F, adjustedY + (height / 2) - 3, -1);
+        FontUtil.getFontRenderer("nursultan.ttf", 18).draw("F", adjustedX + padding, adjustedY + (height / 2) - 3, hud.color());
+        FontUtil.getFontRenderer("interMedium.ttf", (int) fontSize).draw(playerPosition, adjustedX + padding + iconSize * 2.5F, adjustedY + (height / 2) - 3, -1);
     }
 
     @Override

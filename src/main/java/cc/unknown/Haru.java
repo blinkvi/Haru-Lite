@@ -99,6 +99,8 @@ public class Haru {
             new AutoJoinHandler(),
             new TransactionHandler(),
             new ShaderHandler(),
+            new PingSpoofHandler(),
+            new BadPacketsHandler(),
             new DragHandler(),
             new PacketHandler(),
             new CommandHandler(),

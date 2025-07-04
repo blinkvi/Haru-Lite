@@ -19,6 +19,14 @@ public class Slider extends Value {
         this.max = max;
         this.increment = increment;
     }
+    
+    public Slider(String name, double value, double min, double max, double increment) {
+        this(name, null, value, min, max, increment, () -> true);
+    }
+    
+    public Slider(String name, double value, double min, double max) {
+        this(name, null, value, min, max, 1.0, () -> true);
+    }
 
     public Slider(String name, Module module, double value, double min, double max, Supplier<Boolean> visible) {
         this(name, module, value, min, max, 1.0, visible);
@@ -33,15 +41,11 @@ public class Slider extends Value {
     }
 
     public double get() {	    
-        return MathHelper.clamp_double(value, getMin(), getMax());
+        return MathHelper.clamp_double(value, min, max);
     }
 
     public void setValue(double value) {
-        this.value = MathHelper.clamp_double(value, getMin(), getMax());
-    }
-
-    public double getValue() {
-        return value;
+        this.value = MathHelper.clamp_double(value, min, max);
     }
 
     public float getAsFloat() {
@@ -56,16 +60,31 @@ public class Slider extends Value {
         return (long) value;
     }
 
+	public void setIncrement(double increment) {
+		this.increment = increment;
+	}
+
 	public double getMin() {
-	    return min;
+		return min;
+	}
+
+	public void setMin(double min) {
+		this.min = min;
 	}
 
 	public double getMax() {
-	    return max;
+		return max;
+	}
+
+	public void setMax(double max) {
+		this.max = max;
+	}
+
+	public double getValue() {
+		return value;
 	}
 
 	public double getIncrement() {
 		return increment;
 	}
-
 }
