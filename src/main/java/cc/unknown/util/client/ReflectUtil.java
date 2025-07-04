@@ -51,6 +51,10 @@ public class ReflectUtil implements Accessor {
         setPrivateField(Minecraft.class, mc, val, "leftClickCounter", "field_71429_W");
     }
 
+    public static void setRightClickCounter(int val){
+        setPrivateField(Minecraft.class, mc, val, "rightClickCounter", "field_71429_W");
+    }
+
     public static void setJumpTicks(int val) {
         setPrivateField(EntityLivingBase.class, mc.thePlayer, val, "jumpTicks", "field_70773_bE");
     }

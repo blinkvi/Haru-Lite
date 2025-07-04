@@ -39,6 +39,7 @@ public final class ModuleManager extends SList<Module> {
         		Velocity.class,
         		NoHitDelay.class,
         		BlockHit.class,
+                RightClicker.class,
         		
         		// utility
         		AutoTool.class,
