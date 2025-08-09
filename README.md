@@ -23,11 +23,6 @@ Follow these steps to set up the project:
    gradlew -Dorg.gradle.jvmargs=-Xmx2096m setupDecompWorkspace && gradlew eclipse
    ```
 
-## Join the Community
-
-Need help or want to contribute? Join the Discord server:  
-[Discord Invite](https://discord.gg/MuF4YRQFht)
-
 ## Wake up.
 
 It's been a year, wake up, watch them... Why are you in the basement... do something, anything... You're still hiding, you're rotting as you breathe. You're still in the cellar, engulfed in flames...
